@@ -70,6 +70,71 @@ requirements: |
 test_cases: [...]
 ```
 
+## Usage
+
+### Dataset Usage and Verification
+
+To verify the correctness of LLM-generated code using the benchmark dataset, follow these steps:
+
+#### 1. Download ROS 2 Docker Environment
+
+Pull the official ROS 2 development Docker image:
+```bash
+docker pull osrf/ros2:devel
+```
+
+#### 2. Download Robot Software Projects
+
+Download the corresponding robot software projects for each workspace:
+
+| Workspace | Project | Version/Branch |
+|-----------|---------|----------------|
+| diagnostics_ws | diagnostics | ros2-humble |
+| laser_filter_ws | laser_filters | ros2 |
+| autoware.universe | autoware.universe | 0.41.2 |
+| mcl_ws | mcl_3dl | master |
+| moveit_ws | moveit2 | humble |
+| navigation2 | navigation2 | humble |
+
+**Download commands**:
+```bash
+# diagnostics_ws
+git clone -b ros2-humble https://github.com/ros/diagnostics.git diagnostics_ws
+
+# laser_filter_ws
+git clone -b ros2 https://github.com/ros-perception/laser_filters.git laser_filter_ws
+
+# autoware.universe
+git clone -b 0.41.2 https://github.com/autowarefoundation/autoware.universe.git
+
+# mcl_ws
+git clone -b master https://github.com/at-wat/mcl_3dl.git mcl_ws
+
+# moveit_ws
+git clone -b humble https://github.com/ros-planning/moveit2.git moveit_ws
+
+# navigation2
+git clone -b humble https://github.com/ros-planning/navigation2.git
+```
+
+#### 3. Verify Generated Code
+
+Use the command files in each generated repository to verify the correctness of LLM-generated code:
+
+```bash
+# Navigate to the generated code directory
+cd generated_repos/<model_name>/<function_name>
+
+# Execute the verification command
+# The command file contains compilation and testing instructions
+bash command.sh
+```
+
+The verification process will:
+- Compile the generated code within the appropriate ROS 2 workspace
+- Run test cases defined in the benchmark dataset
+- Generate compilation logs and test results
+
 ## Research Questions
 
 ### RQ1: How do ROS architectural elements affect code generation success rates?
