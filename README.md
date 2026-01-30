@@ -7,51 +7,44 @@ This repository contains an empirical study on Large Language Models (LLMs) for 
 This research aims to:
 - Evaluate LLM capabilities in generating real-world ROS code
 - Analyze the impact of ROS architectural elements on code generation success rates
-- Identify and classify root causes of compilation failures
+- Identify and classify root causes of llm-generated failures
 - Provide insights for improving LLM performance on domain-specific code generation
 
 ### Key Features
 
-- **Benchmark Dataset**: 240 real-world ROS functions from the Autoware autonomous driving framework
+- **Benchmark Dataset**: 240 real-world ROS functions from real-world ROS code
 - **Multi-Model Evaluation**: Comparative analysis of DeepSeek, GPT-4o, and Claude
 - **Statistical Analysis**: Residual regression and partial correlation analysis to identify independent factors
-- **Error Taxonomy**: Detailed classification and root cause analysis of compilation failures
+- **Error Taxonomy**: Detailed classification and root cause analysis of llm-generated code failures
 
 ## Repository Structure
 
 ```
-republication/
-├── code/                      # Analysis scripts and evaluation framework
-│   ├── analyse_code/          # Research question analysis scripts
-│   │   ├── rq1.py            # RQ1: ROS architectural element impact analysis
-│   │   ├── rq1_residual.py   # RQ1: Residual regression and partial correlation
-│   │   ├── rq2.py            # RQ2: Compilation failure classification and statistics
-│   │   └── data_collect.py   # Data extraction utilities
-│   └── humanevalx/           # Code generation and evaluation framework
-│       ├── generation.py     # Distributed code generation
-│       ├── evaluation.py     # Functional correctness evaluation
-│       └── execution.py      # Sandboxed execution environment
-├── rosdeval/                  # Benchmark dataset (240 YAML files)
-├── experiment_result/         # Experimental results
-│   ├── rq1_result/           # RQ1 result data
-│   │   └── result_backup.csv # Main results file
-│   └── rq2_result/           # RQ2 error classification results
-│       ├── deepseek/         # DeepSeek error analysis
-│       ├── gpt/              # GPT-4o error analysis
-│       └── claude/           # Claude error analysis
-└── generated_repos/           # Generated code repositories
-    ├── deepseek/             # DeepSeek generated code
-    ├── gpt/                  # GPT-4o generated code
-    └── claude/               # Claude generated code
+code/                      # Analysis scripts and evaluation framework
+├── analyse_code/          # Research question analysis scripts
+│   ├── rq1.py            # RQ1: ROS architectural element impact analysis
+│   ├── rq1_residual.py   # RQ1: Residual regression and partial correlation
+│   ├── rq2.py            # RQ2: Compilation failure classification and statistics
+│   └── data_collect.py   # Data extraction utilities
+└── humanevalx/           # Code generation and evaluation framework
+    ├── generation.py     # Distributed code generation
+    ├── evaluation.py     # Functional correctness evaluation
+    └── execution.py      # Sandboxed execution environment
+rosdeveval/                  # Benchmark dataset (240 YAML files)
+result/         # Experimental results
+├── rq1_result/           # RQ1 result data
+│   └── result_backup.csv # Main results file
+└── label_result/           # RQ2 issues classification results and RQ3 root cause classification results
+    ├── deepseek/         # DeepSeek error analysis
 ```
 
 ## Dataset Description
 
-### ROSDEval Benchmark
+### ROSDevEval Benchmark
 
-The `rosdeval/` directory contains 240 YAML files, each defining a ROS function specification:
+The `rosdeveval/` directory contains 240 YAML files, each defining a ROS function specification:
 
-- **Source**: Autoware autonomous driving framework
+- **Source**: Real World ROS code repository
 - **Language**: ROS 2 C++
 - **Contents**:
   - Method name and signature
@@ -66,12 +59,12 @@ package: kinematic_evaluator
 method_name: KinematicEvaluatorNode::KinematicEvaluatorNode
 category: ros_architecture
 elements:
-  - domain_library
-  - topic
-  - parameter
-  - message
-  - timer
-  - logger
+  - has_domain_library
+  - has_topic
+  - has_parameter
+  - has_message
+  - has_timer
+  - has_logger
 requirements: |
   Constructor implementation...
 test_cases: [...]
