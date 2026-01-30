@@ -70,20 +70,20 @@ requirements: |
 test_cases: [...]
 ```
 
-## Usage
+### Usage
 
-### Dataset Usage and Verification
+#### Dataset Usage and Verification
 
 To verify the correctness of LLM-generated code using the benchmark dataset, follow these steps:
 
-#### 1. Download ROS 2 Docker Environment
+##### 1. Download ROS 2 Docker Environment
 
 Pull the official ROS 2 development Docker image:
 ```bash
 docker pull osrf/ros2:devel
 ```
 
-#### 2. Download Robot Software Projects
+##### 2. Download Robot Software Projects
 
 Download the corresponding robot software projects for each workspace:
 
@@ -117,7 +117,7 @@ git clone -b humble https://github.com/ros-planning/moveit2.git moveit_ws
 git clone -b humble https://github.com/ros-planning/navigation2.git
 ```
 
-#### 3. Verify Generated Code
+##### 3. Verify Generated Code
 
 Use the command files in each generated repository to verify the correctness of LLM-generated code:
 
