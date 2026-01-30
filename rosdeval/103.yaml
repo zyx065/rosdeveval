@@ -1,0 +1,45 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter
+ros_package: autoware_raw_vehicle_cmd_converter
+file_path: src/brake_map.cpp
+method_name: BrakeMap::readBrakeMapFromCSV
+requirement: |
+  /**
+  * Reads brake map data from a CSV file and initializes internal data structures.
+  * 
+  * @param csv_path The file path to the CSV file containing brake map data.
+  * @param validation If true, performs validation checks on the loaded brake map data.
+  * @return True if the brake map was successfully loaded and validated (if requested), false otherwise.
+  */
+category: utilities
+type: []
+signature: |
+  bool BrakeMap::readBrakeMapFromCSV(const std::string & csv_path, const bool validation)
+additional_information: 
+  function_related_variable: |
+    std::string vehicle_name_;
+    std::vector<double> vel_index_;
+    std::vector<double> throttle_index_;
+    std::vector<std::vector<double>> accel_map_;
+  function_related_class: |
+    class CSVLoader
+    {
+    public:
+      explicit CSVLoader(const std::string & csv_path);
+
+      bool readCSV(Table & result, const char delim = ',');
+      static bool validateData(const Table & table, const std::string & csv_path);
+      static bool validateMap(const Map & map, const bool is_col_decent);
+      static Map getMap(const Table & table);
+      static std::vector<double> getRowIndex(const Table & table);
+      static std::vector<double> getColumnIndex(const Table & table);
+      static double clampValue(const double val, const std::vector<double> & ranges);
+
+    private:
+      std::string csv_path_;
+    };
+test: test_autoware_raw_vehicle_cmd_converter
+test_cases: 
+- LoadValidPath
+- AccelMapCalculation

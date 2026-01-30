@@ -1,0 +1,87 @@
+compilation.log: |
+  Starting >>> autoware_motion_utils
+  Finished <<< autoware_motion_utils [18.6s]
+
+  Summary: 1 package finished [20.0s]
+generate_code.cpp: |-
+  bool VehicleStopCheckerBase::isVehicleStopped(const double stop_duration) const {
+      // Check if twist buffer is empty
+      if (twist_buffer_.empty()) {
+          return false;
+      }
+
+      // Get current time
+      rclcpp::Time current_time = clock_->now();
+
+      // Iterate through twist buffer from most recent to oldest
+      for (auto it = twist_buffer_.rbegin(); it != twist_buffer_.rend(); ++it) {
+          // Calculate time difference from current time
+          double time_diff = (current_time - it->header.stamp).seconds();
+
+          // If time difference exceeds stop duration
+          if (time_diff > stop_duration) {
+              break;
+          }
+
+          // Check if velocity magnitude is non-zero
+          double velocity_magnitude = std::sqrt(
+              it->twist.linear.x * it->twist.linear.x +
+              it->twist.linear.y * it->twist.linear.y +
+              it->twist.linear.z * it->twist.linear.z
+          );
+
+          // If any velocity is detected within stop duration, vehicle is not stopped
+          if (velocity_magnitude > 0.01) {  // Small threshold to account for noise
+              return false;
+          }
+      }
+
+      // Vehicle has been stopped for the entire duration
+      return true;
+  }
+ground_truth.cpp: |-
+  bool VehicleStopCheckerBase::isVehicleStopped(const double stop_duration) const
+  {
+    if (twist_buffer_.empty()) {
+      return false;
+    }
+
+    constexpr double squared_stop_velocity = 1e-3 * 1e-3;
+    const auto now = clock_->now();
+
+    const auto time_buffer_back = now - twist_buffer_.back().header.stamp;
+    if (time_buffer_back.seconds() < stop_duration) {
+      return false;
+    }
+
+    // Get velocities within stop_duration
+    for (const auto & velocity : twist_buffer_) {
+      double x = velocity.twist.linear.x;
+      double y = velocity.twist.linear.y;
+      double z = velocity.twist.linear.z;
+      double v = (x * x) + (y * y) + (z * z);
+      if (squared_stop_velocity <= v) {
+        return false;
+      }
+
+      const auto time_diff = now - velocity.header.stamp;
+      if (time_diff.seconds() >= stop_duration) {
+        break;
+      }
+    }
+
+    return true;
+  }
+Architecture-codes:
+  - ROS Timer Issues - Timestamp Processing Errors
+
+Functionality-codes:
+  - Conditional Checks Issues - Conditional Check Missing
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Operation/Calculation Error - Incorrect arithmetic operation
+  - Constant Value Error - Wrong threshold value (0.01 vs 0.001)
+
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements

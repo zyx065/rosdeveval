@@ -1,0 +1,258 @@
+compilation.log: |
+  Starting >>> nav2_costmap_2d
+  --- stderr: nav2_costmap_2d
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp: In member function ‘void nav2_costmap_2d::SpeedFilter::filterInfoCallback(nav2_msgs::msg::CostmapFilterInfo_<std::allocator<void> >::SharedPtr)’:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:102:65: error: ‘PERCENTAGE’ is not a member of ‘nav2_msgs::msg::CostmapFilterInfo’ {aka ‘nav2_msgs::msg::CostmapFilterInfo_<std::allocator<void> >’}
+    102 |   percentage_ = msg->type == nav2_msgs::msg::CostmapFilterInfo::PERCENTAGE;
+        |                                                                 ^~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.hpp:48,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.hpp:42,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.h:35,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/layer.hpp:44,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/costmap_filters/costmap_filter.hpp:49,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/costmap_filters/speed_filter.hpp:44,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:38:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:106:11: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘get_logger’
+    106 |     this->get_logger(),
+        |           ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:106:11: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘get_logger’
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:105:3: error: template argument 1 is invalid
+    105 |   RCLCPP_INFO(
+        |   ^~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.hpp:48,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.hpp:42,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.h:35,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/layer.hpp:44,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/costmap_filters/costmap_filter.hpp:49,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/costmap_filters/speed_filter.hpp:44,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:38:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:106:11: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘get_logger’
+    106 |     this->get_logger(),
+        |           ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:106:11: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘get_logger’
+    106 |     this->get_logger(),
+        |           ^~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.hpp:48,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.hpp:42,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.h:35,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/layer.hpp:44,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/costmap_filters/costmap_filter.hpp:49,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/costmap_filters/speed_filter.hpp:44,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:38:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:113:13: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘get_logger’
+    113 |       this->get_logger(),
+        |             ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:113:13: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘get_logger’
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:112:5: error: template argument 1 is invalid
+    112 |     RCLCPP_INFO(
+        |     ^~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.hpp:48,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.hpp:42,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.h:35,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/layer.hpp:44,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/costmap_filters/costmap_filter.hpp:49,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/costmap_filters/speed_filter.hpp:44,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:38:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:113:13: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘get_logger’
+    113 |       this->get_logger(),
+        |             ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:113:13: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘get_logger’
+    113 |       this->get_logger(),
+        |             ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:116:23: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘create_subscription’
+    116 |     mask_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
+        |                       ^~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:116:71: error: expected primary-expression before ‘>’ token
+    116 |     mask_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
+        |                                                                       ^
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.hpp:48,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.hpp:42,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.h:35,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/layer.hpp:44,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/costmap_filters/costmap_filter.hpp:49,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/costmap_filters/speed_filter.hpp:44,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:38:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp: In lambda function:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:123:17: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘get_logger’
+    123 |           this->get_logger(),
+        |                 ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:123:17: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘get_logger’
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:122:9: error: template argument 1 is invalid
+    122 |         RCLCPP_DEBUG(
+        |         ^~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.hpp:48,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.hpp:42,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.h:35,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/layer.hpp:44,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/costmap_filters/costmap_filter.hpp:49,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/include/nav2_costmap_2d/costmap_filters/speed_filter.hpp:44,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:38:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:123:17: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘get_logger’
+    123 |           this->get_logger(),
+        |                 ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/speed_filter.cpp:123:17: error: ‘class nav2_costmap_2d::SpeedFilter’ has no member named ‘get_logger’
+    123 |           this->get_logger(),
+        |                 ^~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/filters.dir/build.make:90: CMakeFiles/filters.dir/plugins/costmap_filters/speed_filter.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:321: CMakeFiles/filters.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_costmap_2d [4.23s, exited with code 2]
+
+  Summary: 0 packages finished [4.54s]
+    1 package failed: nav2_costmap_2d
+    1 package had stderr output: nav2_costmap_2d
+generate_code.cpp: |-
+  void SpeedFilter::filterInfoCallback(
+    const nav2_msgs::msg::CostmapFilterInfo::SharedPtr msg)
+  {
+    // Update the base and multiplier values from the incoming message
+    base_ = msg->base;
+    multiplier_ = msg->multiplier;
+    percentage_ = msg->type == nav2_msgs::msg::CostmapFilterInfo::PERCENTAGE;
+
+    // Log the updated filter parameters
+    RCLCPP_INFO(
+      this->get_logger(),
+      "Received CostmapFilterInfo: base=%.2f, multiplier=%.2f, type=%s",
+      base_, multiplier_, percentage_ ? "PERCENTAGE" : "ABSOLUTE");
+
+    // Subscribe to the filter mask topic if not already subscribed
+    if (mask_sub_ == nullptr) {
+      RCLCPP_INFO(
+        this->get_logger(),
+        "Subscribing to filter mask topic: %s", msg->filter_mask_topic.c_str());
+
+      mask_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
+        msg->filter_mask_topic, rclcpp::SystemDefaultsQoS(),
+        [this](const nav_msgs::msg::OccupancyGrid::SharedPtr mask_msg) {
+          filter_mask_ = mask_msg;
+          mask_frame_ = mask_msg->header.frame_id;
+
+          RCLCPP_DEBUG(
+            this->get_logger(),
+            "Received filter mask with frame: %s", mask_frame_.c_str());
+        });
+    }
+  }
+ground_truth.cpp: |-
+  void SpeedFilter::filterInfoCallback(
+    const nav2_msgs::msg::CostmapFilterInfo::SharedPtr msg)
+  {
+    std::lock_guard<CostmapFilter::mutex_t> guard(*getMutex());
+
+    rclcpp_lifecycle::LifecycleNode::SharedPtr node = node_.lock();
+    if (!node) {
+      throw std::runtime_error{"Failed to lock node"};
+    }
+
+    if (!mask_sub_) {
+      RCLCPP_INFO(
+        logger_,
+        "SpeedFilter: Received filter info from %s topic.", filter_info_topic_.c_str());
+    } else {
+      RCLCPP_WARN(
+        logger_,
+        "SpeedFilter: New costmap filter info arrived from %s topic. Updating old filter info.",
+        filter_info_topic_.c_str());
+      // Resetting previous subscriber each time when new costmap filter information arrives
+      mask_sub_.reset();
+    }
+
+    // Set base_/multiplier_ or use speed limit in % of maximum speed
+    base_ = msg->base;
+    multiplier_ = msg->multiplier;
+    if (msg->type == SPEED_FILTER_PERCENT) {
+      // Using speed limit in % of maximum speed
+      percentage_ = true;
+      RCLCPP_INFO(
+        logger_,
+        "SpeedFilter: Using expressed in a percent from maximum speed"
+        "speed_limit = %f + filter_mask_data * %f",
+        base_, multiplier_);
+    } else if (msg->type == SPEED_FILTER_ABSOLUTE) {
+      // Using speed limit in m/s
+      percentage_ = false;
+      RCLCPP_INFO(
+        logger_,
+        "SpeedFilter: Using absolute speed_limit = %f + filter_mask_data * %f",
+        base_, multiplier_);
+    } else {
+      RCLCPP_ERROR(logger_, "SpeedFilter: Mode is not supported");
+      return;
+    }
+
+    mask_topic_ = msg->filter_mask_topic;
+
+    // Setting new filter mask subscriber
+    RCLCPP_INFO(
+      logger_,
+      "SpeedFilter: Subscribing to \"%s\" topic for filter mask...",
+      mask_topic_.c_str());
+    mask_sub_ = node->create_subscription<nav_msgs::msg::OccupancyGrid>(
+      mask_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
+      std::bind(&SpeedFilter::maskCallback, this, std::placeholders::_1));
+  }

@@ -1,0 +1,34 @@
+compilation.log: |
+  Starting >>> nav2_rotation_shim_controller
+  Finished <<< nav2_rotation_shim_controller [0.38s]
+
+  Summary: 1 package finished [0.68s]
+generate_code.cpp: |-
+  void RotationShimController::deactivate()
+  {
+    // Log the deactivation process
+    RCLCPP_INFO(logger_, "Deactivating %s controller", plugin_name_.c_str());
+
+    // Reset the dynamic parameters handler
+    dyn_params_handler_.reset();
+
+    // Deactivate the primary controller if it exists
+    if (primary_controller_) {
+      primary_controller_->deactivate();
+    }
+
+    RCLCPP_INFO(logger_, "%s controller deactivated successfully", plugin_name_.c_str());
+  }
+ground_truth.cpp: |-
+  void RotationShimController::deactivate()
+  {
+    RCLCPP_INFO(
+      logger_,
+      "Deactivating controller: %s of type "
+      "nav2_rotation_shim_controller::RotationShimController",
+      plugin_name_.c_str());
+
+    primary_controller_->deactivate();
+
+    dyn_params_handler_.reset();
+  }

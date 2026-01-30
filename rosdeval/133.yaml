@@ -1,0 +1,28 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/utils
+ros_package: moveit_core
+file_path: src/robot_model_test_utils.cpp
+method_name: RobotModelBuilder::addCollisionBox
+requirement: |
+  /**
+  * Adds a box collision geometry to a robot model link.
+  * @param link_name The name of the link to which the collision box will be added.
+  * @param dims A 3-element vector specifying the box dimensions [x, y, z].
+  * @param origin The pose of the collision box relative to the link frame.
+  */
+category: utilities
+type: has_domain_library,has_log
+signature: |
+  void RobotModelBuilder::addCollisionBox(const std::string& link_name, const std::vector<double>& dims,
+                                          geometry_msgs::msg::Pose origin)
+
+additional_information: 
+  function_related_variable: 
+    bool is_valid_ = true;
+  function_related_function: 
+    void RobotModelBuilder::addLinkCollision(const std::string& link_name, const urdf::CollisionSharedPtr& collision, geometry_msgs::msg::Pose origin)
+test: test_aabb
+test_cases: 
+- TestSimple
+- TestComplex

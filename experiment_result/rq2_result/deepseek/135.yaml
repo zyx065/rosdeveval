@@ -1,0 +1,42 @@
+compilation.log: ""
+generate_code.cpp: |-
+  void toBinMsg(const lanelet::LaneletMapPtr & map, autoware_map_msgs::msg::LaneletMapBin * msg)
+  {
+    std::stringstream ss;
+    lanelet::write(std::string("osm"), *map, ss);
+    const auto data = ss.str();
+    msg->data.assign(data.begin(), data.end());
+    msg->header.stamp = rclcpp::Clock().now();
+  }
+ground_truth.cpp: |-
+  void toBinMsg(const lanelet::LaneletMapPtr & map, autoware_map_msgs::msg::LaneletMapBin * msg)
+  {
+    if (msg == nullptr) {
+      std::cerr << __FUNCTION__ << "msg is null pointer!";
+      return;
+    }
+
+    std::stringstream ss;
+    boost::archive::binary_oarchive oa(ss);
+    oa << *map;
+    auto id_counter = lanelet::utils::getId();
+    oa << id_counter;
+
+    std::string data_str(ss.str());
+
+    msg->data.clear();
+    msg->data.assign(data_str.begin(), data_str.end());
+  }
+architecture-codes:
+  - ROS Message Issue - Message Initialization Issue
+  - ROS Timer Issue - Clock Source Instantiation and Synchronization Issue
+functionality-codes:
+  - Condition Issue - Conditional Check Missing Issue
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

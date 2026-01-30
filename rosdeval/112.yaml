@@ -1,0 +1,22 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module
+ros_package: autoware_velocity_smoother
+file_path: src/object_filtering.cpp
+method_name: is_vehicle
+requirement: |
+  /**
+  * @brief Checks if the given object is classified as a vehicle type.
+  * 
+  * @param object The PredictedObject to check for vehicle classification.
+  * @return true If the object has any classification matching vehicle types (car, bus, truck, trailer, motorcycle, or bicycle).
+  * @return false If the object has no vehicle type classifications.
+  */
+category: utilities
+type: has_message
+signature: |
+  bool is_vehicle(const autoware_perception_msgs::msg::PredictedObject & object)
+additional_information: []
+test: test_autoware_motion_velocity_dynamic_obstacle_stop_module
+test_cases: 
+- isVehicle

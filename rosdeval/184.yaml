@@ -1,0 +1,83 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_controller
+ros_package: nav2_controller
+file_path: src/controller_server.cpp
+method_name: ControllerServer::publishVelocity
+requirement: |
+  /**
+  * Publishes a velocity command if the publisher is active and has subscribers.
+  * 
+  * @param velocity The stamped velocity message to publish. Only the twist component is used.
+  */
+category: ros_architecture
+type: has_message,has_topic
+signature: |
+  void ControllerServer::publishVelocity(const geometry_msgs::msg::TwistStamped & velocity)
+additional_information: 
+  function_related_variable: |
+    /**
+    * @brief Callback executed when a parameter change is detected
+    * @param event ParameterEvent message
+    */
+
+    // The controller needs a costmap node
+    std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros_;
+    std::unique_ptr<nav2_util::NodeThread> costmap_thread_;
+
+    // Publishers and subscribers
+    std::unique_ptr<nav_2d_utils::OdomSubscriber> odom_sub_;
+    rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr vel_publisher_;
+    rclcpp::Subscription<nav2_msgs::msg::SpeedLimit>::SharedPtr speed_limit_sub_;
+
+    // Progress Checker Plugin
+    pluginlib::ClassLoader<nav2_core::ProgressChecker> progress_checker_loader_;
+    nav2_core::ProgressChecker::Ptr progress_checker_;
+    std::string default_progress_checker_id_;
+    std::string default_progress_checker_type_;
+    std::string progress_checker_id_;
+    std::string progress_checker_type_;
+
+    // Goal Checker Plugin
+    pluginlib::ClassLoader<nav2_core::GoalChecker> goal_checker_loader_;
+    GoalCheckerMap goal_checkers_;
+    std::vector<std::string> default_goal_checker_ids_;
+    std::vector<std::string> default_goal_checker_types_;
+    std::vector<std::string> goal_checker_ids_;
+    std::vector<std::string> goal_checker_types_;
+    std::string goal_checker_ids_concat_, current_goal_checker_;
+
+    // Controller Plugins
+    pluginlib::ClassLoader<nav2_core::Controller> lp_loader_;
+    ControllerMap controllers_;
+    std::vector<std::string> default_ids_;
+    std::vector<std::string> default_types_;
+    std::vector<std::string> controller_ids_;
+    std::vector<std::string> controller_types_;
+    std::string controller_ids_concat_, current_controller_;
+
+    double controller_frequency_;
+    double min_x_velocity_threshold_;
+    double min_y_velocity_threshold_;
+    double min_theta_velocity_threshold_;
+
+    double failure_tolerance_;
+    bool publish_zero_velocity_;
+
+    // Whether we've published the single controller warning yet
+    geometry_msgs::msg::PoseStamped end_pose_;
+
+    // Last time the controller generated a valid command
+    rclcpp::Time last_valid_cmd_time_;
+
+    // Current path container
+    nav_msgs::msg::Path current_path_;
+  function_related_function: |
+    rcl_interfaces::msg::SetParametersResult
+    dynamicParametersCallback(std::vector<rclcpp::Parameter> parameters);
+
+    // Dynamic parameters handler
+    rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr dyn_params_handler_;
+    std::mutex dynamic_params_lock_;
+test: test_dynamic_parameters
+test_cases: []

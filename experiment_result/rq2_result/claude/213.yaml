@@ -1,0 +1,74 @@
+compilation.log: |
+  Starting >>> nav2_mppi_controller
+  Finished <<< nav2_mppi_controller [0.78s]
+
+  Summary: 1 package finished [1.08s]
+generate_code.cpp: |
+  inline float posePointAngle(
+    const geometry_msgs::msg::Pose & pose, double point_x, double point_y, bool forward_preference)
+  {
+    // Extract position from pose
+    double pose_x = pose.position.x;
+    double pose_y = pose.position.y;
+    
+    // Calculate vector from pose to point
+    double dx = point_x - pose_x;
+    double dy = point_y - pose_y;
+    
+    // Calculate angle from pose to point
+    double target_angle = atan2(dy, dx);
+    
+    // Extract current yaw from pose quaternion
+    double roll, pitch, yaw;
+    tf2::Quaternion q(pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w);
+    tf2::Matrix3x3 m(q);
+    m.getRPY(roll, pitch, yaw);
+    
+    // Calculate angle difference
+    double angle_diff = target_angle - yaw;
+    
+    // Normalize angle to [-pi, pi]
+    while (angle_diff > M_PI) angle_diff -= 2.0 * M_PI;
+    while (angle_diff < -M_PI) angle_diff += 2.0 * M_PI;
+    
+    // If forward preference is disabled and backward direction is shorter
+    if (!forward_preference && abs(angle_diff) > M_PI / 2.0) {
+      if (angle_diff > 0) {
+        angle_diff -= M_PI;
+      } else {
+        angle_diff += M_PI;
+      }
+    }
+    
+    return static_cast<float>(angle_diff);
+  }
+ground_truth.cpp: |-
+  inline float posePointAngle(
+    const geometry_msgs::msg::Pose & pose, double point_x, double point_y, bool forward_preference)
+  {
+    float pose_x = pose.position.x;
+    float pose_y = pose.position.y;
+    float pose_yaw = tf2::getYaw(pose.orientation);
+
+    float yaw = atan2f(point_y - pose_y, point_x - pose_x);
+
+    // If no preference for forward, return smallest angle either in heading or 180 of heading
+    if (!forward_preference) {
+      return std::min(
+        fabs(angles::shortest_angular_distance(yaw, pose_yaw)),
+        fabs(angles::shortest_angular_distance(yaw, angles::normalize_angle(pose_yaw + M_PI))));
+    }
+
+    return fabs(angles::shortest_angular_distance(yaw, pose_yaw));
+  }
+architecture-codes: 
+  - ROS Message Related Issues - Message Operation Issues
+functionality-codes:
+  - Domain Library Issues - Lack of Domain Library Utilization
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Operation/Calculation Error - Incorrect comparison operation
+  - Incomplete Code - Missing Multiple Steps
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

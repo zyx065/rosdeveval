@@ -1,0 +1,101 @@
+compilation.log: |
+  Starting >>> nav2_constrained_smoother
+  --- stderr: nav2_constrained_smoother
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp: In member function ‘virtual void nav2_constrained_smoother::ConstrainedSmoother::configure(const WeakPtr&, std::string, std::shared_ptr<tf2_ros::Buffer>, std::shared_ptr<nav2_costmap_2d::CostmapSubscriber>, std::shared_ptr<nav2_costmap_2d::FootprintSubscriber>)’:
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp:66:20: error: ‘struct nav2_constrained_smoother::SmootherParams’ has no member named ‘max_iterations’
+     66 |   smoother_params_.max_iterations = node->get_parameter(plugin_name_ + ".max_iterations").as_int();
+        |                    ^~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp:67:20: error: ‘struct nav2_constrained_smoother::SmootherParams’ has no member named ‘tolerance’
+     67 |   smoother_params_.tolerance = node->get_parameter(plugin_name_ + ".tolerance").as_double();
+        |                    ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp:68:20: error: ‘struct nav2_constrained_smoother::SmootherParams’ has no member named ‘weight_smoothness’
+     68 |   smoother_params_.weight_smoothness = node->get_parameter(plugin_name_ + ".weight_smoothness").as_double();
+        |                    ^~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp:69:20: error: ‘struct nav2_constrained_smoother::SmootherParams’ has no member named ‘weight_collision’
+     69 |   smoother_params_.weight_collision = node->get_parameter(plugin_name_ + ".weight_collision").as_double();
+        |                    ^~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp:75:21: error: ‘struct nav2_constrained_smoother::OptimizerParams’ has no member named ‘learning_rate’
+     75 |   optimizer_params_.learning_rate = node->get_parameter(plugin_name_ + ".optimizer.learning_rate").as_double();
+        |                     ^~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp:76:21: error: ‘struct nav2_constrained_smoother::OptimizerParams’ has no member named ‘max_gradient_norm’
+     76 |   optimizer_params_.max_gradient_norm = node->get_parameter(plugin_name_ + ".optimizer.max_gradient_norm").as_double();
+        |                     ^~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp:45:57: error: unused parameter ‘footprint_sub’ [-Werror=unused-parameter]
+     45 |   std::shared_ptr<nav2_costmap_2d::FootprintSubscriber> footprint_sub)
+        |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/nav2_constrained_smoother.dir/build.make:76: CMakeFiles/nav2_constrained_smoother.dir/src/constrained_smoother.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:174: CMakeFiles/nav2_constrained_smoother.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_constrained_smoother [6.18s, exited with code 2]
+
+  Summary: 0 packages finished [6.49s]
+    1 package failed: nav2_constrained_smoother
+    1 package had stderr output: nav2_constrained_smoother
+generate_code.cpp: |-
+  void ConstrainedSmoother::configure(
+    const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
+    std::string name, std::shared_ptr<tf2_ros::Buffer> tf,
+    std::shared_ptr<nav2_costmap_2d::CostmapSubscriber> costmap_sub,
+    std::shared_ptr<nav2_costmap_2d::FootprintSubscriber> footprint_sub)
+  {
+    // Store the provided parameters
+    plugin_name_ = name;
+    tf_ = tf;
+    costmap_sub_ = costmap_sub;
+
+    // Lock the parent node to access its parameters
+    auto node = parent.lock();
+    if (!node) {
+      throw std::runtime_error("Unable to lock parent node in ConstrainedSmoother::configure");
+    }
+
+    logger_ = node->get_logger();
+
+    // Retrieve smoother parameters from the parameter server
+    node->declare_parameter(plugin_name_ + ".max_iterations", rclcpp::ParameterValue(100));
+    node->declare_parameter(plugin_name_ + ".tolerance", rclcpp::ParameterValue(1e-6));
+    node->declare_parameter(plugin_name_ + ".weight_smoothness", rclcpp::ParameterValue(1.0));
+    node->declare_parameter(plugin_name_ + ".weight_collision", rclcpp::ParameterValue(1.0));
+
+    smoother_params_.max_iterations = node->get_parameter(plugin_name_ + ".max_iterations").as_int();
+    smoother_params_.tolerance = node->get_parameter(plugin_name_ + ".tolerance").as_double();
+    smoother_params_.weight_smoothness = node->get_parameter(plugin_name_ + ".weight_smoothness").as_double();
+    smoother_params_.weight_collision = node->get_parameter(plugin_name_ + ".weight_collision").as_double();
+
+    // Retrieve optimizer parameters from the parameter server
+    node->declare_parameter(plugin_name_ + ".optimizer.learning_rate", rclcpp::ParameterValue(0.01));
+    node->declare_parameter(plugin_name_ + ".optimizer.max_gradient_norm", rclcpp::ParameterValue(1.0));
+
+    optimizer_params_.learning_rate = node->get_parameter(plugin_name_ + ".optimizer.learning_rate").as_double();
+    optimizer_params_.max_gradient_norm = node->get_parameter(plugin_name_ + ".optimizer.max_gradient_norm").as_double();
+
+    // Initialize the smoother with the optimizer parameters
+    smoother_ = std::make_unique<nav2_constrained_smoother::Smoother>();
+    smoother_->initialize(optimizer_params_);
+
+    RCLCPP_INFO(logger_, "ConstrainedSmoother configured successfully with plugin name: %s", plugin_name_.c_str());
+  }
+ground_truth.cpp: |-
+  void ConstrainedSmoother::configure(
+    const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
+    std::string name, std::shared_ptr<tf2_ros::Buffer> tf,
+    std::shared_ptr<nav2_costmap_2d::CostmapSubscriber> costmap_sub,
+    std::shared_ptr<nav2_costmap_2d::FootprintSubscriber>)
+  {
+    auto node = parent.lock();
+    if (!node) {
+      throw std::runtime_error("Unable to lock node!");
+    }
+
+    costmap_sub_ = costmap_sub;
+    tf_ = tf;
+    plugin_name_ = name;
+    logger_ = node->get_logger();
+
+    smoother_ = std::make_unique<nav2_constrained_smoother::Smoother>();
+    optimizer_params_.get(node.get(), name);
+    smoother_params_.get(node.get(), name);
+    smoother_->initialize(optimizer_params_);
+  }

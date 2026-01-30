@@ -1,0 +1,31 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_planning_validator
+ros_package: autoware_planning_evaluator
+file_path: src/planning_validator.cpp
+method_name: PlanningValidator::PlanningValidator
+requirement: |
+  /**
+  * @brief Constructs a PlanningValidator node for trajectory validation.
+  * 
+  * @param options Node configuration options for ROS 2 node initialization.
+  */
+category: ros_architecture
+type: has_topic,has_parameter,has_message
+signature: |
+  PlanningValidator::PlanningValidator(const rclcpp::NodeOptions & options)
+  : Node("planning_validator", options)
+additional_information: 
+  function_related_variable: |
+    rclcpp::Subscription<Trajectory>::SharedPtr sub_traj_;
+    rclcpp::Publisher<Trajectory>::SharedPtr pub_traj_;
+    rclcpp::Publisher<PlanningValidatorStatus>::SharedPtr pub_status_;
+    rclcpp::Publisher<Float64Stamped>::SharedPtr pub_processing_time_ms_;
+    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr pub_markers_;
+    std::shared_ptr<PlanningValidatorDebugMarkerPublisher> debug_pose_publisher_;
+    std::unique_ptr<autoware::universe_utils::LoggerLevelConfigure> logger_configure_;
+    std::unique_ptr<autoware::universe_utils::PublishedTimePublisher> published_time_publisher_;
+  function_related_function: |
+    void setupParameters();  
+test: test_autoware_planning_validator
+test_cases: []

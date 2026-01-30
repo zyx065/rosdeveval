@@ -1,0 +1,30 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_velocity_smoother
+ros_package: nav2_velocity_smoother
+file_path: src/velocity_smoother.cpp
+method_name: VelocitySmoother::findEtaConstraint
+requirement: |
+  /**
+  * Calculates the velocity constraint scaling factor (eta) for smooth transitions.
+  * 
+  * This method determines the scaling factor needed to limit the velocity change between
+  * the current and commanded velocities based on acceleration and deceleration constraints.
+  * 
+  * @param v_curr The current velocity.
+  * @param v_cmd The commanded target velocity.
+  * @param accel The maximum allowed acceleration.
+  * @param decel The maximum allowed deceleration.
+  * @return Scaling factor eta if velocity change exceeds constraints, -1.0 otherwise.
+  */
+category: utilities
+type: []
+signature: |
+  double VelocitySmoother::findEtaConstraint(
+    const double v_curr, const double v_cmd, const double accel, const double decel)
+additional_information: 
+  function_related_variable: |
+    double smoothing_frequency_;
+test: velocity_smoother_tests
+test_cases: 
+- testfindEtaConstraint

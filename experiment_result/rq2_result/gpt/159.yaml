@@ -1,0 +1,108 @@
+compilation.log: |
+  Starting >>> nav2_collision_monitor
+  --- stderr: nav2_collision_monitor
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp: In member function ‘void nav2_collision_monitor::CollisionMonitor::publishVelocity(const nav2_collision_monitor::Action&)’:
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:172:22: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘has_velocity’
+    172 |     if (robot_action.has_velocity) {
+        |                      ^~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:174:43: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘velocity’
+    174 |         twist_msg.linear.x = robot_action.velocity.linear.x;
+        |                                           ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:175:43: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘velocity’
+    175 |         twist_msg.linear.y = robot_action.velocity.linear.y;
+        |                                           ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:176:43: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘velocity’
+    176 |         twist_msg.linear.z = robot_action.velocity.linear.z;
+        |                                           ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:178:44: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘velocity’
+    178 |         twist_msg.angular.x = robot_action.velocity.angular.x;
+        |                                            ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:179:44: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘velocity’
+    179 |         twist_msg.angular.y = robot_action.velocity.angular.y;
+        |                                            ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:180:44: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘velocity’
+    180 |         twist_msg.angular.z = robot_action.velocity.angular.z;
+        |                                            ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:197:44: error: ‘struct nav2_collision_monitor::Action’ has no member named ‘velocity’
+    197 |             twist_msg = robot_action_prev_.velocity;
+        |                                            ^~~~~~~~
+  gmake[2]: *** [CMakeFiles/collision_monitor_core.dir/build.make:76: CMakeFiles/collision_monitor_core.dir/src/collision_monitor_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:180: CMakeFiles/collision_monitor_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_collision_monitor [4.67s, exited with code 2]
+
+  Summary: 0 packages finished [4.99s]
+    1 package failed: nav2_collision_monitor
+    1 package had stderr output: nav2_collision_monitor
+generate_code.cpp: |-
+  void CollisionMonitor::publishVelocity(const Action & robot_action)
+  {
+      // Check if the cmd_vel_out_pub_ is valid
+      if (!cmd_vel_out_pub_ || !cmd_vel_out_pub_->is_activated()) {
+          RCLCPP_WARN(this->get_logger(), "cmd_vel_out_pub_ is not activated or invalid.");
+          return;
+      }
+
+      // Create a Twist message to publish
+      auto twist_msg = geometry_msgs::msg::Twist();
+
+      // Check if the robot action has a valid velocity
+      if (robot_action.has_velocity) {
+          // Update the twist message with the requested velocity
+          twist_msg.linear.x = robot_action.velocity.linear.x;
+          twist_msg.linear.y = robot_action.velocity.linear.y;
+          twist_msg.linear.z = robot_action.velocity.linear.z;
+
+          twist_msg.angular.x = robot_action.velocity.angular.x;
+          twist_msg.angular.y = robot_action.velocity.angular.y;
+          twist_msg.angular.z = robot_action.velocity.angular.z;
+
+          // Update the stop timestamp
+          stop_stamp_ = this->now();
+      } else {
+          // If no valid velocity, check if the stop timeout has passed
+          if ((this->now() - stop_stamp_) > stop_pub_timeout_) {
+              // Publish a zero velocity command
+              twist_msg.linear.x = 0.0;
+              twist_msg.linear.y = 0.0;
+              twist_msg.linear.z = 0.0;
+
+              twist_msg.angular.x = 0.0;
+              twist_msg.angular.y = 0.0;
+              twist_msg.angular.z = 0.0;
+          } else {
+              // If within the timeout, retain the previous velocity
+              twist_msg = robot_action_prev_.velocity;
+          }
+      }
+
+      // Publish the velocity command
+      cmd_vel_out_pub_->publish(twist_msg);
+
+      // Update the previous robot action
+      robot_action_prev_ = robot_action;
+  }
+ground_truth.cpp: |-
+  void CollisionMonitor::publishVelocity(const Action & robot_action)
+  {
+    if (robot_action.req_vel.isZero()) {
+      if (!robot_action_prev_.req_vel.isZero()) {
+        // Robot just stopped: saving stop timestamp and continue
+        stop_stamp_ = this->now();
+      } else if (this->now() - stop_stamp_ > stop_pub_timeout_) {
+        // More than stop_pub_timeout_ passed after robot has been stopped.
+        // Cease publishing output cmd_vel.
+        return;
+      }
+    }
+
+    std::unique_ptr<geometry_msgs::msg::Twist> cmd_vel_out_msg =
+      std::make_unique<geometry_msgs::msg::Twist>();
+    cmd_vel_out_msg->linear.x = robot_action.req_vel.x;
+    cmd_vel_out_msg->linear.y = robot_action.req_vel.y;
+    cmd_vel_out_msg->angular.z = robot_action.req_vel.tw;
+    // linear.z, angular.x and angular.y will remain 0.0
+
+    cmd_vel_out_pub_->publish(std::move(cmd_vel_out_msg));
+  }

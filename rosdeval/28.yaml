@@ -1,0 +1,83 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_control_validator
+ros_package: autoware_control_validator
+file_path: src/control_validator.cpp
+method_name: ControlValidator::publish_debug_info
+requirement: |
+  /**
+  * Publishes debug information including validation status, virtual walls for invalid controls, and processing time.
+  * 
+  * @param[in] validation_status_ Current validation status of control commands.
+  * @param[in] current_kinematics_ Current vehicle kinematics state.
+  * @param[in] vehicle_info_ Vehicle dimension parameters.
+  * @param[in] stop_watch Timer for measuring processing time.
+  */
+category: ros_architecture
+type: has_topic,has_message,has_timer
+signature: |
+  void ControlValidator::publish_debug_info()
+additional_information: 
+  function_related_variable: |
+    Odometry::ConstSharedPtr current_kinematics_;
+    vehicle_info_utils::VehicleInfo vehicle_info_;
+    std::shared_ptr<ControlValidatorDebugMarkerPublisher> debug_pose_publisher_;
+    rclcpp::Publisher<autoware_internal_debug_msgs::msg::Float64Stamped>::SharedPtr pub_processing_time_;
+  function_related_function: |
+    static bool is_all_valid(const ControlValidatorStatus & status);
+  function_related_class: |
+    struct VehicleInfo
+    {
+      // Base parameters. These describe the vehicle's bounding box and the
+      // position and radius of the wheels.
+      double wheel_radius_m{};       //<! should be positive
+      double wheel_width_m{};        //<! should be positive
+      double wheel_base_m{};         //<! should be positive
+      double wheel_tread_m{};        //<! should be positive
+      double front_overhang_m{};     //<! should be positive
+      double rear_overhang_m{};      //<! should be positive
+      double left_overhang_m{};      //<! should be positive
+      double right_overhang_m{};     //<! should be positive
+      double vehicle_height_m{};     //<! should be positive
+      double max_steer_angle_rad{};  //<! should be positive
+
+      // Derived parameters, i.e. calculated from base parameters
+      // The offset values are relative to the base frame origin, which is located
+      // on the ground below the middle of the rear axle, and can be negative.
+      double vehicle_length_m{};
+      double vehicle_width_m{};
+      double min_longitudinal_offset_m{};
+      double max_longitudinal_offset_m{};
+      double min_lateral_offset_m{};
+      double max_lateral_offset_m{};
+      double min_height_offset_m{};
+      double max_height_offset_m{};
+
+      static constexpr size_t FrontLeftIndex = 0;   //<! the point index of front-left edge == 0
+      static constexpr size_t FrontRightIndex = 1;  //<! the point index of front-right > front-left
+      static constexpr size_t RearRightIndex = 3;   //<! the point index of rear-right > front-right
+      static constexpr size_t RearLeftIndex = 4;    //<! the point index of rear-left > rear-right
+
+      /**
+      * @brief calculate the vehicle footprint in clockwise manner starting from the front-left edge,
+      * through front-right edge, center-right point, to front-left edge again to form a enclosed
+      * polygon
+      * @param margin the longitudinal and lateral inflation margin
+      */
+      autoware::universe_utils::LinearRing2d createFootprint(const double margin = 0.0) const;
+
+      /**
+      * @brief calculate the vehicle footprint in clockwise manner starting from the front-left edge,
+      * through front-right edge, center-right point, to front-left edge again to form a enclosed
+      * polygon
+      * @param margin the longitudinal and lateral inflation margin
+      */
+      autoware::universe_utils::LinearRing2d createFootprint(
+        const double lat_margin, const double lon_margin) const;
+
+      double calcMaxCurvature() const;
+      double calcCurvatureFromSteerAngle(const double steer_angle) const;
+      double calcSteerAngleFromCurvature(const double curvature) const;
+    };
+test: test_autoware_control_validator
+test_cases: []

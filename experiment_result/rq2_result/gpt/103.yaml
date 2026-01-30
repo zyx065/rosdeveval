@@ -1,0 +1,1312 @@
+compilation.log: |
+  Starting >>> autoware_raw_vehicle_cmd_converter
+  --- stderr: autoware_raw_vehicle_cmd_converter
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp: In member function ‘bool autoware::raw_vehicle_cmd_converter::BrakeMap::readBrakeMapFromCSV(const string&, bool)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:50: error: no match for ‘operator<<’ (operand types are ‘const char [26]’ and ‘const string’ {aka ‘const std::__cxx11::basic_string<char>’})
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^~ ~~~~~~~~
+        |                      |                              |
+        |                      const char [26]                const string {aka const std::__cxx11::basic_string<char>}
+  In file included from /usr/include/c++/11/bits/basic_string.h:48,
+                   from /usr/include/c++/11/string:55,
+                   from /usr/include/c++/11/bits/locale_classes.h:40,
+                   from /usr/include/c++/11/bits/ios_base.h:41,
+                   from /usr/include/c++/11/ios:42,
+                   from /usr/include/c++/11/istream:38,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/string_view:667:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::basic_string_view<_CharT, _Traits>)’
+    667 |     operator<<(basic_ostream<_CharT, _Traits>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/string_view:667:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/string:55,
+                   from /usr/include/c++/11/bits/locale_classes.h:40,
+                   from /usr/include/c++/11/bits/ios_base.h:41,
+                   from /usr/include/c++/11/ios:42,
+                   from /usr/include/c++/11/istream:38,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/bits/basic_string.h:6531:5: note: candidate: ‘template<class _CharT, class _Traits, class _Alloc> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>&)’
+   6531 |     operator<<(basic_ostream<_CharT, _Traits>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/basic_string.h:6531:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/bits/ios_base.h:46,
+                   from /usr/include/c++/11/ios:42,
+                   from /usr/include/c++/11/istream:38,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/system_error:279:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::error_code&)’
+    279 |     operator<<(basic_ostream<_CharT, _Traits>& __os, const error_code& __e)
+        |     ^~~~~~~~
+  /usr/include/c++/11/system_error:279:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:513:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, _CharT)’
+    513 |     operator<<(basic_ostream<_CharT, _Traits>& __out, _CharT __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:513:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:518:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, char)’
+    518 |     operator<<(basic_ostream<_CharT, _Traits>& __out, char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:518:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:524:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, char)’
+    524 |     operator<<(basic_ostream<char, _Traits>& __out, char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:524:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:530:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, signed char)’
+    530 |     operator<<(basic_ostream<char, _Traits>& __out, signed char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:530:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:535:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, unsigned char)’
+    535 |     operator<<(basic_ostream<char, _Traits>& __out, unsigned char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:535:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:594:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const _CharT*)’
+    594 |     operator<<(basic_ostream<_CharT, _Traits>& __out, const _CharT* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:594:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/ostream:829,
+                   from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/bits/ostream.tcc:321:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const char*)’
+    321 |     operator<<(basic_ostream<_CharT, _Traits>& __out, const char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/ostream.tcc:321:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:611:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const char*)’
+    611 |     operator<<(basic_ostream<char, _Traits>& __out, const char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:611:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:624:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const signed char*)’
+    624 |     operator<<(basic_ostream<char, _Traits>& __out, const signed char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:624:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:629:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const unsigned char*)’
+    629 |     operator<<(basic_ostream<char, _Traits>& __out, const unsigned char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:629:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:750:5: note: candidate: ‘template<class _Ostream, class _Tp> _Ostream&& std::operator<<(_Ostream&&, const _Tp&)’
+    750 |     operator<<(_Ostream&& __os, const _Tp& __x)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:750:5: note:   template argument deduction/substitution failed:
+  /usr/include/c++/11/ostream: In substitution of ‘template<class _Ostream, class _Tp> _Ostream&& std::operator<<(_Ostream&&, const _Tp&) [with _Ostream = const char (&)[26]; _Tp = std::__cxx11::basic_string<char>]’:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53:   required from here
+  /usr/include/c++/11/ostream:750:5: error: no type named ‘type’ in ‘struct std::enable_if<false, void>’
+  In file included from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/bits/shared_ptr.h:70:5: note: candidate: ‘template<class _Ch, class _Tr, class _Tp, __gnu_cxx::_Lock_policy _Lp> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::__shared_ptr<_Tp, _Lp>&)’
+     70 |     operator<<(std::basic_ostream<_Ch, _Tr>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/shared_ptr.h:70:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:22,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/thread:92:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::thread::id)’
+     92 |     operator<<(basic_ostream<_CharT, _Traits>& __out, thread::id __id)
+        |     ^~~~~~~~
+  /usr/include/c++/11/thread:92:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:79:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Resetiosflags)’
+     79 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Resetiosflags __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:79:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:109:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setiosflags)’
+    109 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setiosflags __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:109:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:143:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setbase)’
+    143 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setbase __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:143:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:178:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setfill<_CharT>)’
+    178 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setfill<_CharT> __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:178:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:208:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setprecision)’
+    208 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setprecision __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:208:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:238:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setw)’
+    238 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setw __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:238:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:311:5: note: candidate: ‘template<class _CharT, class _Traits, class _MoneyT> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Put_money<_MoneyT>)’
+    311 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Put_money<_MoneyT> __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:311:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:363:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Put_time<_CharT>)’
+    363 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Put_time<_CharT> __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:363:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:53: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [26]’
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |                                                     ^~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:5: error: ‘ROS_ERROR_STREAM’ was not declared in this scope; did you mean ‘RCLCPP_ERROR_STREAM’?
+     31 |     ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+        |     ^~~~~~~~~~~~~~~~
+        |     RCLCPP_ERROR_STREAM
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:57: error: no match for ‘operator<<’ (operand types are ‘const char [33]’ and ‘const string’ {aka ‘const std::__cxx11::basic_string<char>’})
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^~ ~~~~~~~~
+        |                      |                                     |
+        |                      const char [33]                       const string {aka const std::__cxx11::basic_string<char>}
+  In file included from /usr/include/c++/11/bits/basic_string.h:48,
+                   from /usr/include/c++/11/string:55,
+                   from /usr/include/c++/11/bits/locale_classes.h:40,
+                   from /usr/include/c++/11/bits/ios_base.h:41,
+                   from /usr/include/c++/11/ios:42,
+                   from /usr/include/c++/11/istream:38,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/string_view:667:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::basic_string_view<_CharT, _Traits>)’
+    667 |     operator<<(basic_ostream<_CharT, _Traits>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/string_view:667:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/string:55,
+                   from /usr/include/c++/11/bits/locale_classes.h:40,
+                   from /usr/include/c++/11/bits/ios_base.h:41,
+                   from /usr/include/c++/11/ios:42,
+                   from /usr/include/c++/11/istream:38,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/bits/basic_string.h:6531:5: note: candidate: ‘template<class _CharT, class _Traits, class _Alloc> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>&)’
+   6531 |     operator<<(basic_ostream<_CharT, _Traits>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/basic_string.h:6531:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/bits/ios_base.h:46,
+                   from /usr/include/c++/11/ios:42,
+                   from /usr/include/c++/11/istream:38,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/system_error:279:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::error_code&)’
+    279 |     operator<<(basic_ostream<_CharT, _Traits>& __os, const error_code& __e)
+        |     ^~~~~~~~
+  /usr/include/c++/11/system_error:279:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:513:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, _CharT)’
+    513 |     operator<<(basic_ostream<_CharT, _Traits>& __out, _CharT __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:513:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:518:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, char)’
+    518 |     operator<<(basic_ostream<_CharT, _Traits>& __out, char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:518:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:524:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, char)’
+    524 |     operator<<(basic_ostream<char, _Traits>& __out, char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:524:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:530:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, signed char)’
+    530 |     operator<<(basic_ostream<char, _Traits>& __out, signed char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:530:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:535:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, unsigned char)’
+    535 |     operator<<(basic_ostream<char, _Traits>& __out, unsigned char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:535:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:594:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const _CharT*)’
+    594 |     operator<<(basic_ostream<_CharT, _Traits>& __out, const _CharT* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:594:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/ostream:829,
+                   from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/bits/ostream.tcc:321:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const char*)’
+    321 |     operator<<(basic_ostream<_CharT, _Traits>& __out, const char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/ostream.tcc:321:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:611:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const char*)’
+    611 |     operator<<(basic_ostream<char, _Traits>& __out, const char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:611:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:624:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const signed char*)’
+    624 |     operator<<(basic_ostream<char, _Traits>& __out, const signed char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:624:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:629:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const unsigned char*)’
+    629 |     operator<<(basic_ostream<char, _Traits>& __out, const unsigned char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:629:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:750:5: note: candidate: ‘template<class _Ostream, class _Tp> _Ostream&& std::operator<<(_Ostream&&, const _Tp&)’
+    750 |     operator<<(_Ostream&& __os, const _Tp& __x)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:750:5: note:   template argument deduction/substitution failed:
+  /usr/include/c++/11/ostream: In substitution of ‘template<class _Ostream, class _Tp> _Ostream&& std::operator<<(_Ostream&&, const _Tp&) [with _Ostream = const char (&)[33]; _Tp = std::__cxx11::basic_string<char>]’:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60:   required from here
+  /usr/include/c++/11/ostream:750:5: error: no type named ‘type’ in ‘struct std::enable_if<false, void>’
+  In file included from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/bits/shared_ptr.h:70:5: note: candidate: ‘template<class _Ch, class _Tr, class _Tp, __gnu_cxx::_Lock_policy _Lp> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::__shared_ptr<_Tp, _Lp>&)’
+     70 |     operator<<(std::basic_ostream<_Ch, _Tr>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/shared_ptr.h:70:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:22,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/thread:92:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::thread::id)’
+     92 |     operator<<(basic_ostream<_CharT, _Traits>& __out, thread::id __id)
+        |     ^~~~~~~~
+  /usr/include/c++/11/thread:92:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:79:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Resetiosflags)’
+     79 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Resetiosflags __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:79:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:109:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setiosflags)’
+    109 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setiosflags __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:109:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:143:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setbase)’
+    143 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setbase __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:143:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:178:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setfill<_CharT>)’
+    178 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setfill<_CharT> __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:178:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:208:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setprecision)’
+    208 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setprecision __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:208:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:238:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setw)’
+    238 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setw __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:238:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:311:5: note: candidate: ‘template<class _CharT, class _Traits, class _MoneyT> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Put_money<_MoneyT>)’
+    311 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Put_money<_MoneyT> __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:311:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:363:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Put_time<_CharT>)’
+    363 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Put_time<_CharT> __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:363:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:60: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |                                                            ^~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:37:5: error: ‘ROS_ERROR_STREAM’ was not declared in this scope; did you mean ‘RCLCPP_ERROR_STREAM’?
+     37 |     ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+        |     ^~~~~~~~~~~~~~~~
+        |     RCLCPP_ERROR_STREAM
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:43:3: error: ‘throttle_index_’ was not declared in this scope
+     43 |   throttle_index_ = CSVLoader::getColumnIndex(table);
+        |   ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:44:3: error: ‘accel_map_’ was not declared in this scope
+     44 |   accel_map_ = CSVLoader::getMap(table);
+        |   ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:48:5: error: ‘ROS_ERROR_STREAM’ was not declared in this scope; did you mean ‘RCLCPP_ERROR_STREAM’?
+     48 |     ROS_ERROR_STREAM("Validation failed for brake map data.");
+        |     ^~~~~~~~~~~~~~~~
+        |     RCLCPP_ERROR_STREAM
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:67: error: no match for ‘operator<<’ (operand types are ‘const char [46]’ and ‘const string’ {aka ‘const std::__cxx11::basic_string<char>’})
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^~ ~~~~~~~~
+        |                   |                                                  |
+        |                   const char [46]                                    const string {aka const std::__cxx11::basic_string<char>}
+  In file included from /usr/include/c++/11/bits/basic_string.h:48,
+                   from /usr/include/c++/11/string:55,
+                   from /usr/include/c++/11/bits/locale_classes.h:40,
+                   from /usr/include/c++/11/bits/ios_base.h:41,
+                   from /usr/include/c++/11/ios:42,
+                   from /usr/include/c++/11/istream:38,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/string_view:667:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::basic_string_view<_CharT, _Traits>)’
+    667 |     operator<<(basic_ostream<_CharT, _Traits>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/string_view:667:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/string:55,
+                   from /usr/include/c++/11/bits/locale_classes.h:40,
+                   from /usr/include/c++/11/bits/ios_base.h:41,
+                   from /usr/include/c++/11/ios:42,
+                   from /usr/include/c++/11/istream:38,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/bits/basic_string.h:6531:5: note: candidate: ‘template<class _CharT, class _Traits, class _Alloc> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>&)’
+   6531 |     operator<<(basic_ostream<_CharT, _Traits>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/basic_string.h:6531:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/bits/ios_base.h:46,
+                   from /usr/include/c++/11/ios:42,
+                   from /usr/include/c++/11/istream:38,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/system_error:279:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::error_code&)’
+    279 |     operator<<(basic_ostream<_CharT, _Traits>& __os, const error_code& __e)
+        |     ^~~~~~~~
+  /usr/include/c++/11/system_error:279:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:513:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, _CharT)’
+    513 |     operator<<(basic_ostream<_CharT, _Traits>& __out, _CharT __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:513:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:518:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, char)’
+    518 |     operator<<(basic_ostream<_CharT, _Traits>& __out, char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:518:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:524:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, char)’
+    524 |     operator<<(basic_ostream<char, _Traits>& __out, char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:524:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:530:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, signed char)’
+    530 |     operator<<(basic_ostream<char, _Traits>& __out, signed char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:530:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:535:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, unsigned char)’
+    535 |     operator<<(basic_ostream<char, _Traits>& __out, unsigned char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:535:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:594:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const _CharT*)’
+    594 |     operator<<(basic_ostream<_CharT, _Traits>& __out, const _CharT* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:594:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/ostream:829,
+                   from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/bits/ostream.tcc:321:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const char*)’
+    321 |     operator<<(basic_ostream<_CharT, _Traits>& __out, const char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/ostream.tcc:321:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:611:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const char*)’
+    611 |     operator<<(basic_ostream<char, _Traits>& __out, const char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:611:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:624:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const signed char*)’
+    624 |     operator<<(basic_ostream<char, _Traits>& __out, const signed char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:624:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:629:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const unsigned char*)’
+    629 |     operator<<(basic_ostream<char, _Traits>& __out, const unsigned char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:629:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/fstream:38,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/ostream:750:5: note: candidate: ‘template<class _Ostream, class _Tp> _Ostream&& std::operator<<(_Ostream&&, const _Tp&)’
+    750 |     operator<<(_Ostream&& __os, const _Tp& __x)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:750:5: note:   template argument deduction/substitution failed:
+  /usr/include/c++/11/ostream: In substitution of ‘template<class _Ostream, class _Tp> _Ostream&& std::operator<<(_Ostream&&, const _Tp&) [with _Ostream = const char (&)[46]; _Tp = std::__cxx11::basic_string<char>]’:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70:   required from here
+  /usr/include/c++/11/ostream:750:5: error: no type named ‘type’ in ‘struct std::enable_if<false, void>’
+  In file included from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/bits/shared_ptr.h:70:5: note: candidate: ‘template<class _Ch, class _Tr, class _Tp, __gnu_cxx::_Lock_policy _Lp> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::__shared_ptr<_Tp, _Lp>&)’
+     70 |     operator<<(std::basic_ostream<_Ch, _Tr>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/shared_ptr.h:70:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:22,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/thread:92:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::thread::id)’
+     92 |     operator<<(basic_ostream<_CharT, _Traits>& __out, thread::id __id)
+        |     ^~~~~~~~
+  /usr/include/c++/11/thread:92:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:79:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Resetiosflags)’
+     79 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Resetiosflags __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:79:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:109:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setiosflags)’
+    109 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setiosflags __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:109:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:143:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setbase)’
+    143 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setbase __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:143:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:178:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setfill<_CharT>)’
+    178 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setfill<_CharT> __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:178:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:208:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setprecision)’
+    208 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setprecision __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:208:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:238:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Setw)’
+    238 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setw __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:238:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:311:5: note: candidate: ‘template<class _CharT, class _Traits, class _MoneyT> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Put_money<_MoneyT>)’
+    311 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Put_money<_MoneyT> __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:311:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:15,
+                   from /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/duration.hpp:9,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/duration.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/qos.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_graph_interface.hpp:32,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:42,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/iomanip:363:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, std::_Put_time<_CharT>)’
+    363 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Put_time<_CharT> __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:363:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:70: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [46]’
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |                                                                      ^~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:3: error: ‘ROS_INFO_STREAM’ was not declared in this scope; did you mean ‘RCLCPP_INFO_STREAM’?
+     52 |   ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+        |   ^~~~~~~~~~~~~~~
+        |   RCLCPP_INFO_STREAM
+  gmake[2]: *** [CMakeFiles/actuation_map_converter.dir/build.make:90: CMakeFiles/actuation_map_converter.dir/src/brake_map.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:163: CMakeFiles/actuation_map_converter.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_raw_vehicle_cmd_converter [2.70s, exited with code 2]
+
+  Summary: 0 packages finished [4.11s]
+    1 package failed: autoware_raw_vehicle_cmd_converter
+    1 package had stderr output: autoware_raw_vehicle_cmd_converter
+generate_code.cpp: |-
+  bool BrakeMap::readBrakeMapFromCSV(const std::string & csv_path, const bool validation)
+  {
+    // Load the CSV file
+    CSVLoader csv_loader(csv_path);
+    Table table;
+    if (!csv_loader.readCSV(table)) {
+      ROS_ERROR_STREAM("Failed to read CSV file: " << csv_path);
+      return false;
+    }
+
+    // Validate the data if requested
+    if (validation && !CSVLoader::validateData(table, csv_path)) {
+      ROS_ERROR_STREAM("Validation failed for CSV file: " << csv_path);
+      return false;
+    }
+
+    // Extract indices and map data
+    vel_index_ = CSVLoader::getRowIndex(table);
+    throttle_index_ = CSVLoader::getColumnIndex(table);
+    accel_map_ = CSVLoader::getMap(table);
+
+    // Perform additional validation on the map if requested
+    if (validation && !CSVLoader::validateMap(accel_map_, true)) {
+      ROS_ERROR_STREAM("Validation failed for brake map data.");
+      return false;
+    }
+
+    ROS_INFO_STREAM("Successfully loaded brake map from CSV file: " << csv_path);
+    return true;
+  }
+ground_truth.cpp: |-
+  bool BrakeMap::readBrakeMapFromCSV(const std::string & csv_path, const bool validation)
+  {
+    CSVLoader csv(csv_path);
+    std::vector<std::vector<std::string>> table;
+
+    if (!csv.readCSV(table)) {
+      return false;
+    }
+
+    vehicle_name_ = table[0][0];
+    vel_index_ = CSVLoader::getColumnIndex(table);
+    brake_index_ = CSVLoader::getRowIndex(table);
+    brake_map_ = CSVLoader::getMap(table);
+    brake_index_rev_ = brake_index_;
+    if (validation && !CSVLoader::validateMap(brake_map_, false)) {
+      return false;
+    }
+    std::reverse(std::begin(brake_index_rev_), std::end(brake_index_rev_));
+
+    return true;
+  }

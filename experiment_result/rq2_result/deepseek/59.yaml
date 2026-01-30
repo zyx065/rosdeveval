@@ -1,0 +1,230 @@
+compilation.log: "Starting >>> autoware_scenario_selector\n--- stderr: autoware_scenario_selector\n\
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:\
+  \ In constructor ‘autoware::scenario_selector::ScenarioSelectorNode::ScenarioSelectorNode(const\
+  \ rclcpp::NodeOptions&)’:\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:468:27:\
+  \ error: no match for ‘operator=’ (operand types are ‘autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All>::SharedPtr’ {aka ‘std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All> >’} and ‘std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ > > >’)\n  468 |     this, \"input/odometry\");\n      |                     \
+  \      ^\nIn file included from /usr/include/c++/11/memory:77,\n               \
+  \  from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,\n                \
+  \ from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/published_time_publisher.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/include/autoware/scenario_selector/node.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:15:\n\
+  /usr/include/c++/11/bits/shared_ptr.h:363:9: note: candidate: ‘template<class _Yp>\
+  \ std::shared_ptr<_Tp>::_Assignable<const std::shared_ptr<_Yp>&> std::shared_ptr<_Tp>::operator=(const\
+  \ std::shared_ptr<_Yp>&) [with _Yp = _Yp; _Tp = autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All>]’\n  363 |         operator=(const\
+  \ shared_ptr<_Yp>& __r) noexcept\n      |         ^~~~~~~~\n/usr/include/c++/11/bits/shared_ptr.h:363:9:\
+  \ note:   template argument deduction/substitution failed:\n/usr/include/c++/11/bits/shared_ptr.h:\
+  \ In substitution of ‘template<class _Tp> template<class _Arg> using _Assignable\
+  \ = typename std::enable_if<std::is_assignable<std::__shared_ptr<_Tp>&, _Arg>::value,\
+  \ std::shared_ptr<_Tp>&>::type [with _Arg = const std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ > > >&; _Tp = autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All>]’:\n/usr/include/c++/11/bits/shared_ptr.h:363:2:\
+  \   required by substitution of ‘template<class _Yp> std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All> >::_Assignable<const std::shared_ptr<_Tp>&>\
+  \ std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All> >::operator=<_Yp>(const std::shared_ptr<_Tp>&)\
+  \ [with _Yp = autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ > >]’\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:468:27:\
+  \   required from here\n/usr/include/c++/11/bits/shared_ptr.h:130:15: error: no\
+  \ type named ‘type’ in ‘struct std::enable_if<false, std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All> >&>’\n  130 |         using\
+  \ _Assignable = typename enable_if<\n      |               ^~~~~~~~~~~\n/usr/include/c++/11/bits/shared_ptr.h:374:9:\
+  \ note: candidate: ‘template<class _Yp> std::shared_ptr<_Tp>::_Assignable<std::auto_ptr<_Up>\
+  \ > std::shared_ptr<_Tp>::operator=(std::auto_ptr<_Up>&&) [with _Yp = _Yp; _Tp =\
+  \ autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All>]’\n  374 |         operator=(auto_ptr<_Yp>&&\
+  \ __r)\n      |         ^~~~~~~~\n/usr/include/c++/11/bits/shared_ptr.h:374:9: note:\
+  \   template argument deduction/substitution failed:\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:468:27:\
+  \ note:   ‘std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ > > >’ is not derived from ‘std::auto_ptr<_Up>’\n  468 |     this, \"input/odometry\"\
+  );\n      |                           ^\nIn file included from /usr/include/c++/11/memory:77,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,\n \
+  \                from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/published_time_publisher.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/include/autoware/scenario_selector/node.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:15:\n\
+  /usr/include/c++/11/bits/shared_ptr.h:391:9: note: candidate: ‘template<class _Yp>\
+  \ std::shared_ptr<_Tp>::_Assignable<std::shared_ptr<_Yp> > std::shared_ptr<_Tp>::operator=(std::shared_ptr<_Yp>&&)\
+  \ [with _Yp = _Yp; _Tp = autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All>]’\n  391 |         operator=(shared_ptr<_Yp>&&\
+  \ __r) noexcept\n      |         ^~~~~~~~\n/usr/include/c++/11/bits/shared_ptr.h:391:9:\
+  \ note:   template argument deduction/substitution failed:\n/usr/include/c++/11/bits/shared_ptr.h:\
+  \ In substitution of ‘template<class _Tp> template<class _Arg> using _Assignable\
+  \ = typename std::enable_if<std::is_assignable<std::__shared_ptr<_Tp>&, _Arg>::value,\
+  \ std::shared_ptr<_Tp>&>::type [with _Arg = std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ > > >; _Tp = autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All>]’:\n/usr/include/c++/11/bits/shared_ptr.h:391:2:\
+  \   required by substitution of ‘template<class _Yp> std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All> >::_Assignable<std::shared_ptr<_Tp>\
+  \ > std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All> >::operator=<_Yp>(std::shared_ptr<_Tp>&&)\
+  \ [with _Yp = autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ > >]’\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:468:27:\
+  \   required from here\n/usr/include/c++/11/bits/shared_ptr.h:130:15: error: no\
+  \ type named ‘type’ in ‘struct std::enable_if<false, std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All> >&>’\n  130 |         using\
+  \ _Assignable = typename enable_if<\n      |               ^~~~~~~~~~~\n/usr/include/c++/11/bits/shared_ptr.h:399:9:\
+  \ note: candidate: ‘template<class _Yp, class _Del> std::shared_ptr<_Tp>::_Assignable<std::unique_ptr<_Up,\
+  \ _Ep> > std::shared_ptr<_Tp>::operator=(std::unique_ptr<_Up, _Ep>&&) [with _Yp\
+  \ = _Yp; _Del = _Del; _Tp = autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All>]’\n  399 |         operator=(unique_ptr<_Yp,\
+  \ _Del>&& __r)\n      |         ^~~~~~~~\n/usr/include/c++/11/bits/shared_ptr.h:399:9:\
+  \ note:   template argument deduction/substitution failed:\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:468:27:\
+  \ note:   ‘std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ > > >’ is not derived from ‘std::unique_ptr<_Tp, _Dp>’\n  468 |     this, \"input/odometry\"\
+  );\n      |                           ^\nIn file included from /usr/include/c++/11/memory:77,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,\n \
+  \                from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/published_time_publisher.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/include/autoware/scenario_selector/node.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:15:\n\
+  /usr/include/c++/11/bits/shared_ptr.h:359:19: note: candidate: ‘std::shared_ptr<_Tp>&\
+  \ std::shared_ptr<_Tp>::operator=(const std::shared_ptr<_Tp>&) [with _Tp = autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All>]’\n  359 |       shared_ptr&\
+  \ operator=(const shared_ptr&) noexcept = default;\n      |                   ^~~~~~~~\n\
+  /usr/include/c++/11/bits/shared_ptr.h:359:29: note:   no known conversion for argument\
+  \ 1 from ‘std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ > > >’ to ‘const std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All> >&’\n  359 |       shared_ptr&\
+  \ operator=(const shared_ptr&) noexcept = default;\n      |                    \
+  \         ^~~~~~~~~~~~~~~~~\n/usr/include/c++/11/bits/shared_ptr.h:383:7: note:\
+  \ candidate: ‘std::shared_ptr<_Tp>& std::shared_ptr<_Tp>::operator=(std::shared_ptr<_Tp>&&)\
+  \ [with _Tp = autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All>]’\n  383 |       operator=(shared_ptr&&\
+  \ __r) noexcept\n      |       ^~~~~~~~\n/usr/include/c++/11/bits/shared_ptr.h:383:30:\
+  \ note:   no known conversion for argument 1 from ‘std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ > > >’ to ‘std::shared_ptr<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void>\
+  \ >, autoware::universe_utils::polling_policy::All> >&&’\n  383 |       operator=(shared_ptr&&\
+  \ __r) noexcept\n      |                 ~~~~~~~~~~~~~^~~\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:483:43:\
+  \ error: ‘tier4_debug_msgs’ was not declared in this scope; did you mean ‘tier4_planning_msgs’?\n\
+  \  483 |   pub_processing_time_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>(\n\
+  \      |                                           ^~~~~~~~~~~~~~~~\n      |   \
+  \                                        tier4_planning_msgs\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:483:26:\
+  \ error: parse error in template argument list\n  483 |   pub_processing_time_ =\
+  \ create_publisher<tier4_debug_msgs::msg::Float64Stamped>(\n      |            \
+  \              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:483:81:\
+  \ error: no matching function for call to ‘autoware::scenario_selector::ScenarioSelectorNode::create_publisher<<expression\
+  \ error> >(const char [25], int)’\n  483 |   pub_processing_time_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>(\n\
+  \      |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n\
+  \  484 |     \"debug/processing_time_ms\", 1);\n      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+  \                                               \nIn file included from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:1321,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:22,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,\n \
+  \                from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/published_time_publisher.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/include/autoware/scenario_selector/node.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:15:\n\
+  /opt/ros/humble/include/rclcpp/rclcpp/node_impl.hpp:73:1: note: candidate: ‘template<class\
+  \ MessageT, class AllocatorT, class PublisherT> std::shared_ptr<PublisherT> rclcpp::Node::create_publisher(const\
+  \ string&, const rclcpp::QoS&, const rclcpp::PublisherOptionsWithAllocator<AllocatorT>&)’\n\
+  \   73 | Node::create_publisher(\n      | ^~~~\n/opt/ros/humble/include/rclcpp/rclcpp/node_impl.hpp:73:1:\
+  \ note:   template argument deduction/substitution failed:\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:483:81:\
+  \ error: template argument 1 is invalid\n  483 |   pub_processing_time_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>(\n\
+  \      |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n\
+  \  484 |     \"debug/processing_time_ms\", 1);\n      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+  \                                               \ngmake[2]: *** [CMakeFiles/autoware_scenario_selector.dir/build.make:76:\
+  \ CMakeFiles/autoware_scenario_selector.dir/src/node.cpp.o] Error 1\ngmake[1]: ***\
+  \ [CMakeFiles/Makefile2:159: CMakeFiles/autoware_scenario_selector.dir/all] Error\
+  \ 2\ngmake: *** [Makefile:146: all] Error 2\n---\nFailed   <<< autoware_scenario_selector\
+  \ [14.9s, exited with code 2]\n\nSummary: 0 packages finished [16.2s]\n  1 package\
+  \ failed: autoware_scenario_selector\n  1 package had stderr output: autoware_scenario_selector\n"
+generate_code.cpp: "ScenarioSelectorNode::ScenarioSelectorNode(const rclcpp::NodeOptions\
+  \ & node_options)\n: Node(\"scenario_selector\", node_options),\n  current_scenario_(tier4_planning_msgs::msg::Scenario::EMPTY),\n\
+  \  update_rate_(this->declare_parameter<double>(\"update_rate\")),\n  th_max_message_delay_sec_(this->declare_parameter<double>(\"\
+  th_max_message_delay_sec\")),\n  th_arrived_distance_m_(this->declare_parameter<double>(\"\
+  th_arrived_distance_m\")),\n  th_stopped_time_sec_(this->declare_parameter<double>(\"\
+  th_stopped_time_sec\")),\n  th_stopped_velocity_mps_(this->declare_parameter<double>(\"\
+  th_stopped_velocity_mps\")),\n  enable_mode_switching_(this->declare_parameter<bool>(\"\
+  enable_mode_switching\")),\n  is_parking_completed_(false)\n{\n  // Subscribers\n\
+  \  sub_lanelet_map_ = create_subscription<autoware_map_msgs::msg::LaneletMapBin>(\n\
+  \    \"input/lanelet_map\", rclcpp::QoS(1).transient_local(),\n    std::bind(&ScenarioSelectorNode::onMap,\
+  \ this, std::placeholders::_1));\n  \n  sub_route_ = create_subscription<autoware_planning_msgs::msg::LaneletRoute>(\n\
+  \    \"input/route\", rclcpp::QoS(1).transient_local(),\n    std::bind(&ScenarioSelectorNode::onRoute,\
+  \ this, std::placeholders::_1));\n  \n  sub_lane_driving_trajectory_ = create_subscription<autoware_planning_msgs::msg::Trajectory>(\n\
+  \    \"input/lane_driving/trajectory\", 1,\n    std::bind(&ScenarioSelectorNode::onLaneDrivingTrajectory,\
+  \ this, std::placeholders::_1));\n  \n  sub_parking_trajectory_ = create_subscription<autoware_planning_msgs::msg::Trajectory>(\n\
+  \    \"input/parking/trajectory\", 1,\n    std::bind(&ScenarioSelectorNode::onParkingTrajectory,\
+  \ this, std::placeholders::_1));\n  \n  sub_odom_ = std::make_shared<autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry>>(\n\
+  \    this, \"input/odometry\");\n  \n  sub_parking_state_ = std::make_shared<autoware::universe_utils::InterProcessPollingSubscriber<std_msgs::msg::Bool>>(\n\
+  \    this, \"input/parking_state\");\n  \n  sub_operation_mode_state_ = std::make_shared<autoware::universe_utils::InterProcessPollingSubscriber<autoware_adapi_v1_msgs::msg::OperationModeState>>(\n\
+  \    this, \"input/operation_mode_state\");\n\n  // Publishers\n  pub_trajectory_\
+  \ = create_publisher<autoware_planning_msgs::msg::Trajectory>(\n    \"output/trajectory\"\
+  , 1);\n  \n  pub_scenario_ = create_publisher<tier4_planning_msgs::msg::Scenario>(\n\
+  \    \"output/scenario\", 1);\n  \n  pub_processing_time_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>(\n\
+  \    \"debug/processing_time_ms\", 1);\n\n  // Timer\n  timer_ = rclcpp::create_timer(\n\
+  \    this, get_clock(), rclcpp::Rate(update_rate_).period(),\n    std::bind(&ScenarioSelectorNode::onTimer,\
+  \ this));\n\n  published_time_publisher_ = std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);\n\
+  }"
+ground_truth.cpp: |-
+  ScenarioSelectorNode::ScenarioSelectorNode(const rclcpp::NodeOptions & node_options)
+  : Node("scenario_selector", node_options),
+    current_scenario_(tier4_planning_msgs::msg::Scenario::EMPTY),
+    update_rate_(this->declare_parameter<double>("update_rate")),
+    th_max_message_delay_sec_(this->declare_parameter<double>("th_max_message_delay_sec")),
+    th_arrived_distance_m_(this->declare_parameter<double>("th_arrived_distance_m")),
+    th_stopped_time_sec_(this->declare_parameter<double>("th_stopped_time_sec")),
+    th_stopped_velocity_mps_(this->declare_parameter<double>("th_stopped_velocity_mps")),
+    enable_mode_switching_(this->declare_parameter<bool>("enable_mode_switching")),
+    is_parking_completed_(false)
+  {
+    lane_driving_stop_time_ = {};
+    empty_parking_trajectory_time_ = {};
+
+    // Input
+    sub_lane_driving_trajectory_ = this->create_subscription<autoware_planning_msgs::msg::Trajectory>(
+      "input/lane_driving/trajectory", rclcpp::QoS{1},
+      std::bind(&ScenarioSelectorNode::onLaneDrivingTrajectory, this, std::placeholders::_1));
+
+    sub_parking_trajectory_ = this->create_subscription<autoware_planning_msgs::msg::Trajectory>(
+      "input/parking/trajectory", rclcpp::QoS{1},
+      std::bind(&ScenarioSelectorNode::onParkingTrajectory, this, std::placeholders::_1));
+
+    sub_lanelet_map_ = this->create_subscription<autoware_map_msgs::msg::LaneletMapBin>(
+      "input/lanelet_map", rclcpp::QoS{1}.transient_local(),
+      std::bind(&ScenarioSelectorNode::onMap, this, std::placeholders::_1));
+
+    sub_route_ = this->create_subscription<autoware_planning_msgs::msg::LaneletRoute>(
+      "input/route", rclcpp::QoS{1}.transient_local(),
+      std::bind(&ScenarioSelectorNode::onRoute, this, std::placeholders::_1));
+
+    sub_odom_ = decltype(sub_odom_)::element_type::create_subscription(
+      this, "input/odometry", rclcpp::QoS{100});
+
+    sub_parking_state_ = decltype(sub_parking_state_)::element_type::create_subscription(
+      this, "is_parking_completed", rclcpp::QoS{1});
+
+    sub_operation_mode_state_ =
+      decltype(sub_operation_mode_state_)::element_type::create_subscription(
+        this, "input/operation_mode_state", rclcpp::QoS{1});
+
+    // Output
+    pub_scenario_ =
+      this->create_publisher<tier4_planning_msgs::msg::Scenario>("output/scenario", rclcpp::QoS{1});
+    pub_trajectory_ = this->create_publisher<autoware_planning_msgs::msg::Trajectory>(
+      "output/trajectory", rclcpp::QoS{1});
+
+    // Timer Callback
+    const auto period_ns = rclcpp::Rate(static_cast<double>(update_rate_)).period();
+
+    timer_ = rclcpp::create_timer(
+      this, get_clock(), period_ns, std::bind(&ScenarioSelectorNode::onTimer, this));
+    published_time_publisher_ =
+      std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);
+    pub_processing_time_ = this->create_publisher<autoware_internal_debug_msgs::msg::Float64Stamped>(
+      "~/debug/processing_time_ms", 1);
+  }
+architecture-codes:
+  - Topic/Service Issue - Topic/Service Name Mismatch Issue
+  - Topic/Service Issue - QoS Policy Incompatibility Issue
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - Topic/Service Issue - Topic/Service Use Error Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements

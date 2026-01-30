@@ -1,0 +1,115 @@
+compilation.log: |
+  Starting >>> autoware_autonomous_emergency_braking
+  --- stderr: autoware_autonomous_emergency_braking
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp: In member function ‘void autoware::motion::control::autonomous_emergency_braking::AEB::onCheckCollision(diagnostic_updater::DiagnosticStatusWrapper&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:448:9: error: ‘checkCollisionExpired’ was not declared in this scope; did you mean ‘checkCollision’?
+    448 |     if (checkCollisionExpired())
+        |         ^~~~~~~~~~~~~~~~~~~~~
+        |         checkCollision
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:467:32: error: ‘class autoware::motion::control::autonomous_emergency_braking::CollisionDataKeeper’ has no member named ‘populateMetrics’
+    467 |         collision_data_keeper_.populateMetrics(metrics);
+        |                                ^~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_autonomous_emergency_braking_node.dir/build.make:76: CMakeFiles/autoware_autonomous_emergency_braking_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:187: CMakeFiles/autoware_autonomous_emergency_braking_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_autonomous_emergency_braking [18.0s, exited with code 2]
+
+  Summary: 0 packages finished [19.5s]
+    1 package failed: autoware_autonomous_emergency_braking
+    1 package had stderr output: autoware_autonomous_emergency_braking
+generate_code.cpp: |-
+  void AEB::onCheckCollision(DiagnosticStatusWrapper & stat)
+  {
+      // Initialize debug markers
+      MarkerArray debug_markers;
+
+      // Check for potential collisions
+      bool collision_detected = checkCollision(debug_markers);
+
+      // Update diagnostic status based on collision detection
+      if (collision_detected)
+      {
+          stat.summary(DiagnosticStatus::ERROR, "Collision detected");
+      }
+      else
+      {
+          stat.summary(DiagnosticStatus::OK, "No collision detected");
+      }
+
+      // Publish debug markers if enabled
+      if (publish_debug_markers_)
+      {
+          if (debug_marker_publisher_)
+          {
+              debug_marker_publisher_->publish(debug_markers);
+          }
+      }
+
+      // Check if collision data has expired
+      if (checkCollisionExpired())
+      {
+          stat.summary(DiagnosticStatus::WARN, "Collision data expired");
+      }
+
+      // Add virtual stop wall marker
+      MarkerArray virtual_wall_markers;
+      addVirtualStopWallMarker(virtual_wall_markers);
+
+      // Publish virtual wall markers
+      if (virtual_wall_publisher_)
+      {
+          virtual_wall_publisher_->publish(virtual_wall_markers);
+      }
+
+      // Publish metrics
+      if (metrics_pub_)
+      {
+          MetricArray metrics;
+          collision_data_keeper_.populateMetrics(metrics);
+          metrics_pub_->publish(metrics);
+      }
+  }
+ground_truth.cpp: |-
+  void AEB::onCheckCollision(DiagnosticStatusWrapper & stat)
+  {
+    MarkerArray debug_markers;
+    MarkerArray virtual_wall_marker;
+    auto metrics = MetricArray();
+    checkCollision(debug_markers);
+
+    if (!collision_data_keeper_.checkCollisionExpired()) {
+      const std::string error_msg = "[AEB]: Emergency Brake";
+      const auto diag_level = DiagnosticStatus::ERROR;
+      stat.summary(diag_level, error_msg);
+      const auto & data = collision_data_keeper_.get();
+      if (data.has_value()) {
+        stat.addf("RSS", "%.2f", data.value().rss);
+        stat.addf("Distance", "%.2f", data.value().distance_to_object);
+        stat.addf("Object Speed", "%.2f", data.value().velocity);
+        if (publish_debug_markers_) {
+          addCollisionMarker(data.value(), debug_markers);
+        }
+      }
+      addVirtualStopWallMarker(virtual_wall_marker);
+
+      {
+        auto metric = Metric();
+        metric.name = "decision";
+        metric.value = "brake";
+        metrics.metric_array.push_back(metric);
+      }
+
+    } else {
+      const std::string error_msg = "[AEB]: No Collision";
+      const auto diag_level = DiagnosticStatus::OK;
+      stat.summary(diag_level, error_msg);
+    }
+
+    // publish debug markers
+    debug_marker_publisher_->publish(debug_markers);
+    virtual_wall_publisher_->publish(virtual_wall_marker);
+    // publish metrics
+    metrics.stamp = get_clock()->now();
+    metrics_pub_->publish(metrics);
+  }

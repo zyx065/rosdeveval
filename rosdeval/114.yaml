@@ -1,0 +1,29 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module
+ros_package: autoware_velocity_smoother
+file_path: src/object_filtering.cpp
+method_name: is_not_too_close
+requirement: |
+  /**
+  * Checks if a predicted object is not too close to the ego vehicle along the trajectory.
+  * 
+  * @param object The predicted object to check for proximity.
+  * @param ego_data Container holding ego vehicle trajectory and position data.
+  * @param ego_longitudinal_offset Additional longitudinal offset from ego vehicle position.
+  * @return True if the object is beyond the safe distance threshold, false otherwise.
+  */
+category: utilities
+type: has_message
+signature: |
+  bool is_not_too_close(
+    const autoware_perception_msgs::msg::PredictedObject & object, const EgoData & ego_data,
+    const double & ego_longitudinal_offset)
+additional_information: 
+  function_related_class: |
+    namespace autoware::motion_utils{
+      double calcSignedArcLength(const T & points, const size_t src_idx, const size_t dst_idx)
+    }
+test: test_autoware_motion_velocity_dynamic_obstacle_stop_module
+test_cases: 
+- isNotTooClose

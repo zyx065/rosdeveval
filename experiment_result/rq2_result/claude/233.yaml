@@ -1,0 +1,461 @@
+compilation.log: |
+  Starting >>> autoware_autonomous_emergency_braking
+  --- stderr: autoware_autonomous_emergency_braking
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp: In member function ‘rcl_interfaces::msg::SetParametersResult autoware::motion::control::autonomous_emergency_braking::AEB::onParameter(const std::vector<rclcpp::Parameter>&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:235:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    235 |   if (!updateParam(parameters, "publish_debug_pointcloud", publish_debug_pointcloud_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:238:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    238 |   if (!updateParam(parameters, "publish_debug_markers", publish_debug_markers_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:241:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    241 |   if (!updateParam(parameters, "use_predicted_trajectory", use_predicted_trajectory_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:244:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    244 |   if (!updateParam(parameters, "use_imu_path", use_imu_path_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:247:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    247 |   if (!updateParam(parameters, "limit_imu_path_lat_dev", limit_imu_path_lat_dev_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:250:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    250 |   if (!updateParam(parameters, "limit_imu_path_length", limit_imu_path_length_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:253:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    253 |   if (!updateParam(parameters, "use_pointcloud_data", use_pointcloud_data_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:256:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    256 |   if (!updateParam(parameters, "use_predicted_object_data", use_predicted_object_data_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:259:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    259 |   if (!updateParam(parameters, "use_object_velocity_calculation", use_object_velocity_calculation_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:262:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    262 |   if (!updateParam(parameters, "check_autoware_state", check_autoware_state_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:267:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    267 |   if (!updateParam(parameters, "imu_path_lat_dev_threshold", imu_path_lat_dev_threshold_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:270:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    270 |   if (!updateParam(parameters, "path_footprint_extra_margin", path_footprint_extra_margin_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:273:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    273 |   if (!updateParam(parameters, "speed_calculation_expansion_margin", speed_calculation_expansion_margin_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:276:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    276 |   if (!updateParam(parameters, "detection_range_min_height", detection_range_min_height_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:279:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    279 |   if (!updateParam(parameters, "detection_range_max_height_margin", detection_range_max_height_margin_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:282:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    282 |   if (!updateParam(parameters, "voxel_grid_x", voxel_grid_x_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:285:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    285 |   if (!updateParam(parameters, "voxel_grid_y", voxel_grid_y_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:288:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    288 |   if (!updateParam(parameters, "voxel_grid_z", voxel_grid_z_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:291:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    291 |   if (!updateParam(parameters, "min_generated_imu_path_length", min_generated_imu_path_length_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:294:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    294 |   if (!updateParam(parameters, "max_generated_imu_path_length", max_generated_imu_path_length_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:297:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    297 |   if (!updateParam(parameters, "expand_width", expand_width_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:300:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    300 |   if (!updateParam(parameters, "longitudinal_offset_margin", longitudinal_offset_margin_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:303:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    303 |   if (!updateParam(parameters, "t_response", t_response_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:306:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    306 |   if (!updateParam(parameters, "a_ego_min", a_ego_min_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:309:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    309 |   if (!updateParam(parameters, "a_obj_min", a_obj_min_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:312:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    312 |   if (!updateParam(parameters, "cluster_tolerance", cluster_tolerance_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:315:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    315 |   if (!updateParam(parameters, "cluster_minimum_height", cluster_minimum_height_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:318:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    318 |   if (!updateParam(parameters, "imu_prediction_time_horizon", imu_prediction_time_horizon_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:321:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    321 |   if (!updateParam(parameters, "imu_prediction_time_interval", imu_prediction_time_interval_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:324:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    324 |   if (!updateParam(parameters, "mpc_prediction_time_horizon", mpc_prediction_time_horizon_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:327:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    327 |   if (!updateParam(parameters, "mpc_prediction_time_interval", mpc_prediction_time_interval_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:332:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    332 |   if (!updateParam(parameters, "minimum_cluster_size", minimum_cluster_size_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:335:8: error: ‘updateParam’ was not declared in this scope; did you mean ‘autoware::universe_utils::updateParam’?
+    335 |   if (!updateParam(parameters, "maximum_cluster_size", maximum_cluster_size_)) {
+        |        ^~~~~~~~~~~
+        |        autoware::universe_utils::updateParam
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:23:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/update_param.hpp:26:6: note: ‘autoware::universe_utils::updateParam’ declared here
+     26 | bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+        |      ^~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_autonomous_emergency_braking_node.dir/build.make:76: CMakeFiles/autoware_autonomous_emergency_braking_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:187: CMakeFiles/autoware_autonomous_emergency_braking_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_autonomous_emergency_braking [18.8s, exited with code 2]
+
+  Summary: 0 packages finished [20.3s]
+    1 package failed: autoware_autonomous_emergency_braking
+    1 package had stderr output: autoware_autonomous_emergency_braking
+generate_code.cpp: |-
+  rcl_interfaces::msg::SetParametersResult AEB::onParameter(
+    const std::vector<rclcpp::Parameter> & parameters)
+  {
+    rcl_interfaces::msg::SetParametersResult result;
+    result.successful = true;
+
+    // Boolean parameters
+    if (!updateParam(parameters, "publish_debug_pointcloud", publish_debug_pointcloud_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "publish_debug_markers", publish_debug_markers_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "use_predicted_trajectory", use_predicted_trajectory_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "use_imu_path", use_imu_path_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "limit_imu_path_lat_dev", limit_imu_path_lat_dev_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "limit_imu_path_length", limit_imu_path_length_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "use_pointcloud_data", use_pointcloud_data_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "use_predicted_object_data", use_predicted_object_data_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "use_object_velocity_calculation", use_object_velocity_calculation_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "check_autoware_state", check_autoware_state_)) {
+      result.successful = false;
+    }
+
+    // Double parameters
+    if (!updateParam(parameters, "imu_path_lat_dev_threshold", imu_path_lat_dev_threshold_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "path_footprint_extra_margin", path_footprint_extra_margin_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "speed_calculation_expansion_margin", speed_calculation_expansion_margin_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "detection_range_min_height", detection_range_min_height_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "detection_range_max_height_margin", detection_range_max_height_margin_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "voxel_grid_x", voxel_grid_x_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "voxel_grid_y", voxel_grid_y_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "voxel_grid_z", voxel_grid_z_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "min_generated_imu_path_length", min_generated_imu_path_length_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "max_generated_imu_path_length", max_generated_imu_path_length_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "expand_width", expand_width_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "longitudinal_offset_margin", longitudinal_offset_margin_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "t_response", t_response_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "a_ego_min", a_ego_min_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "a_obj_min", a_obj_min_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "cluster_tolerance", cluster_tolerance_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "cluster_minimum_height", cluster_minimum_height_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "imu_prediction_time_horizon", imu_prediction_time_horizon_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "imu_prediction_time_interval", imu_prediction_time_interval_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "mpc_prediction_time_horizon", mpc_prediction_time_horizon_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "mpc_prediction_time_interval", mpc_prediction_time_interval_)) {
+      result.successful = false;
+    }
+
+    // Integer parameters
+    if (!updateParam(parameters, "minimum_cluster_size", minimum_cluster_size_)) {
+      result.successful = false;
+    }
+    if (!updateParam(parameters, "maximum_cluster_size", maximum_cluster_size_)) {
+      result.successful = false;
+    }
+
+    return result;
+  }
+ground_truth.cpp: |-
+  rcl_interfaces::msg::SetParametersResult AEB::onParameter(
+    const std::vector<rclcpp::Parameter> & parameters)
+  {
+    using autoware::universe_utils::updateParam;
+    updateParam<bool>(parameters, "publish_debug_pointcloud", publish_debug_pointcloud_);
+    updateParam<bool>(parameters, "publish_debug_markers", publish_debug_markers_);
+    updateParam<bool>(parameters, "use_predicted_trajectory", use_predicted_trajectory_);
+    updateParam<bool>(parameters, "use_imu_path", use_imu_path_);
+    updateParam<bool>(parameters, "limit_imu_path_lat_dev", limit_imu_path_lat_dev_);
+    updateParam<bool>(parameters, "limit_imu_path_length", limit_imu_path_length_);
+    updateParam<bool>(parameters, "use_pointcloud_data", use_pointcloud_data_);
+    updateParam<bool>(parameters, "use_predicted_object_data", use_predicted_object_data_);
+    updateParam<bool>(
+      parameters, "use_object_velocity_calculation", use_object_velocity_calculation_);
+    updateParam<bool>(parameters, "check_autoware_state", check_autoware_state_);
+    updateParam<double>(parameters, "path_footprint_extra_margin", path_footprint_extra_margin_);
+    updateParam<double>(parameters, "imu_path_lat_dev_threshold", imu_path_lat_dev_threshold_);
+    updateParam<double>(
+      parameters, "speed_calculation_expansion_margin", speed_calculation_expansion_margin_);
+    updateParam<double>(parameters, "detection_range_min_height", detection_range_min_height_);
+    updateParam<double>(
+      parameters, "detection_range_max_height_margin", detection_range_max_height_margin_);
+    updateParam<double>(parameters, "voxel_grid_x", voxel_grid_x_);
+    updateParam<double>(parameters, "voxel_grid_y", voxel_grid_y_);
+    updateParam<double>(parameters, "voxel_grid_z", voxel_grid_z_);
+    updateParam<double>(parameters, "min_generated_imu_path_length", min_generated_imu_path_length_);
+    updateParam<double>(parameters, "max_generated_imu_path_length", max_generated_imu_path_length_);
+    updateParam<double>(parameters, "expand_width", expand_width_);
+    updateParam<double>(parameters, "longitudinal_offset_margin", longitudinal_offset_margin_);
+    updateParam<double>(parameters, "t_response", t_response_);
+    updateParam<double>(parameters, "a_ego_min", a_ego_min_);
+    updateParam<double>(parameters, "a_obj_min", a_obj_min_);
+
+    updateParam<double>(parameters, "cluster_tolerance", cluster_tolerance_);
+    updateParam<double>(parameters, "cluster_minimum_height", cluster_minimum_height_);
+    updateParam<int>(parameters, "minimum_cluster_size", minimum_cluster_size_);
+    updateParam<int>(parameters, "maximum_cluster_size", maximum_cluster_size_);
+
+    updateParam<double>(parameters, "imu_prediction_time_horizon", imu_prediction_time_horizon_);
+    updateParam<double>(parameters, "imu_prediction_time_interval", imu_prediction_time_interval_);
+    updateParam<double>(parameters, "mpc_prediction_time_horizon", mpc_prediction_time_horizon_);
+    updateParam<double>(parameters, "mpc_prediction_time_interval", mpc_prediction_time_interval_);
+
+    {  // Object history data keeper setup
+      auto [previous_obstacle_keep_time, collision_keeping_sec] = collision_data_keeper_.getTimeout();
+      updateParam<double>(parameters, "previous_obstacle_keep_time", previous_obstacle_keep_time);
+      updateParam<double>(parameters, "collision_keeping_sec", collision_keeping_sec);
+      collision_data_keeper_.setTimeout(collision_keeping_sec, previous_obstacle_keep_time);
+    }
+
+    rcl_interfaces::msg::SetParametersResult result;
+    result.successful = true;
+    result.reason = "success";
+    return result;
+  }
+architecture-codes:
+  - ROS Parameter Related Issues - Missing Dynamic Configuration Issue
+
+functionality-codes:
+  - Reference Error - Wrong method
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Domain Library Issues - Domain Specific Library Utilization Error
+
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

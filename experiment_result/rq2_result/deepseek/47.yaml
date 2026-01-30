@@ -1,0 +1,402 @@
+compilation.log: |
+  Starting >>> autoware_obstacle_stop_planner
+  --- stderr: autoware_obstacle_stop_planner
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp: In constructor ‘autoware::motion_planning::ObstacleStopPlannerNode::ObstacleStopPlannerNode(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:112:17: error: ‘struct autoware::vehicle_info_utils::VehicleInfo’ has no member named ‘vehicle_width’; did you mean ‘vehicle_width_m’?
+    112 |   vehicle_info_.vehicle_width = vehicle_info.vehicle_width_m;
+        |                 ^~~~~~~~~~~~~
+        |                 vehicle_width_m
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:113:17: error: ‘struct autoware::vehicle_info_utils::VehicleInfo’ has no member named ‘vehicle_length’; did you mean ‘vehicle_length_m’?
+    113 |   vehicle_info_.vehicle_length = vehicle_info.vehicle_length_m;
+        |                 ^~~~~~~~~~~~~~
+        |                 vehicle_length_m
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:114:17: error: ‘struct autoware::vehicle_info_utils::VehicleInfo’ has no member named ‘wheel_base’; did you mean ‘wheel_base_m’?
+    114 |   vehicle_info_.wheel_base = vehicle_info.wheel_base_m;
+        |                 ^~~~~~~~~~
+        |                 wheel_base_m
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:115:17: error: ‘struct autoware::vehicle_info_utils::VehicleInfo’ has no member named ‘front_overhang’; did you mean ‘front_overhang_m’?
+    115 |   vehicle_info_.front_overhang = vehicle_info.front_overhang_m;
+        |                 ^~~~~~~~~~~~~~
+        |                 front_overhang_m
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:116:17: error: ‘struct autoware::vehicle_info_utils::VehicleInfo’ has no member named ‘rear_overhang’; did you mean ‘rear_overhang_m’?
+    116 |   vehicle_info_.rear_overhang = vehicle_info.rear_overhang_m;
+        |                 ^~~~~~~~~~~~~
+        |                 rear_overhang_m
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:117:17: error: ‘struct autoware::vehicle_info_utils::VehicleInfo’ has no member named ‘left_overhang’; did you mean ‘left_overhang_m’?
+    117 |   vehicle_info_.left_overhang = vehicle_info.left_overhang_m;
+        |                 ^~~~~~~~~~~~~
+        |                 left_overhang_m
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:118:17: error: ‘struct autoware::vehicle_info_utils::VehicleInfo’ has no member named ‘right_overhang’; did you mean ‘right_overhang_m’?
+    118 |   vehicle_info_.right_overhang = vehicle_info.right_overhang_m;
+        |                 ^~~~~~~~~~~~~~
+        |                 right_overhang_m
+  In file included from /usr/include/c++/11/memory:76,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:17:
+  /usr/include/c++/11/bits/unique_ptr.h: In instantiation of ‘typename std::_MakeUniq<_Tp>::__single_object std::make_unique(_Args&& ...) [with _Tp = autoware::motion_planning::AdaptiveCruiseController; _Args = {autoware::motion_planning::ObstacleStopPlannerNode&}; typename std::_MakeUniq<_Tp>::__single_object = std::unique_ptr<autoware::motion_planning::AdaptiveCruiseController>]’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:147:63:   required from here
+  /usr/include/c++/11/bits/unique_ptr.h:962:30: error: no matching function for call to ‘autoware::motion_planning::AdaptiveCruiseController::AdaptiveCruiseController(autoware::motion_planning::ObstacleStopPlannerNode&)’
+    962 |     { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+        |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:23:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.hpp:40:3: note: candidate: ‘autoware::motion_planning::AdaptiveCruiseController::AdaptiveCruiseController(rclcpp::Node*, double, double, double)’
+     40 |   AdaptiveCruiseController(
+        |   ^~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.hpp:40:3: note:   candidate expects 4 arguments, 1 provided
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.hpp:37:7: note: candidate: ‘autoware::motion_planning::AdaptiveCruiseController::AdaptiveCruiseController(const autoware::motion_planning::AdaptiveCruiseController&)’
+     37 | class AdaptiveCruiseController
+        |       ^~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.hpp:37:7: note:   no known conversion for argument 1 from ‘autoware::motion_planning::ObstacleStopPlannerNode’ to ‘const autoware::motion_planning::AdaptiveCruiseController&’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.hpp:37:7: note: candidate: ‘autoware::motion_planning::AdaptiveCruiseController::AdaptiveCruiseController(autoware::motion_planning::AdaptiveCruiseController&&)’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.hpp:37:7: note:   no known conversion for argument 1 from ‘autoware::motion_planning::ObstacleStopPlannerNode’ to ‘autoware::motion_planning::AdaptiveCruiseController&&’
+  In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/c++allocator.h:33,
+                   from /usr/include/c++/11/bits/allocator.h:46,
+                   from /usr/include/c++/11/unordered_map:40,
+                   from /usr/include/c++/11/functional:61,
+                   from /usr/include/c++/11/pstl/glue_algorithm_defs.h:13,
+                   from /usr/include/c++/11/algorithm:74,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:15:
+  /usr/include/c++/11/ext/new_allocator.h: In instantiation of ‘void __gnu_cxx::new_allocator<_Tp>::construct(_Up*, _Args&& ...) [with _Up = autoware::motion_planning::ObstacleStopPlannerDebugNode; _Args = {autoware::motion_planning::ObstacleStopPlannerNode*}; _Tp = autoware::motion_planning::ObstacleStopPlannerDebugNode]’:
+  /usr/include/c++/11/bits/alloc_traits.h:516:17:   required from ‘static void std::allocator_traits<std::allocator<_Tp1> >::construct(std::allocator_traits<std::allocator<_Tp1> >::allocator_type&, _Up*, _Args&& ...) [with _Up = autoware::motion_planning::ObstacleStopPlannerDebugNode; _Args = {autoware::motion_planning::ObstacleStopPlannerNode*}; _Tp = autoware::motion_planning::ObstacleStopPlannerDebugNode; std::allocator_traits<std::allocator<_Tp1> >::allocator_type = std::allocator<autoware::motion_planning::ObstacleStopPlannerDebugNode>]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:519:39:   required from ‘std::_Sp_counted_ptr_inplace<_Tp, _Alloc, _Lp>::_Sp_counted_ptr_inplace(_Alloc, _Args&& ...) [with _Args = {autoware::motion_planning::ObstacleStopPlannerNode*}; _Tp = autoware::motion_planning::ObstacleStopPlannerDebugNode; _Alloc = std::allocator<autoware::motion_planning::ObstacleStopPlannerDebugNode>; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:650:16:   required from ‘std::__shared_count<_Lp>::__shared_count(_Tp*&, std::_Sp_alloc_shared_tag<_Alloc>, _Args&& ...) [with _Tp = autoware::motion_planning::ObstacleStopPlannerDebugNode; _Alloc = std::allocator<autoware::motion_planning::ObstacleStopPlannerDebugNode>; _Args = {autoware::motion_planning::ObstacleStopPlannerNode*}; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:1342:14:   required from ‘std::__shared_ptr<_Tp, _Lp>::__shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<autoware::motion_planning::ObstacleStopPlannerDebugNode>; _Args = {autoware::motion_planning::ObstacleStopPlannerNode*}; _Tp = autoware::motion_planning::ObstacleStopPlannerDebugNode; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr.h:409:59:   required from ‘std::shared_ptr<_Tp>::shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<autoware::motion_planning::ObstacleStopPlannerDebugNode>; _Args = {autoware::motion_planning::ObstacleStopPlannerNode*}; _Tp = autoware::motion_planning::ObstacleStopPlannerDebugNode]’
+  /usr/include/c++/11/bits/shared_ptr.h:862:14:   required from ‘std::shared_ptr<_Tp> std::allocate_shared(const _Alloc&, _Args&& ...) [with _Tp = autoware::motion_planning::ObstacleStopPlannerDebugNode; _Alloc = std::allocator<autoware::motion_planning::ObstacleStopPlannerDebugNode>; _Args = {autoware::motion_planning::ObstacleStopPlannerNode*}]’
+  /usr/include/c++/11/bits/shared_ptr.h:878:39:   required from ‘std::shared_ptr<_Tp> std::make_shared(_Args&& ...) [with _Tp = autoware::motion_planning::ObstacleStopPlannerDebugNode; _Args = {autoware::motion_planning::ObstacleStopPlannerNode*}]’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:144:62:   required from here
+  /usr/include/c++/11/ext/new_allocator.h:162:11: error: no matching function for call to ‘autoware::motion_planning::ObstacleStopPlannerDebugNode::ObstacleStopPlannerDebugNode(autoware::motion_planning::ObstacleStopPlannerNode*)’
+    162 |         { ::new((void *)__p) _Up(std::forward<_Args>(__args)...); }
+        |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.hpp:21,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:23:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/debug_marker.hpp:94:12: note: candidate: ‘autoware::motion_planning::ObstacleStopPlannerDebugNode::ObstacleStopPlannerDebugNode(rclcpp::Node*, double)’
+     94 |   explicit ObstacleStopPlannerDebugNode(rclcpp::Node * node, const double base_link2front);
+        |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/debug_marker.hpp:94:12: note:   candidate expects 2 arguments, 1 provided
+  gmake[2]: *** [CMakeFiles/autoware_obstacle_stop_planner.dir/build.make:104: CMakeFiles/autoware_obstacle_stop_planner.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_obstacle_stop_planner.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_obstacle_stop_planner [18.4s, exited with code 2]
+
+  Summary: 0 packages finished [19.8s]
+    1 package failed: autoware_obstacle_stop_planner
+    1 package had stderr output: autoware_obstacle_stop_planner
+generate_code.cpp: |-
+  ObstacleStopPlannerNode::ObstacleStopPlannerNode(const rclcpp::NodeOptions & node_options)
+  : Node("obstacle_stop_planner", node_options)
+  {
+    // Parameters
+    node_param_.enable_slow_down = declare_parameter<bool>("enable_slow_down");
+    node_param_.enable_z_axis_obstacle_filtering = declare_parameter<bool>("enable_z_axis_obstacle_filtering");
+    node_param_.z_axis_filtering_buffer = declare_parameter<double>("z_axis_filtering_buffer");
+    node_param_.max_velocity = declare_parameter<double>("max_velocity");
+    node_param_.chattering_threshold = declare_parameter<double>("chattering_threshold");
+    node_param_.ego_nearest_dist_threshold = declare_parameter<double>("ego_nearest_dist_threshold");
+    node_param_.ego_nearest_yaw_threshold = declare_parameter<double>("ego_nearest_yaw_threshold");
+    node_param_.voxel_grid_x = declare_parameter<double>("voxel_grid_x");
+    node_param_.voxel_grid_y = declare_parameter<double>("voxel_grid_y");
+    node_param_.voxel_grid_z = declare_parameter<double>("voxel_grid_z");
+    node_param_.use_predicted_objects = declare_parameter<bool>("use_predicted_objects");
+    node_param_.predicted_object_filtering_threshold = declare_parameter<double>("predicted_object_filtering_threshold");
+    node_param_.publish_obstacle_polygon = declare_parameter<bool>("publish_obstacle_polygon");
+
+    // Stop parameters
+    stop_param_.max_longitudinal_margin = declare_parameter<double>("stop.max_longitudinal_margin");
+    stop_param_.max_longitudinal_margin_behind_goal = declare_parameter<double>("stop.max_longitudinal_margin_behind_goal");
+    stop_param_.min_longitudinal_margin = declare_parameter<double>("stop.min_longitudinal_margin");
+    stop_param_.lateral_margin = declare_parameter<double>("stop.lateral_margin");
+    stop_param_.vehicle_lateral_margin = declare_parameter<double>("stop.vehicle_lateral_margin");
+    stop_param_.pedestrian_lateral_margin = declare_parameter<double>("stop.pedestrian_lateral_margin");
+    stop_param_.unknown_lateral_margin = declare_parameter<double>("stop.unknown_lateral_margin");
+    stop_param_.step_length = declare_parameter<double>("stop.step_length");
+    stop_param_.enable_stop_behind_goal_for_obstacle = declare_parameter<bool>("stop.enable_stop_behind_goal_for_obstacle");
+    stop_param_.stop_search_radius = declare_parameter<double>("stop.stop_search_radius");
+    stop_param_.hold_stop_margin_distance = declare_parameter<double>("stop.hold_stop_margin_distance");
+
+    // Slow down parameters
+    slow_down_param_.longitudinal_forward_margin = declare_parameter<double>("slow_down.longitudinal_forward_margin");
+    slow_down_param_.longitudinal_backward_margin = declare_parameter<double>("slow_down.longitudinal_backward_margin");
+    slow_down_param_.min_longitudinal_forward_margin = declare_parameter<double>("slow_down.min_longitudinal_forward_margin");
+    slow_down_param_.longitudinal_margin_span = declare_parameter<double>("slow_down.longitudinal_margin_span");
+    slow_down_param_.lateral_margin = declare_parameter<double>("slow_down.lateral_margin");
+    slow_down_param_.vehicle_lateral_margin = declare_parameter<double>("slow_down.vehicle_lateral_margin");
+    slow_down_param_.pedestrian_lateral_margin = declare_parameter<double>("slow_down.pedestrian_lateral_margin");
+    slow_down_param_.unknown_lateral_margin = declare_parameter<double>("slow_down.unknown_lateral_margin");
+    slow_down_param_.max_slow_down_velocity = declare_parameter<double>("slow_down.max_slow_down_velocity");
+    slow_down_param_.min_slow_down_velocity = declare_parameter<double>("slow_down.min_slow_down_velocity");
+    slow_down_param_.slow_down_velocity = declare_parameter<double>("slow_down.slow_down_velocity");
+    slow_down_param_.velocity_threshold_decel_complete = declare_parameter<double>("slow_down.velocity_threshold_decel_complete");
+    slow_down_param_.acceleration_threshold_decel_complete = declare_parameter<double>("slow_down.acceleration_threshold_decel_complete");
+    slow_down_param_.normal_min_jerk = declare_parameter<double>("slow_down.normal_min_jerk");
+    slow_down_param_.normal_min_acc = declare_parameter<double>("slow_down.normal_min_acc");
+    slow_down_param_.limit_min_jerk = declare_parameter<double>("slow_down.limit_min_jerk");
+    slow_down_param_.limit_min_acc = declare_parameter<double>("slow_down.limit_min_acc");
+    slow_down_param_.slow_down_min_jerk = declare_parameter<double>("slow_down.slow_down_min_jerk");
+    slow_down_param_.jerk_start = declare_parameter<double>("slow_down.jerk_start");
+    slow_down_param_.jerk_span = declare_parameter<double>("slow_down.jerk_span");
+    slow_down_param_.consider_constraints = declare_parameter<bool>("slow_down.consider_constraints");
+    slow_down_param_.slow_down_search_radius = declare_parameter<double>("slow_down.slow_down_search_radius");
+
+    // Vehicle info
+    const auto vehicle_info = autoware::vehicle_info_utils::VehicleInfoUtils(*this).getVehicleInfo();
+    vehicle_info_.vehicle_width = vehicle_info.vehicle_width_m;
+    vehicle_info_.vehicle_length = vehicle_info.vehicle_length_m;
+    vehicle_info_.wheel_base = vehicle_info.wheel_base_m;
+    vehicle_info_.front_overhang = vehicle_info.front_overhang_m;
+    vehicle_info_.rear_overhang = vehicle_info.rear_overhang_m;
+    vehicle_info_.left_overhang = vehicle_info.left_overhang_m;
+    vehicle_info_.right_overhang = vehicle_info.right_overhang_m;
+
+    // Publishers
+    pub_trajectory_ = create_publisher<Trajectory>("~/output/trajectory", 1);
+    pub_stop_reason_ = create_publisher<DiagnosticStatus>("~/output/stop_reason", 1);
+    pub_clear_velocity_limit_ = create_publisher<VelocityLimitClearCommand>("~/output/velocity_limit_clear_command", 1);
+    pub_velocity_limit_ = create_publisher<VelocityLimit>("~/output/max_velocity", 1);
+    pub_obstacle_pointcloud_ = create_publisher<sensor_msgs::msg::PointCloud2>("~/output/obstacle_pointcloud", 1);
+    pub_collision_pointcloud_debug_ = create_publisher<sensor_msgs::msg::PointCloud2>("~/output/collision_pointcloud_debug", 1);
+    pub_processing_time_ms_ = create_publisher<Float64Stamped>("~/debug/processing_time_ms", 1);
+
+    // Subscribers
+    sub_trajectory_ = create_subscription<Trajectory>(
+      "~/input/trajectory", 1, std::bind(&ObstacleStopPlannerNode::onTrigger, this, std::placeholders::_1));
+    sub_point_cloud_ = create_subscription<PointCloud2>(
+      "~/input/pointcloud", 1, std::bind(&ObstacleStopPlannerNode::onPointCloud, this, std::placeholders::_1));
+    sub_odometry_ = create_subscription<Odometry>(
+      "~/input/odometry", 1, std::bind(&ObstacleStopPlannerNode::onOdometry, this, std::placeholders::_1));
+    sub_acceleration_ = create_subscription<AccelWithCovarianceStamped>(
+      "~/input/acceleration", 1, std::bind(&ObstacleStopPlannerNode::onAcceleration, this, std::placeholders::_1));
+    sub_dynamic_objects_ = create_subscription<PredictedObjects>(
+      "~/input/objects", 1, std::bind(&ObstacleStopPlannerNode::onDynamicObjects, this, std::placeholders::_1));
+    sub_expand_stop_range_ = create_subscription<ExpandStopRange>(
+      "~/input/expand_stop_range", 1, std::bind(&ObstacleStopPlannerNode::onExpandStopRange, this, std::placeholders::_1));
+
+    // Debug
+    debug_ptr_ = std::make_shared<ObstacleStopPlannerDebugNode>(this);
+
+    // ACC
+    acc_controller_ = std::make_unique<AdaptiveCruiseController>(*this);
+
+    // Logger
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+    published_time_publisher_ = std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);
+  }
+ground_truth.cpp: |-
+  ObstacleStopPlannerNode::ObstacleStopPlannerNode(const rclcpp::NodeOptions & node_options)
+  : Node("obstacle_stop_planner", node_options)
+  {
+    // Vehicle Parameters
+    vehicle_info_ = autoware::vehicle_info_utils::VehicleInfoUtils(*this).getVehicleInfo();
+
+    const auto & i = vehicle_info_;
+
+    // Parameters
+    {
+      auto & p = node_param_;
+      p.enable_slow_down = declare_parameter<bool>("enable_slow_down");
+      p.enable_z_axis_obstacle_filtering =
+        declare_parameter<bool>("enable_z_axis_obstacle_filtering");
+      p.z_axis_filtering_buffer = declare_parameter<double>("z_axis_filtering_buffer");
+      p.max_velocity = declare_parameter<double>("max_velocity");
+      p.chattering_threshold = declare_parameter<double>("chattering_threshold");
+      p.ego_nearest_dist_threshold = declare_parameter<double>("ego_nearest_dist_threshold");
+      p.ego_nearest_yaw_threshold = declare_parameter<double>("ego_nearest_yaw_threshold");
+      p.voxel_grid_x = declare_parameter<double>("voxel_grid_x");
+      p.voxel_grid_y = declare_parameter<double>("voxel_grid_y");
+      p.voxel_grid_z = declare_parameter<double>("voxel_grid_z");
+      p.use_predicted_objects = declare_parameter<bool>("use_predicted_objects");
+      p.publish_obstacle_polygon = declare_parameter<bool>("publish_obstacle_polygon");
+      p.predicted_object_filtering_threshold =
+        declare_parameter<double>("predicted_object_filtering_threshold");
+    }
+
+    {
+      auto & p = stop_param_;
+      const std::string ns = "stop_planner.";
+
+      // params for stop position
+      p.max_longitudinal_margin =
+        declare_parameter<double>(ns + "stop_position.max_longitudinal_margin");
+      p.max_longitudinal_margin_behind_goal =
+        declare_parameter<double>(ns + "stop_position.max_longitudinal_margin_behind_goal");
+      p.min_longitudinal_margin =
+        declare_parameter<double>(ns + "stop_position.min_longitudinal_margin");
+      p.hold_stop_margin_distance =
+        declare_parameter<double>(ns + "stop_position.hold_stop_margin_distance");
+
+      // params for detection area
+      p.lateral_margin = declare_parameter<double>(ns + "detection_area.lateral_margin");
+      p.vehicle_lateral_margin =
+        declare_parameter<double>(ns + "detection_area.vehicle_lateral_margin");
+      p.pedestrian_lateral_margin =
+        declare_parameter<double>(ns + "detection_area.pedestrian_lateral_margin");
+      p.unknown_lateral_margin =
+        declare_parameter<double>(ns + "detection_area.unknown_lateral_margin");
+      p.enable_stop_behind_goal_for_obstacle =
+        declare_parameter<bool>(ns + "detection_area.enable_stop_behind_goal_for_obstacle");
+      p.step_length = declare_parameter<double>(ns + "detection_area.step_length");
+
+      // apply offset
+      p.max_longitudinal_margin += i.max_longitudinal_offset_m;
+      p.max_longitudinal_margin_behind_goal += i.max_longitudinal_offset_m;
+      p.min_longitudinal_margin += i.max_longitudinal_offset_m;
+      p.stop_search_radius =
+        p.step_length +
+        std::hypot(i.vehicle_width_m / 2.0 + p.lateral_margin, i.vehicle_length_m / 2.0);
+    }
+
+    {
+      auto & p = slow_down_param_;
+      const std::string ns = "slow_down_planner.";
+
+      // common param
+      p.normal_min_jerk = declare_parameter<double>("normal.min_jerk");
+      p.normal_min_acc = declare_parameter<double>("normal.min_acc");
+      p.limit_min_jerk = declare_parameter<double>("limit.min_jerk");
+      p.limit_min_acc = declare_parameter<double>("limit.min_acc");
+
+      // params for slow down section
+      p.longitudinal_forward_margin =
+        declare_parameter<double>(ns + "slow_down_section.longitudinal_forward_margin");
+      p.longitudinal_backward_margin =
+        declare_parameter<double>(ns + "slow_down_section.longitudinal_backward_margin");
+      p.min_longitudinal_forward_margin =
+        declare_parameter<double>(ns + "slow_down_section.min_longitudinal_forward_margin");
+      p.longitudinal_margin_span =
+        declare_parameter<double>(ns + "slow_down_section.longitudinal_margin_span");
+
+      // params for detection area
+      p.lateral_margin = declare_parameter<double>(ns + "detection_area.lateral_margin");
+      p.vehicle_lateral_margin =
+        declare_parameter<double>(ns + "detection_area.vehicle_lateral_margin");
+      p.pedestrian_lateral_margin =
+        declare_parameter<double>(ns + "detection_area.pedestrian_lateral_margin");
+      p.unknown_lateral_margin =
+        declare_parameter<double>(ns + "detection_area.unknown_lateral_margin");
+
+      // params for target velocity
+      p.max_slow_down_velocity =
+        declare_parameter<double>(ns + "target_velocity.max_slow_down_velocity");
+      p.min_slow_down_velocity =
+        declare_parameter<double>(ns + "target_velocity.min_slow_down_velocity");
+      p.slow_down_velocity = declare_parameter<double>(ns + "target_velocity.slow_down_velocity");
+
+      // consider jerk/dec constraints in slow down
+      p.consider_constraints = declare_parameter<bool>(ns + "consider_constraints");
+      p.slow_down_min_jerk = declare_parameter<double>(ns + "constraints.jerk_min_slow_down");
+      p.jerk_start = declare_parameter<double>(ns + "constraints.jerk_start");
+      p.jerk_span = declare_parameter<double>(ns + "constraints.jerk_span");
+
+      p.velocity_threshold_decel_complete =
+        declare_parameter<double>(ns + "velocity_threshold_decel_complete");
+      p.acceleration_threshold_decel_complete =
+        declare_parameter<double>(ns + "acceleration_threshold_decel_complete");
+
+      // apply offset
+      p.longitudinal_forward_margin += i.max_longitudinal_offset_m;
+      p.min_longitudinal_forward_margin += i.wheel_base_m + i.front_overhang_m;
+      p.longitudinal_backward_margin += i.rear_overhang_m;
+      p.slow_down_search_radius =
+        stop_param_.step_length +
+        std::hypot(i.vehicle_width_m / 2.0 + p.lateral_margin, i.vehicle_length_m / 2.0);
+    }
+
+    if (node_param_.use_predicted_objects) {
+      // Search the maximum lateral margin
+      std::vector<double> lateral_margins{
+        stop_param_.pedestrian_lateral_margin, stop_param_.vehicle_lateral_margin,
+        stop_param_.unknown_lateral_margin};
+      if (node_param_.enable_slow_down) {
+        lateral_margins.push_back(slow_down_param_.pedestrian_lateral_margin);
+        lateral_margins.push_back(slow_down_param_.vehicle_lateral_margin);
+        lateral_margins.push_back(slow_down_param_.unknown_lateral_margin);
+      }
+      const double max_lateral_margin =
+        *std::max_element(lateral_margins.begin(), lateral_margins.end());
+      object_filtering_margin_ =
+        max_lateral_margin + node_param_.predicted_object_filtering_threshold;
+    }
+
+    // Initializer
+    acc_controller_ = std::make_unique<AdaptiveCruiseController>(
+      this, i.vehicle_width_m, i.vehicle_length_m, i.max_longitudinal_offset_m);
+    debug_ptr_ = std::make_shared<ObstacleStopPlannerDebugNode>(this, i.max_longitudinal_offset_m);
+
+    // Publishers
+    pub_trajectory_ = this->create_publisher<Trajectory>("~/output/trajectory", 1);
+
+    pub_stop_reason_ = this->create_publisher<DiagnosticStatus>("~/output/stop_reason", 1);
+
+    pub_clear_velocity_limit_ = this->create_publisher<VelocityLimitClearCommand>(
+      "~/output/velocity_limit_clear_command", rclcpp::QoS{1}.transient_local());
+
+    pub_velocity_limit_ = this->create_publisher<VelocityLimit>(
+      "~/output/max_velocity", rclcpp::QoS{1}.transient_local());
+
+    pub_obstacle_pointcloud_ =
+      this->create_publisher<sensor_msgs::msg::PointCloud2>("~/debug/obstacle_pointcloud", 1);
+
+    pub_collision_pointcloud_debug_ =
+      this->create_publisher<PointCloud2>("~/debug/collision_pointcloud", 1);
+
+    pub_processing_time_ms_ = this->create_publisher<Float64Stamped>("~/debug/processing_time_ms", 1);
+
+    // Subscribers
+    if (!node_param_.use_predicted_objects) {
+      // No need to point cloud while using predicted objects
+      sub_point_cloud_ = this->create_subscription<PointCloud2>(
+        "~/input/pointcloud", rclcpp::SensorDataQoS(),
+        std::bind(&ObstacleStopPlannerNode::onPointCloud, this, std::placeholders::_1),
+        createSubscriptionOptions(this));
+    }
+
+    sub_trajectory_ = this->create_subscription<Trajectory>(
+      "~/input/trajectory", 1,
+      std::bind(&ObstacleStopPlannerNode::onTrigger, this, std::placeholders::_1),
+      createSubscriptionOptions(this));
+
+    sub_odometry_ = this->create_subscription<Odometry>(
+      "~/input/odometry", 1,
+      std::bind(&ObstacleStopPlannerNode::onOdometry, this, std::placeholders::_1),
+      createSubscriptionOptions(this));
+
+    sub_acceleration_ = this->create_subscription<AccelWithCovarianceStamped>(
+      "~/input/acceleration", 1,
+      std::bind(&ObstacleStopPlannerNode::onAcceleration, this, std::placeholders::_1),
+      createSubscriptionOptions(this));
+
+    sub_dynamic_objects_ = this->create_subscription<PredictedObjects>(
+      "~/input/objects", 1,
+      std::bind(&ObstacleStopPlannerNode::onDynamicObjects, this, std::placeholders::_1),
+      createSubscriptionOptions(this));
+
+    sub_expand_stop_range_ = this->create_subscription<ExpandStopRange>(
+      "~/input/expand_stop_range", 1,
+      std::bind(&ObstacleStopPlannerNode::onExpandStopRange, this, std::placeholders::_1),
+      createSubscriptionOptions(this));
+
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+    published_time_publisher_ =
+      std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);
+  }
+architecture-codes:
+  - ROS Parameter Issue - Use Non-existent Parameter Issue
+  - ROS Parameter Issue - Insufficient Parameter Design Issue
+  - Topic/Service Issue - Topic/Service Name Mismatch Issue
+  - Topic/Service Issue - QoS Policy Incompatibility Issue
+  - Topic/Service Issue - Incomplete Topic/Service Initialization Issue
+  - ROS Message Issue - Incorrect Message Member Access Issue
+
+functionality-codes:
+  - Condition Issue - Conditional Check Missing Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+
+root-cause-codes:
+
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

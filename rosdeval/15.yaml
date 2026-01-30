@@ -1,0 +1,26 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_detected_object_validation
+ros_package: autoware_detected_object_validation
+file_path: src/position_filter/position_filter.cpp
+method_name: ObjectPositionFilterNode::objectCallback
+requirement: |
+  /**
+  * @brief Filters detected objects based on their label and position.
+  * 
+  * @param input_msg The input message containing the detected objects to filter.
+  */
+category: ros_architecture
+type: has_topic,has_message
+signature: |
+  void ObjectPositionFilterNode::objectCallback(
+    const autoware_perception_msgs::msg::DetectedObjects::ConstSharedPtr input_msg)
+additional_information: 
+  function_related_variable: |
+    rclcpp::Publisher<autoware_perception_msgs::msg::DetectedObjects>::SharedPtr object_pub_;
+    utils::FilterTargetLabel filter_target_;
+    std::unique_ptr<autoware::universe_utils::PublishedTimePublisher> published_time_publisher_;
+  function_related_function: |
+    bool ObjectPositionFilterNode::isObjectInBounds(const autoware_perception_msgs::msg::DetectedObject & object) const
+test: detection_object_validation_tests
+test_cases: []

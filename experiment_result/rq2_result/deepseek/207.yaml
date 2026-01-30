@@ -1,0 +1,76 @@
+compilation.log: |
+      Starting >>> nav2_route
+      Finished <<< nav2_route [0.78s]
+
+      Summary: 1 package finished [1.08s]
+generate_code.cpp: |
+      inline Coordinates findClosestPoint(
+      const geometry_msgs::msg::PoseStamped & pose,
+      const Coordinates & start, const Coordinates & end)
+      {
+      // Vector from start to end of line segment
+      double lineVecX = end.x - start.x;
+      double lineVecY = end.y - start.y;
+      
+      // Vector from start to pose
+      double pointVecX = pose.pose.position.x - start.x;
+      double pointVecY = pose.pose.position.y - start.y;
+      
+      // Calculate projection of point onto line segment
+      double lineMagnitudeSquared = lineVecX * lineVecX + lineVecY * lineVecY;
+      
+      // Avoid division by zero
+      if (lineMagnitudeSquared == 0.0) {
+            return start;
+      }
+      
+      // Calculate the projection parameter (t)
+      double t = (pointVecX * lineVecX + pointVecY * lineVecY) / lineMagnitudeSquared;
+      
+      // Clamp t to [0, 1] to restrict point to line segment
+      t = std::max(0.0, std::min(1.0, t));
+      
+      // Calculate the closest point
+      Coordinates closestPoint;
+      closestPoint.x = start.x + t * lineVecX;
+      closestPoint.y = start.y + t * lineVecY;
+      
+      return closestPoint;
+      }
+ground_truth.cpp: |
+      inline Coordinates findClosestPoint(
+      const geometry_msgs::msg::PoseStamped & pose,
+      const Coordinates & start, const Coordinates & end)
+      {
+      Coordinates pt;
+      const float vx = end.x - start.x;
+      const float vy = end.y - start.y;
+      const float ux = start.x - pose.pose.position.x;
+      const float uy = start.y - pose.pose.position.y;
+      const float uv = vx * ux + vy * uy;
+      const float vv = vx * vx + vy * vy;
+
+      // They are the same point, so only one option
+      if (vv < 1e-6) {
+      return start;
+      }
+
+      const float t = -uv / vv;
+      if (t > 0.0 && t < 1.0) {
+      pt.x = (1.0 - t) * start.x + t * end.x;
+      pt.y = (1.0 - t) * start.y + t * end.y;
+      } else if (t <= 0.0) {
+      pt = start;
+      } else {
+      pt = end;
+      }
+
+      return pt;
+      }
+architecture-codes: []
+functionality-codes:
+      - Condition Issue - Condition Check Logic Misapplication Issue
+      - Constant Value Issue
+Root Cause Analysis:
+      - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+      - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries

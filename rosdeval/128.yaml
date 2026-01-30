@@ -1,0 +1,94 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_ros/moveit_servo
+ros_package: moveit_servo
+file_path: src/servo_node.cpp
+method_name: ServoNode::ServoNode
+requirement: |
+  /**
+  * @brief Constructs a ServoNode for controlling robot motion via ROS 2 services.
+  * 
+  * @param options Configuration options for the underlying ROS 2 node, including intra-process communication settings.
+  */
+category: ros_architecture
+type: has_service,has_logger,has_parameter
+signature: |
+  ServoNode::ServoNode(const rclcpp::NodeOptions& options)
+    : node_{ std::make_shared<rclcpp::Node>("servo_node", options) }
+additional_information: 
+  function_related_variable: |
+    std::shared_ptr<rclcpp::Node> node_;
+    std::unique_ptr<moveit_servo::Servo> servo_;
+    std::shared_ptr<planning_scene_monitor::PlanningSceneMonitor> planning_scene_monitor_;
+  function_related_function: |
+    // Helper function for detecting zeroed message
+    bool isNonZero(const control_msgs::msg::JointJog& msg);
+    planning_scene_monitor::PlanningSceneMonitor::startStateMonitor()
+    planning_scene_monitor::PlanningSceneMonitor::startSceneMonitor()
+    planning_scene_monitor::PlanningSceneMonitor::startWorldGeometryMonitor()
+    planning_scene_monitor::PlanningSceneMonitor::setPlanningScenePublishingFrequency()
+    planning_scene_monitor::PlanningSceneMonitor::getStateMonitor()::enableCopyDynamics(true);
+    planning_scene_monitor::PlanningSceneMonitor::startPublishingPlanningScene
+    planning_scene_monitor::PlanningSceneMonitor::UPDATE_SCENE
+    planning_scene_monitor::PlanningSceneMonitor::providePlanningSceneService()
+    planning_scene_monitor::PlanningSceneMonitor::requestPlanningSceneState()
+  function_related_class: |
+    struct ServoParameters:
+      {
+        using SharedConstPtr = std::shared_ptr<const ServoParameters>;
+
+        // Parameter namespace
+        const std::string ns;
+
+        // ROS Parameters
+        // Note that all of these are effectively const because the only way to create one of these
+        //  is as a shared_ptr to a constant struct.
+        bool use_gazebo{ false };
+        std::string status_topic{ "~/status" };
+        // Properties of incoming commands
+        std::string cartesian_command_in_topic{ "~/delta_twist_cmds" };
+        std::string joint_command_in_topic{ "~/delta_joint_cmds" };
+        std::string robot_link_command_frame{ "panda_link0" };
+        std::string command_in_type{ "unitless" };
+        double linear_scale{ 0.4 };
+        double rotational_scale{ 0.8 };
+        double joint_scale{ 0.5 };
+        // Properties of Servo calculations
+        double override_velocity_scaling_factor{ 0.0 };
+        // Properties of outgoing commands
+        std::string command_out_topic{ "/panda_arm_controller/joint_trajectory" };
+        double publish_period{ 0.034 };
+        std::string command_out_type{ "trajectory_msgs/JointTrajectory" };
+        bool publish_joint_positions{ true };
+        bool publish_joint_velocities{ true };
+        bool publish_joint_accelerations{ false };
+        // Plugins for smoothing outgoing commands
+        std::string joint_topic{ "/joint_states" };
+        std::string smoothing_filter_plugin_name{ "online_signal_smoothing::ButterworthFilterPlugin" };
+        // MoveIt properties
+        std::string move_group_name{ "panda_arm" };
+        std::string planning_frame{ "panda_link0" };
+        std::string ee_frame_name{ "panda_link8" };
+        bool is_primary_planning_scene_monitor = { true };
+        std::string monitored_planning_scene_topic{
+          planning_scene_monitor::PlanningSceneMonitor::DEFAULT_PLANNING_SCENE_TOPIC
+        };
+        // Stopping behaviour
+        double incoming_command_timeout{ 0.1 };
+        int num_outgoing_halt_msgs_to_publish{ 4 };
+        bool halt_all_joints_in_joint_mode{ true };
+        bool halt_all_joints_in_cartesian_mode{ true };
+        // Configure handling of singularities and joint limits
+        double lower_singularity_threshold{ 17.0 };
+        double hard_stop_singularity_threshold{ 30.0 };
+        double leaving_singularity_threshold_multiplier{ 2.0 };
+        double joint_limit_margin{ 0.1 };
+        bool low_latency_mode{ false };
+        // Collision checking
+        bool check_collisions{ true };
+        double collision_check_rate{ 10.0 };
+        double self_collision_proximity_threshold{ 0.01 };
+        double scene_collision_proximity_threshold{ 0.02 };
+        }
+test: test_servo_integration
+test_cases: []

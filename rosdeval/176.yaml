@@ -1,0 +1,24 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_waypoint_follower
+ros_package: nav2_waypoint_follower
+file_path: src/waypoint_follower.cpp
+method_name: WaypointFollower::dynamicParametersCallback
+requirement: |
+  /**
+  * Updates configurable parameters for waypoint following behavior.
+  * 
+  * @param parameters Vector of parameters to update with their new values.
+  * @return SetParametersResult indicating success of the parameter update.
+  */
+category: ros_architecture
+type: []
+signature: |
+  rcl_interfaces::msg::SetParametersResult
+  WaypointFollower::dynamicParametersCallback(std::vector<rclcpp::Parameter> parameters)
+additional_information: 
+  function_related_variable: |
+    int loop_rate_;
+    bool stop_on_failure_;
+test: test_task_executors
+test_cases: []

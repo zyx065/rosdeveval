@@ -1,0 +1,35 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/common/autoware_motion_utils
+ros_package: autoware_motion_utils
+file_path: src/distance/distance.cpp
+method_name: calcDecelDistWithJerkAndAccConstraints
+requirement: |
+  /**
+  * Calculates the deceleration distance required to reach a target velocity under acceleration and jerk constraints.
+  * 
+  * Computes the stopping distance needed to decelerate from the current velocity to a target velocity
+  * while respecting minimum acceleration limits and jerk constraints for both acceleration and deceleration phases.
+  * 
+  * @param current_vel Current velocity of the vehicle (must be >= target_vel).
+  * @param target_vel Desired target velocity to decelerate to.
+  * @param current_acc Current acceleration of the vehicle.
+  * @param acc_min Minimum acceleration constraint during deceleration.
+  * @param jerk_acc Jerk limit for acceleration phases.
+  * @param jerk_dec Jerk limit for deceleration phases.
+  * @return std::optional<double> Deceleration distance if calculable, std::nullopt if current velocity is below target.
+  */
+category: utilities
+type: []
+signature: |
+  std::optional<double> calcDecelDistWithJerkAndAccConstraints(
+    const double current_vel, const double target_vel, const double current_acc, const double acc_min,
+    const double jerk_acc, const double jerk_dec)
+additional_information: 
+  function_related_function: |
+    std::optional<double> calcDecelDistPlanType1(const double v0, const double vt, const double a0, const double am, const double ja,const double jd, const double t_during_min_acc)
+    std::optional<double> calcDecelDistPlanType2(const double v0, const double vt, const double a0, const double ja, const double jd)
+    std::optional<double> calcDecelDistPlanType3(const double v0, const double vt, const double a0, const double ja)
+test: test_autoware_motion_utils
+test_cases: 
+- calcDecelDistWithJerkAndAccConstraints

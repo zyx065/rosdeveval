@@ -1,0 +1,78 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_planning_validator
+ros_package: autoware_planning_validator
+file_path: src/planning_validator.cpp
+method_name: checkValidInterval
+requirement: |
+  /**
+  * @brief Checks if the trajectory has valid point intervals within the configured threshold.
+  * 
+  * @param trajectory The trajectory to validate for point spacing.
+  * @return bool True if all consecutive points are within the interval threshold, false otherwise.
+  */
+category: utilities
+type: has_message,has_parameter
+signature: |
+  bool PlanningValidator::checkValidInterval(const Trajectory & trajectory)
+additional_information: 
+  function_related_variable: |
+    std::shared_ptr<PlanningValidatorDebugMarkerPublisher> debug_pose_publisher_;
+    PlanningValidatorStatus validation_status_;
+    ValidationParams validation_params_;
+    using autoware_planning_validator::msg::PlanningValidatorStatus;
+  function_related_function: |
+    std::pair<double, size_t> calcMaxIntervalDistance(const Trajectory & trajectory);
+  function_related_class: |
+    class PlanningValidatorDebugMarkerPublisher
+    {
+    public:
+      explicit PlanningValidatorDebugMarkerPublisher(rclcpp::Node * node);
+
+      void pushPoseMarker(
+        const autoware_planning_msgs::msg::TrajectoryPoint & p, const std::string & ns, int id = 0);
+      void pushPoseMarker(const geometry_msgs::msg::Pose & pose, const std::string & ns, int id = 0);
+      void pushVirtualWall(const geometry_msgs::msg::Pose & pose);
+      void pushWarningMsg(const geometry_msgs::msg::Pose & pose, const std::string & msg);
+      void publish();
+
+      void clearMarkers();
+
+    private:
+      rclcpp::Node * node_;
+      visualization_msgs::msg::MarkerArray marker_array_;
+      visualization_msgs::msg::MarkerArray marker_array_virtual_wall_;
+      rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr debug_viz_pub_;
+      rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr virtual_wall_pub_;
+      std::map<std::string, int> marker_id_;
+
+      int getMarkerId(const std::string & ns)
+      {
+        if (marker_id_.count(ns) == 0) {
+          marker_id_[ns] = 0.0;
+        }
+        return marker_id_[ns]++;
+      }
+    };
+    struct ValidationParams
+    {
+      // thresholds
+      double interval_threshold;
+      double relative_angle_threshold;
+      double curvature_threshold;
+      double lateral_acc_threshold;
+      double longitudinal_max_acc_threshold;
+      double longitudinal_min_acc_threshold;
+      double steering_threshold;
+      double steering_rate_threshold;
+      double velocity_deviation_threshold;
+      double distance_deviation_threshold;
+      double longitudinal_distance_deviation_threshold;
+
+      // parameters
+      double forward_trajectory_length_acceleration;
+      double forward_trajectory_length_margin;
+    };
+test: test_autoware_planning_validator
+test_cases: 
+- checkValidIntervalFunction

@@ -1,0 +1,58 @@
+compilation.log: |
+  Starting >>> nav2_collision_monitor
+  Finished <<< nav2_collision_monitor [0.41s]
+
+  Summary: 1 package finished [0.72s]
+generate_code.cpp: |-
+  void Polygon::publish() const
+  {
+    if (!visualize_) {
+      return;
+    }
+
+    auto node = node_.lock();
+    if (!node) {
+      throw std::runtime_error("Failed to lock node for publishing polygon");
+    }
+
+    if (!polygon_pub_) {
+      return;
+    }
+
+    geometry_msgs::msg::PolygonStamped polygon_stamped;
+    polygon_stamped.header.frame_id = base_frame_id_;
+    polygon_stamped.header.stamp = node->now();
+    polygon_stamped.polygon = polygon_;
+
+    polygon_pub_->publish(polygon_stamped);
+  }
+ground_truth.cpp: |-
+  void Polygon::publish() const
+  {
+    if (!visualize_) {
+      return;
+    }
+
+    auto node = node_.lock();
+    if (!node) {
+      throw std::runtime_error{"Failed to lock node"};
+    }
+
+    // Fill PolygonStamped struct
+    std::unique_ptr<geometry_msgs::msg::PolygonStamped> poly_s =
+      std::make_unique<geometry_msgs::msg::PolygonStamped>();
+    poly_s->header.stamp = node->now();
+    poly_s->header.frame_id = base_frame_id_;
+    poly_s->polygon = polygon_;
+
+    // Publish polygon
+    polygon_pub_->publish(std::move(poly_s));
+  }
+architecture-codes:
+  - ROS Message Related Issues - Message Operation Issue
+functionality-codes:
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements

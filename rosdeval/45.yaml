@@ -1,0 +1,24 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner
+ros_package: autoware_obstacle_cruise_planner
+file_path: src/planner_interface.cpp
+method_name: PlannerInterface::publishMetrics
+requirement: |
+  /**
+  * @brief Publishes planning metrics and clears the internal metric data.
+  * 
+  * @param current_time The current ROS time to stamp the metrics message with.
+  */
+category: ros_architecture
+type: has_parameter,has_topic,has_message
+signature: |
+  void PlannerInterface::publishMetrics(const rclcpp::Time & current_time)
+additional_information: 
+  function_related_variable: |
+    mutable std::shared_ptr<DebugData> debug_data_ptr_;
+    rclcpp::Publisher<MetricArray>::SharedPtr metrics_pub_;
+  function_related_function: |
+    void PlannerInterface::clearMetrics()
+test: test_autoware_obstacle_cruise_planner
+test_cases: []

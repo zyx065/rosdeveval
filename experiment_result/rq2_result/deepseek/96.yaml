@@ -1,0 +1,50 @@
+compilation.log: |
+  Starting >>> perception_utils
+  Finished <<< perception_utils [1.73s]
+
+  Summary: 1 package finished [3.11s]
+generate_code.cpp: "cv::Mat runLengthDecoder(const std::vector<uint8_t> & rle_data,\
+  \ const int rows, const int cols)\n{\n    cv::Mat decoded = cv::Mat::zeros(rows,\
+  \ cols, CV_8UC1);\n    int current_pos = 0;\n    int total_pixels = rows * cols;\n\
+  \    \n    for (size_t i = 0; i < rle_data.size(); i += 2) {\n        if (i + 1\
+  \ >= rle_data.size()) break;\n        \n        uint8_t value = rle_data[i];\n \
+  \       uint8_t length = rle_data[i + 1];\n        \n        for (int j = 0; j <\
+  \ length; ++j) {\n            if (current_pos >= total_pixels) break;\n        \
+  \    \n            int row = current_pos / cols;\n            int col = current_pos\
+  \ % cols;\n            decoded.at<uint8_t>(row, col) = value;\n            current_pos++;\n\
+  \        }\n    }\n    \n    return decoded;\n}"
+ground_truth.cpp: |-
+  cv::Mat runLengthDecoder(const std::vector<uint8_t> & rle_data, const int rows, const int cols)
+  {
+    cv::Mat mask(rows, cols, CV_8UC1, cv::Scalar(0));
+    int idx = 0;
+    int step = sizeof(uint8_t) + sizeof(int);
+    for (size_t i = 0; i < rle_data.size(); i += step) {
+      uint8_t value;
+      int length;
+      std::memcpy(&value, &rle_data[i], sizeof(uint8_t));
+      std::memcpy(
+        &length, &rle_data[i + 1],
+        sizeof(
+          int));  // under the condition that we know rle_data[i] only consume 1 element of the vector
+      for (int j = 0; j < length; ++j) {
+        int row_idx = static_cast<int>(idx / cols);
+        int col_idx = static_cast<int>(idx % cols);
+        mask.at<uint8_t>(row_idx, col_idx) = value;
+        idx++;
+        if (idx > rows * cols) {
+          break;
+        }
+      }
+    }
+    return mask;
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+  - Constant Value Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries

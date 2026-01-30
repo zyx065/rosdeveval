@@ -1,0 +1,29 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/collision_detection
+ros_package: moveit_core
+file_path: src/world.cpp
+method_name: World::moveShapeInObject
+requirement: |
+  /**
+  * Moves a shape within a specified object by updating its local pose.
+  * 
+  * @param object_id The unique identifier of the target object.
+  * @param shape The shape to be moved within the object.
+  * @param shape_pose The new local pose (relative to object frame) for the shape.
+  * @return True if the shape was found and moved, false otherwise.
+  */
+category: utilities
+type: []
+signature: |
+  bool World::moveShapeInObject(const std::string& object_id, const shapes::ShapeConstPtr& shape,
+                                const Eigen::Isometry3d& shape_pose)
+additional_information: 
+  function_related_variable:
+    std::map<std::string, ObjectPtr> objects_;
+  function_related_function: |
+    void World::ensureUnique(ObjectPtr& obj)
+    void World::notify(const ObjectConstPtr& obj, Action action)
+test: test_world_diff
+test_cases: 
+- TrackChanges

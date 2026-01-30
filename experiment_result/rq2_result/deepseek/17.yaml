@@ -1,0 +1,109 @@
+compilation.log: |
+  Starting >>> autoware_perception_online_evaluator
+  --- stderr: autoware_perception_online_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp: In member function ‘void autoware::perception_diagnostics::PerceptionOnlineEvaluatorNode::publishMetrics()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:74:82: error: ‘class autoware::perception_diagnostics::MetricsCalculator’ has no member named ‘getEgoPose’
+     74 |     auto metric_stat = metrics_calculator_.calculate(metric, metrics_calculator_.getEgoPose(), metrics_calculator_.getEgoPose());
+        |                                                                                  ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:74:116: error: ‘class autoware::perception_diagnostics::MetricsCalculator’ has no member named ‘getEgoPose’
+     74 |     auto metric_stat = metrics_calculator_.calculate(metric, metrics_calculator_.getEgoPose(), metrics_calculator_.getEgoPose());
+        |                                                                                                                    ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:76:19: error: ‘metricToString’ was not declared in this scope
+     76 |       toMetricMsg(metricToString(metric), *metric_stat, metrics_msg);
+        |                   ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:81:20: error: ‘using MetricArray = struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’ {aka ‘struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’} has no member named ‘metrics’
+     81 |   if (!metrics_msg.metrics.empty()) {
+        |                    ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:86:20: error: ‘using element_type = struct autoware::perception_diagnostics::Parameters’ {aka ‘struct autoware::perception_diagnostics::Parameters’} has no member named ‘debug_markers’
+     86 |   if (parameters_->debug_markers) {
+        |                    ^~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:87:5: error: ‘publishDebugMarkers’ was not declared in this scope; did you mean ‘publishDebugMarker’?
+     87 |     publishDebugMarkers();
+        |     ^~~~~~~~~~~~~~~~~~~
+        |     publishDebugMarker
+  gmake[2]: *** [CMakeFiles/autoware_perception_online_evaluator.dir/build.make:90: CMakeFiles/autoware_perception_online_evaluator.dir/src/perception_online_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_perception_online_evaluator.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_perception_online_evaluator [6.89s, exited with code 2]
+
+  Summary: 0 packages finished [8.31s]
+    1 package failed: autoware_perception_online_evaluator
+    1 package had stderr output: autoware_perception_online_evaluator
+generate_code.cpp: |
+  void PerceptionOnlineEvaluatorNode::publishMetrics()
+  {
+    // Create metric message with current timestamp
+    tier4_metric_msgs::msg::MetricArray metrics_msg;
+    metrics_msg.stamp = this->now();
+
+    // Calculate and add metrics if they have valid results
+    for (const auto & metric : parameters_->metrics) {
+      auto metric_stat = metrics_calculator_.calculate(metric, metrics_calculator_.getEgoPose(), metrics_calculator_.getEgoPose());
+      if (metric_stat) {
+        toMetricMsg(metricToString(metric), *metric_stat, metrics_msg);
+      }
+    }
+
+    // Publish metrics if any were calculated
+    if (!metrics_msg.metrics.empty()) {
+      metrics_pub_->publish(metrics_msg);
+    }
+
+    // Publish debug markers if enabled
+    if (parameters_->debug_markers) {
+      publishDebugMarkers();
+    }
+  }
+ground_truth.cpp: |-
+  void PerceptionOnlineEvaluatorNode::publishMetrics()
+  {
+    // DiagnosticArray metrics_msg;
+    tier4_metric_msgs::msg::MetricArray metrics_msg;
+
+    // calculate metrics
+    for (const Metric & metric : parameters_->metrics) {
+      const auto metric_result = metrics_calculator_.calculate(Metric(metric));
+      if (!metric_result.has_value()) {
+        continue;
+      }
+
+      std::visit(
+        [&metrics_msg, this](auto && arg) {
+          using T = std::decay_t<decltype(arg)>;
+          for (const auto & [metric, value] : arg) {
+            if constexpr (std::is_same_v<T, MetricStatMap>) {
+              if (value.count() > 0) {
+                toMetricMsg(metric, value, metrics_msg);
+              }
+            } else if constexpr (std::is_same_v<T, MetricValueMap>) {
+              toMetricMsg(metric, value, metrics_msg);
+            }
+          }
+        },
+        metric_result.value());
+    }
+
+    // publish metrics
+    if (!metrics_msg.metric_array.empty()) {
+      metrics_msg.stamp = now();
+      metrics_pub_->publish(metrics_msg);
+    }
+    publishDebugMarker();
+  }
+architecture-codes:
+    - ROS Message Issue - Incorrect Message Member Access Issue
+    - ROS Parameter Issue - Use Non-existent Parameter Issue
+    - ROS Message Issue - Message Operation Issue
+
+functionality-codes:
+    - Domain Library Issue - Domain Specific Library Utilization Error
+    - Incomplete Code Issue - Missing Multiple Steps Issue
+    - Condition Issue - Conditional Check Missing Issue
+    - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+
+root-cause-codes:
+    - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+    - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+    - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+    - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

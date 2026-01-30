@@ -1,0 +1,72 @@
+compilation.log: |
+  Starting >>> autoware_planning_validator
+  --- stderr: autoware_planning_validator
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp: In lambda function:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:45:40: error: unused parameter ‘msg’ [-Werror=unused-parameter]
+     45 |     [this](const Trajectory::SharedPtr msg) {
+        |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/autoware_planning_validator_component.dir/build.make:76: CMakeFiles/autoware_planning_validator_component.dir/src/planning_validator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:239: CMakeFiles/autoware_planning_validator_component.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_planning_validator [12.6s, exited with code 2]
+
+  Summary: 0 packages finished [14.0s]
+    1 package failed: autoware_planning_validator
+    1 package had stderr output: autoware_planning_validator
+generate_code.cpp: |-
+  PlanningValidator::PlanningValidator(const rclcpp::NodeOptions & options)
+  : Node("planning_validator", options)
+  {
+    // Initialize logger configuration
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+
+    // Initialize published time publisher
+    published_time_publisher_ = std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);
+
+    // Setup parameters
+    setupParameters();
+
+    // Initialize subscribers and publishers
+    sub_traj_ = this->create_subscription<Trajectory>(
+      "input_trajectory", rclcpp::QoS{10},
+      [this](const Trajectory::SharedPtr msg) {
+        // Callback logic for trajectory subscription
+        RCLCPP_INFO(this->get_logger(), "Received trajectory message");
+        // Add your processing logic here
+      });
+
+    pub_traj_ = this->create_publisher<Trajectory>("output_trajectory", rclcpp::QoS{10});
+    pub_status_ = this->create_publisher<PlanningValidatorStatus>("validation_status", rclcpp::QoS{10});
+    pub_processing_time_ms_ = this->create_publisher<Float64Stamped>("processing_time_ms", rclcpp::QoS{10});
+    pub_markers_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("debug_markers", rclcpp::QoS{10});
+
+    // Initialize debug pose publisher
+    debug_pose_publisher_ = std::make_shared<PlanningValidatorDebugMarkerPublisher>(this);
+
+    // Log node initialization
+    RCLCPP_INFO(this->get_logger(), "PlanningValidator node has been initialized");
+  }
+ground_truth.cpp: |-
+  PlanningValidator::PlanningValidator(const rclcpp::NodeOptions & options)
+  : Node("planning_validator", options)
+  {
+    using std::placeholders::_1;
+
+    sub_traj_ = create_subscription<Trajectory>(
+      "~/input/trajectory", 1, std::bind(&PlanningValidator::onTrajectory, this, _1));
+
+    pub_traj_ = create_publisher<Trajectory>("~/output/trajectory", 1);
+    pub_status_ = create_publisher<PlanningValidatorStatus>("~/output/validation_status", 1);
+    pub_markers_ = create_publisher<visualization_msgs::msg::MarkerArray>("~/output/markers", 1);
+    pub_processing_time_ms_ = create_publisher<Float64Stamped>("~/debug/processing_time_ms", 1);
+
+    debug_pose_publisher_ = std::make_shared<PlanningValidatorDebugMarkerPublisher>(this);
+
+    setupParameters();
+
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+    published_time_publisher_ =
+      std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);
+  }

@@ -1,0 +1,25 @@
+repository: diagnostics-ros2-humble
+language: C++
+ros_package_file: src/diagnostic_remote_logging
+ros_package: diagnostic_remote_logging
+file_path: include/diagnostic_remote_logging/influx_line_protocol.hpp
+method_name: diagnosticArrayToInfluxLineProtocol
+requirement: |
+  /**
+  * Converts a DiagnosticArray message to InfluxDB line protocol format.
+  * 
+  * @param diag_msg The DiagnosticArray message to convert.
+  * @return std::string The converted data in InfluxDB line protocol format.
+  */
+category: utilities
+type: []
+signature: |
+  std::string diagnosticArrayToInfluxLineProtocol(
+    const diagnostic_msgs::msg::DiagnosticArray::SharedPtr & diag_msg)
+additional_information: 
+  function_related_function: |
+    std::string toInfluxTimestamp(const rclcpp::Time & time)
+    void statusToInfluxLineProtocol(std::string & output,const diagnostic_msgs::msg::DiagnosticStatus & status,const std::string & timestamp_str)
+test: unit_tests
+test_cases: 
+- HandlesMultipleStatuses

@@ -1,0 +1,252 @@
+compilation.log: |
+  Starting >>> autoware_cluster_merger
+  --- stderr: autoware_cluster_merger
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp: In member function ‘void autoware::cluster_merger::ClusterMergerNode::objectsCallback(const ConstSharedPtr&, const ConstSharedPtr&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:57:9: error: no match for ‘operator*’ (operand type is ‘tf2_ros::Buffer’)
+     57 |         *tf_buffer_,
+        |         ^~~~~~~~~~~
+  In file included from /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:19,
+                   from /opt/ros/humble/include/tf2/tf2/LinearMath/Transform.h:21,
+                   from /opt/ros/humble/include/tf2/tf2/buffer_core.h:47,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/async_buffer_interface.h:39,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.h:41,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/transform_listener.hpp:22,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:15:
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:364:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2::Vector3&, const tf2::Vector3&)’
+    364 | operator*(const Vector3& v1, const Vector3& v2)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:364:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:384:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2::Vector3&, const tf2Scalar&)’
+    384 | operator*(const Vector3& v, const tf2Scalar& s)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:384:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:391:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2Scalar&, const tf2::Vector3&)’
+    391 | operator*(const tf2Scalar& s, const Vector3& v)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:391:1: note:   candidate expects 2 arguments, 1 provided
+  In file included from /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:20,
+                   from /opt/ros/humble/include/tf2/tf2/LinearMath/Transform.h:21,
+                   from /opt/ros/humble/include/tf2/tf2/buffer_core.h:47,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/async_buffer_interface.h:39,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.h:41,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/transform_listener.hpp:22,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:15:
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:368:1: note: candidate: ‘tf2::Quaternion tf2::operator*(const tf2::Quaternion&, const tf2::Quaternion&)’
+    368 | operator*(const Quaternion& q1, const Quaternion& q2) {
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:368:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:376:1: note: candidate: ‘tf2::Quaternion tf2::operator*(const tf2::Quaternion&, const tf2::Vector3&)’
+    376 | operator*(const Quaternion& q, const Vector3& w)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:376:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:385:1: note: candidate: ‘tf2::Quaternion tf2::operator*(const tf2::Vector3&, const tf2::Quaternion&)’
+    385 | operator*(const Vector3& w, const Quaternion& q)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:385:1: note:   candidate expects 2 arguments, 1 provided
+  In file included from /opt/ros/humble/include/tf2/tf2/LinearMath/Transform.h:21,
+                   from /opt/ros/humble/include/tf2/tf2/buffer_core.h:47,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/async_buffer_interface.h:39,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.h:41,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/transform_listener.hpp:22,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:15:
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:611:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2::Matrix3x3&, const tf2::Vector3&)’
+    611 | operator*(const Matrix3x3& m, const Vector3& v)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:611:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:618:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2::Vector3&, const tf2::Matrix3x3&)’
+    618 | operator*(const Vector3& v, const Matrix3x3& m)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:618:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:624:1: note: candidate: ‘tf2::Matrix3x3 tf2::operator*(const tf2::Matrix3x3&, const tf2::Matrix3x3&)’
+    624 | operator*(const Matrix3x3& m1, const Matrix3x3& m2)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:624:1: note:   candidate expects 2 arguments, 1 provided
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:68:9: error: no match for ‘operator*’ (operand type is ‘tf2_ros::Buffer’)
+     68 |         *tf_buffer_,
+        |         ^~~~~~~~~~~
+  In file included from /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:19,
+                   from /opt/ros/humble/include/tf2/tf2/LinearMath/Transform.h:21,
+                   from /opt/ros/humble/include/tf2/tf2/buffer_core.h:47,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/async_buffer_interface.h:39,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.h:41,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/transform_listener.hpp:22,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:15:
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:364:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2::Vector3&, const tf2::Vector3&)’
+    364 | operator*(const Vector3& v1, const Vector3& v2)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:364:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:384:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2::Vector3&, const tf2Scalar&)’
+    384 | operator*(const Vector3& v, const tf2Scalar& s)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:384:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:391:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2Scalar&, const tf2::Vector3&)’
+    391 | operator*(const tf2Scalar& s, const Vector3& v)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:391:1: note:   candidate expects 2 arguments, 1 provided
+  In file included from /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:20,
+                   from /opt/ros/humble/include/tf2/tf2/LinearMath/Transform.h:21,
+                   from /opt/ros/humble/include/tf2/tf2/buffer_core.h:47,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/async_buffer_interface.h:39,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.h:41,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/transform_listener.hpp:22,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:15:
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:368:1: note: candidate: ‘tf2::Quaternion tf2::operator*(const tf2::Quaternion&, const tf2::Quaternion&)’
+    368 | operator*(const Quaternion& q1, const Quaternion& q2) {
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:368:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:376:1: note: candidate: ‘tf2::Quaternion tf2::operator*(const tf2::Quaternion&, const tf2::Vector3&)’
+    376 | operator*(const Quaternion& q, const Vector3& w)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:376:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:385:1: note: candidate: ‘tf2::Quaternion tf2::operator*(const tf2::Vector3&, const tf2::Quaternion&)’
+    385 | operator*(const Vector3& w, const Quaternion& q)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:385:1: note:   candidate expects 2 arguments, 1 provided
+  In file included from /opt/ros/humble/include/tf2/tf2/LinearMath/Transform.h:21,
+                   from /opt/ros/humble/include/tf2/tf2/buffer_core.h:47,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/async_buffer_interface.h:39,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer.h:41,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/transform_listener.hpp:22,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:15:
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:611:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2::Matrix3x3&, const tf2::Vector3&)’
+    611 | operator*(const Matrix3x3& m, const Vector3& v)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:611:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:618:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2::Vector3&, const tf2::Matrix3x3&)’
+    618 | operator*(const Vector3& v, const Matrix3x3& m)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:618:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:624:1: note: candidate: ‘tf2::Matrix3x3 tf2::operator*(const tf2::Matrix3x3&, const tf2::Matrix3x3&)’
+    624 | operator*(const Matrix3x3& m1, const Matrix3x3& m2)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:624:1: note:   candidate expects 2 arguments, 1 provided
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:79:14: error: ‘using DetectedObjectsWithFeature = struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’ {aka ‘struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’} has no member named ‘objects’
+     79 |   output_msg.objects.insert(
+        |              ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:80:16: error: ‘using DetectedObjectsWithFeature = struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’ {aka ‘struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’} has no member named ‘objects’
+     80 |     output_msg.objects.end(),
+        |                ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:81:26: error: ‘using DetectedObjectsWithFeature = struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’ {aka ‘struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’} has no member named ‘objects’
+     81 |     transformed_objects0.objects.begin(),
+        |                          ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:82:26: error: ‘using DetectedObjectsWithFeature = struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’ {aka ‘struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’} has no member named ‘objects’
+     82 |     transformed_objects0.objects.end()
+        |                          ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:85:14: error: ‘using DetectedObjectsWithFeature = struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’ {aka ‘struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’} has no member named ‘objects’
+     85 |   output_msg.objects.insert(
+        |              ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:86:16: error: ‘using DetectedObjectsWithFeature = struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’ {aka ‘struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’} has no member named ‘objects’
+     86 |     output_msg.objects.end(),
+        |                ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:87:26: error: ‘using DetectedObjectsWithFeature = struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’ {aka ‘struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’} has no member named ‘objects’
+     87 |     transformed_objects1.objects.begin(),
+        |                          ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_cluster_merger/src/cluster_merger_node.cpp:88:26: error: ‘using DetectedObjectsWithFeature = struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’ {aka ‘struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’} has no member named ‘objects’
+     88 |     transformed_objects1.objects.end()
+        |                          ^~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_cluster_merger.dir/build.make:76: CMakeFiles/autoware_cluster_merger.dir/src/cluster_merger_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_cluster_merger.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_cluster_merger [12.6s, exited with code 2]
+
+  Summary: 0 packages finished [14.0s]
+    1 package failed: autoware_cluster_merger
+    1 package had stderr output: autoware_cluster_merger
+generate_code.cpp: |
+  void ClusterMergerNode::objectsCallback(
+    const DetectedObjectsWithFeature::ConstSharedPtr & input_objects0_msg,
+    const DetectedObjectsWithFeature::ConstSharedPtr & input_objects1_msg)
+  {
+    // Create output message to store merged objects
+    DetectedObjectsWithFeature output_msg;
+    
+    // Transform both input object messages to a common frame (using the first input message's frame)
+    DetectedObjectsWithFeature transformed_objects0, transformed_objects1;
+    
+    // Transform first set of objects
+    if (!autoware::object_recognition_utils::transformObjectsWithFeature(
+          *input_objects0_msg, 
+          input_objects0_msg->header.frame_id, 
+          *tf_buffer_, 
+          transformed_objects0)) 
+    {
+      RCLCPP_WARN(get_logger(), "Failed to transform first set of objects");
+      return;
+    }
+    
+    // Transform second set of objects
+    if (!autoware::object_recognition_utils::transformObjectsWithFeature(
+          *input_objects1_msg, 
+          input_objects0_msg->header.frame_id, 
+          *tf_buffer_, 
+          transformed_objects1)) 
+    {
+      RCLCPP_WARN(get_logger(), "Failed to transform second set of objects");
+      return;
+    }
+    
+    // Copy header from first input message
+    output_msg.header = input_objects0_msg->header;
+    
+    // Merge objects from both transformed messages
+    output_msg.objects.insert(
+      output_msg.objects.end(), 
+      transformed_objects0.objects.begin(), 
+      transformed_objects0.objects.end()
+    );
+    
+    output_msg.objects.insert(
+      output_msg.objects.end(), 
+      transformed_objects1.objects.begin(), 
+      transformed_objects1.objects.end()
+    );
+    
+    // Publish merged objects
+    pub_objects_->publish(output_msg);
+  }
+ground_truth.cpp: |-
+  void ClusterMergerNode::objectsCallback(
+    const DetectedObjectsWithFeature::ConstSharedPtr & input_objects0_msg,
+    const DetectedObjectsWithFeature::ConstSharedPtr & input_objects1_msg)
+  {
+    if (pub_objects_->get_subscription_count() < 1) {
+      return;
+    }
+    // TODO(badai-nguyen): transform input topics to desired frame before concatenating
+    /* transform to the same with cluster0 frame id*/
+    DetectedObjectsWithFeature transformed_objects0;
+    DetectedObjectsWithFeature transformed_objects1;
+    if (
+      !autoware::object_recognition_utils::transformObjectsWithFeature(
+        *input_objects0_msg, output_frame_id_, tf_buffer_, transformed_objects0) ||
+      !autoware::object_recognition_utils::transformObjectsWithFeature(
+        *input_objects1_msg, output_frame_id_, tf_buffer_, transformed_objects1)) {
+      return;
+    }
+
+    DetectedObjectsWithFeature output_objects;
+    output_objects.header = input_objects0_msg->header;
+    // add check frame id and transform if they are different
+    output_objects.feature_objects = transformed_objects0.feature_objects;
+    output_objects.feature_objects.insert(
+      output_objects.feature_objects.end(), transformed_objects1.feature_objects.begin(),
+      transformed_objects1.feature_objects.end());
+    pub_objects_->publish(output_objects);
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+functionality-codes:
+  - Incomplete Code - Missing Multiple Steps
+  - Reference Error - Wrong Variable
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

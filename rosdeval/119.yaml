@@ -1,0 +1,27 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/simulator/autoware_dummy_perception_publisher
+ros_package: autoware_dummy_perception_publisher
+file_path: src/signed_distance_function.cpp
+method_name: getSphereTracingDist
+requirement: |
+  /**
+  * Computes the distance along a ray until intersecting a surface using sphere tracing.
+  * 
+  * @param x_start The starting x-coordinate of the ray.
+  * @param y_start The starting y-coordinate of the ray.
+  * @param angle The angle (in radians) specifying the ray direction.
+  * @param max_dist The maximum allowed tracing distance.
+  * @param eps The epsilon value defining proximity to the surface.
+  * @return The distance to the surface intersection, or infinity if no intersection found.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  double AbstractSignedDistanceFunction::getSphereTracingDist(
+    double x_start, double y_start, double angle, double max_dist, double eps) const
+additional_information: []
+test: signed_distance_function-test
+test_cases: 
+- BoxSDF
+- CompositeSDF

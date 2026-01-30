@@ -1,0 +1,58 @@
+compilation.log: |
+  Starting >>> autoware_geography_utils
+  Finished <<< autoware_geography_utils [2.09s]
+
+  Summary: 1 package finished [3.52s]
+generate_code.cpp: |-
+  double convert_height(
+    const double height, const double latitude, const double longitude,
+    const std::string & source_vertical_datum, const std::string & target_vertical_datum)
+  {
+    // Check if the source and target vertical datums are the same
+    if (source_vertical_datum == target_vertical_datum) {
+      return height; // No conversion needed
+    }
+
+    // Example: Conversion between WGS84 and EGM96
+    if ((source_vertical_datum == "WGS84" && target_vertical_datum == "EGM96") ||
+        (source_vertical_datum == "EGM96" && target_vertical_datum == "WGS84")) {
+      // Placeholder for the actual geoid height difference calculation
+      // In a real implementation, you would use a geoid model library or dataset
+      double geoid_height_difference = 0.0;
+
+      // Simulate geoid height difference based on latitude and longitude
+      // This is a simplified example and should be replaced with actual geoid data
+      geoid_height_difference = 10.0 * std::sin(latitude * M_PI / 180.0) * std::cos(longitude * M_PI / 180.0);
+
+      if (source_vertical_datum == "WGS84" && target_vertical_datum == "EGM96") {
+        return height - geoid_height_difference; // Convert from WGS84 to EGM96
+      } else if (source_vertical_datum == "EGM96" && target_vertical_datum == "WGS84") {
+        return height + geoid_height_difference; // Convert from EGM96 to WGS84
+      }
+    }
+
+    // If the conversion is not supported, throw an exception
+    throw std::invalid_argument("Conversion between the specified datums is not supported.");
+  }
+ground_truth.cpp: |-
+  double convert_height(
+    const double height, const double latitude, const double longitude,
+    const std::string & source_vertical_datum, const std::string & target_vertical_datum)
+  {
+    if (source_vertical_datum == target_vertical_datum) {
+      return height;
+    }
+    static const std::map<std::pair<std::string, std::string>, HeightConversionFunction>
+      conversion_map{
+        {{"WGS84", "EGM2008"}, convert_wgs84_to_egm2008},
+        {{"EGM2008", "WGS84"}, convert_egm2008_to_wgs84},
+      };
+
+    const auto key = std::make_pair(source_vertical_datum, target_vertical_datum);
+    if (const auto it = conversion_map.find(key); it != conversion_map.end()) {
+      return it->second(height, latitude, longitude);
+    }
+
+    throw std::invalid_argument(
+      "Invalid conversion types: " + source_vertical_datum + " to " + target_vertical_datum);
+  }

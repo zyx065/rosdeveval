@@ -1,0 +1,88 @@
+compilation.log: |
+  Starting >>> autoware_rtc_interface
+  --- stderr: autoware_rtc_interface
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp: In constructor ‘autoware::rtc_interface::RTCInterface::RTCInterface(rclcpp::Node*, const string&, bool)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp:131:34: error: ‘onServiceCommand’ is not a member of ‘autoware::rtc_interface::RTCInterface’
+    131 |         std::bind(&RTCInterface::onServiceCommand, this, std::placeholders::_1, std::placeholders::_2),
+        |                                  ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp:136:34: error: ‘onServiceAutoMode’ is not a member of ‘autoware::rtc_interface::RTCInterface’
+    136 |         std::bind(&RTCInterface::onServiceAutoMode, this, std::placeholders::_1, std::placeholders::_2),
+        |                                  ^~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp: At global scope:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp:66:8: error: ‘tier4_rtc_msgs::msg::Module {anonymous}::getModuleType(const string&)’ defined but not used [-Werror=unused-function]
+     66 | Module getModuleType(const std::string & module_name)
+        |        ^~~~~~~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/autoware_rtc_interface.dir/build.make:76: CMakeFiles/autoware_rtc_interface.dir/src/rtc_interface.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_rtc_interface.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_rtc_interface [2.87s, exited with code 2]
+
+  Summary: 0 packages finished [4.28s]
+    1 package failed: autoware_rtc_interface
+    1 package had stderr output: autoware_rtc_interface
+generate_code.cpp: "RTCInterface::RTCInterface(rclcpp::Node * node, const std::string\
+  \ & name, const bool enable_rtc)\n: clock_{node->get_clock()},\n  logger_{node->get_logger().get_child(\"\
+  RTCInterface[\" + name + \"]\")},\n  is_auto_mode_enabled_{!enable_rtc},\n  is_locked_{false}\n\
+  {\n    callback_group_ = node->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);\n\
+  \    \n    pub_statuses_ = node->create_publisher<CooperateStatusArray>(\n     \
+  \   \"~/rtc_statuses\", rclcpp::QoS(1).transient_local());\n    \n    pub_auto_mode_status_\
+  \ = node->create_publisher<AutoModeStatus>(\n        \"~/rtc_auto_mode_status\"\
+  , rclcpp::QoS(1).transient_local());\n    \n    srv_commands_ = node->create_service<CooperateCommands>(\n\
+  \        \"~/rtc_commands\",\n        std::bind(&RTCInterface::onServiceCommand,\
+  \ this, std::placeholders::_1, std::placeholders::_2),\n        rmw_qos_profile_services_default,\
+  \ callback_group_);\n    \n    srv_auto_mode_ = node->create_service<AutoMode>(\n\
+  \        \"~/rtc_auto_mode\",\n        std::bind(&RTCInterface::onServiceAutoMode,\
+  \ this, std::placeholders::_1, std::placeholders::_2),\n        rmw_qos_profile_services_default,\
+  \ callback_group_);\n    \n    timer_ = node->create_wall_timer(\n        std::chrono::milliseconds(100),\
+  \ std::bind(&RTCInterface::onTimer, this), callback_group_);\n}"
+ground_truth.cpp: |-
+  RTCInterface::RTCInterface(rclcpp::Node * node, const std::string & name, const bool enable_rtc)
+  : clock_{node->get_clock()},
+    logger_{node->get_logger().get_child("RTCInterface[" + name + "]")},
+    is_auto_mode_enabled_{!enable_rtc},
+    is_locked_{false}
+  {
+    using std::placeholders::_1;
+    using std::placeholders::_2;
+
+    constexpr double update_rate = 10.0;
+    const auto period_ns = rclcpp::Rate(update_rate).period();
+    timer_ = rclcpp::create_timer(
+      node, node->get_clock(), period_ns, std::bind(&RTCInterface::onTimer, this));
+
+    // Publisher
+    pub_statuses_ =
+      node->create_publisher<CooperateStatusArray>(cooperate_status_namespace_ + "/" + name, 1);
+
+    pub_auto_mode_status_ =
+      node->create_publisher<AutoModeStatus>(auto_mode_status_namespace_ + "/" + name, 1);
+
+    // Service
+    callback_group_ = node->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    srv_commands_ = node->create_service<CooperateCommands>(
+      cooperate_commands_namespace_ + "/" + name,
+      std::bind(&RTCInterface::onCooperateCommandService, this, _1, _2),
+      rmw_qos_profile_services_default, callback_group_);
+    srv_auto_mode_ = node->create_service<AutoMode>(
+      enable_auto_mode_namespace_ + "/" + name,
+      std::bind(&RTCInterface::onAutoModeService, this, _1, _2), rmw_qos_profile_services_default,
+      callback_group_);
+
+    // Module
+    module_ = getModuleType(name);
+  }
+architecture-codes:
+  - Topic/Service Issue - Topic/Service Name Mismatch Issue
+  - Topic/Service Issue - QoS Policy Incompatibility Issue
+  - ROS Timer Issue - Clock Source Usage Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

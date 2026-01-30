@@ -1,0 +1,113 @@
+compilation.log: |
+  Starting >>> autoware_raw_vehicle_cmd_converter
+  --- stderr: autoware_raw_vehicle_cmd_converter
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp: In member function ‘bool autoware::raw_vehicle_cmd_converter::BrakeMap::readBrakeMapFromCSV(const string&, bool)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:36:9: error: ‘ROS_ERROR’ was not declared in this scope
+     36 |         ROS_ERROR("Failed to read CSV file: %s", csv_path.c_str());
+        |         ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:43:9: error: ‘ROS_ERROR’ was not declared in this scope
+     43 |         ROS_ERROR("CSV data validation failed for file: %s", csv_path.c_str());
+        |         ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:49:5: error: ‘throttle_index_’ was not declared in this scope
+     49 |     throttle_index_ = CSVLoader::getColumnIndex(csv_table);
+        |     ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:57:9: error: ‘ROS_ERROR’ was not declared in this scope
+     57 |         ROS_ERROR("Brake map validation failed for file: %s", csv_path.c_str());
+        |         ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:62:5: error: ‘accel_map_’ was not declared in this scope
+     62 |     accel_map_.clear();
+        |     ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:65:34: error: ‘const class std::vector<double>’ has no member named ‘second’
+     65 |         accel_map_.push_back(row.second);
+        |                                  ^~~~~~
+  gmake[2]: *** [CMakeFiles/actuation_map_converter.dir/build.make:90: CMakeFiles/actuation_map_converter.dir/src/brake_map.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:163: CMakeFiles/actuation_map_converter.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_raw_vehicle_cmd_converter [2.57s, exited with code 2]
+
+  Summary: 0 packages finished [3.97s]
+    1 package failed: autoware_raw_vehicle_cmd_converter
+    1 package had stderr output: autoware_raw_vehicle_cmd_converter
+generate_code.cpp: |-
+  bool BrakeMap::readBrakeMapFromCSV(const std::string & csv_path, const bool validation)
+  {
+      // Create a CSVLoader instance with the provided CSV path
+      CSVLoader csv_loader(csv_path);
+
+      // Table to store CSV data
+      Table csv_table;
+
+      // Read the CSV file
+      if (!csv_loader.readCSV(csv_table))
+      {
+          ROS_ERROR("Failed to read CSV file: %s", csv_path.c_str());
+          return false;
+      }
+
+      // Optional validation of CSV data
+      if (validation && !CSVLoader::validateData(csv_table, csv_path))
+      {
+          ROS_ERROR("CSV data validation failed for file: %s", csv_path.c_str());
+          return false;
+      }
+
+      // Extract row and column indices
+      vel_index_ = CSVLoader::getRowIndex(csv_table);
+      throttle_index_ = CSVLoader::getColumnIndex(csv_table);
+
+      // Convert table to map
+      Map brake_map = CSVLoader::getMap(csv_table);
+
+      // Validate map structure if validation is requested
+      if (validation && !CSVLoader::validateMap(brake_map, true))
+      {
+          ROS_ERROR("Brake map validation failed for file: %s", csv_path.c_str());
+          return false;
+      }
+
+      // Convert map to 2D vector for accel_map_
+      accel_map_.clear();
+      for (const auto& row : brake_map)
+      {
+          accel_map_.push_back(row.second);
+      }
+
+      return true;
+  }
+ground_truth.cpp: |-
+  bool BrakeMap::readBrakeMapFromCSV(const std::string & csv_path, const bool validation)
+  {
+    CSVLoader csv(csv_path);
+    std::vector<std::vector<std::string>> table;
+
+    if (!csv.readCSV(table)) {
+      return false;
+    }
+
+    vehicle_name_ = table[0][0];
+    vel_index_ = CSVLoader::getColumnIndex(table);
+    brake_index_ = CSVLoader::getRowIndex(table);
+    brake_map_ = CSVLoader::getMap(table);
+    brake_index_rev_ = brake_index_;
+    if (validation && !CSVLoader::validateMap(brake_map_, false)) {
+      return false;
+    }
+    std::reverse(std::begin(brake_index_rev_), std::end(brake_index_rev_));
+
+    return true;
+  }
+architecture-codes: 
+   - ROS Logger Issues - ROS Logger Missing Issue
+functionality-codes:
+   - Reference Error - Wrong Variable
+   - Reference Error - Wrong Method
+   - Incomplete Code - Missing Multiple Steps
+   - Conditional Checks Issues - Conditional Check Logic Misapplication
+   - Garbage Code - Wrong Logical
+   - Constant Value Error
+root-cause-codes:
+   - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+   - Deficiencies in Domain Knowledge - Insufficient Understanding of ROS Programming
+   - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+   - Weakness in System-Level Integration - Lack of Familiarity with the Existing Codebase

@@ -1,0 +1,47 @@
+compilation.log: |
+  Starting >>> autoware_velocity_smoother
+  --- stderr: autoware_velocity_smoother
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp: In member function ‘void autoware::velocity_smoother::VelocitySmootherNode::publishTrajectory(const TrajectoryPoints&) const’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:318:63: error: ‘class autoware::universe_utils::PublishedTimePublisher’ has no member named ‘has_subscribers’
+    318 |   if (published_time_publisher_ && published_time_publisher_->has_subscribers()) {
+        |                                                               ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:319:32: error: ‘class autoware::universe_utils::PublishedTimePublisher’ has no member named ‘publish’; did you mean ‘std::map<rmw_gid_s, std::shared_ptr<rclcpp::Publisher<autoware_internal_msgs::msg::PublishedTime_<std::allocator<void> > > >, autoware::universe_utils::PublishedTimePublisher::GidCompare> autoware::universe_utils::PublishedTimePublisher::publishers_’? (not accessible from this context)
+    319 |     published_time_publisher_->publish(trajectory_msg.header.stamp);
+        |                                ^~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/include/autoware/velocity_smoother/node.hpp:40,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:15:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/published_time_publisher.hpp:110:80: note: declared private here
+    110 |   std::map<rmw_gid_t, rclcpp::Publisher<PublishedTime>::SharedPtr, GidCompare> publishers_;
+        |                                                                                ^~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_velocity_smoother_node.dir/build.make:76: CMakeFiles/autoware_velocity_smoother_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:208: CMakeFiles/autoware_velocity_smoother_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_velocity_smoother [10.5s, exited with code 2]
+
+  Summary: 0 packages finished [11.8s]
+    1 package failed: autoware_velocity_smoother
+    1 package had stderr output: autoware_velocity_smoother
+generate_code.cpp: |-
+  void VelocitySmootherNode::publishTrajectory(const TrajectoryPoints & trajectory) const
+  {
+    // Convert the trajectory points to a Trajectory message
+    auto trajectory_msg = autoware::motion_utils::convertToTrajectory(trajectory, base_traj_raw_ptr_->header);
+
+    // Publish the trajectory message
+    pub_trajectory_->publish(trajectory_msg);
+
+    // Publish the trajectory timestamp if there are subscribers
+    if (published_time_publisher_ && published_time_publisher_->has_subscribers()) {
+      published_time_publisher_->publish(trajectory_msg.header.stamp);
+    }
+  }
+ground_truth.cpp: |-
+  void VelocitySmootherNode::publishTrajectory(const TrajectoryPoints & trajectory) const
+  {
+    Trajectory publishing_trajectory = autoware::motion_utils::convertToTrajectory(trajectory);
+    publishing_trajectory.header = base_traj_raw_ptr_->header;
+    pub_trajectory_->publish(publishing_trajectory);
+    published_time_publisher_->publish_if_subscribed(
+      pub_trajectory_, publishing_trajectory.header.stamp);
+  }

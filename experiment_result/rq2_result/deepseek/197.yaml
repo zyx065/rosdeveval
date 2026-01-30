@@ -1,0 +1,71 @@
+compilation.log: |
+  Starting >>> nav2_velocity_smoother
+  Finished <<< nav2_velocity_smoother [0.24s]
+
+  Summary: 1 package finished [0.48s]
+generate_code.cpp: |-
+  double VelocitySmoother::findEtaConstraint(
+    const double v_curr, const double v_cmd, const double accel, const double decel)
+  {
+    double delta_v = v_cmd - v_curr;
+    double eta = -1.0;
+
+    if (delta_v > 0.0)  // Accelerating
+    {
+      double max_delta_v = accel / smoothing_frequency_;
+      if (delta_v > max_delta_v)
+      {
+        eta = max_delta_v / delta_v;
+      }
+    }
+    else if (delta_v < 0.0)  // Decelerating
+    {
+      double max_delta_v = decel / smoothing_frequency_;
+      if (-delta_v > max_delta_v)
+      {
+        eta = max_delta_v / -delta_v;
+      }
+    }
+
+    return eta;
+  }
+ground_truth.cpp: |-
+  double VelocitySmoother::findEtaConstraint(
+    const double v_curr, const double v_cmd, const double accel, const double decel)
+  {
+    // Exploiting vector scaling properties
+    double dv = v_cmd - v_curr;
+
+    double v_component_max;
+    double v_component_min;
+
+    // Accelerating if magnitude of v_cmd is above magnitude of v_curr
+    // and if v_cmd and v_curr have the same sign (i.e. speed is NOT passing through 0.0)
+    // Decelerating otherwise
+    if (abs(v_cmd) >= abs(v_curr) && v_curr * v_cmd >= 0.0) {
+      v_component_max = accel / smoothing_frequency_;
+      v_component_min = -accel / smoothing_frequency_;
+    } else {
+      v_component_max = -decel / smoothing_frequency_;
+      v_component_min = decel / smoothing_frequency_;
+    }
+
+    if (dv > v_component_max) {
+      return v_component_max / dv;
+    }
+
+    if (dv < v_component_min) {
+      return v_component_min / dv;
+    }
+
+    return -1.0;
+  }
+architecture-codes: []
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries 

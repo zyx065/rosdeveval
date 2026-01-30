@@ -1,0 +1,52 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_trajectory_follower_node
+ros_package: autoware_trajectory_follower_node
+file_path: src/controller_node.cpp
+method_name: Controller::callbackTimerControl
+requirement: |
+  /**
+  * @brief Timer callback for executing vehicle control operations.
+  * 
+  * This method handles the periodic control cycle, including input validation, 
+  * lateral/longitudinal controller execution, and command publication.
+  * 
+  * @note Control execution is skipped if input data is unavailable or controllers are not ready.
+  */
+category: ros_architecture
+type: has_message,has_topic,has_logger
+signature: |
+  void Controller::callbackTimerControl()
+additional_information: 
+  function_related_function: |
+    std::optional<ControlHorizon> Controller::mergeLatLonHorizon(const LateralHorizon & lateral_horizon, const LongitudinalHorizon & longitudinal_horizon,const rclcpp::Time & stamp)
+    void Controller::publishDebugMarker(const trajectory_follower::InputData & input_data,const trajectory_follower::LateralOutput & lat_out)
+  function_related_class: |
+    autoware::motion::control::trajectory_follower::MpcLateralController::isReady(&trajectory_follower::InputData)
+    autoware::motion::control::trajectory_follower::MpcLateralController::run(&trajectory_follower::InputData)
+    autoware::motion::control::trajectory_follower::MpcLateralController::sync(LongitudinalSyncData const & longitudinal_sync_data)
+    autoware::motion::control::trajectory_follower::LongitudinalControllerBase::isReady(&trajectory_follower::InputData)
+    autoware::motion::control::trajectory_follower::LongitudinalControllerBase::run(&trajectory_follower::InputData)
+    autoware::motion::control::trajectory_follower::LongitudinalControllerBase::sync(LateralSyncData const & lateral_sync_data)
+    struct InputData
+    {
+      autoware_planning_msgs::msg::Trajectory current_trajectory;
+      nav_msgs::msg::Odometry current_odometry;
+      autoware_vehicle_msgs::msg::SteeringReport current_steering;
+      geometry_msgs::msg::AccelWithCovarianceStamped current_accel;
+      autoware_adapi_v1_msgs::msg::OperationModeState current_operation_mode;
+    };
+    struct LateralOutput
+    {
+      Lateral control_cmd;
+      LateralHorizon control_cmd_horizon;
+      LateralSyncData sync_data;
+    };
+    struct LongitudinalOutput
+    {
+      Longitudinal control_cmd;
+      LongitudinalHorizon control_cmd_horizon;
+      LongitudinalSyncData sync_data;
+    };
+test: test_trajectory_follower_node
+test_cases: []

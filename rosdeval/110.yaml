@@ -1,0 +1,29 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_surround_obstacle_checker
+ros_package: autoware_surround_obstacle_checker
+file_path: src/node.cpp
+method_name: SurroundObstacleCheckerNode::isStopRequired
+requirement: |
+  /**
+  * Determines if vehicle stop is required based on obstacle detection and vehicle state.
+  * 
+  * @param is_obstacle_found Whether an obstacle is currently detected in the surround check area
+  * @param is_vehicle_stopped Whether the vehicle is currently in a stopped state
+  * @param state Current state of the surround obstacle checker
+  * @param last_obstacle_found_time Timestamp when obstacle was last detected (optional)
+  * @param time_threshold Time threshold to maintain stop after obstacle disappears
+  * @return Pair containing: [0] boolean indicating if stop is required, 
+  *         [1] optional timestamp of when obstacle was first detected during this stop period
+  */
+category: utilities
+type: has_timer
+signature: |
+  auto SurroundObstacleCheckerNode::isStopRequired(
+    const bool is_obstacle_found, const bool is_vehicle_stopped, const State & state,
+    const std::optional<rclcpp::Time> & last_obstacle_found_time, const double time_threshold) const
+    -> std::pair<bool, std::optional<rclcpp::Time>>
+additional_information: []
+test: test_autoware_surround_obstacle_checker
+test_cases: 
+- isStopRequired

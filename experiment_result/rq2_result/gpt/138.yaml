@@ -1,0 +1,539 @@
+compilation.log: |
+  Starting >>> moveit_core
+  --- stderr: moveit_core
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp: In member function ‘virtual kinematic_constraints::ConstraintEvaluationResult kinematic_constraints::JointConstraint::decide(const moveit::core::RobotState&, bool) const’:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:56: error: no match for ‘operator<<’ (operand types are ‘const char [33]’ and ‘const string’ {aka ‘const std::__cxx11::basic_string<char>’})
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^~ ~~~~~~~~~~~~~~~~~~~~
+        |                     |                                     |
+        |                     const char [33]                       const string {aka const std::__cxx11::basic_string<char>}
+  In file included from /usr/include/c++/11/memory:77,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/macros/include/moveit/macros/declare_ptr.h:37,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/macros/include/moveit/macros/class_forward.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/bits/shared_ptr.h:70:5: note: candidate: ‘template<class _Ch, class _Tr, class _Tp, __gnu_cxx::_Lock_policy _Lp> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, const std::__shared_ptr<_Tp, _Lp>&)’
+     70 |     operator<<(std::basic_ostream<_Ch, _Tr>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/shared_ptr.h:70:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/bits/basic_string.h:48,
+                   from /usr/include/c++/11/string:55,
+                   from /usr/include/c++/11/stdexcept:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/exceptions/include/moveit/exceptions/exceptions.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:41,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/string_view:667:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, std::basic_string_view<_CharT, _Traits>)’
+    667 |     operator<<(basic_ostream<_CharT, _Traits>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/string_view:667:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/string:55,
+                   from /usr/include/c++/11/stdexcept:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/exceptions/include/moveit/exceptions/exceptions.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:41,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/bits/basic_string.h:6531:5: note: candidate: ‘template<class _CharT, class _Traits, class _Alloc> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>&)’
+   6531 |     operator<<(basic_ostream<_CharT, _Traits>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/basic_string.h:6531:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/bits/ios_base.h:46,
+                   from /usr/include/c++/11/ios:42,
+                   from /usr/include/c++/11/istream:38,
+                   from /usr/include/c++/11/sstream:38,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/pose.h:41,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/joint.h:43,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/link.h:44,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/model.h:42,
+                   from /opt/ros/humble/include/urdf/urdf/model.h:43,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/system_error:279:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, const std::error_code&)’
+    279 |     operator<<(basic_ostream<_CharT, _Traits>& __os, const error_code& __e)
+        |     ^~~~~~~~
+  /usr/include/c++/11/system_error:279:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/sstream:38,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/pose.h:41,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/joint.h:43,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/link.h:44,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/model.h:42,
+                   from /opt/ros/humble/include/urdf/urdf/model.h:43,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/ostream:513:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, _CharT)’
+    513 |     operator<<(basic_ostream<_CharT, _Traits>& __out, _CharT __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:513:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/sstream:38,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/pose.h:41,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/joint.h:43,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/link.h:44,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/model.h:42,
+                   from /opt/ros/humble/include/urdf/urdf/model.h:43,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/ostream:518:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, char)’
+    518 |     operator<<(basic_ostream<_CharT, _Traits>& __out, char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:518:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/sstream:38,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/pose.h:41,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/joint.h:43,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/link.h:44,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/model.h:42,
+                   from /opt/ros/humble/include/urdf/urdf/model.h:43,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/ostream:524:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, char)’
+    524 |     operator<<(basic_ostream<char, _Traits>& __out, char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:524:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/sstream:38,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/pose.h:41,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/joint.h:43,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/link.h:44,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/model.h:42,
+                   from /opt/ros/humble/include/urdf/urdf/model.h:43,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/ostream:530:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, signed char)’
+    530 |     operator<<(basic_ostream<char, _Traits>& __out, signed char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:530:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/sstream:38,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/pose.h:41,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/joint.h:43,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/link.h:44,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/model.h:42,
+                   from /opt/ros/humble/include/urdf/urdf/model.h:43,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/ostream:535:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, unsigned char)’
+    535 |     operator<<(basic_ostream<char, _Traits>& __out, unsigned char __c)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:535:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/sstream:38,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/pose.h:41,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/joint.h:43,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/link.h:44,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/model.h:42,
+                   from /opt/ros/humble/include/urdf/urdf/model.h:43,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/ostream:594:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, const _CharT*)’
+    594 |     operator<<(basic_ostream<_CharT, _Traits>& __out, const _CharT* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:594:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/ostream:829,
+                   from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/sstream:38,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/pose.h:41,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/joint.h:43,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/link.h:44,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/model.h:42,
+                   from /opt/ros/humble/include/urdf/urdf/model.h:43,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/bits/ostream.tcc:321:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, const char*)’
+    321 |     operator<<(basic_ostream<_CharT, _Traits>& __out, const char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/ostream.tcc:321:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/sstream:38,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/pose.h:41,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/joint.h:43,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/link.h:44,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/model.h:42,
+                   from /opt/ros/humble/include/urdf/urdf/model.h:43,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/ostream:611:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const char*)’
+    611 |     operator<<(basic_ostream<char, _Traits>& __out, const char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:611:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/sstream:38,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/pose.h:41,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/joint.h:43,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/link.h:44,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/model.h:42,
+                   from /opt/ros/humble/include/urdf/urdf/model.h:43,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/ostream:624:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const signed char*)’
+    624 |     operator<<(basic_ostream<char, _Traits>& __out, const signed char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:624:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/sstream:38,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/pose.h:41,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/joint.h:43,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/link.h:44,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/model.h:42,
+                   from /opt/ros/humble/include/urdf/urdf/model.h:43,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/ostream:629:5: note: candidate: ‘template<class _Traits> std::basic_ostream<char, _Traits>& std::operator<<(std::basic_ostream<char, _Traits>&, const unsigned char*)’
+    629 |     operator<<(basic_ostream<char, _Traits>& __out, const unsigned char* __s)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:629:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<char, _Traits>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/istream:39,
+                   from /usr/include/c++/11/sstream:38,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/pose.h:41,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/joint.h:43,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/link.h:44,
+                   from /opt/ros/humble/include/urdfdom_headers/urdf_model/model.h:42,
+                   from /opt/ros/humble/include/urdf/urdf/model.h:43,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/ostream:750:5: note: candidate: ‘template<class _Ostream, class _Tp> _Ostream&& std::operator<<(_Ostream&&, const _Tp&)’
+    750 |     operator<<(_Ostream&& __os, const _Tp& __x)
+        |     ^~~~~~~~
+  /usr/include/c++/11/ostream:750:5: note:   template argument deduction/substitution failed:
+  /usr/include/c++/11/ostream: In substitution of ‘template<class _Ostream, class _Tp> _Ostream&& std::operator<<(_Ostream&&, const _Tp&) [with _Ostream = const char (&)[33]; _Tp = std::__cxx11::basic_string<char>]’:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59:   required from here
+  /usr/include/c++/11/ostream:750:5: error: no type named ‘type’ in ‘struct std::enable_if<false, void>’
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/detail/joint_limits__traits.hpp:15,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/joint_limits.hpp:9,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model.h:44,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/iomanip:79:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, std::_Resetiosflags)’
+     79 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Resetiosflags __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:79:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/detail/joint_limits__traits.hpp:15,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/joint_limits.hpp:9,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model.h:44,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/iomanip:109:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, std::_Setiosflags)’
+    109 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setiosflags __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:109:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/detail/joint_limits__traits.hpp:15,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/joint_limits.hpp:9,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model.h:44,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/iomanip:143:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, std::_Setbase)’
+    143 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setbase __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:143:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/detail/joint_limits__traits.hpp:15,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/joint_limits.hpp:9,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model.h:44,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/iomanip:178:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, std::_Setfill<_CharT>)’
+    178 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setfill<_CharT> __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:178:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/detail/joint_limits__traits.hpp:15,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/joint_limits.hpp:9,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model.h:44,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/iomanip:208:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, std::_Setprecision)’
+    208 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setprecision __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:208:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/detail/joint_limits__traits.hpp:15,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/joint_limits.hpp:9,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model.h:44,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/iomanip:238:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, std::_Setw)’
+    238 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Setw __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:238:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/detail/joint_limits__traits.hpp:15,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/joint_limits.hpp:9,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model.h:44,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/iomanip:311:5: note: candidate: ‘template<class _CharT, class _Traits, class _MoneyT> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, std::_Put_money<_MoneyT>)’
+    311 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Put_money<_MoneyT> __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:311:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rosidl_runtime_cpp/rosidl_runtime_cpp/traits.hpp:19,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/detail/joint_limits__traits.hpp:15,
+                   from /root/repos/moveit_ws/install/moveit_msgs/include/moveit_msgs/moveit_msgs/msg/joint_limits.hpp:9,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model.h:44,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/iomanip:363:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, std::_Put_time<_CharT>)’
+    363 |     operator<<(basic_ostream<_CharT, _Traits>& __os, _Put_time<_CharT> __f)
+        |     ^~~~~~~~
+  /usr/include/c++/11/iomanip:363:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/boost/config/compiler/gcc.hpp:165,
+                   from /usr/include/boost/config.hpp:39,
+                   from /usr/include/boost/random/mersenne_twister.hpp:24,
+                   from /opt/ros/humble/include/random_numbers/random_numbers.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/cstddef:126:5: note: candidate: ‘template<class _IntegerType> constexpr std::__byte_op_t<_IntegerType> std::operator<<(std::byte, _IntegerType)’
+    126 |     operator<<(byte __b, _IntegerType __shift) noexcept
+        |     ^~~~~~~~
+  /usr/include/c++/11/cstddef:126:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:21: note:   cannot convert ‘"JointConstraint::decide: Joint \'"’ (type ‘const char [33]’) to type ‘std::byte’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/eigen3/Eigen/Core:50,
+                   from /usr/include/eigen3/Eigen/Geometry:11,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model.h:46,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/complex:555:5: note: candidate: ‘template<class _Tp, class _CharT, class _Traits> std::basic_ostream<_CharT, _Traits>& std::operator<<(std::basic_ostream<_CharT, _Traits>&, const std::complex<_Tp>&)’
+    555 |     operator<<(basic_ostream<_CharT, _Traits>& __os, const complex<_Tp>& __x)
+        |     ^~~~~~~~
+  /usr/include/c++/11/complex:555:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_CharT, _Traits>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/timer.hpp:23,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:30,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematics_base/include/moveit/kinematics_base/kinematics_base.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/include/moveit/kinematic_constraints/kinematic_constraint.h:39,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:37:
+  /usr/include/c++/11/thread:92:5: note: candidate: ‘template<class _CharT, class _Traits> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, std::thread::id)’
+     92 |     operator<<(basic_ostream<_CharT, _Traits>& __out, thread::id __id)
+        |     ^~~~~~~~
+  /usr/include/c++/11/thread:92:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/octomap/OcTreeBaseImpl.h:42,
+                   from /opt/ros/humble/include/octomap/OccupancyOcTreeBase.h:44,
+                   from /opt/ros/humble/include/octomap/OcTree.h:38,
+                   from /opt/ros/humble/include/octomap/octomap.h:37,
+                   from /usr/include/fcl/geometry/octree/octree.h:48,
+                   from /usr/include/fcl/narrowphase/detail/traversal/octree/collision/mesh_octree_collision_traversal_node.h:46,
+                   from /usr/include/fcl/narrowphase/detail/collision_func_matrix-inl.h:75,
+                   from /usr/include/fcl/narrowphase/detail/collision_func_matrix.h:86,
+                   from /usr/include/fcl/narrowphase/collision-inl.h:43,
+                   from /usr/include/fcl/narrowphase/collision.h:70,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/collision_detection_fcl/include/moveit/collision_detection_fcl/collision_common.h:47,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/collision_detection_fcl/include/moveit/collision_detection_fcl/collision_env_fcl.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:41:
+  /usr/include/c++/11/bitset:1540:5: note: candidate: ‘template<class _CharT, class _Traits, long unsigned int _Nb> std::basic_ostream<_Ch, _Tr>& std::operator<<(std::basic_ostream<_Ch, _Tr>&, const std::bitset<_Nb>&)’
+   1540 |     operator<<(std::basic_ostream<_CharT, _Traits>& __os,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bitset:1540:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:59: note:   mismatched types ‘std::basic_ostream<_Ch, _Tr>’ and ‘const char [33]’
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |                                                           ^~~~~~~~~~~~~~~~~~~~
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:297:5: error: ‘ROS_INFO_STREAM’ was not declared in this scope; did you mean ‘RCLCPP_INFO_STREAM’?
+    297 |     ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+        |     ^~~~~~~~~~~~~~~
+        |     RCLCPP_INFO_STREAM
+  gmake[2]: *** [kinematic_constraints/CMakeFiles/moveit_kinematic_constraints.dir/build.make:79: kinematic_constraints/CMakeFiles/moveit_kinematic_constraints.dir/src/kinematic_constraint.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1126: kinematic_constraints/CMakeFiles/moveit_kinematic_constraints.dir/all] Error 2
+  gmake: *** [Makefile:149: all] Error 2
+  ---
+  Failed   <<< moveit_core [7.69s, exited with code 2]
+
+  Summary: 0 packages finished [8.16s]
+    1 package failed: moveit_core
+    1 package had stderr output: moveit_core
+generate_code.cpp: |-
+  ConstraintEvaluationResult JointConstraint::decide(const moveit::core::RobotState& state, bool verbose) const
+  {
+    // Get the current joint position from the robot state
+    double current_position = state.getVariablePosition(joint_variable_index_);
+
+    // Compute the distance from the desired joint position
+    double distance;
+    if (joint_is_continuous_)
+    {
+      // Normalize the angle difference for continuous joints
+      distance = normalizeAngle(current_position - joint_position_);
+    }
+    else
+    {
+      // Direct difference for non-continuous joints
+      distance = current_position - joint_position_;
+    }
+
+    // Check if the joint position satisfies the constraint
+    bool satisfied = (distance >= -joint_tolerance_below_ && distance <= joint_tolerance_above_);
+
+    // Log detailed information if verbose is true
+    if (verbose)
+    {
+      ROS_INFO_STREAM("JointConstraint::decide: Joint '" << joint_variable_name_
+                      << "' current position = " << current_position
+                      << ", target position = " << joint_position_
+                      << ", distance = " << distance
+                      << ", tolerance below = " << joint_tolerance_below_
+                      << ", tolerance above = " << joint_tolerance_above_
+                      << ", satisfied = " << (satisfied ? "true" : "false"));
+    }
+
+    // Compute the constraint cost (weighted absolute distance)
+    double cost = constraint_weight_ * std::abs(distance);
+
+    // Return the evaluation result
+    return ConstraintEvaluationResult(satisfied, cost);
+  }
+ground_truth.cpp: |-
+  ConstraintEvaluationResult JointConstraint::decide(const moveit::core::RobotState& state, bool verbose) const
+  {
+    if (!joint_model_)
+      return ConstraintEvaluationResult(true, 0.0);
+
+    double current_joint_position = state.getVariablePosition(joint_variable_index_);
+    double dif = 0.0;
+
+    // compute signed shortest distance for continuous joints
+    if (joint_is_continuous_)
+    {
+      dif = normalizeAngle(current_joint_position) - joint_position_;
+
+      if (dif > M_PI)
+        dif = 2.0 * M_PI - dif;
+      else if (dif < -M_PI)
+        dif += 2.0 * M_PI;  // we include a sign change to have dif > 0
+    }
+    else
+      dif = current_joint_position - joint_position_;
+
+    // check bounds
+    bool result = dif <= (joint_tolerance_above_ + 2.0 * std::numeric_limits<double>::epsilon()) &&
+                  dif >= (-joint_tolerance_below_ - 2.0 * std::numeric_limits<double>::epsilon());
+    if (verbose)
+      RCLCPP_INFO(LOGGER,
+                  "Constraint %s:: Joint name: '%s', actual value: %f, desired value: %f, "
+                  "tolerance_above: %f, tolerance_below: %f",
+                  result ? "satisfied" : "violated", joint_variable_name_.c_str(), current_joint_position,
+                  joint_position_, joint_tolerance_above_, joint_tolerance_below_);
+    return ConstraintEvaluationResult(result, constraint_weight_ * fabs(dif));
+  }

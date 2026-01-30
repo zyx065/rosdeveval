@@ -1,0 +1,45 @@
+compilation.log: |
+  Starting >>> moveit_core
+  Finished <<< moveit_core [0.73s]
+
+  Summary: 1 package finished [1.19s]
+generate_code.cpp: |-
+  double path_length(RobotTrajectory const& trajectory)
+  {
+      double total_length = 0.0;
+
+      // Get the number of waypoints in the trajectory
+      std::size_t waypoint_count = trajectory.getWayPointCount();
+
+      // If there are fewer than 2 waypoints, the path length is 0
+      if (waypoint_count < 2)
+          return total_length;
+
+      // Iterate through the waypoints and calculate the distance between consecutive waypoints
+      for (std::size_t i = 1; i < waypoint_count; ++i)
+      {
+          const moveit::core::RobotState& prev_waypoint = trajectory.getWayPoint(i - 1);
+          const moveit::core::RobotState& curr_waypoint = trajectory.getWayPoint(i);
+
+          // Calculate the Euclidean distance between the two waypoints
+          const Eigen::Vector3d& prev_position = prev_waypoint.getGlobalLinkTransform("base_link").translation();
+          const Eigen::Vector3d& curr_position = curr_waypoint.getGlobalLinkTransform("base_link").translation();
+
+          double distance = (curr_position - prev_position).norm();
+          total_length += distance;
+      }
+
+      return total_length;
+  }
+ground_truth.cpp: |-
+  double path_length(RobotTrajectory const& trajectory)
+  {
+    auto trajectory_length = 0.0;
+    for (std::size_t index = 1; index < trajectory.getWayPointCount(); ++index)
+    {
+      auto const& first = trajectory.getWayPoint(index - 1);
+      auto const& second = trajectory.getWayPoint(index);
+      trajectory_length += first.distance(second);
+    }
+    return trajectory_length;
+  }

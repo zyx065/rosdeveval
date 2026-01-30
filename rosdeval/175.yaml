@@ -1,0 +1,56 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_smac_planner
+ros_package: nav2_smac_planner
+file_path: src/smac_planner_2d.cpp
+method_name: SmacPlanner2D::configure
+requirement: |
+  /**
+  * @brief Configures the SmacPlanner2D plugin with parameters and initializes components.
+  * 
+  * This method sets up the planner by declaring parameters, initializing the A* algorithm,
+  * collision checker, path smoother, and optional costmap downsampler.
+  * 
+  * @param parent Weak pointer to the parent lifecycle node for parameter declaration
+  * @param name Name of the planner plugin for parameter namespace
+  * @param costmap_ros Shared pointer to the costmap ROS wrapper for environment data
+  */
+category: ros_architecture
+type: has_timer,has_logger,has_parameter
+signature: |
+  void SmacPlanner2D::configure(
+    const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
+    std::string name, std::shared_ptr<tf2_ros::Buffer>/*tf*/,
+    std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros)
+additional_information: 
+  function_related_variable: |
+    rcl_interfaces::msg::SetParametersResult
+    dynamicParametersCallback(std::vector<rclcpp::Parameter> parameters);
+
+    std::unique_ptr<AStarAlgorithm<Node2D>> _a_star;
+    GridCollisionChecker _collision_checker;
+    std::unique_ptr<Smoother> _smoother;
+    nav2_costmap_2d::Costmap2D * _costmap;
+    std::unique_ptr<CostmapDownsampler> _costmap_downsampler;
+    rclcpp::Clock::SharedPtr _clock;
+    rclcpp::Logger _logger{rclcpp::get_logger("SmacPlanner2D")};
+    std::string _global_frame, _name;
+    float _tolerance;
+    int _downsampling_factor;
+    bool _downsample_costmap;
+    rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::Path>::SharedPtr _raw_plan_publisher;
+    double _max_planning_time;
+    bool _allow_unknown;
+    int _max_iterations;
+    int _max_on_approach_iterations;
+    bool _use_final_approach_orientation;
+    SearchInfo _search_info;
+    std::string _motion_model_for_search;
+    MotionModel _motion_model;
+    std::mutex _mutex;
+    rclcpp_lifecycle::LifecycleNode::WeakPtr _node;
+
+    // Dynamic parameters handler
+    rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr _dyn_params_handler;
+test: test_smac_2d
+test_cases: []

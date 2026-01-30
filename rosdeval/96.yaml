@@ -1,0 +1,27 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/perception_utils
+ros_package: perception_utils
+file_path: src/run_length_encoder.cpp
+method_name: runLengthDecoder
+requirement: |
+  /**
+  * Decodes run-length encoded binary data into a 2D matrix.
+  * 
+  * Reconstructs a binary image matrix from compressed run-length encoded data,
+  * where each run is represented by a value and length pair.
+  *
+  * @param rle_data Vector containing run-length encoded data with alternating 
+  *                 value and length pairs
+  * @param rows Number of rows in the output matrix
+  * @param cols Number of columns in the output matrix
+  * @return cv::Mat Decoded binary matrix with dimensions rows x cols
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  cv::Mat runLengthDecoder(const std::vector<uint8_t> & rle_data, const int rows, const int cols)
+additional_information: []
+test: test_utils
+test_cases: 
+- runLengthEncoderDecoderTest

@@ -1,0 +1,84 @@
+compilation.log: |
+  Starting >>> nav2_mppi_controller
+  Finished <<< nav2_mppi_controller [0.81s]
+
+  Summary: 1 package finished [1.11s]
+generate_code.cpp: |
+  inline unsigned int findFirstPathInversion(nav_msgs::msg::Path & path)
+  {
+      if (path.poses.size() < 3) {
+          return path.poses.size();
+      }
+      
+      for (unsigned int i = 1; i < path.poses.size() - 1; ++i) {
+          // Calculate vectors between consecutive poses
+          double dx1 = path.poses[i].pose.position.x - path.poses[i-1].pose.position.x;
+          double dy1 = path.poses[i].pose.position.y - path.poses[i-1].pose.position.y;
+          
+          double dx2 = path.poses[i+1].pose.position.x - path.poses[i].pose.position.x;
+          double dy2 = path.poses[i+1].pose.position.y - path.poses[i].pose.position.y;
+          
+          // Calculate magnitudes
+          double mag1 = sqrt(dx1*dx1 + dy1*dy1);
+          double mag2 = sqrt(dx2*dx2 + dy2*dy2);
+          
+          // Skip if either segment is too small
+          if (mag1 < 1e-6 || mag2 < 1e-6) {
+              continue;
+          }
+          
+          // Calculate dot product to determine angle between segments
+          double dot_product = (dx1*dx2 + dy1*dy2) / (mag1 * mag2);
+          
+          // Clamp dot product to valid range for acos
+          dot_product = std::max(-1.0, std::min(1.0, dot_product));
+          
+          // Calculate angle between segments
+          double angle = acos(dot_product);
+          
+          // If angle is greater than 120 degrees (2.094 radians), consider it an inversion
+          if (angle > 2.094) {
+              return i + 1;  // Return the point after the inversion
+          }
+      }
+      
+      // No inversion found
+      return path.poses.size();
+  }
+ground_truth.cpp: |-
+  inline unsigned int findFirstPathInversion(nav_msgs::msg::Path & path)
+  {
+    // At least 3 poses for a possible inversion
+    if (path.poses.size() < 3) {
+      return path.poses.size();
+    }
+
+    // Iterating through the path to determine the position of the path inversion
+    for (unsigned int idx = 1; idx < path.poses.size() - 1; ++idx) {
+      // We have two vectors for the dot product OA and AB. Determining the vectors.
+      float oa_x = path.poses[idx].pose.position.x -
+        path.poses[idx - 1].pose.position.x;
+      float oa_y = path.poses[idx].pose.position.y -
+        path.poses[idx - 1].pose.position.y;
+      float ab_x = path.poses[idx + 1].pose.position.x -
+        path.poses[idx].pose.position.x;
+      float ab_y = path.poses[idx + 1].pose.position.y -
+        path.poses[idx].pose.position.y;
+
+      // Checking for the existance of cusp, in the path, using the dot product.
+      float dot_product = (oa_x * ab_x) + (oa_y * ab_y);
+      if (dot_product < 0.0) {
+        return idx + 1;
+      }
+    }
+
+    return path.poses.size();
+  }
+architecture-codes: []
+functionality-codes:
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Operation/Calculation Error - Incorrect arithmetic operation
+  - Incomplete Code - Missing one step
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries

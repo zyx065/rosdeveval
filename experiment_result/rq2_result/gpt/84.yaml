@@ -1,0 +1,343 @@
+compilation.log: |
+  Starting >>> autoware_sampler_common
+  --- stderr: autoware_sampler_common
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp: In member function ‘autoware::sampler_common::FrenetPoint autoware::sampler_common::transform::Spline2D::frenet(const autoware::universe_utils::Point2d&, double) const’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:242:26: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘<unresolved overloaded function type>’ to binary ‘operator-’
+    242 |         double dx = p2.x - p1.x;
+        |                     ~~~~ ^ ~~~~
+        |                        |      |
+        |                        |      <unresolved overloaded function type>
+        |                        <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:243:26: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘<unresolved overloaded function type>’ to binary ‘operator-’
+    243 |         double dy = p2.y - p1.y;
+        |                     ~~~~ ^ ~~~~
+        |                        |      |
+        |                        |      <unresolved overloaded function type>
+        |                        <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:245:26: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘<unresolved overloaded function type>’ to binary ‘operator-’
+    245 |         double t = ((p.x - p1.x) * dx + (p.y - p1.y) * dy) / (segment_length * segment_length);
+        |                      ~~~ ^ ~~~~
+        |                        |      |
+        |                        |      <unresolved overloaded function type>
+        |                        <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:245:46: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘<unresolved overloaded function type>’ to binary ‘operator-’
+    245 |         double t = ((p.x - p1.x) * dx + (p.y - p1.y) * dy) / (segment_length * segment_length);
+        |                                          ~~~ ^ ~~~~
+        |                                            |      |
+        |                                            |      <unresolved overloaded function type>
+        |                                            <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:251:38: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘double’ to binary ‘operator+’
+    251 |         Point2d projected_point(p1.x + t * dx, p1.y + t * dy);
+        |                                 ~~~~ ^ ~~~~~~
+        |                                    |     |
+        |                                    |     double
+        |                                    <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:251:53: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘double’ to binary ‘operator+’
+    251 |         Point2d projected_point(p1.x + t * dx, p1.y + t * dy);
+        |                                                ~~~~ ^ ~~~~~~
+        |                                                   |     |
+        |                                                   |     double
+        |                                                   <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:255:18: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘<unresolved overloaded function type>’ to binary ‘operator-’
+    255 |             (p.x - projected_point.x) * (p.x - projected_point.x) +
+        |              ~~~ ^ ~~~~~~~~~~~~~~~~~
+        |                |                   |
+        |                |                   <unresolved overloaded function type>
+        |                <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:255:46: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘<unresolved overloaded function type>’ to binary ‘operator-’
+    255 |             (p.x - projected_point.x) * (p.x - projected_point.x) +
+        |                                          ~~~ ^ ~~~~~~~~~~~~~~~~~
+        |                                            |                   |
+        |                                            |                   <unresolved overloaded function type>
+        |                                            <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:256:18: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘<unresolved overloaded function type>’ to binary ‘operator-’
+    256 |             (p.y - projected_point.y) * (p.y - projected_point.y));
+        |              ~~~ ^ ~~~~~~~~~~~~~~~~~
+        |                |                   |
+        |                |                   <unresolved overloaded function type>
+        |                <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:256:46: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘<unresolved overloaded function type>’ to binary ‘operator-’
+    256 |             (p.y - projected_point.y) * (p.y - projected_point.y));
+        |                                          ~~~ ^ ~~~~~~~~~~~~~~~~~
+        |                                            |                   |
+        |                                            |                   <unresolved overloaded function type>
+        |                                            <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:273:55: error: cannot convert ‘const std::vector<autoware::universe_utils::Point2d>’ to ‘const std::vector<double>&’
+    273 |         double current_x = x_spline_.value(refined_s, original_points_);
+        |                                                       ^~~~~~~~~~~~~~~~
+        |                                                       |
+        |                                                       const std::vector<autoware::universe_utils::Point2d>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:71:70: note:   initializing argument 2 of ‘double autoware::sampler_common::transform::Spline::value(double, const std::vector<double>&) const’
+     71 | double Spline::value(const double query, const std::vector<double> & base_index) const
+        |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:274:55: error: cannot convert ‘const std::vector<autoware::universe_utils::Point2d>’ to ‘const std::vector<double>&’
+    274 |         double current_y = y_spline_.value(refined_s, original_points_);
+        |                                                       ^~~~~~~~~~~~~~~~
+        |                                                       |
+        |                                                       const std::vector<autoware::universe_utils::Point2d>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:71:70: note:   initializing argument 2 of ‘double autoware::sampler_common::transform::Spline::value(double, const std::vector<double>&) const’
+     71 | double Spline::value(const double query, const std::vector<double> & base_index) const
+        |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:275:25: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘double’ to binary ‘operator-’
+    275 |         double dx = p.x - current_x;
+        |                     ~~~ ^ ~~~~~~~~~
+        |                       |   |
+        |                       |   double
+        |                       <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:276:25: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘double’ to binary ‘operator-’
+    276 |         double dy = p.y - current_y;
+        |                     ~~~ ^ ~~~~~~~~~
+        |                       |   |
+        |                       |   double
+        |                       <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:283:47: error: cannot convert ‘const std::vector<autoware::universe_utils::Point2d>’ to ‘const std::vector<double>&’
+    283 |             (p.x - x_spline_.value(forward_s, original_points_)) * (p.x - x_spline_.value(forward_s, original_points_)) +
+        |                                               ^~~~~~~~~~~~~~~~
+        |                                               |
+        |                                               const std::vector<autoware::universe_utils::Point2d>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:71:70: note:   initializing argument 2 of ‘double autoware::sampler_common::transform::Spline::value(double, const std::vector<double>&) const’
+     71 | double Spline::value(const double query, const std::vector<double> & base_index) const
+        |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:283:102: error: cannot convert ‘const std::vector<autoware::universe_utils::Point2d>’ to ‘const std::vector<double>&’
+    283 |             (p.x - x_spline_.value(forward_s, original_points_)) * (p.x - x_spline_.value(forward_s, original_points_)) +
+        |                                                                                                      ^~~~~~~~~~~~~~~~
+        |                                                                                                      |
+        |                                                                                                      const std::vector<autoware::universe_utils::Point2d>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:71:70: note:   initializing argument 2 of ‘double autoware::sampler_common::transform::Spline::value(double, const std::vector<double>&) const’
+     71 | double Spline::value(const double query, const std::vector<double> & base_index) const
+        |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:284:47: error: cannot convert ‘const std::vector<autoware::universe_utils::Point2d>’ to ‘const std::vector<double>&’
+    284 |             (p.y - y_spline_.value(forward_s, original_points_)) * (p.y - y_spline_.value(forward_s, original_points_)));
+        |                                               ^~~~~~~~~~~~~~~~
+        |                                               |
+        |                                               const std::vector<autoware::universe_utils::Point2d>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:71:70: note:   initializing argument 2 of ‘double autoware::sampler_common::transform::Spline::value(double, const std::vector<double>&) const’
+     71 | double Spline::value(const double query, const std::vector<double> & base_index) const
+        |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:284:102: error: cannot convert ‘const std::vector<autoware::universe_utils::Point2d>’ to ‘const std::vector<double>&’
+    284 |             (p.y - y_spline_.value(forward_s, original_points_)) * (p.y - y_spline_.value(forward_s, original_points_)));
+        |                                                                                                      ^~~~~~~~~~~~~~~~
+        |                                                                                                      |
+        |                                                                                                      const std::vector<autoware::universe_utils::Point2d>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:71:70: note:   initializing argument 2 of ‘double autoware::sampler_common::transform::Spline::value(double, const std::vector<double>&) const’
+     71 | double Spline::value(const double query, const std::vector<double> & base_index) const
+        |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:286:48: error: cannot convert ‘const std::vector<autoware::universe_utils::Point2d>’ to ‘const std::vector<double>&’
+    286 |             (p.x - x_spline_.value(backward_s, original_points_)) * (p.x - x_spline_.value(backward_s, original_points_)) +
+        |                                                ^~~~~~~~~~~~~~~~
+        |                                                |
+        |                                                const std::vector<autoware::universe_utils::Point2d>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:71:70: note:   initializing argument 2 of ‘double autoware::sampler_common::transform::Spline::value(double, const std::vector<double>&) const’
+     71 | double Spline::value(const double query, const std::vector<double> & base_index) const
+        |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:286:104: error: cannot convert ‘const std::vector<autoware::universe_utils::Point2d>’ to ‘const std::vector<double>&’
+    286 |             (p.x - x_spline_.value(backward_s, original_points_)) * (p.x - x_spline_.value(backward_s, original_points_)) +
+        |                                                                                                        ^~~~~~~~~~~~~~~~
+        |                                                                                                        |
+        |                                                                                                        const std::vector<autoware::universe_utils::Point2d>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:71:70: note:   initializing argument 2 of ‘double autoware::sampler_common::transform::Spline::value(double, const std::vector<double>&) const’
+     71 | double Spline::value(const double query, const std::vector<double> & base_index) const
+        |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:287:48: error: cannot convert ‘const std::vector<autoware::universe_utils::Point2d>’ to ‘const std::vector<double>&’
+    287 |             (p.y - y_spline_.value(backward_s, original_points_)) * (p.y - y_spline_.value(backward_s, original_points_)));
+        |                                                ^~~~~~~~~~~~~~~~
+        |                                                |
+        |                                                const std::vector<autoware::universe_utils::Point2d>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:71:70: note:   initializing argument 2 of ‘double autoware::sampler_common::transform::Spline::value(double, const std::vector<double>&) const’
+     71 | double Spline::value(const double query, const std::vector<double> & base_index) const
+        |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:287:104: error: cannot convert ‘const std::vector<autoware::universe_utils::Point2d>’ to ‘const std::vector<double>&’
+    287 |             (p.y - y_spline_.value(backward_s, original_points_)) * (p.y - y_spline_.value(backward_s, original_points_)));
+        |                                                                                                        ^~~~~~~~~~~~~~~~
+        |                                                                                                        |
+        |                                                                                                        const std::vector<autoware::universe_utils::Point2d>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:71:70: note:   initializing argument 2 of ‘double autoware::sampler_common::transform::Spline::value(double, const std::vector<double>&) const’
+     71 | double Spline::value(const double query, const std::vector<double> & base_index) const
+        |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:300:51: error: cannot convert ‘const std::vector<autoware::universe_utils::Point2d>’ to ‘const std::vector<double>&’
+    300 |     double refined_x = x_spline_.value(refined_s, original_points_);
+        |                                                   ^~~~~~~~~~~~~~~~
+        |                                                   |
+        |                                                   const std::vector<autoware::universe_utils::Point2d>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:71:70: note:   initializing argument 2 of ‘double autoware::sampler_common::transform::Spline::value(double, const std::vector<double>&) const’
+     71 | double Spline::value(const double query, const std::vector<double> & base_index) const
+        |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:301:51: error: cannot convert ‘const std::vector<autoware::universe_utils::Point2d>’ to ‘const std::vector<double>&’
+    301 |     double refined_y = y_spline_.value(refined_s, original_points_);
+        |                                                   ^~~~~~~~~~~~~~~~
+        |                                                   |
+        |                                                   const std::vector<autoware::universe_utils::Point2d>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:71:70: note:   initializing argument 2 of ‘double autoware::sampler_common::transform::Spline::value(double, const std::vector<double>&) const’
+     71 | double Spline::value(const double query, const std::vector<double> & base_index) const
+        |                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:302:24: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘double’ to binary ‘operator-’
+    302 |     d = std::sqrt((p.x - refined_x) * (p.x - refined_x) + (p.y - refined_y) * (p.y - refined_y));
+        |                    ~~~ ^ ~~~~~~~~~
+        |                      |   |
+        |                      |   double
+        |                      <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:302:44: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘double’ to binary ‘operator-’
+    302 |     d = std::sqrt((p.x - refined_x) * (p.x - refined_x) + (p.y - refined_y) * (p.y - refined_y));
+        |                                        ~~~ ^ ~~~~~~~~~
+        |                                          |   |
+        |                                          |   double
+        |                                          <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:302:64: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘double’ to binary ‘operator-’
+    302 |     d = std::sqrt((p.x - refined_x) * (p.x - refined_x) + (p.y - refined_y) * (p.y - refined_y));
+        |                                                            ~~~ ^ ~~~~~~~~~
+        |                                                              |   |
+        |                                                              |   double
+        |                                                              <unresolved overloaded function type>
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common/src/sampler_common/transform/spline_transform.cpp:302:84: error: invalid operands of types ‘<unresolved overloaded function type>’ and ‘double’ to binary ‘operator-’
+    302 |     d = std::sqrt((p.x - refined_x) * (p.x - refined_x) + (p.y - refined_y) * (p.y - refined_y));
+        |                                                                                ~~~ ^ ~~~~~~~~~
+        |                                                                                  |   |
+        |                                                                                  |   double
+        |                                                                                  <unresolved overloaded function type>
+  gmake[2]: *** [CMakeFiles/autoware_sampler_common.dir/build.make:118: CMakeFiles/autoware_sampler_common.dir/src/sampler_common/transform/spline_transform.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_sampler_common.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_sampler_common [2.99s, exited with code 2]
+
+  Summary: 0 packages finished [4.35s]
+    1 package failed: autoware_sampler_common
+    1 package had stderr output: autoware_sampler_common
+generate_code.cpp: |-
+  FrenetPoint Spline2D::frenet(const Point2d & p, const double precision) const
+  {
+      // Initialize variables
+      double s = 0.0; // Longitudinal coordinate along the spline
+      double d = 0.0; // Lateral offset from the spline
+      double min_distance = std::numeric_limits<double>::max(); // Minimum distance to the spline
+      double best_s = 0.0; // Best s value corresponding to the closest point on the spline
+
+      // Iterate through the original points to find the closest segment
+      for (size_t i = 0; i < original_points_.size() - 1; ++i) {
+          const Point2d & p1 = original_points_[i];
+          const Point2d & p2 = original_points_[i + 1];
+
+          // Calculate the projection of point p onto the segment [p1, p2]
+          double dx = p2.x - p1.x;
+          double dy = p2.y - p1.y;
+          double segment_length = std::sqrt(dx * dx + dy * dy);
+          double t = ((p.x - p1.x) * dx + (p.y - p1.y) * dy) / (segment_length * segment_length);
+
+          // Clamp t to the range [0, 1] to ensure the projection lies within the segment
+          t = std::max(0.0, std::min(1.0, t));
+
+          // Calculate the projected point on the segment
+          Point2d projected_point(p1.x + t * dx, p1.y + t * dy);
+
+          // Calculate the distance from the point p to the projected point
+          double distance = std::sqrt(
+              (p.x - projected_point.x) * (p.x - projected_point.x) +
+              (p.y - projected_point.y) * (p.y - projected_point.y));
+
+          // Update the closest point if a smaller distance is found
+          if (distance < min_distance) {
+              min_distance = distance;
+              best_s = s + t * segment_length; // Calculate the s value for the closest point
+              d = distance; // Update the lateral offset
+          }
+
+          // Increment s by the length of the current segment
+          s += segment_length;
+      }
+
+      // Refine the s value using the spline interpolation for better precision
+      double refined_s = best_s;
+      double step = precision;
+      while (step > precision / 10.0) {
+          double current_x = x_spline_.value(refined_s, original_points_);
+          double current_y = y_spline_.value(refined_s, original_points_);
+          double dx = p.x - current_x;
+          double dy = p.y - current_y;
+          double current_distance = std::sqrt(dx * dx + dy * dy);
+
+          // Check if moving forward or backward along the spline reduces the distance
+          double forward_s = refined_s + step;
+          double backward_s = refined_s - step;
+          double forward_distance = std::sqrt(
+              (p.x - x_spline_.value(forward_s, original_points_)) * (p.x - x_spline_.value(forward_s, original_points_)) +
+              (p.y - y_spline_.value(forward_s, original_points_)) * (p.y - y_spline_.value(forward_s, original_points_)));
+          double backward_distance = std::sqrt(
+              (p.x - x_spline_.value(backward_s, original_points_)) * (p.x - x_spline_.value(backward_s, original_points_)) +
+              (p.y - y_spline_.value(backward_s, original_points_)) * (p.y - y_spline_.value(backward_s, original_points_)));
+
+          // Update refined_s based on the direction that reduces the distance
+          if (forward_distance < current_distance) {
+              refined_s = forward_s;
+          } else if (backward_distance < current_distance) {
+              refined_s = backward_s;
+          } else {
+              step /= 2.0; // Reduce step size for finer adjustment
+          }
+      }
+
+      // Update d using the refined s value
+      double refined_x = x_spline_.value(refined_s, original_points_);
+      double refined_y = y_spline_.value(refined_s, original_points_);
+      d = std::sqrt((p.x - refined_x) * (p.x - refined_x) + (p.y - refined_y) * (p.y - refined_y));
+
+      // Return the Frenet coordinates
+      return FrenetPoint{refined_s, d};
+  }
+ground_truth.cpp: |-
+  FrenetPoint Spline2D::frenet(const Point2d & p, const double precision) const
+  {
+    const auto distance = [&](const Point2d & p2) {
+      return std::hypot(p.x() - p2.x(), p.y() - p2.y());
+    };
+    size_t min_i{};
+    auto min_dist = std::numeric_limits<double>::max();
+    for (size_t i = 0; i < original_points_.size(); ++i) {
+      const auto dist = distance(original_points_[i]);
+      if (dist <= min_dist) {
+        min_dist = dist;
+        min_i = i;
+      }
+    }
+    auto lb_i = min_i == 0 ? min_i : min_i - 1;
+    auto ub_i = min_i + 1 == original_points_.size() ? min_i : min_i + 1;
+    auto best_s = s_[min_i];
+    // real closest s is either in interval [lb_i:min_i] or interval [min_i:ub]
+    // continue exploring the interval whose middle point is closest to the input point
+    std::vector<double> s_interval = {s_[lb_i], {}, s_[min_i], {}, s_[ub_i]};
+    std::vector<double> d_interval = {
+      distance(original_points_[lb_i]),
+      {},
+      distance(original_points_[min_i]),
+      {},
+      distance(original_points_[ub_i])};
+    while (s_interval[4] - s_interval[0] > precision) {
+      s_interval[1] = s_interval[0] + (s_interval[2] - s_interval[0]) / 2;
+      s_interval[3] = s_interval[2] + (s_interval[4] - s_interval[2]) / 2;
+      d_interval[1] =
+        distance({x_spline_.value(s_interval[1], s_), y_spline_.value(s_interval[1], s_)});
+      d_interval[3] =
+        distance({x_spline_.value(s_interval[3], s_), y_spline_.value(s_interval[3], s_)});
+
+      for (auto i = 0; i < 5; ++i) {
+        if (d_interval[i] <= min_dist) {
+          min_dist = d_interval[i];
+          min_i = i;
+        }
+      }
+
+      best_s = s_interval[min_i];
+      lb_i = min_i == 0 ? min_i : min_i - 1;
+      ub_i = min_i == 4 ? min_i : min_i + 1;
+      s_interval = {s_interval[lb_i], {}, s_interval[min_i], {}, s_interval[ub_i]};
+      d_interval = {d_interval[lb_i], {}, d_interval[min_i], {}, d_interval[ub_i]};
+    }
+    // check sign of d
+    const double x0 = x_spline_.value(best_s, s_);
+    const double y0 = y_spline_.value(best_s, s_);
+    const double x1 = x_spline_.value(best_s + precision, s_);
+    const double y1 = y_spline_.value(best_s + precision, s_);
+    if ((x1 - x0) * (p.y() - y0) - (y1 - y0) * (p.x() - x0) < 0) {
+      min_dist *= -1.0;
+    }
+    return {best_s, min_dist};
+  }

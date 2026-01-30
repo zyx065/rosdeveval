@@ -1,0 +1,54 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator
+ros_package: autoware_perception_online_evaluator
+file_path: src/perception_online_evaluator_node.cpp
+method_name: PerceptionOnlineEvaluatorNode::publishMetrics
+requirement: |
+  /**
+  * Publishes perception evaluation metrics and debug markers.
+  * 
+  * Calculates metrics based on the configured parameters, converts valid results to ROS messages,
+  * and publishes them if any metrics are available. Also publishes debug markers for visualization.
+  * 
+  * @note This method automatically uses the current node time for the metric timestamps.
+  * @note Only metrics with valid calculations (non-empty results) are included in the published message.
+  */
+category: ros_architecture
+type: has_topic,has_message,has_timer
+signature: |
+  void PerceptionOnlineEvaluatorNode::publishMetrics()
+additional_information: 
+  function_related_variable: |
+    std::shared_ptr<Parameters> parameters_;
+    MetricsCalculator metrics_calculator_;
+  function_related_class: |
+    class MetricsCalculator
+    {
+    public:
+      Parameters parameters;
+
+      MetricsCalculator() = default;
+      std::optional<Accumulator<double>> calculate(const Metric metric, const Trajectory & traj) const;
+      std::optional<Accumulator<double>> calculate(const Metric metric, const Pose & base_pose, const Pose & target_pose) const;
+      void setReferenceTrajectory(const Trajectory & traj);
+      void setPreviousTrajectory(const Trajectory & traj);
+      void setPredictedObjects(const PredictedObjects & objects);
+      void setEgoPose(const geometry_msgs::msg::Pose & pose);
+      Pose getEgoPose();
+
+    private:
+      Trajectory getLookaheadTrajectory(const Trajectory & traj, const double max_dist_m, const double max_time_s) const;
+
+      Trajectory reference_trajectory_;
+      Trajectory reference_trajectory_lookahead_;
+      Trajectory previous_trajectory_;
+      Trajectory previous_trajectory_lookahead_;
+      PredictedObjects dynamic_objects_;
+      geometry_msgs::msg::Pose ego_pose_;
+      PoseWithUuidStamped modified_goal_;
+    };
+  function_related_function: |
+    void PerceptionOnlineEvaluatorNode::toMetricMsg(const std::string & metric, const Accumulator<double> & metric_stat,tier4_metric_msgs::msg::MetricArray & metrics_msg) const
+test: test_perception_online_evaluator_node
+test_cases: []

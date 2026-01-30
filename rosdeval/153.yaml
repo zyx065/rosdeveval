@@ -1,0 +1,31 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_ros/moveit_servo
+ros_package: moveit_servo
+file_path: src/enforce_limits.cpp
+method_name: enforceVelocityLimits
+requirement: |
+  /**
+  * Adjusts joint velocities and positions to respect velocity limits.
+  *
+  * Applies a velocity scaling factor to ensure joint velocities do not exceed their limits,
+  * and updates positions accordingly to maintain consistency over the given period.
+  *
+  * @param[in] joint_model_group The group of joints to enforce limits for.
+  * @param[in] publish_period The time period over which to enforce velocity limits.
+  * @param[in,out] joint_state The joint state message to modify with scaled velocities and positions.
+  * @param[in] override_velocity_scaling_factor Optional scaling factor (0.0 to use internal calculation).
+  */
+category: utilities
+type: has_domain_library,has_message
+signature: |
+  void enforceVelocityLimits(const moveit::core::JointModelGroup* joint_model_group, const double publish_period,
+                             sensor_msgs::msg::JointState& joint_state, const double override_velocity_scaling_factor)
+additional_information: 
+  function_related_function: 
+    double getVelocityScalingFactor(const moveit::core::JointModelGroup* joint_model_group, const Eigen::VectorXd& velocity)
+test: servo_calcs_unit_tests
+test_cases: 
+- AcceptableJointVelocities
+- NegativeVelocitiesTooFast
+- VelocitiesTooFast

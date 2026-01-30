@@ -1,0 +1,26 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_mission_planner_universe
+ros_package: autoware_raw_vehicle_cmd_converter
+file_path: src/lanelet2_plugins/utility_functions.cpp
+method_name: convertBasicPoint3dToPose
+requirement: |
+  /**
+  * @brief Converts a BasicPoint3d with yaw angle into a geometry_msgs Pose message.
+  * @param point The 3D point containing x, y, z coordinates to set the position.
+  * @param lane_yaw The yaw angle (in radians) used to set the orientation.
+  * @return geometry_msgs::msg::Pose containing the position from point and orientation from yaw.
+  */
+category: utilities
+type: has_message
+signature: |
+  geometry_msgs::msg::Pose convertBasicPoint3dToPose(
+    const lanelet::BasicPoint3d & point, const double lane_yaw)
+additional_information: 
+  function_related_class: |
+    namespace autoware::universe_utils{
+      geometry_msgs::msg::Quaternion createQuaternionFromYaw(const double yaw);
+    }
+test: test_autoware_mission_planner_universe
+test_cases: 
+- convertBasicPoint3dToPose

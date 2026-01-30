@@ -1,0 +1,38 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_costmap_generator
+ros_package: autoware_costmap_generator
+file_path: src/costmap_generator.cpp
+method_name: CostmapGenerator::CostmapGenerator
+requirement: |
+  /**
+  * @brief Constructs a KinematicEvaluatorNode for evaluating kinematic metrics.
+  *
+  * Initializes the node with TF buffer/listener, subscribes to odometry data, and sets up
+  * metric calculation based on parameters. Results can be published as diagnostics and optionally
+  * saved to a file.
+  *
+  * @param node_options Configuration options for the ROS 2 node.
+  */
+category: ros_architecture
+type: has_parameter,has_topic,has_timer,has_message
+signature: |
+  CostmapGenerator::CostmapGenerator(const rclcpp::NodeOptions & node_options)
+  : Node("costmap_generator", node_options), tf_buffer_(this->get_clock()), tf_listener_(tf_buffer_)
+additional_information: 
+  function_related_variable: |
+    std::shared_ptr<::costmap_generator_node::ParamListener> param_listener_;
+    std::shared_ptr<::costmap_generator_node::Params> param_;
+    rclcpp::Subscription<autoware_map_msgs::msg::LaneletMapBin>::SharedPtr sub_lanelet_bin_map_;
+    rclcpp::Publisher<grid_map_msgs::msg::GridMap>::SharedPtr pub_costmap_;
+    rclcpp::Publisher<nav_msgs::msg::OccupancyGrid>::SharedPtr pub_occupancy_grid_;
+    rclcpp::Publisher<autoware::universe_utils::ProcessingTimeDetail>::SharedPtr pub_processing_time_;
+    rclcpp::Publisher<tier4_debug_msgs::msg::Float64Stamped>::SharedPtr pub_processing_time_ms_;
+    std::shared_ptr<autoware::universe_utils::TimeKeeper> time_keeper_;
+    rclcpp::TimerBase::SharedPtr timer_;
+  function_related_function: |
+    void initGridmap();
+    void onLaneletMapBin(const autoware_map_msgs::msg::LaneletMapBin::ConstSharedPtr msg);
+    void onTimer();
+test: test_autoware_costmap_generator
+test_cases: []

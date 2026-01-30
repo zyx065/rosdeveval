@@ -1,0 +1,24 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_route_handler
+ros_package: autoware_planning_validator
+file_path: src/route_handler.cpp
+method_name: RouteHandler::getGoalLanelet
+requirement: |
+  /**
+  * Finds the goal lanelet in the route based on the goal lane ID.
+  * @param[out] goal_lanelet Pointer to store the found goal lanelet if successful.
+  * @return True if the goal lanelet was found, false otherwise.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  bool RouteHandler::getGoalLanelet(lanelet::ConstLanelet * goal_lanelet) const
+additional_information: 
+  function_related_function: |
+    lanelet::Id RouteHandler::getGoalLaneId() const
+  function_related_variable: |
+    lanelet::ConstLanelets route_lanelets_;
+test: test_autoware_route_handler
+test_cases: 
+- getGoalLaneId

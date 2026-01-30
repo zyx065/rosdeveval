@@ -1,0 +1,44 @@
+compilation.log: |
+  Starting >>> autoware_scenario_selector
+  [Processing: autoware_scenario_selector]
+  Finished <<< autoware_scenario_selector [46.5s]
+
+  Summary: 1 package finished [47.9s]
+generate_code.cpp: "void ScenarioSelectorNode::onOdom(const nav_msgs::msg::Odometry::ConstSharedPtr\
+  \ msg)\n{\n    // Update current pose\n    current_pose_ = msg;\n\n    // Create\
+  \ a TwistStamped message from the odometry twist\n    auto twist_stamped = std::make_shared<geometry_msgs::msg::TwistStamped>();\n\
+  \    twist_stamped->header = msg->header;\n    twist_stamped->twist = msg->twist.twist;\n\
+  \n    // Update current twist\n    twist_ = twist_stamped;\n\n    // Add to twist\
+  \ history buffer\n    twist_buffer_.push_back(twist_stamped);\n\n    // Remove old\
+  \ twists if buffer exceeds time threshold\n    while (!twist_buffer_.empty() &&\
+  \ \n           (rclcpp::Time(twist_stamped->header.stamp) - \n            rclcpp::Time(twist_buffer_.front()->header.stamp)).seconds()\
+  \ > th_stopped_time_sec_)\n    {\n        twist_buffer_.pop_front();\n    }\n}"
+ground_truth.cpp: |-
+  void ScenarioSelectorNode::onOdom(const nav_msgs::msg::Odometry::ConstSharedPtr msg)
+  {
+    current_pose_ = msg;
+    auto twist = std::make_shared<geometry_msgs::msg::TwistStamped>();
+    twist->header = msg->header;
+    twist->twist = msg->twist.twist;
+
+    twist_ = twist;
+    twist_buffer_.push_back(twist);
+
+    // Delete old data in buffer
+    while (true) {
+      const auto time_diff =
+        rclcpp::Time(msg->header.stamp) - rclcpp::Time(twist_buffer_.front()->header.stamp);
+
+      if (time_diff.seconds() < th_stopped_time_sec_) {
+        break;
+      }
+
+      twist_buffer_.pop_front();
+    }
+  }
+architecture-codes: []
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

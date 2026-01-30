@@ -1,0 +1,25 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/sensing/autoware_pointcloud_preprocessor
+ros_package: autoware_pointcloud_preprocessor
+file_path: src/utility/geometry.cpp
+method_name: remove_polygon_cgal_from_cloud
+requirement: |
+  /**
+  * Filters a point cloud by removing points inside a 2D polygon and below an optional Z threshold.
+  * 
+  * @param cloud_in The input point cloud to filter.
+  * @param polyline_polygon The 2D polygon used for filtering points in the XY plane.
+  * @param[out] cloud_out The output point cloud containing points outside the polygon and above max_z.
+  * @param max_z Optional maximum Z value; points at or below this value within the polygon are removed.
+  */
+category: utilities
+type: has_domain_library,has_message
+signature: |
+  void remove_polygon_cgal_from_cloud(
+    const sensor_msgs::msg::PointCloud2 & cloud_in, const PolygonCgal & polyline_polygon,
+    sensor_msgs::msg::PointCloud2 & cloud_out, const std::optional<float> & max_z)
+additional_information: []
+test: test_utilities
+test_cases: 
+- PointsBelowMaxZAreRemoved

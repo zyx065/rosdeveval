@@ -1,0 +1,61 @@
+compilation.log: |
+  Starting >>> autoware_planning_evaluator
+  --- stderr: autoware_planning_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/motion_evaluator_node.cpp: In member function ‘void planning_diagnostics::MotionEvaluatorNode::onOdom(nav_msgs::msg::Odometry_<std::allocator<void> >::SharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/motion_evaluator_node.cpp:112:29: error: ‘using Trajectory = struct autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >’} has no member named ‘push_back’
+    112 |     accumulated_trajectory_.push_back(current_pose);
+        |                             ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/motion_evaluator_node.cpp:119:33: error: ‘using Trajectory = struct autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >’} has no member named ‘size’
+    119 |     if (accumulated_trajectory_.size() > max_size) {
+        |                                 ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/motion_evaluator_node.cpp:120:33: error: ‘using Trajectory = struct autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >’} has no member named ‘pop_front’
+    120 |         accumulated_trajectory_.pop_front();
+        |                                 ^~~~~~~~~
+  gmake[2]: *** [CMakeFiles/planning_evaluator_node.dir/build.make:160: CMakeFiles/planning_evaluator_node.dir/src/motion_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:161: CMakeFiles/planning_evaluator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_planning_evaluator [5.48s, exited with code 2]
+
+  Summary: 0 packages finished [6.91s]
+    1 package failed: autoware_planning_evaluator
+    1 package had stderr output: autoware_planning_evaluator
+generate_code.cpp: |-
+  void MotionEvaluatorNode::onOdom(const nav_msgs::msg::Odometry::SharedPtr msg)
+  {
+      // Extract the current pose from the odometry message
+      geometry_msgs::msg::Pose current_pose = msg->pose.pose;
+
+      // Get the timestamp of the odometry message
+      rclcpp::Time current_time = msg->header.stamp;
+
+      // Append the current pose to the accumulated trajectory
+      accumulated_trajectory_.push_back(current_pose);
+
+      // Append the timestamp to the deque of timestamps
+      stamps_.push_back(current_time);
+
+      // Optional: If you want to limit the size of the accumulated trajectory and timestamps
+      const size_t max_size = 1000; // Example limit
+      if (accumulated_trajectory_.size() > max_size) {
+          accumulated_trajectory_.pop_front();
+          stamps_.pop_front();
+      }
+  }
+ground_truth.cpp: |-
+  void MotionEvaluatorNode::onOdom(const nav_msgs::msg::Odometry::SharedPtr msg)
+  {
+    // TODO(Maxime CLEMENT): set some desired minimum time/distance between two points
+    TrajectoryPoint current_point;
+    current_point.pose = getCurrentEgoPose();
+    current_point.longitudinal_velocity_mps = msg->twist.twist.linear.x;
+    const rclcpp::Time now = this->get_clock()->now();
+    if (!accumulated_trajectory_.points.empty()) {
+      current_point.acceleration_mps2 =
+        (msg->twist.twist.linear.x -
+         accumulated_trajectory_.points.back().longitudinal_velocity_mps) /
+        (now - stamps_.back()).seconds();
+    }
+    accumulated_trajectory_.points.push_back(current_point);
+    stamps_.push_back(now);
+  }

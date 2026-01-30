@@ -1,0 +1,38 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/sensing/autoware_radar_tracks_noise_filter
+ros_package: autoware_radar_tracks_noise_filter
+file_path: src/radar_tracks_noise_filter_node.cpp
+method_name: RadarTrackCrossingNoiseFilterNode::RadarTrackCrossingNoiseFilterNode
+requirement: |
+  /**
+  * @brief Constructor for the radar track crossing noise filter node.
+  * 
+  * Initializes the ROS 2 node with parameter handling, subscriptions, and publishers
+  * for filtering radar tracks based on lateral velocity thresholds.
+  * 
+  * @param node_options Configuration options for the ROS 2 node initialization.
+  */
+category: ros_architecture
+type: has_topic,has_message
+signature: |
+  RadarTrackCrossingNoiseFilterNode::RadarTrackCrossingNoiseFilterNode(
+    const rclcpp::NodeOptions & node_options)
+  : Node("radar_tracks_noise_filter", node_options)
+additional_information:
+  function_related_variable: |
+    OnSetParametersCallbackHandle::SharedPtr set_param_res_;
+    NodeParam node_param_{};
+    rclcpp::Publisher<RadarTracks>::SharedPtr pub_noise_tracks_{};
+    rclcpp::Publisher<RadarTracks>::SharedPtr pub_filtered_tracks_{};
+    rclcpp::Subscription<RadarTracks>::SharedPtr sub_tracks_{};
+  function_related_function: |
+    rcl_interfaces::msg::SetParametersResult onSetParam(const std::vector<rclcpp::Parameter> & params);
+    void onTracks(const RadarTracks::ConstSharedPtr msg);
+  function_related_class: |
+      struct NodeParam
+      {
+        double velocity_y_threshold{};
+      };
+test: autoware_radar_tracks_noise_filter_test
+test_cases: []

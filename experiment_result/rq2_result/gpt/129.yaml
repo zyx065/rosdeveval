@@ -1,0 +1,46 @@
+compilation.log: |
+  Starting >>> moveit_planners_ompl
+  Finished <<< moveit_planners_ompl [0.99s]
+
+  Summary: 1 package finished [1.44s]
+generate_code.cpp: |-
+  void ConstrainedPlanningStateSpace::copyJointToOMPLState(ompl::base::State* ompl_state,
+                                                           const moveit::core::RobotState& robot_state,
+                                                           const moveit::core::JointModel* joint_model,
+                                                           int ompl_state_joint_index) const
+  {
+      // Get the starting index of the joint variables in the RobotState
+      int robot_state_variable_index = joint_model->getFirstVariableIndex();
+
+      // Get the number of variables associated with the joint
+      int variable_count = joint_model->getVariableCount();
+
+      // Get the pointer to the joint variable positions in the RobotState
+      const double* robot_state_positions = robot_state.getVariablePositions();
+
+      // Copy each joint variable value from the RobotState to the OMPL state
+      for (int i = 0; i < variable_count; ++i)
+      {
+          // Get the address in the OMPL state for the current joint variable
+          double* ompl_state_value_address = getValueAddressAtIndex(ompl_state, ompl_state_joint_index + i);
+
+          // Copy the value from the RobotState to the OMPL state
+          *ompl_state_value_address = robot_state_positions[robot_state_variable_index + i];
+      }
+  }
+ground_truth.cpp: |-
+  void ConstrainedPlanningStateSpace::copyJointToOMPLState(ompl::base::State* ompl_state,
+                                                           const moveit::core::RobotState& robot_state,
+                                                           const moveit::core::JointModel* joint_model,
+                                                           int ompl_state_joint_index) const
+  {
+    assert(ompl_state != nullptr);
+    assert(joint_model != nullptr);
+    memcpy(getValueAddressAtIndex(ompl_state->as<ompl::base::ConstrainedStateSpace::StateType>()->getState(),
+                                  ompl_state_joint_index),
+           robot_state.getVariablePositions() + joint_model->getFirstVariableIndex(),
+           joint_model->getVariableCount() * sizeof(double));
+
+    // clear any cached info (such as validity known or not)
+    ompl_state->as<ompl::base::ConstrainedStateSpace::StateType>()->getState()->as<StateType>()->clearKnownInformation();
+  }

@@ -1,0 +1,29 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_cluster_merger
+ros_package: autoware_cluster_merger
+file_path: src/cluster_merger_node.cpp
+method_name: ClusterMergerNode::objectsCallback
+requirement: |
+  /**
+  * @brief Merges two detected object lists into a single output message after transforming them to a common frame.
+  * 
+  * @param input_objects0_msg First input detected objects with features message.
+  * @param input_objects1_msg Second input detected objects with features message.
+  */
+category: ros_architecture
+type: has_topic,has_message
+signature: |
+  void ClusterMergerNode::objectsCallback(
+    const DetectedObjectsWithFeature::ConstSharedPtr & input_objects0_msg,
+    const DetectedObjectsWithFeature::ConstSharedPtr & input_objects1_msg)
+additional_information: 
+  function_related_variable: |
+    rclcpp::Publisher<DetectedObjectsWithFeature>::SharedPtr pub_objects_;
+  function_related_class: |
+    namespace autoware::object_recognition_utils
+    {
+      bool transformObjectsWithFeature(const T & input_msg, const std::string & target_frame_id, const tf2_ros::Buffer & tf_buffer,T & output_msg)
+    }
+test: cluster_merger_tests
+test_cases: []

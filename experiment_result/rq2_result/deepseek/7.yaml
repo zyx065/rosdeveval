@@ -1,0 +1,132 @@
+compilation.log: "Starting >>> autoware_gyro_odometer\n--- stderr: autoware_gyro_odometer\n\
+  /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:\
+  \ In constructor ‘autoware::gyro_odometer::GyroOdometerNode::GyroOdometerNode(const\
+  \ rclcpp::NodeOptions&)’:\n/workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:76:45:\
+  \ error: ‘localization_util’ is not a member of ‘autoware’\n   76 |   diagnostics_\
+  \ = std::make_unique<autoware::localization_util::DiagnosticsModule>(\n      | \
+  \                                            ^~~~~~~~~~~~~~~~~\n/workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:76:23:\
+  \ error: parse error in template argument list\n   76 |   diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(\n\
+  \      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+  /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:76:82:\
+  \ error: no matching function for call to ‘make_unique<<expression error> >(autoware::gyro_odometer::GyroOdometerNode*,\
+  \ const char [14], double&)’\n   76 |   diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(\n\
+  \      |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n\
+  \   77 |     this, \"gyro_odometer\", message_timeout_sec_);\n      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+  \                                  \nIn file included from /usr/include/c++/11/memory:76,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,\n \
+  \                from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/diagnostics_interface.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:15:\n\
+  /usr/include/c++/11/bits/unique_ptr.h:961:5: note: candidate: ‘template<class _Tp,\
+  \ class ... _Args> typename std::_MakeUniq<_Tp>::__single_object std::make_unique(_Args&&\
+  \ ...)’\n  961 |     make_unique(_Args&&... __args)\n      |     ^~~~~~~~~~~\n/usr/include/c++/11/bits/unique_ptr.h:961:5:\
+  \ note:   template argument deduction/substitution failed:\n/workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:76:82:\
+  \ error: template argument 1 is invalid\n   76 |   diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(\n\
+  \      |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n\
+  \   77 |     this, \"gyro_odometer\", message_timeout_sec_);\n      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+  \                                  \nIn file included from /usr/include/c++/11/memory:76,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,\n \
+  \                from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/diagnostics_interface.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:15:\n\
+  /usr/include/c++/11/bits/unique_ptr.h:967:5: note: candidate: ‘template<class _Tp>\
+  \ typename std::_MakeUniq<_Tp>::__array std::make_unique(std::size_t)’\n  967 |\
+  \     make_unique(size_t __num)\n      |     ^~~~~~~~~~~\n/usr/include/c++/11/bits/unique_ptr.h:967:5:\
+  \ note:   template argument deduction/substitution failed:\n/workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:76:82:\
+  \ error: template argument 1 is invalid\n   76 |   diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(\n\
+  \      |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n\
+  \   77 |     this, \"gyro_odometer\", message_timeout_sec_);\n      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+  \                                  \nIn file included from /usr/include/c++/11/memory:76,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,\n \
+  \                from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/diagnostics_interface.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:15:\n\
+  /usr/include/c++/11/bits/unique_ptr.h:973:5: note: candidate: ‘template<class _Tp,\
+  \ class ... _Args> typename std::_MakeUniq<_Tp>::__invalid_type std::make_unique(_Args&&\
+  \ ...)’ (deleted)\n  973 |     make_unique(_Args&&...) = delete;\n      |     ^~~~~~~~~~~\n\
+  /usr/include/c++/11/bits/unique_ptr.h:973:5: note:   template argument deduction/substitution\
+  \ failed:\n/workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:76:82:\
+  \ error: template argument 1 is invalid\n   76 |   diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(\n\
+  \      |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n\
+  \   77 |     this, \"gyro_odometer\", message_timeout_sec_);\n      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+  \                                  \ngmake[2]: *** [CMakeFiles/autoware_gyro_odometer.dir/build.make:76:\
+  \ CMakeFiles/autoware_gyro_odometer.dir/src/gyro_odometer_core.cpp.o] Error 1\n\
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_gyro_odometer.dir/all]\
+  \ Error 2\ngmake: *** [Makefile:146: all] Error 2\n---\nFailed   <<< autoware_gyro_odometer\
+  \ [4.38s, exited with code 2]\n\nSummary: 0 packages finished [5.81s]\n  1 package\
+  \ failed: autoware_gyro_odometer\n  1 package had stderr output: autoware_gyro_odometer\n"
+generate_code.cpp: |-
+  GyroOdometerNode::GyroOdometerNode(const rclcpp::NodeOptions & node_options)
+  : Node("gyro_odometer", node_options),
+    output_frame_(declare_parameter<std::string>("output_frame")),
+    message_timeout_sec_(declare_parameter<double>("message_timeout_sec")),
+    vehicle_twist_arrived_(false),
+    imu_arrived_(false)
+  {
+    // Initialize transform listener
+    transform_listener_ = std::make_shared<autoware::universe_utils::TransformListener>(this);
+
+    // Initialize logger level configure
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+
+    // Create subscribers
+    vehicle_twist_sub_ = create_subscription<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "input/twist_with_covariance", rclcpp::QoS{1},
+      std::bind(&GyroOdometerNode::callback_vehicle_twist, this, std::placeholders::_1));
+
+    // Create publishers
+    twist_raw_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("output/twist_raw", 1);
+    twist_with_covariance_raw_pub_ = create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "output/twist_with_covariance_raw", 1);
+    twist_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("output/twist", 1);
+    twist_with_covariance_pub_ = create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "output/twist_with_covariance", 1);
+
+    // Initialize diagnostics
+    diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(
+      this, "gyro_odometer", message_timeout_sec_);
+  }
+ground_truth.cpp: |-
+  GyroOdometerNode::GyroOdometerNode(const rclcpp::NodeOptions & node_options)
+  : Node("gyro_odometer", node_options),
+    output_frame_(declare_parameter<std::string>("output_frame")),
+    message_timeout_sec_(declare_parameter<double>("message_timeout_sec")),
+    vehicle_twist_arrived_(false),
+    imu_arrived_(false)
+  {
+    transform_listener_ = std::make_shared<autoware::universe_utils::TransformListener>(this);
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+
+    vehicle_twist_sub_ = create_subscription<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "vehicle/twist_with_covariance", rclcpp::QoS{100},
+      std::bind(&GyroOdometerNode::callback_vehicle_twist, this, std::placeholders::_1));
+
+    imu_sub_ = create_subscription<sensor_msgs::msg::Imu>(
+      "imu", rclcpp::QoS{100},
+      std::bind(&GyroOdometerNode::callback_imu, this, std::placeholders::_1));
+
+    twist_raw_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("twist_raw", rclcpp::QoS{10});
+    twist_with_covariance_raw_pub_ = create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "twist_with_covariance_raw", rclcpp::QoS{10});
+
+    twist_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("twist", rclcpp::QoS{10});
+    twist_with_covariance_pub_ = create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "twist_with_covariance", rclcpp::QoS{10});
+
+    diagnostics_ =
+      std::make_unique<autoware::universe_utils::DiagnosticsInterface>(this, "gyro_odometer_status");
+
+    // TODO(YamatoAndo) createTimer
+  }
+architecture-codes:
+  - Topic/Service Issue - Topic/Service Name Mismatch Issue
+  - Topic/Service Issue - QoS Policy Incompatibility Issue
+  - Topic/Service Issue - Incomplete Topic/Service Initialization Issue
+  - ROS Diagnostic Issue - ROS Diagnostic API Misuse Issue
+functionality-codes:
+  - Incomplete Code Issue - Missing One Step Issue
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements

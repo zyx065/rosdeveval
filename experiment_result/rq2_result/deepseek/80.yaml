@@ -1,0 +1,31 @@
+compilation.log: |
+  Starting >>> autoware_mission_planner_universe
+  Finished <<< autoware_mission_planner_universe [29.1s]
+
+  Summary: 1 package finished [30.5s]
+generate_code.cpp: "std::vector<geometry_msgs::msg::Point> convertCenterlineToPoints(const\
+  \ lanelet::Lanelet & lanelet)\n{\n    std::vector<geometry_msgs::msg::Point> points;\n\
+  \    const auto centerline = lanelet.centerline();\n    \n    for (const auto& point\
+  \ : centerline) {\n        geometry_msgs::msg::Point ros_point;\n        ros_point.x\
+  \ = point.x();\n        ros_point.y = point.y();\n        ros_point.z = point.z();\n\
+  \        points.push_back(ros_point);\n    }\n    \n    return points;\n}"
+ground_truth.cpp: |-
+  std::vector<geometry_msgs::msg::Point> convertCenterlineToPoints(const lanelet::Lanelet & lanelet)
+  {
+    std::vector<geometry_msgs::msg::Point> centerline_points;
+    for (const auto & point : lanelet.centerline()) {
+      geometry_msgs::msg::Point center_point;
+      center_point.x = point.basicPoint().x();
+      center_point.y = point.basicPoint().y();
+      center_point.z = point.basicPoint().z();
+      centerline_points.push_back(center_point);
+    }
+    return centerline_points;
+  }
+architecture-codes: []
+functionality-codes:
+  - Domain Library Issue - Domain Specific Library Utilization Error
+
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

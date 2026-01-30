@@ -1,0 +1,36 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_smac_planner
+ros_package: nav2_smac_planner
+file_path: src/node_2d.cpp
+method_name: Node2D::getNeighbors
+requirement: |
+  /**
+  * @brief Populates the list of valid neighboring nodes for the current node.
+  * 
+  * @param[in] NeighborGetter Function to retrieve a node pointer by index.
+  * @param[in] collision_checker Collision checker to validate node accessibility.
+  * @param[in] traverse_unknown Whether to allow traversal through unknown space.
+  * @param[out] neighbors Vector to store valid, unvisited neighboring nodes.
+  */
+category: utilities
+type: []
+signature: |
+  void Node2D::getNeighbors(
+    std::function<bool(const unsigned int &, nav2_smac_planner::Node2D * &)> & NeighborGetter,
+    GridCollisionChecker * collision_checker,
+    const bool & traverse_unknown,
+    NodeVector & neighbors)
+additional_information: 
+  function_related_variable: |
+    double min_turning_rad_, tolerance_, data_w_, smooth_w_;
+    int max_its_, refinement_ctr_;
+    bool is_holonomic_, do_refinement_;
+    MotionModel motion_model_;
+    ompl::base::StateSpacePtr state_space_;
+  function_related_function: |
+    static inline Coordinates getCoords(const unsigned int & index)
+    bool isNodeValid(const bool & traverse_unknown, GridCollisionChecker * collision_checker);
+test: test_node2d
+test_cases: 
+- test_node_2d_neighbors

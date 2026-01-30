@@ -1,0 +1,29 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_smac_planner
+ros_package: nav2_smac_planner
+file_path: src/node_lattice.cpp
+method_name: NodeLattice::getHeuristicCost
+requirement: |
+  /**
+  * Calculates the heuristic cost from a node to the goal.
+  * 
+  * @param node_coords The coordinates of the current node to evaluate.
+  * @param goal_coords The coordinates of the goal node.
+  * @param costmap The costmap to use for obstacle information.
+  * @return The maximum of obstacle heuristic and distance heuristic costs.
+  */
+category: utilities
+type: []
+signature: |
+  float NodeLattice::getHeuristicCost(
+    const Coordinates & node_coords,
+    const Coordinates & goal_coords,
+    const nav2_costmap_2d::Costmap2D * costmap)
+additional_information: 
+  function_related_function: 
+    float NodeHybrid::getObstacleHeuristic(const Coordinates & node_coords,const Coordinates & goal_coords,const double & cost_penalty)
+    float NodeLattice::getDistanceHeuristic(const Coordinates & node_coords,const Coordinates & goal_coords,const float & obstacle_heuristic)
+test: test_node2d
+test_cases: 
+- test_node_2d

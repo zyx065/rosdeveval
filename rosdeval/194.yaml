@@ -1,0 +1,26 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_regulated_pure_pursuit_controller
+ros_package: nav2_regulated_pure_pursuit_controller
+file_path: test/path_utils/path_utils.cpp
+method_name: generate_path
+requirement: |
+  /**
+  * Generates a continuous path from a starting pose through a sequence of path segments.
+  * 
+  * @param start The starting pose for the path generation, which also provides the header frame.
+  * @param spacing The desired distance between consecutive points along the path segments.
+  * @param segments List of path segments to be connected in sequence to form the complete path.
+  * @return nav_msgs::msg::Path A path message containing the generated pose sequence.
+  */
+category: utilities
+type: has_message
+signature: |
+  nav_msgs::msg::Path generate_path(
+    geometry_msgs::msg::PoseStamped start,
+    double spacing,
+    std::initializer_list<std::unique_ptr<PathSegment>> segments)
+additional_information: []
+test: test_path_utils
+test_cases: 
+- test_generate_straight

@@ -1,0 +1,45 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/localization/autoware_landmark_based_localizer/autoware_ar_tag_based_localizer
+ros_package: autoware_ar_tag_based_localizer
+file_path: src/ar_tag_based_localizer.cpp
+method_name: ArTagBasedLocalizer::ArTagBasedLocalizer
+requirement: |
+  /**
+  * @brief Constructs an ArUco tag-based localizer node.
+  *
+  * Initializes the node with configuration parameters for marker detection, sets up subscribers for
+  * map data, camera images, camera info, and EKF pose, and publishers for localization results and
+  * debug information.
+  *
+  * @param options Node configuration options.
+  */
+category: ros_architecture
+type: has_domain_library,has_logger,has_topic,has_parameter
+signature: |
+  ArTagBasedLocalizer::ArTagBasedLocalizer(const rclcpp::NodeOptions & options)
+  : rclcpp::Node("ar_tag_based_localizer", options), cam_info_received_(false)
+additional_information:
+  function_related_variable: |
+    float marker_size_{};
+    std::vector<std::string> target_tag_ids_;
+    std::vector<double> base_covariance_;
+    double distance_threshold_{};
+    bool consider_orientation_{};
+    double ekf_time_tolerance_{};
+    double ekf_position_tolerance_{};
+    aruco::MarkerDetector detector_;
+    std::unique_ptr<autoware::localization_util::SmartPoseBuffer> ekf_pose_buffer_;
+    std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+    std::unique_ptr<tf2_ros::TransformListener> tf_listener_;
+    rclcpp::Subscription<LaneletMapBin>::SharedPtr map_bin_sub_;
+    rclcpp::Subscription<Image>::SharedPtr image_sub_;
+    rclcpp::Subscription<CameraInfo>::SharedPtr cam_info_sub_;
+    rclcpp::Subscription<PoseWithCovarianceStamped>::SharedPtr ekf_pose_sub_;
+    rclcpp::Publisher<PoseWithCovarianceStamped>::SharedPtr pose_pub_;
+    rclcpp::Publisher<Image>::SharedPtr image_pub_;
+    rclcpp::Publisher<PoseArray>::SharedPtr detected_tag_pose_pub_;
+    rclcpp::Publisher<MarkerArray>::SharedPtr mapped_tag_pose_pub_;
+    rclcpp::Publisher<DiagnosticArray>::SharedPtr diag_pub_;
+test: test_autoware_ar_tag_based_localizer
+test_cases: []

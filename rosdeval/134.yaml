@@ -1,0 +1,31 @@
+repository: autoware
+language: C++
+ros_package_file: src/core/autoware.core/common/autoware_geography_utils
+ros_package: autoware_geography_utils
+file_path: src/height.cpp
+method_name: convert_height
+test_coverage: 75%
+requirement: |
+  # Converts a given height from one vertical datum to another based on latitude and longitude.
+  
+  # @param height The height value to be converted.
+  # @param latitude The latitude coordinate used in the conversion.
+  # @param longitude The longitude coordinate used in the conversion.
+  # @param source_vertical_datum The vertical datum of the input height.
+  # @param target_vertical_datum The vertical datum to which the height should be converted.
+  # @return The converted height value.
+  # @throws std::invalid_argument If the conversion between the specified datums is not supported.
+category: utilities
+type: has_domain_library
+signature: |
+  double convert_height(
+    const double height, const double latitude, const double longitude,
+    const std::string & source_vertical_datum, const std::string & target_vertical_datum)
+additional_information: []
+test: test_autoware_geography_utils
+test_cases: 
+- SameSourceTargetDatum
+- ValidSourceTargetDatum
+- InvalidSourceTargetDatum
+- InvalidSourceDatum
+- InvalidTargetDatum

@@ -1,0 +1,26 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/localization/autoware_gyro_odometer
+ros_package: autoware_gyro_odometer
+file_path: src/gyro_odometer_core.cpp
+method_name: GyroOdometerNode::callback_imu
+requirement: |
+  /**
+  * @brief Processes incoming IMU messages for gyro-odometer integration.
+  * 
+  * @param[in] imu_msg_ptr Shared pointer to the received IMU message.
+  */
+category: ros_architecture
+type: has_diagnostic,has_message,has_topic,has_timer
+signature: |
+  void GyroOdometerNode::callback_imu(const sensor_msgs::msg::Imu::ConstSharedPtr imu_msg_ptr)
+additional_information:
+  function_related_variable: |
+    std::unique_ptr<autoware::localization_util::DiagnosticsModule> diagnostics_;
+    bool imu_arrived_;
+    rclcpp::Time latest_imu_ros_time_;
+    std::deque<sensor_msgs::msg::Imu> gyro_queue_;
+  function_related_function: |
+    void concat_gyro_and_odometer();
+test: test_gyro_odometer
+test_cases: []

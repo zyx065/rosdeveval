@@ -1,0 +1,26 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_route
+ros_package: nav2_route
+file_path: src/path_converter.cpp
+method_name: PathConverter::interpolateEdge
+requirement: |
+  /**
+  * Populates a pose vector with interpolated poses along a straight line between two points.
+  * 
+  * @param x0 The x-coordinate of the starting point.
+  * @param y0 The y-coordinate of the starting point.
+  * @param x1 The x-coordinate of the ending point.
+  * @param y1 The y-coordinate of the ending point.
+  * @param[out] poses The vector to be populated with interpolated poses, including the endpoints.
+  */
+category: utilities
+type: []
+signature: |
+  void PathConverter::interpolateEdge(
+    float x0, float y0, float x1, float y1,
+    std::vector<geometry_msgs::msg::PoseStamped> & poses)
+additional_information: []
+test: test_path_converter
+test_cases: 
+- test_path_converter_interpolation

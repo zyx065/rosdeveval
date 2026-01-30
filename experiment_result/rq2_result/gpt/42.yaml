@@ -1,0 +1,167 @@
+compilation.log: |
+  Starting >>> autoware_costmap_generator
+  --- stderr: autoware_costmap_generator
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp: In constructor ‘autoware::costmap_generator::CostmapGenerator::CostmapGenerator(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:170:75: error: ‘Float64Stamped’ is not a member of ‘tier4_debug_msgs::msg’; did you mean ‘autoware_internal_debug_msgs::msg::Float64Stamped’?
+    170 |   pub_processing_time_ms_ = this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>("debug/processing_time_ms", rclcpp::QoS(1));
+        |                                                                           ^~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/float64_stamped.hpp:7,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:61,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/detail/float64_stamped__struct.hpp:139:7: note: ‘autoware_internal_debug_msgs::msg::Float64Stamped’ declared here
+    139 | using Float64Stamped =
+        |       ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:170:90: error: no matching function for call to ‘autoware::costmap_generator::CostmapGenerator::create_publisher<<expression error> >(const char [25], rclcpp::QoS)’
+    170 |   pub_processing_time_ms_ = this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>("debug/processing_time_ms", rclcpp::QoS(1));
+        |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:1321,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:22,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/grid_map_ros/message_traits.hpp:5,
+                   from /opt/ros/humble/include/grid_map_ros/grid_map_ros.hpp:13,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/utils/objects_to_costmap.hpp:48,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:48,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /opt/ros/humble/include/rclcpp/rclcpp/node_impl.hpp:73:1: note: candidate: ‘template<class MessageT, class AllocatorT, class PublisherT> std::shared_ptr<PublisherT> rclcpp::Node::create_publisher(const string&, const rclcpp::QoS&, const rclcpp::PublisherOptionsWithAllocator<AllocatorT>&)’
+     73 | Node::create_publisher(
+        | ^~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/node_impl.hpp:73:1: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:170:90: error: template argument 1 is invalid
+    170 |   pub_processing_time_ms_ = this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>("debug/processing_time_ms", rclcpp::QoS(1));
+        |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:184:80: error: ‘using element_type = struct costmap_generator_node::Params’ {aka ‘struct costmap_generator_node::Params’} has no member named ‘timer_period_ms’
+    184 |   const auto timer_period = std::chrono::milliseconds(static_cast<int>(param_->timer_period_ms));
+        |                                                                                ^~~~~~~~~~~~~~~
+  In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/c++allocator.h:33,
+                   from /usr/include/c++/11/bits/allocator.h:46,
+                   from /usr/include/c++/11/string:41,
+                   from /usr/include/c++/11/bits/locale_classes.h:40,
+                   from /usr/include/c++/11/bits/ios_base.h:41,
+                   from /usr/include/c++/11/ios:42,
+                   from /usr/include/c++/11/istream:38,
+                   from /usr/include/c++/11/sstream:38,
+                   from /usr/include/c++/11/complex:45,
+                   from /usr/include/eigen3/Eigen/Core:50,
+                   from /opt/ros/humble/include/grid_map_core/TypeDefs.hpp:13,
+                   from /opt/ros/humble/include/grid_map_core/grid_map_core.hpp:12,
+                   from /opt/ros/humble/include/grid_map_ros/grid_map_ros.hpp:12,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/utils/objects_to_costmap.hpp:48,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:48,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /usr/include/c++/11/ext/new_allocator.h: In instantiation of ‘void __gnu_cxx::new_allocator<_Tp>::construct(_Up*, _Args&& ...) [with _Up = costmap_generator_node::ParamListener; _Args = {autoware::costmap_generator::CostmapGenerator*}; _Tp = costmap_generator_node::ParamListener]’:
+  /usr/include/c++/11/bits/alloc_traits.h:516:17:   required from ‘static void std::allocator_traits<std::allocator<_CharT> >::construct(std::allocator_traits<std::allocator<_CharT> >::allocator_type&, _Up*, _Args&& ...) [with _Up = costmap_generator_node::ParamListener; _Args = {autoware::costmap_generator::CostmapGenerator*}; _Tp = costmap_generator_node::ParamListener; std::allocator_traits<std::allocator<_CharT> >::allocator_type = std::allocator<costmap_generator_node::ParamListener>]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:519:39:   required from ‘std::_Sp_counted_ptr_inplace<_Tp, _Alloc, _Lp>::_Sp_counted_ptr_inplace(_Alloc, _Args&& ...) [with _Args = {autoware::costmap_generator::CostmapGenerator*}; _Tp = costmap_generator_node::ParamListener; _Alloc = std::allocator<costmap_generator_node::ParamListener>; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:650:16:   required from ‘std::__shared_count<_Lp>::__shared_count(_Tp*&, std::_Sp_alloc_shared_tag<_Alloc>, _Args&& ...) [with _Tp = costmap_generator_node::ParamListener; _Alloc = std::allocator<costmap_generator_node::ParamListener>; _Args = {autoware::costmap_generator::CostmapGenerator*}; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:1342:14:   required from ‘std::__shared_ptr<_Tp, _Lp>::__shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<costmap_generator_node::ParamListener>; _Args = {autoware::costmap_generator::CostmapGenerator*}; _Tp = costmap_generator_node::ParamListener; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr.h:409:59:   required from ‘std::shared_ptr<_Tp>::shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<costmap_generator_node::ParamListener>; _Args = {autoware::costmap_generator::CostmapGenerator*}; _Tp = costmap_generator_node::ParamListener]’
+  /usr/include/c++/11/bits/shared_ptr.h:862:14:   required from ‘std::shared_ptr<_Tp> std::allocate_shared(const _Alloc&, _Args&& ...) [with _Tp = costmap_generator_node::ParamListener; _Alloc = std::allocator<costmap_generator_node::ParamListener>; _Args = {autoware::costmap_generator::CostmapGenerator*}]’
+  /usr/include/c++/11/bits/shared_ptr.h:878:39:   required from ‘std::shared_ptr<_Tp> std::make_shared(_Args&& ...) [with _Tp = costmap_generator_node::ParamListener; _Args = {autoware::costmap_generator::CostmapGenerator*}]’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:163:78:   required from here
+  /usr/include/c++/11/ext/new_allocator.h:162:11: error: no matching function for call to ‘costmap_generator_node::ParamListener::ParamListener(autoware::costmap_generator::CostmapGenerator*)’
+    162 |         { ::new((void *)__p) _Up(std::forward<_Args>(__args)...); }
+        |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:50,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:127:5: note: candidate: ‘costmap_generator_node::ParamListener::ParamListener(const std::shared_ptr<rclcpp::node_interfaces::NodeParametersInterface>&, rclcpp::Logger, const string&)’
+    127 |     ParamListener(const std::shared_ptr<rclcpp::node_interfaces::NodeParametersInterface>& parameters_interface,
+        |     ^~~~~~~~~~~~~
+  /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:127:5: note:   candidate expects 3 arguments, 1 provided
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:50,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:121:5: note: candidate: ‘costmap_generator_node::ParamListener::ParamListener(const std::shared_ptr<rclcpp::node_interfaces::NodeParametersInterface>&, const string&)’
+    121 |     ParamListener(const std::shared_ptr<rclcpp::node_interfaces::NodeParametersInterface>& parameters_interface,
+        |     ^~~~~~~~~~~~~
+  /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:121:92: note:   no known conversion for argument 1 from ‘autoware::costmap_generator::CostmapGenerator*’ to ‘const std::shared_ptr<rclcpp::node_interfaces::NodeParametersInterface>&’
+    121 |     ParamListener(const std::shared_ptr<rclcpp::node_interfaces::NodeParametersInterface>& parameters_interface,
+        |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:118:5: note: candidate: ‘costmap_generator_node::ParamListener::ParamListener(rclcpp_lifecycle::LifecycleNode::SharedPtr, const string&)’
+    118 |     ParamListener(rclcpp_lifecycle::LifecycleNode::SharedPtr node, std::string const& prefix = "")
+        |     ^~~~~~~~~~~~~
+  /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:118:62: note:   no known conversion for argument 1 from ‘autoware::costmap_generator::CostmapGenerator*’ to ‘rclcpp_lifecycle::LifecycleNode::SharedPtr’ {aka ‘std::shared_ptr<rclcpp_lifecycle::LifecycleNode>’}
+    118 |     ParamListener(rclcpp_lifecycle::LifecycleNode::SharedPtr node, std::string const& prefix = "")
+        |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+  /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:115:5: note: candidate: ‘costmap_generator_node::ParamListener::ParamListener(rclcpp::Node::SharedPtr, const string&)’
+    115 |     ParamListener(rclcpp::Node::SharedPtr node, std::string const& prefix = "")
+        |     ^~~~~~~~~~~~~
+  /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:115:43: note:   no known conversion for argument 1 from ‘autoware::costmap_generator::CostmapGenerator*’ to ‘rclcpp::Node::SharedPtr’ {aka ‘std::shared_ptr<rclcpp::Node>’}
+    115 |     ParamListener(rclcpp::Node::SharedPtr node, std::string const& prefix = "")
+        |                   ~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+  In file included from /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:23,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:50,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp: In function ‘void __static_initialization_and_destruction_0(int, int)’:
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp:51:13: warning: ‘parameter_traits::OK’ is deprecated: When returning tl::expected<void, std::string> default construct for OK with `{}`. [-Wdeprecated-declarations]
+     51 | auto static OK
+        |             ^~
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp:51:13: note: declared here
+  gmake[2]: *** [CMakeFiles/costmap_generator_node.dir/build.make:76: CMakeFiles/costmap_generator_node.dir/src/costmap_generator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:218: CMakeFiles/costmap_generator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_costmap_generator [18.0s, exited with code 2]
+
+  Summary: 0 packages finished [19.4s]
+    1 package failed: autoware_costmap_generator
+    1 package had stderr output: autoware_costmap_generator
+generate_code.cpp: |-
+  CostmapGenerator::CostmapGenerator(const rclcpp::NodeOptions & node_options)
+  : Node("costmap_generator", node_options), tf_buffer_(this->get_clock()), tf_listener_(tf_buffer_)
+  {
+    // Initialize parameter listener and load parameters
+    param_listener_ = std::make_shared<::costmap_generator_node::ParamListener>(this);
+    param_ = std::make_shared<::costmap_generator_node::Params>(param_listener_->get_params());
+
+    // Initialize publishers
+    pub_costmap_ = this->create_publisher<grid_map_msgs::msg::GridMap>("output/costmap", rclcpp::QoS(1).transient_local());
+    pub_occupancy_grid_ = this->create_publisher<nav_msgs::msg::OccupancyGrid>("output/occupancy_grid", rclcpp::QoS(1).transient_local());
+    pub_processing_time_ = this->create_publisher<autoware::universe_utils::ProcessingTimeDetail>("debug/processing_time_detail", rclcpp::QoS(1));
+    pub_processing_time_ms_ = this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>("debug/processing_time_ms", rclcpp::QoS(1));
+
+    // Initialize time keeper
+    time_keeper_ = std::make_shared<autoware::universe_utils::TimeKeeper>();
+
+    // Initialize grid map
+    initGridmap();
+
+    // Subscribe to LaneletMapBin topic
+    sub_lanelet_bin_map_ = this->create_subscription<autoware_map_msgs::msg::LaneletMapBin>(
+      "input/lanelet_map_bin", rclcpp::QoS(1).transient_local(),
+      std::bind(&CostmapGenerator::onLaneletMapBin, this, std::placeholders::_1));
+
+    // Create timer for periodic processing
+    const auto timer_period = std::chrono::milliseconds(static_cast<int>(param_->timer_period_ms));
+    timer_ = this->create_wall_timer(timer_period, std::bind(&CostmapGenerator::onTimer, this));
+  }
+ground_truth.cpp: |-
+  CostmapGenerator::CostmapGenerator(const rclcpp::NodeOptions & node_options)
+  : Node("costmap_generator", node_options), tf_buffer_(this->get_clock()), tf_listener_(tf_buffer_)
+  {
+    param_listener_ = std::make_shared<::costmap_generator_node::ParamListener>(
+      this->get_node_parameters_interface());
+    param_ = std::make_shared<::costmap_generator_node::Params>(param_listener_->get_params());
+
+    // Lanelet map subscriber
+    sub_lanelet_bin_map_ = this->create_subscription<autoware_map_msgs::msg::LaneletMapBin>(
+      "~/input/vector_map", rclcpp::QoS{1}.transient_local(),
+      std::bind(&CostmapGenerator::onLaneletMapBin, this, std::placeholders::_1));
+
+    // Publishers
+    pub_costmap_ = this->create_publisher<grid_map_msgs::msg::GridMap>("~/output/grid_map", 1);
+    pub_occupancy_grid_ =
+      this->create_publisher<nav_msgs::msg::OccupancyGrid>("~/output/occupancy_grid", 1);
+    pub_processing_time_ =
+      create_publisher<autoware::universe_utils::ProcessingTimeDetail>("processing_time", 1);
+    time_keeper_ = std::make_shared<autoware::universe_utils::TimeKeeper>(pub_processing_time_);
+    pub_processing_time_ms_ =
+      this->create_publisher<autoware_internal_debug_msgs::msg::Float64Stamped>(
+        "~/debug/processing_time_ms", 1);
+
+    // Timer
+    const auto period_ns = rclcpp::Rate(param_->update_rate).period();
+    timer_ =
+      rclcpp::create_timer(this, get_clock(), period_ns, std::bind(&CostmapGenerator::onTimer, this));
+
+    // Initialize
+    initGridmap();
+  }

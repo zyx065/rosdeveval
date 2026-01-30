@@ -1,0 +1,28 @@
+repository: laser_filters
+language: C++
+ros_package_file: src/laser_filters
+ros_package: laser_filters
+file_path: include/laser_filters/array_filter.h
+method_name: update
+requirement: |
+  /**
+  * Filters a laser scan by replacing out-of-range values with replacement values.
+  * 
+  * @param[in] input_scan The input laser scan data to filter.
+  * @param[out] filtered_scan The output laser scan with filtered range values.
+  * @return Always returns true.
+  */
+category: utilities
+type: has_logger
+signature: |
+  bool update(const sensor_msgs::msg::LaserScan &scan_in, sensor_msgs::msg::LaserScan &scan_out)
+additional_information: 
+  function_related_variable: |
+    double lower_threshold_ ;
+    double upper_threshold_ ;
+    bool use_message_range_limits_ ;
+    float lower_replacement_value_ ;
+    float upper_replacement_value_ ;
+test: test_scan_filter_chain
+test_cases: 
+- ArrayFilter

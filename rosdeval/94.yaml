@@ -1,0 +1,22 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/sensing/autoware_imu_corrector
+ros_package: autoware_imu_corrector
+file_path: src/gyro_bias_estimation_module.cpp
+method_name: GyroBiasEstimationModule::get_bias_base_link
+requirement: |
+  /**
+  * Returns the estimated gyroscope bias vector expressed in the base_link frame.
+  * 
+  * @return geometry_msgs::msg::Vector3 The estimated gyroscope bias (x, y, z components) 
+  *         in the base_link coordinate frame.
+  * @throws std::runtime_error if any component of the normalization vector is zero.
+  */
+category: utilities
+type: has_message
+signature: |
+  geometry_msgs::msg::Vector3 GyroBiasEstimationModule::get_bias_base_link() const
+additional_information: []
+test: test_gyro_bias_estimation_module
+test_cases: 
+- GetInsufficientDataException

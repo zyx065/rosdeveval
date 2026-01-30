@@ -1,0 +1,31 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_smac_planner
+ros_package: nav2_smac_planner
+file_path: src/smac_planner_hybrid.cpp
+method_name: SmacPlannerHybrid::activate
+requirement: |
+  /**
+  * @brief Configures the costmap node on lifecycle state transition to inactive.
+  * 
+  * Initializes the costmap layers, transform objects, plugins, filters, and communication interfaces.
+  * This method is called as part of the node's lifecycle management when transitioning to the inactive state.
+  * 
+  * @param state The lifecycle state containing transition information (unused).
+  * @return nav2_util::CallbackReturn SUCCESS if configuration completed successfully.
+  */
+category: ros_architecture
+type: has_logger,has_topic,has_parameter
+signature: |
+  void SmacPlannerHybrid::activate()
+additional_information: 
+  function_related_variable: |
+    rclcpp::Logger _logger{rclcpp::get_logger("SmacPlannerHybrid")};
+    std::string _global_frame, _name;
+    rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::Path>::SharedPtr _raw_plan_publisher;
+    std::unique_ptr<CostmapDownsampler> _costmap_downsampler;
+    rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr _dyn_params_handler;
+  function_related_function: |
+    rcl_interfaces::msg::SetParametersResult dynamicParametersCallback(std::vector<rclcpp::Parameter> parameters);
+test: test_smac_hybrid
+test_cases: []

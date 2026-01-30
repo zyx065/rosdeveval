@@ -1,0 +1,27 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/localization/autoware_pose2twist
+ros_package: autoware_pose2twist
+file_path: src/pose2twist_core.cpp
+method_name: compute_relative_rotation_vector
+requirement: |
+  /**
+  * Computes the relative rotation vector between two quaternions.
+  * 
+  * This method calculates the axis-angle representation of the rotation that would transform
+  * from orientation q1 to orientation q2, returned as a 3D vector where the direction
+  * represents the rotation axis and the magnitude represents the rotation angle in radians.
+  * 
+  * @param q1 The starting orientation as a quaternion.
+  * @param q2 The target orientation as a quaternion.
+  * @return geometry_msgs::msg::Vector3 representing the axis-angle rotation from q1 to q2.
+  */
+category: utilities
+type: has_domain_library,has_message
+signature: |
+  geometry_msgs::msg::Vector3 compute_relative_rotation_vector(
+    const tf2::Quaternion & q1, const tf2::Quaternion & q2)
+additional_information: []
+test: test_angular_velocity
+test_cases: 
+- CheckNumericalValidity

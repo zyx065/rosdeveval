@@ -1,0 +1,48 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_costmap_2d
+ros_package: nav2_costmap_2d
+file_path: src/costmap_2d.cpp
+method_name: Costmap2D::copyWindow
+requirement: |
+  /**
+  * Copies a rectangular window of cost values from a source costmap to this costmap.
+  * 
+  * @param source The source costmap to copy data from.
+  * @param sx0 Source X coordinate of the window's top-left corner.
+  * @param sy0 Source Y coordinate of the window's top-left corner.
+  * @param sxn Source X coordinate of the window's bottom-right corner (exclusive).
+  * @param syn Source Y coordinate of the window's bottom-right corner (exclusive).
+  * @param dx0 Destination X coordinate where the window will be placed.
+  * @param dy0 Destination Y coordinate where the window will be placed.
+  * @return True if the copy was successful, false if the window exceeds source or destination bounds.
+  */
+category: utilities
+type: []
+signature: |
+  bool Costmap2D::copyWindow(
+    const Costmap2D & source,
+    unsigned int sx0, unsigned int sy0, unsigned int sxn, unsigned int syn,
+    unsigned int dx0, unsigned int dy0)
+additional_information: 
+  function_related_variable: |
+    unsigned int size_x_;
+    unsigned int size_y_;
+    double resolution_;
+    double origin_x_;
+    double origin_y_;
+    unsigned char * costmap_;
+    unsigned char default_value_;
+  function_related_function: |
+    unsigned int getSizeInCellsX() const
+    unsigned int getSizeInCellsY() const;
+    void copyMapRegion(
+      data_type * source_map, unsigned int sm_lower_left_x,
+      unsigned int sm_lower_left_y,
+      unsigned int sm_size_x, data_type * dest_map, unsigned int dm_lower_left_x,
+      unsigned int dm_lower_left_y, unsigned int dm_size_x, unsigned int region_size_x,
+      unsigned int region_size_y)
+test: copy_window_test
+test_cases: 
+- copyValidWindow
+- copyInvalidWindow

@@ -1,0 +1,23 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_waypoint_follower
+ros_package: nav2_waypoint_follower
+file_path: src/waypoint_follower.cpp
+method_name: WaypointFollower::resultCallback
+requirement: |
+  /**
+  * Handles the result callback from an action client for waypoint following.
+  * 
+  * @param result The wrapped result from the action client containing goal status and information.
+  */
+category: ros_architecture
+type: has_logger,has_message
+signature: |
+  void
+  WaypointFollower::resultCallback(
+    const rclcpp_action::ClientGoalHandle<ClientT>::WrappedResult & result)
+additional_information: 
+  function_related_variable: |
+    std::shared_future<rclcpp_action::ClientGoalHandle<ClientT>::SharedPtr> future_goal_handle_;
+test: test_task_executors
+test_cases: []

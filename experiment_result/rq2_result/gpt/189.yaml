@@ -1,0 +1,60 @@
+compilation.log: |
+  Starting >>> nav2_mppi_controller
+  [Processing: nav2_mppi_controller]
+  Finished <<< nav2_mppi_controller [39.0s]
+
+  Summary: 1 package finished [39.4s]
+generate_code.cpp: |-
+  inline bool withinPositionGoalTolerance(
+    nav2_core::GoalChecker * goal_checker,
+    const geometry_msgs::msg::Pose & robot,
+    const geometry_msgs::msg::Pose & goal)
+  {
+    // Retrieve the position tolerance from the goal checker
+    geometry_msgs::msg::Pose pose_tolerance;
+    geometry_msgs::msg::Twist vel_tolerance;
+
+    if (!goal_checker->getTolerances(pose_tolerance, vel_tolerance)) {
+      // If tolerances cannot be retrieved, return false
+      return false;
+    }
+
+    // Calculate the difference between the robot's position and the goal's position
+    double dx = robot.position.x - goal.position.x;
+    double dy = robot.position.y - goal.position.y;
+    double dz = robot.position.z - goal.position.z;
+
+    // Check if the robot's position is within the tolerances
+    if (std::abs(dx) <= pose_tolerance.position.x &&
+        std::abs(dy) <= pose_tolerance.position.y &&
+        std::abs(dz) <= pose_tolerance.position.z) {
+      return true;
+    }
+
+    return false;
+  }
+ground_truth.cpp: |-
+  inline bool withinPositionGoalTolerance(
+    nav2_core::GoalChecker * goal_checker,
+    const geometry_msgs::msg::Pose & robot,
+    const geometry_msgs::msg::Pose & goal)
+  {
+    if (goal_checker) {
+      geometry_msgs::msg::Pose pose_tolerance;
+      geometry_msgs::msg::Twist velocity_tolerance;
+      goal_checker->getTolerances(pose_tolerance, velocity_tolerance);
+
+      const auto pose_tolerance_sq = pose_tolerance.position.x * pose_tolerance.position.x;
+
+      auto dx = robot.position.x - goal.position.x;
+      auto dy = robot.position.y - goal.position.y;
+
+      auto dist_sq = dx * dx + dy * dy;
+
+      if (dist_sq < pose_tolerance_sq) {
+        return true;
+      }
+    }
+
+    return false;
+  }

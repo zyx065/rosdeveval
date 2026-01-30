@@ -1,0 +1,85 @@
+compilation.log: |
+  Starting >>> moveit_core
+  Finished <<< moveit_core [0.63s]
+
+  Summary: 1 package finished [1.10s]
+generate_code.cpp: |
+  void distance_field::findInternalPointsConvex(const bodies::Body& body, double resolution,
+                                                EigenSTL::vector_Vector3d& points)
+  {
+      points.clear();
+      
+      // Get the bounding sphere of the body
+      bodies::BoundingSphere bounding_sphere;
+      body.computeBoundingSphere(bounding_sphere);
+      
+      const Eigen::Vector3d& center = bounding_sphere.center;
+      double radius = bounding_sphere.radius;
+      
+      // Calculate grid bounds based on bounding sphere
+      int grid_size = static_cast<int>(std::ceil(2.0 * radius / resolution));
+      double half_size = grid_size * resolution * 0.5;
+      
+      // Sample points in a grid within the bounding sphere
+      for (int x = 0; x < grid_size; ++x)
+      {
+          for (int y = 0; y < grid_size; ++y)
+          {
+              for (int z = 0; z < grid_size; ++z)
+              {
+                  // Calculate world coordinates
+                  Eigen::Vector3d point;
+                  point.x() = center.x() - half_size + (x + 0.5) * resolution;
+                  point.y() = center.y() - half_size + (y + 0.5) * resolution;
+                  point.z() = center.z() - half_size + (z + 0.5) * resolution;
+                  
+                  // Check if point is within bounding sphere
+                  double distance_to_center = (point - center).norm();
+                  if (distance_to_center <= radius)
+                  {
+                      // Check if point is inside the convex body
+                      if (body.containsPoint(point))
+                      {
+                          points.push_back(point);
+                      }
+                  }
+              }
+          }
+      }
+  }
+ground_truth.cpp: |-
+  void distance_field::findInternalPointsConvex(const bodies::Body& body, double resolution,
+                                                EigenSTL::vector_Vector3d& points)
+  {
+    bodies::BoundingSphere sphere;
+    body.computeBoundingSphere(sphere);
+    double xval_s = std::floor((sphere.center.x() - sphere.radius - resolution) / resolution) * resolution;
+    double yval_s = std::floor((sphere.center.y() - sphere.radius - resolution) / resolution) * resolution;
+    double zval_s = std::floor((sphere.center.z() - sphere.radius - resolution) / resolution) * resolution;
+    double xval_e = sphere.center.x() + sphere.radius + resolution;
+    double yval_e = sphere.center.y() + sphere.radius + resolution;
+    double zval_e = sphere.center.z() + sphere.radius + resolution;
+    Eigen::Vector3d pt;
+    for (pt.x() = xval_s; pt.x() <= xval_e; pt.x() += resolution)
+    {
+      for (pt.y() = yval_s; pt.y() <= yval_e; pt.y() += resolution)
+      {
+        for (pt.z() = zval_s; pt.z() <= zval_e; pt.z() += resolution)
+        {
+          if (body.containsPoint(pt))
+          {
+            points.push_back(pt);
+          }
+        }
+      }
+    }
+  }
+architecture-codes: []
+functionality-codes:
+    - Operation/Calculation Error - Incorrect arithmetic operation
+    - Conditional Checks Issues - Redundant Conditional Check
+    - Incomplete Code - Suboptimal Algorithm Implementation
+
+root-cause-codes:
+    - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+    - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries

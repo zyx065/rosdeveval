@@ -1,0 +1,292 @@
+compilation.log: |
+  Starting >>> moveit_servo
+  --- stderr: moveit_servo
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/servo_calcs.cpp: In constructor ‘moveit_servo::ServoCalcs::ServoCalcs(const SharedPtr&, const std::shared_ptr<const moveit_servo::ServoParameters>&, const PlanningSceneMonitorPtr&)’:
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/servo_calcs.cpp:108:26: error: no matching function for call to ‘online_signal_smoothing::SmoothingBaseClass::initialize(std::shared_ptr<rclcpp::Node>&)’
+    108 |     smoother_->initialize(node_);
+        |     ~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+  In file included from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/servo_calcs.h:69,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/servo_calcs.cpp:50:
+  /root/repos/moveit_ws/install/moveit_core/include/moveit/online_signal_smoothing/smoothing_base_class.h:69:16: note: candidate: ‘virtual bool online_signal_smoothing::SmoothingBaseClass::initialize(rclcpp::Node::SharedPtr, moveit::core::RobotModelConstPtr, size_t)’
+     69 |   virtual bool initialize(rclcpp::Node::SharedPtr node, moveit::core::RobotModelConstPtr robot_model,
+        |                ^~~~~~~~~~
+  /root/repos/moveit_ws/install/moveit_core/include/moveit/online_signal_smoothing/smoothing_base_class.h:69:16: note:   candidate expects 3 arguments, 1 provided
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/servo_calcs.cpp: In lambda function:
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/servo_calcs.cpp:124:71: error: ‘processTwistStamped’ was not declared in this scope
+    124 |       [this](const geometry_msgs::msg::TwistStamped::SharedPtr msg) { processTwistStamped(msg); });
+        |                                                                       ^~~~~~~~~~~~~~~~~~~
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/servo_calcs.cpp: In lambda function:
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/servo_calcs.cpp:129:66: error: ‘processJointJog’ was not declared in this scope
+    129 |       [this](const control_msgs::msg::JointJog::SharedPtr msg) { processJointJog(msg); });
+        |                                                                  ^~~~~~~~~~~~~~~
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/servo_calcs.cpp: In lambda function:
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/servo_calcs.cpp:134:61: error: ‘collisionVelocityScaleCallback’ was not declared in this scope; did you mean ‘collisionVelocityScaleCB’?
+    134 |       [this](const std_msgs::msg::Float64::SharedPtr msg) { collisionVelocityScaleCallback(msg); });
+        |                                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        |                                                             collisionVelocityScaleCB
+  gmake[2]: *** [CMakeFiles/moveit_servo_lib.dir/build.make:118: CMakeFiles/moveit_servo_lib.dir/src/servo_calcs.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:203: CMakeFiles/moveit_servo_lib.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< moveit_servo [17.2s, exited with code 2]
+
+  Summary: 0 packages finished [17.9s]
+    1 package failed: moveit_servo
+    1 package had stderr output: moveit_servo
+generate_code.cpp: |-
+  ServoCalcs::ServoCalcs(const rclcpp::Node::SharedPtr& node,
+                         const std::shared_ptr<const moveit_servo::ServoParameters>& parameters,
+                         const planning_scene_monitor::PlanningSceneMonitorPtr& planning_scene_monitor)
+    : node_(node)
+    , parameters_(parameters)
+    , planning_scene_monitor_(planning_scene_monitor)
+    , stop_requested_(true)
+    , done_stopping_(false)
+    , paused_(false)
+    , robot_link_command_frame_(parameters->robot_link_command_frame)
+    , smoothing_loader_("moveit_core", "online_signal_smoothing::SmoothingBaseClass")
+  {
+    // Initialize the planning scene monitor and robot state
+    if (planning_scene_monitor_)
+    {
+      current_state_ = planning_scene_monitor_->getStateMonitor()->getCurrentState();
+      joint_model_group_ = current_state_->getJointModelGroup(parameters_->move_group_name);
+    }
+
+    // Ensure the joint model group is valid
+    if (!joint_model_group_)
+    {
+      RCLCPP_ERROR(node_->get_logger(), "Joint model group '%s' not found", parameters_->move_group_name.c_str());
+      throw std::runtime_error("Invalid joint model group");
+    }
+
+    // Get the number of joints in the group
+    num_joints_ = joint_model_group_->getVariableCount();
+
+    // Initialize delta_theta_ with zeros
+    delta_theta_ = Eigen::ArrayXd::Zero(num_joints_);
+
+    // Map joint names to indices
+    const std::vector<std::string>& joint_names = joint_model_group_->getVariableNames();
+    for (std::size_t i = 0; i < joint_names.size(); ++i)
+    {
+      joint_state_name_map_[joint_names[i]] = i;
+    }
+
+    // Load the smoothing plugin
+    try
+    {
+      smoother_ = smoothing_loader_.createSharedInstance(parameters_->smoothing_filter_plugin_name);
+      smoother_->initialize(node_);
+    }
+    catch (const pluginlib::PluginlibException& ex)
+    {
+      RCLCPP_ERROR(node_->get_logger(), "Failed to load smoothing plugin '%s': %s",
+                   parameters_->smoothing_filter_plugin_name.c_str(), ex.what());
+      throw std::runtime_error("Failed to load smoothing plugin");
+    }
+
+    // Initialize the transform between MoveIt and robot command frames
+    tf_moveit_to_robot_cmd_frame_ = Eigen::Isometry3d::Identity();
+    tf_moveit_to_ee_frame_ = Eigen::Isometry3d::Identity();
+
+    // Subscribe to incoming twist commands
+    twist_stamped_sub_ = node_->create_subscription<geometry_msgs::msg::TwistStamped>(
+        parameters_->cartesian_command_in_topic, rclcpp::QoS(1),
+        [this](const geometry_msgs::msg::TwistStamped::SharedPtr msg) { processTwistStamped(msg); });
+
+    // Subscribe to incoming joint commands
+    joint_cmd_sub_ = node_->create_subscription<control_msgs::msg::JointJog>(
+        parameters_->joint_command_in_topic, rclcpp::QoS(1),
+        [this](const control_msgs::msg::JointJog::SharedPtr msg) { processJointJog(msg); });
+
+    // Subscribe to collision velocity scaling
+    collision_velocity_scale_sub_ = node_->create_subscription<std_msgs::msg::Float64>(
+        "~/collision_velocity_scale", rclcpp::QoS(1),
+        [this](const std_msgs::msg::Float64::SharedPtr msg) { collisionVelocityScaleCallback(msg); });
+
+    // Advertise outgoing trajectory commands
+    trajectory_outgoing_cmd_pub_ = node_->create_publisher<trajectory_msgs::msg::JointTrajectory>(
+        parameters_->command_out_topic, rclcpp::QoS(1));
+
+    // Advertise outgoing multiarray commands
+    multiarray_outgoing_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64MultiArray>(
+        "~/multiarray_outgoing_cmds", rclcpp::QoS(1));
+
+    // Advertise servo status
+    status_pub_ = node_->create_publisher<std_msgs::msg::Int8>(parameters_->status_topic, rclcpp::QoS(1));
+
+    // Service for changing drift dimensions
+    drift_dimensions_server_ = node_->create_service<moveit_msgs::srv::ChangeDriftDimensions>(
+        "~/change_drift_dimensions", [this](const std::shared_ptr<moveit_msgs::srv::ChangeDriftDimensions::Request> req,
+                                            std::shared_ptr<moveit_msgs::srv::ChangeDriftDimensions::Response> res) {
+          changeDriftDimensions(req, res);
+        });
+
+    // Service for changing control dimensions
+    control_dimensions_server_ = node_->create_service<moveit_msgs::srv::ChangeControlDimensions>(
+        "~/change_control_dimensions", [this](const std::shared_ptr<moveit_msgs::srv::ChangeControlDimensions::Request> req,
+                                              std::shared_ptr<moveit_msgs::srv::ChangeControlDimensions::Response> res) {
+          changeControlDimensions(req, res);
+        });
+
+    // Service for resetting servo status
+    reset_servo_status_ = node_->create_service<std_srvs::srv::Empty>(
+        "~/reset_servo_status", [this](const std::shared_ptr<std_srvs::srv::Empty::Request> req,
+                                       std::shared_ptr<std_srvs::srv::Empty::Response> res) {
+          resetServoStatus(req, res);
+        });
+
+    // Initialize inverse kinematics solver
+    ik_solver_ = joint_model_group_->getSolverInstance();
+    if (!ik_solver_)
+    {
+      RCLCPP_WARN(node_->get_logger(), "No IK solver available for joint model group '%s'",
+                  parameters_->move_group_name.c_str());
+    }
+
+    // Determine if inverse Jacobian should be used
+    use_inv_jacobian_ = (parameters_->command_in_type == "unitless");
+
+    RCLCPP_INFO(node_->get_logger(), "ServoCalcs initialized successfully");
+  }
+ground_truth.cpp: |-
+  ServoCalcs::ServoCalcs(const rclcpp::Node::SharedPtr& node,
+                         const std::shared_ptr<const moveit_servo::ServoParameters>& parameters,
+                         const planning_scene_monitor::PlanningSceneMonitorPtr& planning_scene_monitor)
+    : node_(node)
+    , parameters_(parameters)
+    , planning_scene_monitor_(planning_scene_monitor)
+    , stop_requested_(true)
+    , done_stopping_(false)
+    , paused_(false)
+    , robot_link_command_frame_(parameters->robot_link_command_frame)
+    , smoothing_loader_("moveit_core", "online_signal_smoothing::SmoothingBaseClass")
+  {
+    // Register callback for changes in robot_link_command_frame
+    bool callback_success = parameters_->registerSetParameterCallback(parameters->ns + ".robot_link_command_frame",
+                                                                      [this](const rclcpp::Parameter& parameter) {
+                                                                        return robotLinkCommandFrameCallback(parameter);
+                                                                      });
+    if (!callback_success)
+    {
+      throw std::runtime_error("Failed to register setParameterCallback");
+    }
+
+    // MoveIt Setup
+    current_state_ = planning_scene_monitor_->getStateMonitor()->getCurrentState();
+    joint_model_group_ = current_state_->getJointModelGroup(parameters_->move_group_name);
+    if (joint_model_group_ == nullptr)
+    {
+      RCLCPP_ERROR_STREAM(LOGGER, "Invalid move group name: `" << parameters_->move_group_name << "`");
+      throw std::runtime_error("Invalid move group name");
+    }
+
+    // Subscribe to command topics
+    twist_stamped_sub_ = node_->create_subscription<geometry_msgs::msg::TwistStamped>(
+        parameters_->cartesian_command_in_topic, rclcpp::SystemDefaultsQoS(),
+        [this](const geometry_msgs::msg::TwistStamped::ConstSharedPtr& msg) { return twistStampedCB(msg); });
+
+    joint_cmd_sub_ = node_->create_subscription<control_msgs::msg::JointJog>(
+        parameters_->joint_command_in_topic, rclcpp::SystemDefaultsQoS(),
+        [this](const control_msgs::msg::JointJog::ConstSharedPtr& msg) { return jointCmdCB(msg); });
+
+    // ROS Server for allowing drift in some dimensions
+    drift_dimensions_server_ = node_->create_service<moveit_msgs::srv::ChangeDriftDimensions>(
+        "~/change_drift_dimensions",
+        [this](const std::shared_ptr<moveit_msgs::srv::ChangeDriftDimensions::Request>& req,
+               const std::shared_ptr<moveit_msgs::srv::ChangeDriftDimensions::Response>& res) {
+          return changeDriftDimensions(req, res);
+        });
+
+    // ROS Server for changing the control dimensions
+    control_dimensions_server_ = node_->create_service<moveit_msgs::srv::ChangeControlDimensions>(
+        "~/change_control_dimensions",
+        [this](const std::shared_ptr<moveit_msgs::srv::ChangeControlDimensions::Request>& req,
+               const std::shared_ptr<moveit_msgs::srv::ChangeControlDimensions::Response>& res) {
+          return changeControlDimensions(req, res);
+        });
+
+    // ROS Server to reset the status, e.g. so the arm can move again after a collision
+    reset_servo_status_ = node_->create_service<std_srvs::srv::Empty>(
+        "~/reset_servo_status",
+        [this](const std::shared_ptr<std_srvs::srv::Empty::Request>& req,
+               const std::shared_ptr<std_srvs::srv::Empty::Response>& res) { return resetServoStatus(req, res); });
+
+    // Subscribe to the collision_check topic
+    collision_velocity_scale_sub_ = node_->create_subscription<std_msgs::msg::Float64>(
+        "~/collision_velocity_scale", rclcpp::SystemDefaultsQoS(),
+        [this](const std_msgs::msg::Float64::ConstSharedPtr& msg) { return collisionVelocityScaleCB(msg); });
+
+    // Publish freshly-calculated joints to the robot.
+    // Put the outgoing msg in the right format (trajectory_msgs/JointTrajectory or std_msgs/Float64MultiArray).
+    if (parameters_->command_out_type == "trajectory_msgs/JointTrajectory")
+    {
+      trajectory_outgoing_cmd_pub_ = node_->create_publisher<trajectory_msgs::msg::JointTrajectory>(
+          parameters_->command_out_topic, rclcpp::SystemDefaultsQoS());
+    }
+    else if (parameters_->command_out_type == "std_msgs/Float64MultiArray")
+    {
+      multiarray_outgoing_cmd_pub_ = node_->create_publisher<std_msgs::msg::Float64MultiArray>(
+          parameters_->command_out_topic, rclcpp::SystemDefaultsQoS());
+    }
+
+    // Publish status
+    status_pub_ = node_->create_publisher<std_msgs::msg::Int8>(parameters_->status_topic, rclcpp::SystemDefaultsQoS());
+
+    internal_joint_state_.name = joint_model_group_->getActiveJointModelNames();
+    num_joints_ = internal_joint_state_.name.size();
+    internal_joint_state_.position.resize(num_joints_);
+    internal_joint_state_.velocity.resize(num_joints_);
+    delta_theta_.setZero(num_joints_);
+
+    for (std::size_t i = 0; i < num_joints_; ++i)
+    {
+      // A map for the indices of incoming joint commands
+      joint_state_name_map_[internal_joint_state_.name[i]] = i;
+    }
+
+    // Load the smoothing plugin
+    try
+    {
+      smoother_ = smoothing_loader_.createSharedInstance(parameters_->smoothing_filter_plugin_name);
+    }
+    catch (pluginlib::PluginlibException& ex)
+    {
+      RCLCPP_ERROR(LOGGER, "Exception while loading the smoothing plugin '%s': '%s'",
+                   parameters_->smoothing_filter_plugin_name.c_str(), ex.what());
+      std::exit(EXIT_FAILURE);
+    }
+
+    // Initialize the smoothing plugin
+    if (!smoother_->initialize(node_, planning_scene_monitor_->getRobotModel(), num_joints_))
+    {
+      RCLCPP_ERROR(LOGGER, "Smoothing plugin could not be initialized");
+      std::exit(EXIT_FAILURE);
+    }
+
+    // A matrix of all zeros is used to check whether matrices have been initialized
+    Eigen::Matrix3d empty_matrix;
+    empty_matrix.setZero();
+    tf_moveit_to_ee_frame_ = empty_matrix;
+    tf_moveit_to_robot_cmd_frame_ = empty_matrix;
+
+    // Get the IK solver for the group
+    ik_solver_ = joint_model_group_->getSolverInstance();
+    if (!ik_solver_)
+    {
+      use_inv_jacobian_ = true;
+      RCLCPP_WARN(
+          LOGGER,
+          "No kinematics solver instantiated for group '%s'. Will use inverse Jacobian for servo calculations instead.",
+          joint_model_group_->getName().c_str());
+    }
+    else if (!ik_solver_->supportsGroup(joint_model_group_))
+    {
+      use_inv_jacobian_ = true;
+      RCLCPP_WARN(LOGGER,
+                  "The loaded kinematics plugin does not support group '%s'. Will use inverse Jacobian for servo "
+                  "calculations instead.",
+                  joint_model_group_->getName().c_str());
+    }
+  }

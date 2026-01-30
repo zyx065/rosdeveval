@@ -1,0 +1,73 @@
+compilation.log: |
+  Starting >>> nav2_collision_monitor
+  --- stderr: nav2_collision_monitor
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/polygon.cpp: In member function ‘void nav2_collision_monitor::Polygon::publish() const’:
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/polygon.cpp:228:46: error: base operand of ‘->’ has non-pointer type ‘const WeakPtr’ {aka ‘const std::weak_ptr<rclcpp_lifecycle::LifecycleNode>’}
+    228 |     polygon_stamped_msg->header.stamp = node_->now();
+        |                                              ^~
+  gmake[2]: *** [CMakeFiles/collision_monitor_core.dir/build.make:90: CMakeFiles/collision_monitor_core.dir/src/polygon.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:180: CMakeFiles/collision_monitor_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_collision_monitor [3.01s, exited with code 2]
+
+  Summary: 0 packages finished [3.35s]
+    1 package failed: nav2_collision_monitor
+    1 package had stderr output: nav2_collision_monitor
+generate_code.cpp: |-
+  void Polygon::publish() const
+  {
+      // Check if visualization is enabled
+      if (!visualize_)
+      {
+          RCLCPP_DEBUG(logger_, "Visualization is disabled. Skipping polygon publish.");
+          return;
+      }
+
+      // Check if the publisher is valid
+      if (!polygon_pub_ || !polygon_pub_->is_activated())
+      {
+          RCLCPP_WARN(logger_, "Polygon publisher is not valid or not activated. Cannot publish polygon.");
+          return;
+      }
+
+      // Create a PolygonStamped message
+      auto polygon_stamped_msg = std::make_unique<geometry_msgs::msg::PolygonStamped>();
+      polygon_stamped_msg->header.stamp = node_->now();
+      polygon_stamped_msg->header.frame_id = base_frame_id_;
+      polygon_stamped_msg->polygon = polygon_;
+
+      // Publish the message
+      try
+      {
+          polygon_pub_->publish(std::move(polygon_stamped_msg));
+          RCLCPP_DEBUG(logger_, "Polygon published successfully.");
+      }
+      catch (const std::exception &e)
+      {
+          RCLCPP_ERROR(logger_, "Failed to publish polygon: %s", e.what());
+          throw std::runtime_error("Failed to publish polygon.");
+      }
+  }
+ground_truth.cpp: |-
+  void Polygon::publish() const
+  {
+    if (!visualize_) {
+      return;
+    }
+
+    auto node = node_.lock();
+    if (!node) {
+      throw std::runtime_error{"Failed to lock node"};
+    }
+
+    // Fill PolygonStamped struct
+    std::unique_ptr<geometry_msgs::msg::PolygonStamped> poly_s =
+      std::make_unique<geometry_msgs::msg::PolygonStamped>();
+    poly_s->header.stamp = node->now();
+    poly_s->header.frame_id = base_frame_id_;
+    poly_s->polygon = polygon_;
+
+    // Publish polygon
+    polygon_pub_->publish(std::move(poly_s));
+  }

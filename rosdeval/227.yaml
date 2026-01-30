@@ -1,0 +1,25 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_map_server
+ros_package: nav2_map_server
+file_path: src/costmap_filter_info/costmap_filter_info_server.cpp
+method_name: CostmapFilterInfoServer::on_activate
+requirement: |
+  /**
+  * Activates the costmap filter info server and publishes the filter info message.
+  * 
+  * @param[in] state The lifecycle state triggering the activation (unused).
+  * @return nav2_util::CallbackReturn::SUCCESS always upon successful activation.
+  */
+category: ros_architecture
+type: has_logger,has_topic,has_message
+signature: |
+  nav2_util::CallbackReturn
+  CostmapFilterInfoServer::on_activate(const rclcpp_lifecycle::State & /*state*/)
+additional_information: 
+  function_related_variable: |
+    rclcpp_lifecycle::LifecyclePublisher<nav2_msgs::msg::CostmapFilterInfo>::SharedPtr publisher_;
+  function_related_function: |
+    createBond()  
+test: test_costmap_filter_info_server
+test_cases: []

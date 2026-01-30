@@ -1,0 +1,238 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_obstacle_stop_planner
+ros_package: autoware_obstacle_stop_planner
+file_path: src/node.cpp
+method_name: ObstacleStopPlannerNode::ObstacleStopPlannerNode
+requirement: |
+  /**
+  * @brief Constructs an ObstacleStopPlannerNode for obstacle-aware trajectory planning.
+  * 
+  * @param node_options Configuration options for initializing the ROS 2 node.
+  */
+category: ros_architecture
+type: has_parameter,has_topic,has_logger,has_message
+signature: |
+  ObstacleStopPlannerNode::ObstacleStopPlannerNode(const rclcpp::NodeOptions & node_options)
+  : Node("obstacle_stop_planner", node_options)
+additional_information: 
+  function_related_variable: |
+    VehicleInfo vehicle_info_;
+    NodeParam node_param_;
+    StopParam stop_param_;
+    SlowDownParam slow_down_param_;
+    std::unique_ptr<AdaptiveCruiseController> acc_controller_;
+    std::shared_ptr<ObstacleStopPlannerDebugNode> debug_ptr_;
+    rclcpp::Subscription<Trajectory>::SharedPtr sub_trajectory_;
+    rclcpp::Subscription<PointCloud2>::SharedPtr sub_point_cloud_;
+    rclcpp::Subscription<Odometry>::SharedPtr sub_odometry_;
+    rclcpp::Subscription<AccelWithCovarianceStamped>::SharedPtr sub_acceleration_;
+    rclcpp::Subscription<PredictedObjects>::SharedPtr sub_dynamic_objects_;
+    rclcpp::Subscription<ExpandStopRange>::SharedPtr sub_expand_stop_range_;
+    rclcpp::Publisher<Trajectory>::SharedPtr pub_trajectory_;
+    rclcpp::Publisher<DiagnosticStatus>::SharedPtr pub_stop_reason_;
+    rclcpp::Publisher<VelocityLimitClearCommand>::SharedPtr pub_clear_velocity_limit_;
+    rclcpp::Publisher<VelocityLimit>::SharedPtr pub_velocity_limit_;
+    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_obstacle_pointcloud_;
+    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_collision_pointcloud_debug_;
+    rclcpp::Publisher<Float64Stamped>::SharedPtr pub_processing_time_ms_;
+    std::unique_ptr<autoware::universe_utils::LoggerLevelConfigure> logger_configure_;
+    std::unique_ptr<autoware::universe_utils::PublishedTimePublisher> published_time_publisher_;
+  function_related_function: |
+    void onTrigger(const Trajectory::ConstSharedPtr input_msg);
+    void onOdometry(const Odometry::ConstSharedPtr input_msg);
+    void onAcceleration(const AccelWithCovarianceStamped::ConstSharedPtr input_msg);
+    void onPointCloud(const PointCloud2::ConstSharedPtr input_msg);
+    void onDynamicObjects(const PredictedObjects::ConstSharedPtr input_msg);
+    void onExpandStopRange(const ExpandStopRange::ConstSharedPtr input_msg);
+  function_related_class: |
+    truct NodeParam
+    {
+      // set True, slow down for obstacle beside the path
+      bool enable_slow_down;
+
+      // set True, filter obstacles in z axis
+      bool enable_z_axis_obstacle_filtering;
+
+      // buffer for z axis filtering [m]
+      double z_axis_filtering_buffer;
+
+      // max velocity [m/s]
+      double max_velocity;
+
+      // keep slow down or stop state if obstacle vanished [s]
+      double chattering_threshold;
+
+      // dist threshold for ego's nearest index
+      double ego_nearest_dist_threshold;
+
+      // yaw threshold for ego's nearest index
+      double ego_nearest_yaw_threshold;
+
+      // voxel grid x parameter for filtering pointcloud [m]
+      double voxel_grid_x;
+
+      // voxel grid y parameter for filtering pointcloud [m]
+      double voxel_grid_y;
+
+      // voxel grid z parameter for filtering pointcloud [m]
+      double voxel_grid_z;
+
+      // It uses only predicted objects for slowdown and collision checking
+      bool use_predicted_objects;
+
+      // If use_predicted_objects is true, objects are ignored if distance to trajectory is larger than
+      // this value [m]
+      double predicted_object_filtering_threshold;
+
+      // If use_predicted_objects is true, node publishes collision polygon
+      bool publish_obstacle_polygon;
+    };
+
+    struct StopParam
+    {
+      // ==============================
+      // params for longitudinal margin
+      // ==============================
+
+      // margin between obstacle and the ego's front [m]
+      double max_longitudinal_margin;
+      double max_longitudinal_margin_behind_goal;
+
+      // margin between obstacle and the ego's front [m]
+      // if any other stop point is inserted within max_longitudinal_margin.
+      double min_longitudinal_margin;
+
+      // ==================================
+      // params for obstacle detection area
+      // ==================================
+
+      // lateral margin between the ego's footprint and
+      // the boundary of the detection area for collision obstacles [m]
+      // if any obstacles exist within the detection area, this module plans to stop
+      // before the obstacle.
+      double lateral_margin;
+      double vehicle_lateral_margin;
+      double pedestrian_lateral_margin;
+      double unknown_lateral_margin;
+
+      // =================================
+      // params for trajectory pre-process
+      // =================================
+
+      // step length for pointcloud search range [m]
+      double step_length;
+
+      // enable extend trajectory after goal lane for obstacle detection
+      bool enable_stop_behind_goal_for_obstacle;
+
+      // ======
+      // others
+      // ======
+
+      // search radius for obstacle point cloud [m]
+      double stop_search_radius;
+
+      // keep stopping if the ego is in this margin [m]
+      double hold_stop_margin_distance;
+    };
+
+    struct SlowDownParam
+    {
+      // =================
+      // params for margin
+      // =================
+
+      // margin between obstacle and the ego's front [m]
+      double longitudinal_forward_margin;
+
+      // margin between obstacle and the ego's rear [m]
+      double longitudinal_backward_margin;
+
+      // OPTIONAL (use this param if consider_constraints is True)
+      // minimum distance between obstacle and the ego's front when slow down margin is relaxed [m]
+      double min_longitudinal_forward_margin;
+
+      // OPTIONAL (use this param if consider_constraints is True)
+      // fineness param for relaxing slow down margin [m]
+      double longitudinal_margin_span;
+
+      // ==================================
+      // params for obstacle detection area
+      // ==================================
+
+      // lateral margin between the ego's footprint and the boundary of the detection area for slow down
+      // obstacles [m]
+      double lateral_margin;
+      double vehicle_lateral_margin;
+      double pedestrian_lateral_margin;
+      double unknown_lateral_margin;
+
+      // ===================
+      // params for velocity
+      // ===================
+
+      // OPTIONAL (use this param if consider_constraints is False)
+      // maximum velocity fow slow down section [m/s]
+      double max_slow_down_velocity;
+
+      // OPTIONAL (use this param if consider_constraints is False)
+      // minimum velocity for slow down section [m/s]
+      double min_slow_down_velocity;
+
+      // OPTIONAL (use this param if consider_constraints is True)
+      // target slow down velocity [m/s]
+      double slow_down_velocity;
+
+      // OPTIONAL (use this param if consider_constraints is True)
+      // velocity threshold whether the vehicle complete deceleration [m/s]
+      double velocity_threshold_decel_complete;
+
+      // OPTIONAL (use this param if consider_constraints is True)
+      // acceleration threshold whether the vehicle complete deceleration [m/ss]
+      double acceleration_threshold_decel_complete;
+
+      // ===================================
+      // params for deceleration constraints
+      // ===================================
+
+      // OPTIONAL (use this param if consider_constraints is True)
+      // min jerk limit for mild stop [m/sss]
+      double normal_min_jerk;
+
+      // OPTIONAL (use this param if consider_constraints is True)
+      // min deceleration limit for mild stop [m/ss]
+      double normal_min_acc;
+
+      // OPTIONAL (use this param if consider_constraints is True)
+      // min jerk limit [m/sss]
+      double limit_min_jerk;
+
+      // OPTIONAL (use this param if consider_constraints is True)
+      // min deceleration limit [m/ss]
+      double limit_min_acc;
+
+      // OPTIONAL (use this param if consider_constraints is True)
+      // min slow down jerk constraint [m/sss]
+      double slow_down_min_jerk;
+
+      // OPTIONAL (use this param if consider_constraints is True)
+      // init jerk used for deceleration planning [m/sss]
+      double jerk_start;
+
+      // OPTIONAL (use this param if consider_constraints is True)
+      // fineness param for planning deceleration jerk [m/sss]
+      double jerk_span;
+
+      // ======
+      // others
+      // ======
+
+      // set "True", decel point is planned under jerk/dec constraints
+      bool consider_constraints;
+
+      // search radius for slow down obstacle point cloud [m]
+      double slow_down_search_radius;
+    };
+test: test_autoware_obstacle_stop_planner
+test_cases: []

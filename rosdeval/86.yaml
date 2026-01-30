@@ -1,0 +1,42 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_obstacle_collision_checker
+ros_package: autoware_perception_online_evaluator
+file_path: src/obstacle_collision_checker.cpp
+method_name: check_for_collisions
+requirement: |
+  /**
+  * Resamples a trajectory by spacing waypoints at approximately the specified interval.
+  * 
+  * @param trajectory The input trajectory to be resampled.
+  * @param interval The desired distance interval between consecutive waypoints in the resampled trajectory.
+  * @return Resampled trajectory with waypoints spaced at approximately the specified interval.
+  */
+category: utilities
+type: has_timer,has_message
+signature: |
+  Output check_for_collisions(const Input & input)
+additional_information: 
+  function_related_class: |
+    namespace autoware::universe_utils{
+      double calcDistance2d(const Point1 & point1, const Point2 & point2)
+    }
+    struct Output
+    {
+      std::map<std::string, double> processing_time_map;
+      bool will_collide;
+      autoware_planning_msgs::msg::Trajectory resampled_trajectory;
+      std::vector<LinearRing2d> vehicle_footprints;
+      std::vector<LinearRing2d> vehicle_passing_areas;
+    };
+  function_related_function: |
+    double calc_braking_distance(const double abs_velocity, const double max_deceleration, const double delay_time)
+    autoware_planning_msgs::msg::Trajectory resample_trajectory(const autoware_planning_msgs::msg::Trajectory & trajectory, const double interval)
+    pcl::PointCloud<pcl::PointXYZ> get_transformed_point_cloud(const sensor_msgs::msg::PointCloud2 & pointcloud_msg,const geometry_msgs::msg::Transform & transform)
+    pcl::PointCloud<pcl::PointXYZ> filter_point_cloud_by_trajectory(const pcl::PointCloud<pcl::PointXYZ> & pointcloud, const autoware_planning_msgs::msg::Trajectory & trajectory, const double radius)
+    std::vector<LinearRing2d> create_vehicle_footprints(const autoware_planning_msgs::msg::Trajectory & trajectory, const Param & param,const autoware::vehicle_info_utils::VehicleInfo & vehicle_info)
+    std::vector<LinearRing2d> create_vehicle_passing_areas(const std::vector<LinearRing2d> & vehicle_footprints)
+    bool will_collide(const pcl::PointCloud<pcl::PointXYZ> & obstacle_pointcloud,const std::vector<LinearRing2d> & vehicle_footprints)
+test: test_obstacle_collision_checker
+test_cases: 
+- check_for_collisions

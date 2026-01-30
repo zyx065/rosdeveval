@@ -1,0 +1,85 @@
+compilation.log: |
+  Starting >>> autoware_planning_evaluator
+  --- stderr: autoware_planning_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp: In member function ‘void planning_diagnostics::PlanningEvaluatorNode::onModifiedGoal(autoware_planning_msgs::msg::PoseWithUuidStamped_<std::allocator<void> >::ConstSharedPtr, nav_msgs::msg::Odometry_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp:338:34: error: cannot convert ‘const geometry_msgs::msg::Pose_<std::allocator<void> >’ to ‘const Odometry&’ {aka ‘const nav_msgs::msg::Odometry_<std::allocator<void> >&’}
+    338 |   metrics_calculator_.setEgoPose(ego_pose);
+        |                                  ^~~~~~~~
+        |                                  |
+        |                                  const geometry_msgs::msg::Pose_<std::allocator<void> >
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/include/autoware/planning_evaluator/planning_evaluator_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/include/autoware/planning_evaluator/metrics_calculator.hpp:78:51: note:   initializing argument 1 of ‘void planning_diagnostics::MetricsCalculator::setEgoPose(const Odometry&)’
+     78 |   void setEgoPose(const nav_msgs::msg::Odometry & ego_odometry);
+        |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/planning_evaluator_node.dir/build.make:174: CMakeFiles/planning_evaluator_node.dir/src/planning_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:161: CMakeFiles/planning_evaluator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_planning_evaluator [13.7s, exited with code 2]
+
+  Summary: 0 packages finished [15.0s]
+    1 package failed: autoware_planning_evaluator
+    1 package had stderr output: autoware_planning_evaluator
+generate_code.cpp: |-
+  void PlanningEvaluatorNode::onModifiedGoal(
+    const PoseWithUuidStamped::ConstSharedPtr modified_goal_msg,
+    const Odometry::ConstSharedPtr ego_state_ptr)
+  {
+    // Return silently if either input pointer is null
+    if (!modified_goal_msg || !ego_state_ptr) {
+      return;
+    }
+
+    // Extract the ego pose from the odometry message
+    const auto & ego_pose = ego_state_ptr->pose.pose;
+
+    // Extract the modified goal pose
+    const auto & modified_goal_pose = modified_goal_msg->pose;
+
+    // Update the MetricsCalculator with the current ego pose
+    metrics_calculator_.setEgoPose(ego_pose);
+
+    // Iterate through all defined metrics and calculate them
+    for (size_t i = 0; i < static_cast<size_t>(Metric::SIZE); ++i) {
+      const auto metric = static_cast<Metric>(i);
+
+      // Calculate the metric using the ego pose and modified goal pose
+      const auto metric_result = metrics_calculator_.calculate(metric, ego_pose, modified_goal_pose);
+
+      // If the metric calculation was successful, record the result
+      if (metric_result.has_value()) {
+        AddMetricMsg(metric, metric_result.value());
+      }
+    }
+  }
+ground_truth.cpp: |-
+  void PlanningEvaluatorNode::onModifiedGoal(
+    const PoseWithUuidStamped::ConstSharedPtr modified_goal_msg,
+    const Odometry::ConstSharedPtr ego_state_ptr)
+  {
+    if (!modified_goal_msg || !ego_state_ptr) {
+      return;
+    }
+    auto start = now();
+
+    for (Metric metric : metrics_) {
+      const auto metric_stat = metrics_calculator_.calculate(
+        Metric(metric), modified_goal_msg->pose, ego_state_ptr->pose.pose);
+      if (!metric_stat) {
+        continue;
+      }
+      if (output_metrics_) {
+        metric_accumulators_[static_cast<size_t>(metric)][0].add(metric_stat->min());
+        metric_accumulators_[static_cast<size_t>(metric)][1].add(metric_stat->max());
+        metric_accumulators_[static_cast<size_t>(metric)][2].add(metric_stat->mean());
+      }
+      if (metric_stat->count() > 0) {
+        AddMetricMsg(metric, *metric_stat);
+      }
+    }
+    auto runtime = (now() - start).seconds();
+    RCLCPP_DEBUG(
+      get_logger(), "Planning evaluation modified goal deviation calculation time: %2.2f ms",
+      runtime * 1e3);
+  }

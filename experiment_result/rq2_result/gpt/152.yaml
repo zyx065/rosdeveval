@@ -1,0 +1,38 @@
+compilation.log: |
+  Starting >>> moveit_core
+  Finished <<< moveit_core [0.78s]
+
+  Summary: 1 package finished [1.24s]
+generate_code.cpp: "Eigen::VectorXd Trajectory::getPosition(double time) const\n{\n\
+  \    // Find the trajectory segment corresponding to the given time\n    auto segment\
+  \ = getTrajectorySegment(time);\n    \n    // If no valid segment is found, return\
+  \ an empty vector\n    if (segment == trajectory_.end())\n    {\n        return\
+  \ Eigen::VectorXd();\n    }\n\n    // Interpolate the position based on the time\
+  \ within the segment\n    auto next_segment = std::next(segment);\n    if (next_segment\
+  \ == trajectory_.end())\n    {\n        // If there is no next segment, return the\
+  \ position of the current segment\n        Eigen::VectorXd position(1);\n      \
+  \  position(0) = segment->path_pos_;\n        return position;\n    }\n\n    //\
+  \ Compute the interpolation factor\n    double t1 = segment->time_;\n    double\
+  \ t2 = next_segment->time_;\n    double alpha = (time - t1) / (t2 - t1);\n\n   \
+  \ // Interpolate the position\n    double pos1 = segment->path_pos_;\n    double\
+  \ pos2 = next_segment->path_pos_;\n    double interpolated_pos = (1 - alpha) * pos1\
+  \ + alpha * pos2;\n\n    // Return the interpolated position as an Eigen vector\n\
+  \    Eigen::VectorXd position(1);\n    position(0) = interpolated_pos;\n    return\
+  \ position;\n}"
+ground_truth.cpp: |-
+  Eigen::VectorXd Trajectory::getPosition(double time) const
+  {
+    std::list<TrajectoryStep>::const_iterator it = getTrajectorySegment(time);
+    std::list<TrajectoryStep>::const_iterator previous = it;
+    previous--;
+
+    double time_step = it->time_ - previous->time_;
+    const double acceleration =
+        2.0 * (it->path_pos_ - previous->path_pos_ - time_step * previous->path_vel_) / (time_step * time_step);
+
+    time_step = time - previous->time_;
+    const double path_pos =
+        previous->path_pos_ + time_step * previous->path_vel_ + 0.5 * time_step * time_step * acceleration;
+
+    return path_.getConfig(path_pos);
+  }

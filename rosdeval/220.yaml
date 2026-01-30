@@ -1,0 +1,40 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_smac_planner
+ros_package: nav2_smac_planner
+file_path: src/costmap_downsampler.cpp
+method_name: CostmapDownsampler::downsample
+requirement: |
+  /**
+  * @brief Downsamples the current costmap by a given factor and returns the result.
+  * 
+  * @param[in] downsampling_factor The factor by which to downsample the costmap (e.g., 2 for half resolution).
+  * @return nav2_costmap_2d::Costmap2D* Pointer to the downsampled costmap.
+  */
+category: utilities
+type: []
+signature: |
+  nav2_costmap_2d::Costmap2D * CostmapDownsampler::downsample(
+    const unsigned int & downsampling_factor)
+additional_information: 
+  function_related_variable: |
+    unsigned int _size_x;
+    unsigned int _size_y;
+    unsigned int _downsampled_size_x;
+    unsigned int _downsampled_size_y;
+    unsigned int _downsampling_factor;
+    bool _use_min_cost_neighbor;
+    float _downsampled_resolution;
+    nav2_costmap_2d::Costmap2D * _costmap;
+    std::unique_ptr<nav2_costmap_2d::Costmap2D> _downsampled_costmap;
+    std::unique_ptr<nav2_costmap_2d::Costmap2DPublisher> _downsampled_costmap_pub;
+  function_related_function: |
+    void CostmapDownsampler::updateCostmapSize()
+    unsigned int getSizeInCellsX() const;
+    unsigned int getSizeInCellsY() const;
+    double getResolution() const;
+    void CostmapDownsampler::resizeCostmap()
+    void CostmapDownsampler::setCostOfCell(const unsigned int & new_mx,const unsigned int & new_my)
+test: test_costmap_downsampler
+test_cases: 
+- costmap_downsample_test

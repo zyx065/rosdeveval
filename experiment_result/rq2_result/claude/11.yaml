@@ -1,0 +1,97 @@
+compilation.log: |
+  Starting >>> autoware_pose_instability_detector
+  Finished <<< autoware_pose_instability_detector [25.1s]
+
+  Summary: 1 package finished [26.5s]
+generate_code.cpp: |-
+  PoseInstabilityDetector::PoseInstabilityDetector(const rclcpp::NodeOptions & options)
+  : rclcpp::Node("pose_instability_detector", options),
+    timer_period_(this->declare_parameter<double>("timer_period", 0.1)),
+    heading_velocity_maximum_(this->declare_parameter<double>("heading_velocity_maximum", 5.0)),
+    heading_velocity_scale_factor_tolerance_(
+      this->declare_parameter<double>("heading_velocity_scale_factor_tolerance", 0.2)),
+    angular_velocity_maximum_(this->declare_parameter<double>("angular_velocity_maximum", 1.0)),
+    angular_velocity_scale_factor_tolerance_(
+      this->declare_parameter<double>("angular_velocity_scale_factor_tolerance", 0.1)),
+    angular_velocity_bias_tolerance_(
+      this->declare_parameter<double>("angular_velocity_bias_tolerance", 0.05)),
+    pose_estimator_longitudinal_tolerance_(
+      this->declare_parameter<double>("pose_estimator_longitudinal_tolerance", 0.1)),
+    pose_estimator_lateral_tolerance_(
+      this->declare_parameter<double>("pose_estimator_lateral_tolerance", 0.1)),
+    pose_estimator_vertical_tolerance_(
+      this->declare_parameter<double>("pose_estimator_vertical_tolerance", 0.1)),
+    pose_estimator_angular_tolerance_(
+      this->declare_parameter<double>("pose_estimator_angular_tolerance", 0.1))
+  {
+    // Initialize subscribers
+    odometry_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
+      "odometry", rclcpp::QoS(10),
+      std::bind(&PoseInstabilityDetector::callback_odometry, this, std::placeholders::_1)
+    );
+
+    twist_sub_ = this->create_subscription<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "twist", rclcpp::QoS(10),
+      std::bind(&PoseInstabilityDetector::callback_twist, this, std::placeholders::_1)
+    );
+
+    // Initialize publishers
+    diff_pose_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>(
+      "pose_difference", rclcpp::QoS(10)
+    );
+
+    diagnostics_pub_ = this->create_publisher<diagnostic_msgs::msg::DiagnosticArray>(
+      "diagnostics", rclcpp::QoS(10)
+    );
+
+    // Initialize timer
+    timer_ = this->create_wall_timer(
+      std::chrono::duration<double>(timer_period_),
+      std::bind(&PoseInstabilityDetector::callback_timer, this)
+    );
+  }
+ground_truth.cpp: |-
+  PoseInstabilityDetector::PoseInstabilityDetector(const rclcpp::NodeOptions & options)
+  : rclcpp::Node("pose_instability_detector", options),
+    timer_period_(this->declare_parameter<double>("timer_period")),
+    heading_velocity_maximum_(this->declare_parameter<double>("heading_velocity_maximum")),
+    heading_velocity_scale_factor_tolerance_(
+      this->declare_parameter<double>("heading_velocity_scale_factor_tolerance")),
+    angular_velocity_maximum_(this->declare_parameter<double>("angular_velocity_maximum")),
+    angular_velocity_scale_factor_tolerance_(
+      this->declare_parameter<double>("angular_velocity_scale_factor_tolerance")),
+    angular_velocity_bias_tolerance_(
+      this->declare_parameter<double>("angular_velocity_bias_tolerance")),
+    pose_estimator_longitudinal_tolerance_(
+      this->declare_parameter<double>("pose_estimator_longitudinal_tolerance")),
+    pose_estimator_lateral_tolerance_(
+      this->declare_parameter<double>("pose_estimator_lateral_tolerance")),
+    pose_estimator_vertical_tolerance_(
+      this->declare_parameter<double>("pose_estimator_vertical_tolerance")),
+    pose_estimator_angular_tolerance_(
+      this->declare_parameter<double>("pose_estimator_angular_tolerance"))
+  {
+    // Define subscribers, publishers and a timer.
+    odometry_sub_ = this->create_subscription<Odometry>(
+      "~/input/odometry", 10,
+      std::bind(&PoseInstabilityDetector::callback_odometry, this, std::placeholders::_1));
+
+    twist_sub_ = this->create_subscription<TwistWithCovarianceStamped>(
+      "~/input/twist", 10,
+      std::bind(&PoseInstabilityDetector::callback_twist, this, std::placeholders::_1));
+
+    timer_ = rclcpp::create_timer(
+      this, this->get_clock(), std::chrono::duration<double>(timer_period_),
+      std::bind(&PoseInstabilityDetector::callback_timer, this));
+
+    diff_pose_pub_ = this->create_publisher<PoseStamped>("~/debug/diff_pose", 10);
+    diagnostics_pub_ = this->create_publisher<DiagnosticArray>("/diagnostics", 10);
+  }
+architecture-codes:
+  - Topic/Service Related Issues - Topic Name Mismatch Issues
+  - ROS Parameter Related Issues - Insufficient Parameter Design
+  - ROS Timer Issues - Timestamp Processing Errors
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Unclear of ROS computation graph

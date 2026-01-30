@@ -1,0 +1,72 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_collision_monitor
+ros_package: nav2_collision_monitor
+file_path: src/polygon.cpp
+method_name: getCollisionTime
+requirement: |
+  /**
+  * Calculates the time until collision when moving the polygon with a given velocity.
+  * 
+  * @param collision_points The set of points to check for collision in the base_footprint frame.
+  * @param velocity The velocity to simulate movement with.
+  * @return Time until collision occurs, or -1.0 if no collision occurs within the time horizon.
+  */
+category: utilities
+type: []
+signature: |
+  double Polygon::getCollisionTime(
+    const std::vector<Point> & collision_points,
+    const Velocity & velocity) const
+additional_information: 
+  function_related_variable: |
+    /// @brief Collision Monitor node
+    nav2_util::LifecycleNode::WeakPtr node_;
+    /// @brief Collision monitor node logger stored for further usage
+    rclcpp::Logger logger_{rclcpp::get_logger("collision_monitor")};
+    /// @brief Dynamic parameters handler
+    rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr dyn_params_handler_;
+
+    // Basic parameters
+    /// @brief Name of polygon
+    std::string polygon_name_;
+    /// @brief Action type for the polygon
+    ActionType action_type_;
+    /// @brief Maximum number of data readings within a zone to not trigger the action
+    int max_points_;
+    /// @brief Robot slowdown (share of its actual speed)
+    double slowdown_ratio_;
+    /// @brief Time before collision in seconds
+    double time_before_collision_;
+    /// @brief Time step for robot movement simulation
+    double simulation_time_step_;
+    /// @brief Footprint subscriber
+    std::unique_ptr<nav2_costmap_2d::FootprintSubscriber> footprint_sub_;
+    /// @brief Whether polygon is enabled
+    bool enabled_;
+
+    // Global variables
+    /// @brief TF buffer
+    std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
+    /// @brief Base frame ID
+    std::string base_frame_id_;
+    /// @brief Transform tolerance
+    tf2::Duration transform_tolerance_;
+
+    // Visualization
+    /// @brief Whether to publish the polygon
+    bool visualize_;
+    /// @brief Polygon points stored for later publishing
+    geometry_msgs::msg::Polygon polygon_;
+    /// @brief Polygon publisher for visualization purposes
+    rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PolygonStamped>::SharedPtr polygon_pub_;
+
+    /// @brief Polygon points (vertices)
+    std::vector<Point> poly_;
+  function_related_function: |
+    int Polygon::getPointsInside(const std::vector<Point> & points) const
+    void projectState(const double & dt, Pose & pose, Velocity & velocity)
+    void transformPoints(const Pose & pose, std::vector<Point> & points)
+test: kinematics_test
+test_cases: 
+- testPolygonGetCollisionTime

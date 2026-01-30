@@ -1,0 +1,36 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_obstacle_collision_checker
+ros_package: autoware_obstacle_collision_checker
+file_path: src/obstacle_collision_checker_node.cpp
+method_name: ObstacleCollisionCheckerNode::on_timer
+requirement: |
+  /**
+  * @brief Timer callback that performs obstacle collision checks for autonomous vehicle navigation.
+  * 
+  * This method collects current vehicle state and sensor data, checks for potential collisions
+  * with obstacles along reference and predicted trajectories, and publishes the results.
+  * 
+  * @note This is a ROS2 timer callback that executes periodically based on the node's timer configuration.
+  */
+category: ros_architecture
+type: has_timer,has_logger,has_message,has_topic
+signature: |
+  void ObstacleCollisionCheckerNode::on_timer()
+additional_information: 
+  function_related_variable: |
+    std::shared_ptr<autoware::universe_utils::SelfPoseListener> self_pose_listener_;
+    rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr sub_obstacle_pointcloud_;
+    geometry_msgs::msg::TransformStamped::ConstSharedPtr obstacle_transform_;
+    std::shared_ptr<autoware::universe_utils::TransformListener> transform_listener_;
+    Input input_;
+    Output output_;
+    diagnostic_updater::Updater updater_;
+    std::shared_ptr<autoware::universe_utils::DebugPublisher> debug_publisher_;
+    std::shared_ptr<autoware::universe_utils::ProcessingTimePublisher> time_publisher_;
+  function_related_function: |
+    bool is_data_ready();
+    bool is_data_timeout();
+    Output check_for_collisions()
+test: test_obstacle_collision_checker
+test_cases: []

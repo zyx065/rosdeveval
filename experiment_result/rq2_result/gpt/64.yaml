@@ -1,0 +1,120 @@
+compilation.log: |
+  Starting >>> autoware_velocity_smoother
+  --- stderr: autoware_velocity_smoother
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp: In member function ‘void autoware::velocity_smoother::VelocitySmootherNode::publishClosestState(const TrajectoryPoints&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1019:37: error: ‘using TrajectoryPoint = struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’} has no member named ‘velocity’
+   1019 |     double velocity = closest_point.velocity;
+        |                                     ^~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1020:41: error: ‘using TrajectoryPoint = struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’} has no member named ‘acceleration’; did you mean ‘acceleration_mps2’?
+   1020 |     double acceleration = closest_point.acceleration;
+        |                                         ^~~~~~~~~~~~
+        |                                         acceleration_mps2
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1043:59: error: ‘TwistStamped’ is not a member of ‘geometry_msgs::msg’; did you mean ‘PointStamped’?
+   1043 |     auto debug_msg = std::make_shared<geometry_msgs::msg::TwistStamped>();
+        |                                                           ^~~~~~~~~~~~
+        |                                                           PointStamped
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1043:72: error: no matching function for call to ‘make_shared<<expression error> >()’
+   1043 |     auto debug_msg = std::make_shared<geometry_msgs::msg::TwistStamped>();
+        |                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+  In file included from /usr/include/c++/11/memory:77,
+                   from /workspace/repos/autoware/install/autoware_planning_msgs/include/autoware_planning_msgs/autoware_planning_msgs/msg/detail/path__struct.hpp:10,
+                   from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/conversion.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/include/autoware/velocity_smoother/node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:15:
+  /usr/include/c++/11/bits/shared_ptr.h:875:5: note: candidate: ‘template<class _Tp, class ... _Args> std::shared_ptr<_Tp> std::make_shared(_Args&& ...)’
+    875 |     make_shared(_Args&&... __args)
+        |     ^~~~~~~~~~~
+  /usr/include/c++/11/bits/shared_ptr.h:875:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1043:72: error: template argument 1 is invalid
+   1043 |     auto debug_msg = std::make_shared<geometry_msgs::msg::TwistStamped>();
+        |                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1053:5: error: ‘debug_publisher_’ was not declared in this scope
+   1053 |     debug_publisher_->publish(*debug_msg);
+        |     ^~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_velocity_smoother_node.dir/build.make:76: CMakeFiles/autoware_velocity_smoother_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:208: CMakeFiles/autoware_velocity_smoother_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_velocity_smoother [10.5s, exited with code 2]
+
+  Summary: 0 packages finished [11.9s]
+    1 package failed: autoware_velocity_smoother
+    1 package had stderr output: autoware_velocity_smoother
+generate_code.cpp: |-
+  void VelocitySmootherNode::publishClosestState(const TrajectoryPoints & trajectory)
+  {
+      // Calculate the projected trajectory point closest to the ego vehicle
+      TrajectoryPoint closest_point = calcProjectedTrajectoryPointFromEgo(trajectory);
+
+      // Extract velocity, acceleration, and jerk from the closest trajectory point
+      double velocity = closest_point.velocity;
+      double acceleration = closest_point.acceleration;
+
+      // Calculate jerk if we have a valid previous time
+      double jerk = 0.0;
+      if (prev_time_ && prev_time_->nanoseconds() > 0) {
+          // Calculate time difference
+          rclcpp::Time current_time = this->now();
+          double dt = (current_time - *prev_time_).seconds();
+
+          if (dt > 0.0) {
+              jerk = (acceleration - prev_acc_) / dt;
+          }
+
+          // Update previous time and acceleration
+          *prev_time_ = current_time;
+          prev_acc_ = acceleration;
+      } else {
+          // Initialize previous time and acceleration if not already set
+          prev_time_ = std::make_shared<rclcpp::Time>(this->now());
+          prev_acc_ = acceleration;
+      }
+
+      // Create a message for debugging
+      auto debug_msg = std::make_shared<geometry_msgs::msg::TwistStamped>();
+      debug_msg->header.stamp = this->now();
+      debug_msg->header.frame_id = "base_link"; // Assuming the frame is "base_link"
+
+      // Populate the message with velocity, acceleration, and jerk
+      debug_msg->twist.linear.x = velocity;
+      debug_msg->twist.linear.y = acceleration;
+      debug_msg->twist.linear.z = jerk;
+
+      // Publish the debug message
+      debug_publisher_->publish(*debug_msg);
+  }
+ground_truth.cpp: |-
+  void VelocitySmootherNode::publishClosestState(const TrajectoryPoints & trajectory)
+  {
+    const auto closest_point = calcProjectedTrajectoryPointFromEgo(trajectory);
+
+    auto publishFloat = [=](const double data, const auto pub) {
+      Float32Stamped msg{};
+      msg.stamp = this->now();
+      msg.data = data;
+      pub->publish(msg);
+      return;
+    };
+
+    const double curr_vel{closest_point.longitudinal_velocity_mps};
+    const double curr_acc{closest_point.acceleration_mps2};
+    if (!prev_time_) {
+      prev_time_ = std::make_shared<rclcpp::Time>(this->now());
+      prev_acc_ = curr_acc;
+      return;
+    }
+
+    // Calculate jerk
+    rclcpp::Time curr_time{this->now()};
+    double dt = (curr_time - *prev_time_).seconds();
+    double curr_jerk = (curr_acc - prev_acc_) / dt;
+
+    // Publish data
+    publishFloat(curr_vel, debug_closest_velocity_);
+    publishFloat(curr_acc, debug_closest_acc_);
+    publishFloat(curr_jerk, debug_closest_jerk_);
+
+    // Update
+    prev_acc_ = curr_acc;
+    *prev_time_ = curr_time;
+  }

@@ -1,0 +1,57 @@
+compilation.log: |
+  Starting >>> autoware_external_cmd_converter
+  [Processing: autoware_external_cmd_converter]
+  Finished <<< autoware_external_cmd_converter [30.1s]
+
+  Summary: 1 package finished [31.3s]
+generate_code.cpp: |-
+  bool ExternalCmdConverterNode::check_emergency_stop_topic_timeout()
+  {
+      // If we are waiting for the first topic, return true to allow operation
+      if (wait_for_first_topic_) {
+          return true;
+      }
+
+      // If the current gate mode is nullptr, we cannot proceed
+      if (!current_gate_mode_) {
+          RCLCPP_WARN(this->get_logger(), "Current gate mode is not set.");
+          return false;
+      }
+
+      // If no heartbeat has been received yet, return false
+      if (!latest_emergency_stop_heartbeat_received_time_) {
+          RCLCPP_WARN(this->get_logger(), "No emergency stop heartbeat received yet.");
+          return false;
+      }
+
+      // Calculate the time difference since the last heartbeat
+      const auto current_time = this->now();
+      const auto time_since_last_heartbeat = current_time - *latest_emergency_stop_heartbeat_received_time_;
+
+      // Check if the time difference exceeds the timeout threshold
+      if (time_since_last_heartbeat.seconds() > emergency_stop_timeout_) {
+          RCLCPP_WARN(this->get_logger(), "Emergency stop topic timed out. Time since last heartbeat: %.2f seconds.", time_since_last_heartbeat.seconds());
+          return false;
+      }
+
+      // If all checks pass, return true
+      return true;
+  }
+ground_truth.cpp: |-
+  bool ExternalCmdConverterNode::check_emergency_stop_topic_timeout()
+  {
+    if (!current_gate_mode_) {
+      return true;
+    }
+
+    if (current_gate_mode_->data == tier4_control_msgs::msg::GateMode::AUTO) {
+      latest_emergency_stop_heartbeat_received_time_ = nullptr;
+    }
+
+    if (!latest_emergency_stop_heartbeat_received_time_) {
+      return wait_for_first_topic_;
+    }
+
+    const auto duration = (this->now() - *latest_emergency_stop_heartbeat_received_time_);
+    return duration.seconds() <= emergency_stop_timeout_;
+  }

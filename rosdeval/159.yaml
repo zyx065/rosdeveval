@@ -1,0 +1,24 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_collision_monitor
+ros_package: nav2_collision_monitor
+file_path: src/collision_monitor_node.cpp
+method_name: CollisionMonitor::publishVelocity
+requirement: |
+  /**
+  * Publishes velocity commands based on robot action with stop timeout handling.
+  * 
+  * @param robot_action The current robot action containing requested velocity information.
+  */
+category: ros_architecture
+type: has_topic,has_timer,has_message
+signature: |
+  void CollisionMonitor::publishVelocity(const Action & robot_action)
+additional_information: 
+  function_related_variable: |
+    Action robot_action_prev_;
+    rclcpp::Time stop_stamp_;
+    rclcpp::Duration stop_pub_timeout_;
+    rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_out_pub_;
+test: collision_monitor_node_test
+test_cases: []

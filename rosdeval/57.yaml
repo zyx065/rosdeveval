@@ -1,0 +1,24 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_scenario_selector
+ros_package: autoware_scenario_selector
+file_path: src/node.cpp
+method_name: ScenarioSelectorNode::onOdom
+requirement: |
+  /**
+  * @brief Callback for odometry messages that updates current pose and maintains a twist history.
+  * 
+  * @param msg Shared pointer to the received odometry message containing pose and twist data.
+  */
+category: ros_architecture
+type: has_timer,has_message,has_parameter
+signature: |
+  void ScenarioSelectorNode::onOdom(const nav_msgs::msg::Odometry::ConstSharedPtr msg)
+additional_information: 
+  function_related_variable: |
+    nav_msgs::msg::Odometry::ConstSharedPtr current_pose_;
+    geometry_msgs::msg::TwistStamped::ConstSharedPtr twist_;
+    std::deque<geometry_msgs::msg::TwistStamped::ConstSharedPtr> twist_buffer_;
+    double th_stopped_time_sec_;
+test: test_autoware_scenario_selector
+test_cases: []

@@ -1,0 +1,40 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/robot_state
+ros_package: moveit_core
+file_path: src/robot_state.cpp
+method_name: RobotState::computeAABB
+requirement: |
+  /**
+  * Computes the axis-aligned bounding box (AABB) that encloses the entire robot model including attached bodies.
+  * 
+  * The AABB is computed by combining the bounding boxes of all links with collision geometry and any attached bodies,
+  * transformed into the global coordinate frame.
+  * 
+  * @param[out] aabb Vector of 6 values representing the AABB in the format [min_x, max_x, min_y, max_y, min_z, max_z].
+  *                  If no geometry is present, returns a vector of 6 zeros.
+  */
+category: utilities
+type: []
+signature: |
+  void RobotState::computeAABB(std::vector<double>& aabb) const
+additional_information: 
+  function_related_variable: |
+    RobotModelConstPtr robot_model_;
+    std::map<std::string, std::unique_ptr<AttachedBody>> attached_body_map_;
+  function_related_function: |
+    bool moveit::core::AABB::checkLinkTransforms() const;
+    const Eigen::Isometry3d& RobotState::getGlobalLinkTransform(const LinkModel* link)
+    void moveit::core::AABB::extendWithTransformedBox(const Eigen::Isometry3d& transform, const Eigen::Vector3d& box)
+    const EigenSTL::vector_Isometry3d& AttachedBody::getGlobalCollisionBodyTransforms() const
+    const std::vector<shapes::ShapeConstPtr>& moveit::core::getShapes() const
+    Eigen::Vector3d shapes::computeShapeExtents(const ShapeMsg &shape_msg)
+  function_related_class: |
+    class moveit::core::LinkModel:
+      const Eigen::Vector3d& getShapeExtentsAtOrigin() const
+      const Eigen::Vector3d& getCenteredBoundingBoxOffset() const
+    class moveit::core::RobotModel:
+      const std::vector<const LinkModel*>& getLinkModelsWithCollisionGeometry() const
+test: test_aabb
+test_cases: 
+- TestPR2

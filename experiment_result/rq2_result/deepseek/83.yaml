@@ -1,0 +1,95 @@
+compilation.log: |
+  Starting >>> autoware_raw_vehicle_cmd_converter
+  --- stderr: autoware_raw_vehicle_cmd_converter
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp: In member function ‘bool autoware::raw_vehicle_cmd_converter::BrakeMap::getBrake(double, double, double&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:50:57: error: ‘acc_index_’ was not declared in this scope; did you mean ‘vel_index_’?
+     50 |   const double clamped_acc = CSVLoader::clampValue(acc, acc_index_);
+        |                                                         ^~~~~~~~~~
+        |                                                         vel_index_
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:51:51: error: no matching function for call to ‘autoware::raw_vehicle_cmd_converter::CSVLoader::clampValue(const double&, std::vector<double>&)’
+     51 |   const double clamped_vel = CSVLoader::clampValue(vel, vel_index_);
+        |                              ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:39:17: note: candidate: ‘static double autoware::raw_vehicle_cmd_converter::CSVLoader::clampValue(double, const std::vector<double>&, const string&)’
+     39 |   static double clampValue(
+        |                 ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/csv_loader.hpp:39:17: note:   candidate expects 3 arguments, 2 provided
+  gmake[2]: *** [CMakeFiles/actuation_map_converter.dir/build.make:90: CMakeFiles/actuation_map_converter.dir/src/brake_map.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:163: CMakeFiles/actuation_map_converter.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_raw_vehicle_cmd_converter [5.64s, exited with code 2]
+
+  Summary: 0 packages finished [7.14s]
+    1 package failed: autoware_raw_vehicle_cmd_converter
+    1 package had stderr output: autoware_raw_vehicle_cmd_converter
+generate_code.cpp: |-
+  bool BrakeMap::getBrake(const double acc, const double vel, double & brake)
+  {
+    // Clamp input values to be within the map bounds
+    const double clamped_acc = CSVLoader::clampValue(acc, acc_index_);
+    const double clamped_vel = CSVLoader::clampValue(vel, vel_index_);
+
+    // Perform bilinear interpolation to get the brake value
+    // First interpolate along velocity axis for each acceleration row
+    std::vector<double> interpolated_values;
+    for (const auto & row : brake_map_) {
+      interpolated_values.push_back(
+        autoware::interpolation::lerp(vel_index_, row, clamped_vel));
+    }
+
+    // Then interpolate along acceleration axis using the previously interpolated values
+    brake = autoware::interpolation::lerp(acc_index_, interpolated_values, clamped_acc);
+
+    return true;
+  }
+ground_truth.cpp: |-
+  bool BrakeMap::getBrake(const double acc, const double vel, double & brake)
+  {
+    std::vector<double> interpolated_acc_vec;
+    const double clamped_vel = CSVLoader::clampValue(vel, vel_index_, "brake: vel");
+
+    // (throttle, vel, acc) map => (throttle, acc) map by fixing vel
+    interpolated_acc_vec.reserve(brake_map_.size());
+    for (const std::vector<double> & accelerations : brake_map_) {
+      interpolated_acc_vec.push_back(
+        autoware::interpolation::lerp(vel_index_, accelerations, clamped_vel));
+    }
+
+    // calculate brake
+    // When the desired acceleration is smaller than the brake area, return max brake on the map
+    // When the desired acceleration is greater than the brake area, return min brake on the map
+    if (acc < interpolated_acc_vec.back()) {
+      RCLCPP_WARN_SKIPFIRST_THROTTLE(
+        logger_, clock_, 1000,
+        "Exceeding the acc range. Desired acc: %f < min acc on map: %f. return max "
+        "value.",
+        acc, interpolated_acc_vec.back());
+      brake = brake_index_.back();
+      return true;
+    }
+    if (interpolated_acc_vec.front() < acc) {
+      brake = brake_index_.front();
+      return true;
+    }
+
+    std::reverse(std::begin(interpolated_acc_vec), std::end(interpolated_acc_vec));
+    brake = autoware::interpolation::lerp(interpolated_acc_vec, brake_index_rev_, acc);
+
+    return true;
+  }
+architecture-codes:
+  - ROS Logger Issue - ROS Logger Missing Issue
+
+functionality-codes:
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Condition Issue - Conditional Check Missing Issue
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

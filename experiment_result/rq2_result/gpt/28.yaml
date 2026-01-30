@@ -1,0 +1,60 @@
+compilation.log: |
+  Starting >>> autoware_control_validator
+  --- stderr: autoware_control_validator
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/src/control_validator.cpp: In member function ‘void autoware::control_validator::ControlValidator::publish_debug_info()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/src/control_validator.cpp:177:32: error: ‘stop_watch_’ was not declared in this scope; did you mean ‘stop_watch’?
+    177 |     processing_time_msg.data = stop_watch_.getElapsedTime(); // Assuming stop_watch_ is a valid timer object
+        |                                ^~~~~~~~~~~
+        |                                stop_watch
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/src/control_validator.cpp:187:28: error: ‘using element_type = class ControlValidatorDebugMarkerPublisher’ {aka ‘class ControlValidatorDebugMarkerPublisher’} has no member named ‘publishVirtualWallMarkers’
+    187 |     debug_pose_publisher_->publishVirtualWallMarkers(
+        |                            ^~~~~~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_control_validator_component.dir/build.make:76: CMakeFiles/autoware_control_validator_component.dir/src/control_validator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:235: CMakeFiles/autoware_control_validator_component.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_control_validator [7.44s, exited with code 2]
+
+  Summary: 0 packages finished [8.86s]
+    1 package failed: autoware_control_validator
+    1 package had stderr output: autoware_control_validator
+generate_code.cpp: |-
+  void ControlValidator::publish_debug_info()
+  {
+    // Publish processing time
+    if (pub_processing_time_) {
+      autoware_internal_debug_msgs::msg::Float64Stamped processing_time_msg;
+      processing_time_msg.stamp = this->now();
+      processing_time_msg.data = stop_watch_.getElapsedTime(); // Assuming stop_watch_ is a valid timer object
+      pub_processing_time_->publish(processing_time_msg);
+    }
+
+    // Check if the validation status is valid
+    const bool is_valid = is_all_valid(validation_status_);
+
+    // Publish debug markers for virtual walls if invalid
+    if (!is_valid && debug_pose_publisher_) {
+      const auto vehicle_footprint = vehicle_info_.createFootprint();
+      debug_pose_publisher_->publishVirtualWallMarkers(
+        current_kinematics_, vehicle_footprint, validation_status_);
+    }
+  }
+ground_truth.cpp: |-
+  void ControlValidator::publish_debug_info()
+  {
+    pub_status_->publish(validation_status_);
+
+    if (!is_all_valid(validation_status_)) {
+      geometry_msgs::msg::Pose front_pose = current_kinematics_->pose.pose;
+      shift_pose(front_pose, vehicle_info_.front_overhang_m + vehicle_info_.wheel_base_m);
+      debug_pose_publisher_->push_virtual_wall(front_pose);
+      debug_pose_publisher_->push_warning_msg(front_pose, "INVALID CONTROL");
+    }
+    debug_pose_publisher_->publish();
+
+    // Publish ProcessingTime
+    autoware_internal_debug_msgs::msg::Float64Stamped processing_time_msg;
+    processing_time_msg.stamp = get_clock()->now();
+    processing_time_msg.data = stop_watch.toc();
+    pub_processing_time_->publish(processing_time_msg);
+  }

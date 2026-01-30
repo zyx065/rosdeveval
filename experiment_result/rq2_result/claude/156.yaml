@@ -1,0 +1,61 @@
+compilation.log: |
+  Starting >>> nav2_util
+  Finished <<< nav2_util [0.35s]
+
+  Summary: 1 package finished [0.68s]
+generate_code.cpp: |
+  OdomSmoother::OdomSmoother(
+    const rclcpp::Node::WeakPtr & parent,
+    double filter_duration,
+    const std::string & odom_topic)
+  : odom_history_duration_(rclcpp::Duration::from_seconds(filter_duration))
+  {
+    auto node = parent.lock();
+    if (!node) {
+      throw std::runtime_error("Parent node is invalid");
+    }
+    
+    // Initialize cumulative odometry
+    odom_cumulate_ = nav_msgs::msg::Odometry();
+    odom_cumulate_.header.frame_id = "odom";
+    odom_cumulate_.child_frame_id = "base_link";
+    
+    // Initialize smooth velocity
+    vel_smooth_ = geometry_msgs::msg::TwistStamped();
+    
+    // Create odometry subscription
+    odom_sub_ = node->create_subscription<nav_msgs::msg::Odometry>(
+      odom_topic,
+      rclcpp::QoS(10),
+      std::bind(&OdomSmoother::odomCallback, this, std::placeholders::_1)
+    );
+  }
+ground_truth.cpp: |-
+  OdomSmoother::OdomSmoother(
+    const rclcpp::Node::WeakPtr & parent,
+    double filter_duration,
+    const std::string & odom_topic)
+  : odom_history_duration_(rclcpp::Duration::from_seconds(filter_duration))
+  {
+    auto node = parent.lock();
+    odom_sub_ = node->create_subscription<nav_msgs::msg::Odometry>(
+      odom_topic,
+      rclcpp::SystemDefaultsQoS(),
+      std::bind(&OdomSmoother::odomCallback, this, std::placeholders::_1));
+
+    odom_cumulate_.twist.twist.linear.x = 0;
+    odom_cumulate_.twist.twist.linear.y = 0;
+    odom_cumulate_.twist.twist.linear.z = 0;
+    odom_cumulate_.twist.twist.angular.x = 0;
+    odom_cumulate_.twist.twist.angular.y = 0;
+    odom_cumulate_.twist.twist.angular.z = 0;
+  }
+architecture-codes:
+  - Topic/Service Related Issues - QoS Policy Incompatibility
+  - ROS Message Related Issues - Message Initialization Issues
+functionality-codes:
+  - Incomplete Code - Missing One Step
+  - Garbage Code - Meaningless Code Snippets
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

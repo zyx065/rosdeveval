@@ -1,0 +1,24 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_out_of_lane_module
+ros_package: autoware_motion_velocity_out_of_lane_module
+file_path: src/filter_predicted_objects.cpp
+method_name: cut_predicted_path_beyond_line
+requirement: |
+  /**
+  * @brief Truncates a predicted path at the intersection point with a stop line, accounting for object overhang.
+  * 
+  * @param predicted_path The predicted path to be modified in-place. Will be shortened if intersection occurs.
+  * @param stop_line The 2D line segment representing the stop line to check for intersection.
+  * @param object_front_overhang The distance from the object's reference point to its front end.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  void cut_predicted_path_beyond_line(
+    autoware_perception_msgs::msg::PredictedPath & predicted_path,
+    const universe_utils::LineString2d & stop_line, const double object_front_overhang)
+additional_information: []
+test: test_autoware_motion_velocity_out_of_lane_module
+test_cases: 
+- CutPredictedPathBeyondLine

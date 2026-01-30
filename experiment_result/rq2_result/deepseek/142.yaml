@@ -1,0 +1,150 @@
+compilation.log: |
+  Starting >>> autoware_lane_departure_checker
+  --- stderr: autoware_lane_departure_checker
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp: In function ‘autoware::lane_departure_checker::utils::TrajectoryPoints autoware::lane_departure_checker::utils::cutTrajectory(const TrajectoryPoints&, double)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:76:24: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘x’
+     76 |             curr_point.x - prev_point.x,
+        |                        ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:76:39: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘x’
+     76 |             curr_point.x - prev_point.x,
+        |                                       ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:77:24: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘y’
+     77 |             curr_point.y - prev_point.y);
+        |                        ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:77:39: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘y’
+     77 |             curr_point.y - prev_point.y);
+        |                                       ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:85:32: error: ‘using TrajectoryPoint = struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’} has no member named ‘x’
+     85 |             interpolated_point.x = prev_point.x + ratio * (curr_point.x - prev_point.x);
+        |                                ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:85:47: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘x’
+     85 |             interpolated_point.x = prev_point.x + ratio * (curr_point.x - prev_point.x);
+        |                                               ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:85:71: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘x’
+     85 |             interpolated_point.x = prev_point.x + ratio * (curr_point.x - prev_point.x);
+        |                                                                       ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:85:86: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘x’
+     85 |             interpolated_point.x = prev_point.x + ratio * (curr_point.x - prev_point.x);
+        |                                                                                      ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:86:32: error: ‘using TrajectoryPoint = struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’} has no member named ‘y’
+     86 |             interpolated_point.y = prev_point.y + ratio * (curr_point.y - prev_point.y);
+        |                                ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:86:47: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘y’
+     86 |             interpolated_point.y = prev_point.y + ratio * (curr_point.y - prev_point.y);
+        |                                               ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:86:71: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘y’
+     86 |             interpolated_point.y = prev_point.y + ratio * (curr_point.y - prev_point.y);
+        |                                                                       ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:86:86: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘y’
+     86 |             interpolated_point.y = prev_point.y + ratio * (curr_point.y - prev_point.y);
+        |                                                                                      ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:90:32: error: ‘using TrajectoryPoint = struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’} has no member named ‘x’
+     90 |             interpolated_point.x = prev_point.x + ratio * (curr_point.x - prev_point.x);
+        |                                ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:90:47: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘x’
+     90 |             interpolated_point.x = prev_point.x + ratio * (curr_point.x - prev_point.x);
+        |                                               ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:90:71: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘x’
+     90 |             interpolated_point.x = prev_point.x + ratio * (curr_point.x - prev_point.x);
+        |                                                                       ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:90:86: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘x’
+     90 |             interpolated_point.x = prev_point.x + ratio * (curr_point.x - prev_point.x);
+        |                                                                                      ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:91:32: error: ‘using TrajectoryPoint = struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’} has no member named ‘y’
+     91 |             interpolated_point.y = prev_point.y + ratio * (curr_point.y - prev_point.y);
+        |                                ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:91:47: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘y’
+     91 |             interpolated_point.y = prev_point.y + ratio * (curr_point.y - prev_point.y);
+        |                                               ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:91:71: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘y’
+     91 |             interpolated_point.y = prev_point.y + ratio * (curr_point.y - prev_point.y);
+        |                                                                       ^
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_lane_departure_checker/src/lane_departure_checker_node/utils.cpp:91:86: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘y’
+     91 |             interpolated_point.y = prev_point.y + ratio * (curr_point.y - prev_point.y);
+        |                                                                                      ^
+  gmake[2]: *** [CMakeFiles/autoware_lane_departure_checker.dir/build.make:104: CMakeFiles/autoware_lane_departure_checker.dir/src/lane_departure_checker_node/utils.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_lane_departure_checker.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_lane_departure_checker [8.23s, exited with code 2]
+
+  Summary: 0 packages finished [9.76s]
+    1 package failed: autoware_lane_departure_checker
+    1 package had stderr output: autoware_lane_departure_checker
+generate_code.cpp: "TrajectoryPoints cutTrajectory(const TrajectoryPoints & trajectory,\
+  \ const double length)\n{\n    TrajectoryPoints result;\n    if (trajectory.empty()\
+  \ || length <= 0.0)\n    {\n        return result;\n    }\n\n    double accumulated_length\
+  \ = 0.0;\n    result.push_back(trajectory.front());\n\n    for (size_t i = 1; i\
+  \ < trajectory.size(); ++i)\n    {\n        const auto & prev_point = trajectory[i-1];\n\
+  \        const auto & curr_point = trajectory[i];\n        const double segment_length\
+  \ = std::hypot(\n            curr_point.x - prev_point.x,\n            curr_point.y\
+  \ - prev_point.y);\n\n        if (accumulated_length + segment_length >= length)\n\
+  \        {\n            const double remaining_length = length - accumulated_length;\n\
+  \            const double ratio = remaining_length / segment_length;\n         \
+  \   \n            TrajectoryPoint interpolated_point;\n            interpolated_point.x\
+  \ = prev_point.x + ratio * (curr_point.x - prev_point.x);\n            interpolated_point.y\
+  \ = prev_point.y + ratio * (curr_point.y - prev_point.y);\n            \n      \
+  \      // Copy other attributes from the last point (or interpolate if needed)\n\
+  \            interpolated_point = curr_point;\n            interpolated_point.x\
+  \ = prev_point.x + ratio * (curr_point.x - prev_point.x);\n            interpolated_point.y\
+  \ = prev_point.y + ratio * (curr_point.y - prev_point.y);\n            \n      \
+  \      result.push_back(interpolated_point);\n            return result;\n     \
+  \   }\n\n        accumulated_length += segment_length;\n        result.push_back(curr_point);\n\
+  \    }\n\n    return result;\n}"
+ground_truth.cpp: |-
+  TrajectoryPoints cutTrajectory(const TrajectoryPoints & trajectory, const double length)
+  {
+    if (trajectory.empty()) {
+      return {};
+    }
+
+    TrajectoryPoints cut;
+
+    double total_length = 0.0;
+    auto last_point = autoware::universe_utils::fromMsg(trajectory.front().pose.position);
+    auto end_it = std::next(trajectory.cbegin());
+    for (; end_it != trajectory.cend(); ++end_it) {
+      const auto remain_distance = length - total_length;
+
+      // Over length
+      if (remain_distance <= 0) {
+        break;
+      }
+
+      const auto & new_pose = end_it->pose;
+      const auto new_point = autoware::universe_utils::fromMsg(new_pose.position);
+      const auto points_distance = boost::geometry::distance(last_point.to_2d(), new_point.to_2d());
+
+      // Require interpolation
+      if (remain_distance <= points_distance) {
+        const Eigen::Vector3d p_interpolated =
+          last_point + remain_distance * (new_point - last_point).normalized();
+
+        TrajectoryPoint p;
+        p.pose.position.x = p_interpolated.x();
+        p.pose.position.y = p_interpolated.y();
+        p.pose.position.z = p_interpolated.z();
+        p.pose.orientation = new_pose.orientation;
+
+        cut.push_back(p);
+        break;
+      }
+
+      total_length += points_distance;
+      last_point = new_point;
+    }
+    cut.insert(cut.begin(), trajectory.begin(), end_it);
+
+    return cut;
+  }
+architecture-codes:
+    - ROS Message Issue - Incorrect Message Member Access Issue
+
+functionality-codes:
+    - Domain Library Issue - Lack of Domain Library Utilization Issue
+    - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+    - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+    - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+    - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

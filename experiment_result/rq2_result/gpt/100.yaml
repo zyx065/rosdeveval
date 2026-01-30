@@ -1,0 +1,168 @@
+compilation.log: |
+  Starting >>> autoware_motion_utils
+  --- stderr: autoware_motion_utils
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp: In function ‘tier4_planning_msgs::msg::PathPointWithLaneId autoware::motion_utils::calcInterpolatedPoint(const PathWithLaneId&, const Pose&, bool, double, double)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:127:51: error: no matching function for call to ‘calcInterpolatedPose(const _points_type&, const double&)’
+    127 |     autoware::universe_utils::calcInterpolatedPose(path.points, interpolation_ratio);
+        |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/include/autoware/motion_utils/trajectory/interpolation.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:15:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:512:26: note: candidate: ‘template<class Pose1, class Pose2> geometry_msgs::msg::Pose autoware::universe_utils::calcInterpolatedPose(const Pose1&, const Pose2&, double, bool)’
+    512 | geometry_msgs::msg::Pose calcInterpolatedPose(
+        |                          ^~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:512:26: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:127:51: note:   candidate expects 4 arguments, 2 provided
+    127 |     autoware::universe_utils::calcInterpolatedPose(path.points, interpolation_ratio);
+        |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:132:35: error: ‘const _point_type’ {aka ‘const struct autoware_planning_msgs::msg::PathPoint_<std::allocator<void> >’} has no member named ‘twist’
+    132 |     interpolated_twist = p1.point.twist;  // Use the twist of the first point in the segment
+        |                                   ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:135:58: error: ‘const _point_type’ {aka ‘const struct autoware_planning_msgs::msg::PathPoint_<std::allocator<void> >’} has no member named ‘twist’
+    135 |       0.0, segment_length, interpolation_ratio, p1.point.twist.linear.x, p2.point.twist.linear.x);
+        |                                                          ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:135:83: error: ‘const _point_type’ {aka ‘const struct autoware_planning_msgs::msg::PathPoint_<std::allocator<void> >’} has no member named ‘twist’
+    135 |       0.0, segment_length, interpolation_ratio, p1.point.twist.linear.x, p2.point.twist.linear.x);
+        |                                                                                   ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:137:58: error: ‘const _point_type’ {aka ‘const struct autoware_planning_msgs::msg::PathPoint_<std::allocator<void> >’} has no member named ‘twist’
+    137 |       0.0, segment_length, interpolation_ratio, p1.point.twist.angular.z, p2.point.twist.angular.z);
+        |                                                          ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:137:84: error: ‘const _point_type’ {aka ‘const struct autoware_planning_msgs::msg::PathPoint_<std::allocator<void> >’} has no member named ‘twist’
+    137 |       0.0, segment_length, interpolation_ratio, p1.point.twist.angular.z, p2.point.twist.angular.z);
+        |                                                                                    ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:142:56: error: ‘const _point_type’ {aka ‘const struct autoware_planning_msgs::msg::PathPoint_<std::allocator<void> >’} has no member named ‘heading_rate’; did you mean ‘heading_rate_rps’?
+    142 |     0.0, segment_length, interpolation_ratio, p1.point.heading_rate, p2.point.heading_rate);
+        |                                                        ^~~~~~~~~~~~
+        |                                                        heading_rate_rps
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:142:79: error: ‘const _point_type’ {aka ‘const struct autoware_planning_msgs::msg::PathPoint_<std::allocator<void> >’} has no member named ‘heading_rate’; did you mean ‘heading_rate_rps’?
+    142 |     0.0, segment_length, interpolation_ratio, p1.point.heading_rate, p2.point.heading_rate);
+        |                                                                               ^~~~~~~~~~~~
+        |                                                                               heading_rate_rps
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:147:28: error: ‘using _point_type = struct autoware_planning_msgs::msg::PathPoint_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::PathPoint_<std::allocator<void> >’} has no member named ‘twist’
+    147 |   interpolated_point.point.twist = interpolated_twist;
+        |                            ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:148:28: error: ‘using _point_type = struct autoware_planning_msgs::msg::PathPoint_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::PathPoint_<std::allocator<void> >’} has no member named ‘heading_rate’; did you mean ‘heading_rate_rps’?
+    148 |   interpolated_point.point.heading_rate = interpolated_heading_rate;
+        |                            ^~~~~~~~~~~~
+        |                            heading_rate_rps
+  gmake[2]: *** [CMakeFiles/autoware_motion_utils.dir/build.make:146: CMakeFiles/autoware_motion_utils.dir/src/trajectory/interpolation.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_motion_utils.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_motion_utils [4.54s, exited with code 2]
+
+  Summary: 0 packages finished [5.92s]
+    1 package failed: autoware_motion_utils
+    1 package had stderr output: autoware_motion_utils
+generate_code.cpp: |-
+  PathPointWithLaneId calcInterpolatedPoint(
+    const PathWithLaneId & path, const geometry_msgs::msg::Pose & target_pose,
+    const bool use_zero_order_hold_for_twist, const double dist_threshold, const double yaw_threshold)
+  {
+    // Ensure the path has at least two points for interpolation
+    if (path.points.size() < 2) {
+      throw std::runtime_error("Path must contain at least two points for interpolation.");
+    }
+
+    // Find the nearest segment index with soft constraints
+    const size_t nearest_segment_index = autoware::motion_utils::findFirstNearestSegmentIndexWithSoftConstraints(
+      path.points, target_pose, dist_threshold, yaw_threshold);
+
+    // Get the two points that form the nearest segment
+    const auto & p1 = path.points.at(nearest_segment_index);
+    const auto & p2 = path.points.at(nearest_segment_index + 1);
+
+    // Calculate the projection ratio of the target pose onto the segment
+    const tf2::Vector3 p1_vec(p1.point.pose.position.x, p1.point.pose.position.y, 0.0);
+    const tf2::Vector3 p2_vec(p2.point.pose.position.x, p2.point.pose.position.y, 0.0);
+    const tf2::Vector3 target_vec(target_pose.position.x, target_pose.position.y, 0.0);
+
+    const tf2::Vector3 segment_vec = p2_vec - p1_vec;
+    const tf2::Vector3 target_to_p1_vec = target_vec - p1_vec;
+
+    const double segment_length = segment_vec.length();
+    const double projection_length = target_to_p1_vec.dot(segment_vec.normalized());
+    const double interpolation_ratio = std::clamp(projection_length / segment_length, 0.0, 1.0);
+
+    // Interpolate the pose
+    const geometry_msgs::msg::Pose interpolated_pose =
+      autoware::universe_utils::calcInterpolatedPose(path.points, interpolation_ratio);
+
+    // Interpolate the twist (linear and angular velocities)
+    geometry_msgs::msg::Twist interpolated_twist;
+    if (use_zero_order_hold_for_twist) {
+      interpolated_twist = p1.point.twist;  // Use the twist of the first point in the segment
+    } else {
+      interpolated_twist.linear.x = autoware::interpolation::lerp(
+        0.0, segment_length, interpolation_ratio, p1.point.twist.linear.x, p2.point.twist.linear.x);
+      interpolated_twist.angular.z = autoware::interpolation::lerp(
+        0.0, segment_length, interpolation_ratio, p1.point.twist.angular.z, p2.point.twist.angular.z);
+    }
+
+    // Interpolate the heading rate
+    const double interpolated_heading_rate = autoware::interpolation::lerp(
+      0.0, segment_length, interpolation_ratio, p1.point.heading_rate, p2.point.heading_rate);
+
+    // Construct the interpolated PathPointWithLaneId
+    PathPointWithLaneId interpolated_point;
+    interpolated_point.point.pose = interpolated_pose;
+    interpolated_point.point.twist = interpolated_twist;
+    interpolated_point.point.heading_rate = interpolated_heading_rate;
+    interpolated_point.lane_ids = p1.lane_ids;  // Copy lane IDs from the first point in the segment
+
+    return interpolated_point;
+  }
+ground_truth.cpp: |-
+  PathPointWithLaneId calcInterpolatedPoint(
+    const PathWithLaneId & path, const geometry_msgs::msg::Pose & target_pose,
+    const bool use_zero_order_hold_for_twist, const double dist_threshold, const double yaw_threshold)
+  {
+    if (path.points.empty()) {
+      PathPointWithLaneId interpolated_point{};
+      interpolated_point.point.pose = target_pose;
+      return interpolated_point;
+    }
+    if (path.points.size() == 1) {
+      return path.points.front();
+    }
+
+    const size_t segment_idx =
+      autoware::motion_utils::findFirstNearestSegmentIndexWithSoftConstraints(
+        path.points, target_pose, dist_threshold, yaw_threshold);
+
+    // Calculate interpolation ratio
+    const auto & curr_pt = path.points.at(segment_idx);
+    const auto & next_pt = path.points.at(segment_idx + 1);
+    const auto v1 = autoware::universe_utils::point2tfVector(curr_pt.point, next_pt.point);
+    const auto v2 = autoware::universe_utils::point2tfVector(curr_pt.point, target_pose);
+    if (v1.length2() < 1e-3) {
+      return curr_pt;
+    }
+
+    const double ratio = v1.dot(v2) / v1.length2();
+    const double clamped_ratio = std::clamp(ratio, 0.0, 1.0);
+
+    // Interpolate
+    PathPointWithLaneId interpolated_point{};
+
+    // pose interpolation
+    interpolated_point.point.pose =
+      autoware::universe_utils::calcInterpolatedPose(curr_pt.point, next_pt.point, clamped_ratio);
+
+    // twist interpolation
+    if (use_zero_order_hold_for_twist) {
+      interpolated_point.point.longitudinal_velocity_mps = curr_pt.point.longitudinal_velocity_mps;
+      interpolated_point.point.lateral_velocity_mps = curr_pt.point.lateral_velocity_mps;
+    } else {
+      interpolated_point.point.longitudinal_velocity_mps = autoware::interpolation::lerp(
+        curr_pt.point.longitudinal_velocity_mps, next_pt.point.longitudinal_velocity_mps,
+        clamped_ratio);
+      interpolated_point.point.lateral_velocity_mps = autoware::interpolation::lerp(
+        curr_pt.point.lateral_velocity_mps, next_pt.point.lateral_velocity_mps, clamped_ratio);
+    }
+
+    // heading rate interpolation
+    interpolated_point.point.heading_rate_rps = autoware::interpolation::lerp(
+      curr_pt.point.heading_rate_rps, next_pt.point.heading_rate_rps, clamped_ratio);
+
+    return interpolated_point;
+  }

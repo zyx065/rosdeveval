@@ -1,0 +1,137 @@
+compilation.log: |
+  Starting >>> autoware_external_cmd_converter
+  --- stderr: autoware_external_cmd_converter
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_external_cmd_converter/src/node.cpp: In constructor ‘autoware::external_cmd_converter::ExternalCmdConverterNode::ExternalCmdConverterNode(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_external_cmd_converter/src/node.cpp:50:15: error: no matching function for call to ‘diagnostic_updater::Updater::add(const char [25], autoware::external_cmd_converter::ExternalCmdConverterNode*, void (autoware::external_cmd_converter::ExternalCmdConverterNode::*)())’
+     50 |   updater_.add("ExternalCmdConverterNode", this, &ExternalCmdConverterNode::on_timer);
+        |   ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_external_cmd_converter/include/autoware_external_cmd_converter/node.hpp:22,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_external_cmd_converter/src/node.cpp:15:
+  /opt/ros/humble/include/diagnostic_updater/diagnostic_updater.hpp:286:8: note: candidate: ‘template<class T> void diagnostic_updater::DiagnosticTaskVector::add(std::string, T*, void (T::*)(diagnostic_updater::DiagnosticStatusWrapper&))’
+    286 |   void add(
+        |        ^~~
+  /opt/ros/humble/include/diagnostic_updater/diagnostic_updater.hpp:286:8: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_external_cmd_converter/src/node.cpp:50:15: note:   candidate expects 2 arguments, 1 provided
+     50 |   updater_.add("ExternalCmdConverterNode", this, &ExternalCmdConverterNode::on_timer);
+        |   ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_external_cmd_converter/include/autoware_external_cmd_converter/node.hpp:22,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_external_cmd_converter/src/node.cpp:15:
+  /opt/ros/humble/include/diagnostic_updater/diagnostic_updater.hpp:253:8: note: candidate: ‘void diagnostic_updater::DiagnosticTaskVector::add(const string&, diagnostic_updater::TaskFunction)’
+    253 |   void add(const std::string & name, TaskFunction f)
+        |        ^~~
+  /opt/ros/humble/include/diagnostic_updater/diagnostic_updater.hpp:253:8: note:   candidate expects 2 arguments, 3 provided
+  /opt/ros/humble/include/diagnostic_updater/diagnostic_updater.hpp:266:8: note: candidate: ‘void diagnostic_updater::DiagnosticTaskVector::add(diagnostic_updater::DiagnosticTask&)’
+    266 |   void add(DiagnosticTask & task)
+        |        ^~~
+  /opt/ros/humble/include/diagnostic_updater/diagnostic_updater.hpp:266:8: note:   candidate expects 1 argument, 3 provided
+  gmake[2]: *** [CMakeFiles/autoware_external_cmd_converter.dir/build.make:76: CMakeFiles/autoware_external_cmd_converter.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_external_cmd_converter.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_external_cmd_converter [7.75s, exited with code 2]
+
+  Summary: 0 packages finished [9.07s]
+    1 package failed: autoware_external_cmd_converter
+    1 package had stderr output: autoware_external_cmd_converter
+generate_code.cpp: |-
+  ExternalCmdConverterNode::ExternalCmdConverterNode(const rclcpp::NodeOptions & node_options)
+  : Node("external_cmd_converter", node_options),
+    ref_vel_gain_(declare_parameter("ref_vel_gain", 1.0)),
+    wait_for_first_topic_(declare_parameter("wait_for_first_topic", true)),
+    control_command_timeout_(declare_parameter("control_command_timeout", 0.5)),
+    emergency_stop_timeout_(declare_parameter("emergency_stop_timeout", 0.5)),
+    acc_map_initialized_(false)
+  {
+    // Initialize publishers
+    cmd_pub_ = create_publisher<Control>("output/control_cmd", rclcpp::QoS{1});
+    current_cmd_pub_ = create_publisher<tier4_external_api_msgs::msg::ControlCommandStamped>(
+      "output/current_control_cmd", rclcpp::QoS{1});
+
+    // Initialize subscriptions
+    control_cmd_sub_ = create_subscription<tier4_external_api_msgs::msg::ControlCommandStamped>(
+      "input/external_control_cmd", rclcpp::QoS{1},
+      std::bind(&ExternalCmdConverterNode::on_external_cmd, this, std::placeholders::_1));
+
+    emergency_stop_heartbeat_sub_ = create_subscription<tier4_external_api_msgs::msg::Heartbeat>(
+      "input/emergency_stop_heartbeat", rclcpp::QoS{1},
+      std::bind(&ExternalCmdConverterNode::on_emergency_stop_heartbeat, this, std::placeholders::_1));
+
+    // Initialize diagnostic updater
+    updater_.setHardwareID("external_cmd_converter");
+    updater_.add("ExternalCmdConverterNode", this, &ExternalCmdConverterNode::on_timer);
+
+    // Load acceleration map
+    const std::string accel_map_csv_path = declare_parameter("accel_map_csv_path", "");
+    if (!accel_map_csv_path.empty()) {
+      acc_map_initialized_ = accel_map_.readAccelMapFromCSV(accel_map_csv_path);
+      if (!acc_map_initialized_) {
+        RCLCPP_ERROR(get_logger(), "Failed to initialize acceleration map from CSV file.");
+      }
+    }
+
+    // Load brake map
+    const std::string brake_map_csv_path = declare_parameter("brake_map_csv_path", "");
+    if (!brake_map_csv_path.empty()) {
+      if (!brake_map_.readBrakeMapFromCSV(brake_map_csv_path)) {
+        RCLCPP_ERROR(get_logger(), "Failed to initialize brake map from CSV file.");
+      }
+    }
+
+    // Timer for diagnostics and control command timeout
+    const auto timer_period = std::chrono::milliseconds(static_cast<int>(control_command_timeout_ * 1000));
+    create_wall_timer(timer_period, std::bind(&ExternalCmdConverterNode::on_timer, this));
+
+    RCLCPP_INFO(get_logger(), "ExternalCmdConverterNode initialized.");
+  }
+ground_truth.cpp: |-
+  ExternalCmdConverterNode::ExternalCmdConverterNode(const rclcpp::NodeOptions & node_options)
+  : Node("external_cmd_converter", node_options)
+  {
+    using std::placeholders::_1;
+
+    cmd_pub_ = create_publisher<Control>("out/control_cmd", rclcpp::QoS{1});
+    current_cmd_pub_ =
+      create_publisher<ExternalControlCommand>("out/latest_external_control_cmd", rclcpp::QoS{1});
+    control_cmd_sub_ = create_subscription<ExternalControlCommand>(
+      "in/external_control_cmd", 1, std::bind(&ExternalCmdConverterNode::on_external_cmd, this, _1));
+    emergency_stop_heartbeat_sub_ = create_subscription<tier4_external_api_msgs::msg::Heartbeat>(
+      "in/emergency_stop", 1,
+      std::bind(&ExternalCmdConverterNode::on_emergency_stop_heartbeat, this, _1));
+
+    // Parameter
+    ref_vel_gain_ = declare_parameter<double>("ref_vel_gain");
+
+    // Parameter for Hz check
+    const double timer_rate = declare_parameter<double>("timer_rate");
+    wait_for_first_topic_ = declare_parameter<bool>("wait_for_first_topic");
+    control_command_timeout_ = declare_parameter<double>("control_command_timeout");
+    emergency_stop_timeout_ = declare_parameter<double>("emergency_stop_timeout");
+
+    const auto period_ns = rclcpp::Rate(timer_rate).period();
+    rate_check_timer_ = rclcpp::create_timer(
+      this, get_clock(), period_ns, std::bind(&ExternalCmdConverterNode::on_timer, this));
+
+    // Parameter for accel/brake map
+    const std::string csv_path_accel_map = declare_parameter<std::string>("csv_path_accel_map");
+    const std::string csv_path_brake_map = declare_parameter<std::string>("csv_path_brake_map");
+    acc_map_initialized_ = true;
+    if (!accel_map_.readAccelMapFromCSV(csv_path_accel_map)) {
+      RCLCPP_ERROR(
+        get_logger(), "Cannot read accelmap. csv path = %s. stop calculation.",
+        csv_path_accel_map.c_str());
+      acc_map_initialized_ = false;
+    }
+    if (!brake_map_.readBrakeMapFromCSV(csv_path_brake_map)) {
+      RCLCPP_ERROR(
+        get_logger(), "Cannot read brakemap. csv path = %s. stop calculation.",
+        csv_path_brake_map.c_str());
+      acc_map_initialized_ = false;
+    }
+
+    // Diagnostics
+    updater_.setHardwareID("external_cmd_converter");
+    updater_.add("remote_control_topic_status", this, &ExternalCmdConverterNode::check_topic_status);
+
+    // Set default values
+    current_shift_cmd_ = std::make_shared<GearCommand>();
+  }

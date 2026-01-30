@@ -1,0 +1,29 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_ros/moveit_servo
+ros_package: moveit_servo
+file_path: src/servo_calcs.cpp
+method_name: ServoCalcs::jointCmdCB
+requirement: |
+  /**
+  * Callback for incoming JointJog commands to update the latest joint command.
+  * 
+  * @param[in] msg The incoming JointJog message containing joint velocity commands.
+  */
+category: ros_architecture
+type: has_timer,has_parameter,has_message
+signature: |
+  void ServoCalcs::jointCmdCB(const control_msgs::msg::JointJog::ConstSharedPtr& msg)
+additional_information: 
+  function_related_variable: |
+    mutable std::mutex main_loop_mutex_;
+    control_msgs::msg::JointJog::ConstSharedPtr latest_joint_cmd_;
+    bool latest_joint_cmd_is_nonzero_ = false;
+    rclcpp::Time latest_joint_command_stamp_ = rclcpp::Time(0., RCL_ROS_TIME);
+    bool new_input_cmd_ = false;
+    std::condition_variable input_cv_;
+  function_related_function: |
+    // Helper function for detecting zeroed message
+    bool isNonZero(const control_msgs::msg::JointJog& msg);
+test: servo_calcs_unit_tests
+test_cases: []

@@ -1,0 +1,29 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_obstacle_velocity_limiter_module
+ros_package: autoware_motion_velocity_obstacle_velocity_limiter_module
+file_path: src/distance.cpp
+method_name: distanceToClosestCollision
+requirement: |
+  /**
+  * Calculates the distance to the closest collision point along a projection line.
+  * 
+  * @param projection The linestring representing the projected path to check for collisions.
+  * @param footprint The polygon representing the vehicle's footprint for collision checking.
+  * @param collision_checker The collision checker instance used to find intersections.
+  * @param params Parameters controlling the distance calculation method and vehicle model.
+  * @return std::optional<double> The distance to the closest collision point if found, otherwise std::nullopt.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  std::optional<double> distanceToClosestCollision(
+    const linestring_t & projection, const polygon_t & footprint,
+    const CollisionChecker & collision_checker, const ProjectionParameters & params)
+additional_information: 
+  function_related_function: |
+    double arcDistance(const point_t & origin, const double heading, const point_t & target)
+test: test_autoware_motion_velocity_obstacle_velocity_limiter_module
+test_cases: 
+- distanceToClosestCollisionParticleModel
+- distanceToClosestCollisionBicycleModel

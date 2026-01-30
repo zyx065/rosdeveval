@@ -1,0 +1,114 @@
+compilation.log: |
+  Starting >>> autoware_mission_planner_universe
+  --- stderr: autoware_mission_planner_universe
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_mission_planner_universe/src/lanelet2_plugins/utility_functions.cpp: In function ‘bool autoware::mission_planner_universe::lanelet2::is_in_parking_space(const ConstLineStrings3d&, const lanelet::ConstPoint3d&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_mission_planner_universe/src/lanelet2_plugins/utility_functions.cpp:100:39: error: no matching function for call to ‘std::vector<lanelet::Point3d>::push_back(const lanelet::ConstPoint3d&)’
+    100 |             polygon_vertices.push_back(vertex);
+        |             ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+  In file included from /usr/include/c++/11/vector:67,
+                   from /opt/ros/humble/include/rcpputils/rcpputils/filesystem_helper.hpp:45,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:25,
+                   from /workspace/repos/autoware/install/autoware_route_handler/include/autoware/route_handler/route_handler.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_mission_planner_universe/src/lanelet2_plugins/utility_functions.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_mission_planner_universe/src/lanelet2_plugins/utility_functions.cpp:15:
+  /usr/include/c++/11/bits/stl_vector.h:1187:7: note: candidate: ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = lanelet::Point3d; _Alloc = std::allocator<lanelet::Point3d>; std::vector<_Tp, _Alloc>::value_type = lanelet::Point3d]’
+   1187 |       push_back(const value_type& __x)
+        |       ^~~~~~~~~
+  /usr/include/c++/11/bits/stl_vector.h:1187:35: note:   no known conversion for argument 1 from ‘const lanelet::ConstPoint3d’ to ‘const value_type&’ {aka ‘const lanelet::Point3d&’}
+   1187 |       push_back(const value_type& __x)
+        |                 ~~~~~~~~~~~~~~~~~~^~~
+  /usr/include/c++/11/bits/stl_vector.h:1203:7: note: candidate: ‘void std::vector<_Tp, _Alloc>::push_back(std::vector<_Tp, _Alloc>::value_type&&) [with _Tp = lanelet::Point3d; _Alloc = std::allocator<lanelet::Point3d>; std::vector<_Tp, _Alloc>::value_type = lanelet::Point3d]’
+   1203 |       push_back(value_type&& __x)
+        |       ^~~~~~~~~
+  /usr/include/c++/11/bits/stl_vector.h:1203:30: note:   no known conversion for argument 1 from ‘const lanelet::ConstPoint3d’ to ‘std::vector<lanelet::Point3d>::value_type&&’ {aka ‘lanelet::Point3d&&’}
+   1203 |       push_back(value_type&& __x)
+        |                 ~~~~~~~~~~~~~^~~
+  gmake[2]: *** [CMakeFiles/autoware_mission_planner_universe_lanelet2_plugins.dir/build.make:90: CMakeFiles/autoware_mission_planner_universe_lanelet2_plugins.dir/src/lanelet2_plugins/utility_functions.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:298: CMakeFiles/autoware_mission_planner_universe_lanelet2_plugins.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_mission_planner_universe [9.67s, exited with code 2]
+
+  Summary: 0 packages finished [11.1s]
+    1 package failed: autoware_mission_planner_universe
+    1 package had stderr output: autoware_mission_planner_universe
+generate_code.cpp: |
+  bool is_in_parking_space(
+    const lanelet::ConstLineStrings3d & parking_spaces, const lanelet::ConstPoint3d & point)
+  {
+      // Iterate through each parking space boundary
+      for (const auto& parking_space : parking_spaces)
+      {
+          // Check if the point is inside the current parking space
+          if (parking_space.size() < 3)
+              continue;  // Skip invalid parking spaces with fewer than 3 points
+
+          // Create polygon vertices from the line string
+          std::vector<lanelet::Point3d> polygon_vertices;
+          for (const auto& vertex : parking_space)
+          {
+              polygon_vertices.push_back(vertex);
+          }
+
+          // Use ray casting algorithm to determine point containment
+          int intersections = 0;
+          size_t n = polygon_vertices.size();
+          for (size_t i = 0; i < n; ++i)
+          {
+              size_t j = (i + 1) % n;
+              
+              // Check if the ray from the point crosses the edge
+              if (((polygon_vertices[i].y() > point.y()) != (polygon_vertices[j].y() > point.y())) &&
+                  (point.x() < (polygon_vertices[j].x() - polygon_vertices[i].x()) * 
+                  (point.y() - polygon_vertices[i].y()) / 
+                  (polygon_vertices[j].y() - polygon_vertices[i].y()) + 
+                  polygon_vertices[i].x()))
+              {
+                  intersections++;
+              }
+          }
+
+          // If odd number of intersections, point is inside the polygon
+          if (intersections % 2 == 1)
+          {
+              return true;
+          }
+      }
+
+      // Point is not inside any parking space
+      return false;
+  }
+ground_truth.cpp: |-
+  bool is_in_parking_space(
+    const lanelet::ConstLineStrings3d & parking_spaces, const lanelet::ConstPoint3d & point)
+  {
+    for (const auto & parking_space : parking_spaces) {
+      lanelet::ConstPolygon3d parking_space_polygon;
+      if (!lanelet::utils::lineStringWithWidthToPolygon(parking_space, &parking_space_polygon)) {
+        continue;
+      }
+
+      const double distance = boost::geometry::distance(
+        lanelet::utils::to2D(parking_space_polygon).basicPolygon(),
+        lanelet::utils::to2D(point).basicPoint());
+      constexpr double th_distance = std::numeric_limits<double>::epsilon();
+      if (distance < th_distance) {
+        return true;
+      }
+    }
+    return false;
+  }
+architecture-codes:
+  - ROS Message Related Issues - Message Type Mismatch
+
+functionality-codes:
+  - Domain Library Issues - Lack of Domain Library Utilization
+  - Reference Error - Wrong Variable Type
+  - Incomplete Code - Missing Multiple Steps
+  - Operation/Calculation Error - Incorrect Comparison Operation
+
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Deficiencies in Domain Knowledge - Insufficient Understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of Familiarity with the Existing Codebase

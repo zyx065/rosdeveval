@@ -1,0 +1,72 @@
+compilation.log: |
+  Starting >>> autoware_motion_velocity_dynamic_obstacle_stop_module
+  --- stderr: autoware_motion_velocity_dynamic_obstacle_stop_module
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp: In function ‘bool autoware::motion_velocity_planner::dynamic_obstacle_stop::is_in_range(const PredictedObject&, const TrajectoryPoints&, const autoware::motion_velocity_planner::dynamic_obstacle_stop::PlannerParam&, double)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:60:41: error: ‘const _kinematics_type’ {aka ‘const struct autoware_perception_msgs::msg::PredictedObjectKinematics_<std::allocator<void> >’} has no member named ‘pose_with_covariance’; did you mean ‘initial_pose_with_covariance’?
+     60 |       ego_trajectory, object.kinematics.pose_with_covariance.pose.position, i);
+        |                                         ^~~~~~~~~~~~~~~~~~~~
+        |                                         initial_pose_with_covariance
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:72:32: error: ‘const struct autoware::motion_velocity_planner::dynamic_obstacle_stop::PlannerParam’ has no member named ‘lateral_distance_threshold’
+     72 |   double safety_range = params.lateral_distance_threshold + hysteresis;
+        |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_motion_velocity_dynamic_obstacle_stop_module.dir/build.make:132: CMakeFiles/autoware_motion_velocity_dynamic_obstacle_stop_module.dir/src/object_filtering.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_motion_velocity_dynamic_obstacle_stop_module.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_motion_velocity_dynamic_obstacle_stop_module [9.87s, exited with code 2]
+
+  Summary: 0 packages finished [11.3s]
+    1 package failed: autoware_motion_velocity_dynamic_obstacle_stop_module
+    1 package had stderr output: autoware_motion_velocity_dynamic_obstacle_stop_module
+generate_code.cpp: |
+  std::optional<double> distanceToClosestCollision(
+    const linestring_t & projection, const polygon_t & footprint,
+    const CollisionChecker & collision_checker, const ProjectionParameters & params)
+  {
+      // Check if projection is empty or has insufficient points
+      if (projection.size() < 2) {
+          return std::nullopt;
+      }
+
+      // Minimum collision distance, initialized to max possible value
+      double min_collision_distance = std::numeric_limits<double>::max();
+      bool collision_found = false;
+
+      // Iterate through projection points to check for collisions
+      for (size_t i = 0; i < projection.size() - 1; ++i) {
+          // Check for collision between current line segment and footprint
+          if (collision_checker.checkCollision(projection[i], projection[i+1], footprint)) {
+              // Calculate distance from origin to collision point
+              double collision_distance = arcDistance(projection[0], params.initial_heading, projection[i]);
+              
+              // Update minimum collision distance if needed
+              min_collision_distance = std::min(min_collision_distance, collision_distance);
+              collision_found = true;
+          }
+      }
+
+      // Return result based on whether a collision was found
+      return collision_found ? std::optional<double>(min_collision_distance) : std::nullopt;
+  }
+ground_truth.cpp: |-
+  bool is_in_range(
+    const autoware_perception_msgs::msg::PredictedObject & object,
+    const TrajectoryPoints & ego_trajectory, const PlannerParam & params, const double hysteresis)
+  {
+    const auto distance = std::abs(motion_utils::calcLateralOffset(
+      ego_trajectory, object.kinematics.initial_pose_with_covariance.pose.position));
+    return distance <= params.minimum_object_distance_from_ego_trajectory +
+                         params.ego_lateral_offset + object.shape.dimensions.y / 2.0 + hysteresis;
+  }
+architecture-codes: 
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Parameter Related Issues - Use Non-exist Parameter
+functionality-codes:
+  - Reference Error - Wrong Variable
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Garbage Code - Wrong logical
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

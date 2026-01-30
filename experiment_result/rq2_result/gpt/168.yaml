@@ -1,0 +1,66 @@
+compilation.log: |
+  Starting >>> nav2_rotation_shim_controller
+  --- stderr: nav2_rotation_shim_controller
+  /root/repos/nav_ws/src/nav2_rotation_shim_controller/src/nav2_rotation_shim_controller.cpp: In member function ‘virtual void nav2_rotation_shim_controller::RotationShimController::activate()’:
+  /root/repos/nav_ws/src/nav2_rotation_shim_controller/src/nav2_rotation_shim_controller.cpp:127:31: error: ‘class nav2_rotation_shim_controller::RotationShimController’ has no member named ‘add_on_set_parameters_callback’
+    127 |   dyn_params_handler_ = this->add_on_set_parameters_callback(
+        |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/nav2_rotation_shim_controller.dir/build.make:76: CMakeFiles/nav2_rotation_shim_controller.dir/src/nav2_rotation_shim_controller.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:172: CMakeFiles/nav2_rotation_shim_controller.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_rotation_shim_controller [3.96s, exited with code 2]
+
+  Summary: 0 packages finished [4.27s]
+    1 package failed: nav2_rotation_shim_controller
+    1 package had stderr output: nav2_rotation_shim_controller
+generate_code.cpp: |-
+  void RotationShimController::activate()
+  {
+    RCLCPP_INFO(logger_, "Activating RotationShimController");
+
+    // Reset internal state
+    in_rotation_ = false;
+    last_angular_vel_ = std::numeric_limits<double>::max();
+
+    // Activate the primary controller
+    if (primary_controller_) {
+      primary_controller_->activate();
+      RCLCPP_INFO(logger_, "Primary controller activated");
+    } else {
+      RCLCPP_ERROR(logger_, "Primary controller is not initialized");
+      throw std::runtime_error("Primary controller is not initialized");
+    }
+
+    // Initialize dynamic parameters callback
+    dyn_params_handler_ = this->add_on_set_parameters_callback(
+      std::bind(&RotationShimController::dynamicParametersCallback, this, std::placeholders::_1));
+    RCLCPP_INFO(logger_, "Dynamic parameters callback initialized");
+
+    // Prepare the goal checker
+    position_goal_checker_ = std::make_unique<nav2_controller::PositionGoalChecker>();
+    position_goal_checker_->reset();
+    RCLCPP_INFO(logger_, "Position goal checker reset and ready for new navigation tasks");
+
+    RCLCPP_INFO(logger_, "RotationShimController activated successfully");
+  }
+ground_truth.cpp: |-
+  void RotationShimController::activate()
+  {
+    RCLCPP_INFO(
+      logger_,
+      "Activating controller: %s of type "
+      "nav2_rotation_shim_controller::RotationShimController",
+      plugin_name_.c_str());
+
+    primary_controller_->activate();
+    in_rotation_ = false;
+    last_angular_vel_ = std::numeric_limits<double>::max();
+
+    auto node = node_.lock();
+    dyn_params_handler_ = node->add_on_set_parameters_callback(
+      std::bind(
+        &RotationShimController::dynamicParametersCallback,
+        this, std::placeholders::_1));
+    position_goal_checker_->reset();
+  }

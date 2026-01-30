@@ -1,0 +1,22 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_costmap_2d
+ros_package: nav2_costmap_2d
+file_path: src/array_parser.cpp
+method_name: parseVVF
+requirement: |
+  /** @brief Parse a vector of vector of floats from a string.
+  * @param input
+  * @param error_return
+  * Syntax is [[1.0, 2.0], [3.3, 4.4, 5.5], ...] */
+category: utilities
+type: []
+signature: |
+  std::vector<std::vector<float>> parseVVF(const std::string & input, std::string & error_return)
+additional_information: []
+test: array_parser_test
+test_cases: 
+- basic_operation
+- missing_open
+- missing_close
+- wrong_depth

@@ -1,0 +1,38 @@
+compilation.log: |
+  Starting >>> nav2_util
+  Finished <<< nav2_util [0.40s]
+
+  Summary: 1 package finished [0.65s]
+generate_code.cpp: "bool getCurrentPose(\n  geometry_msgs::msg::PoseStamped & global_pose,\n\
+  \  tf2_ros::Buffer & tf_buffer, const std::string global_frame,\n  const std::string\
+  \ robot_frame, const double transform_timeout,\n  const rclcpp::Time stamp)\n{\n\
+  \  // Initialize the pose in the robot's frame\n  geometry_msgs::msg::PoseStamped\
+  \ robot_pose;\n  robot_pose.header.frame_id = robot_frame;\n  robot_pose.header.stamp\
+  \ = stamp;\n\n  // Set the robot's pose to the origin in its own frame\n  robot_pose.pose.position.x\
+  \ = 0.0;\n  robot_pose.pose.position.y = 0.0;\n  robot_pose.pose.position.z = 0.0;\n\
+  \  robot_pose.pose.orientation.x = 0.0;\n  robot_pose.pose.orientation.y = 0.0;\n\
+  \  robot_pose.pose.orientation.z = 0.0;\n  robot_pose.pose.orientation.w = 1.0;\n\
+  \n  // Transform the robot's pose into the global frame\n  try {\n    if (!tf_buffer.canTransform(global_frame,\
+  \ robot_frame, stamp, tf2::durationFromSec(transform_timeout))) {\n      RCLCPP_WARN(rclcpp::get_logger(\"\
+  getCurrentPose\"), \n                  \"Transform from %s to %s not available after\
+  \ %f seconds\",\n                  robot_frame.c_str(), global_frame.c_str(), transform_timeout);\n\
+  \      return false;\n    }\n\n    tf_buffer.transform(robot_pose, global_pose,\
+  \ global_frame, tf2::durationFromSec(transform_timeout));\n    return true;\n  }\
+  \ catch (tf2::TransformException & ex) {\n    RCLCPP_ERROR(rclcpp::get_logger(\"\
+  getCurrentPose\"), \n                 \"Failed to transform pose from %s to %s:\
+  \ %s\",\n                 robot_frame.c_str(), global_frame.c_str(), ex.what());\n\
+  \    return false;\n  }\n}"
+ground_truth.cpp: |-
+  bool getCurrentPose(
+    geometry_msgs::msg::PoseStamped & global_pose,
+    tf2_ros::Buffer & tf_buffer, const std::string global_frame,
+    const std::string robot_frame, const double transform_timeout,
+    const rclcpp::Time stamp)
+  {
+    tf2::toMsg(tf2::Transform::getIdentity(), global_pose.pose);
+    global_pose.header.frame_id = robot_frame;
+    global_pose.header.stamp = stamp;
+
+    return transformPoseInTargetFrame(
+      global_pose, global_pose, tf_buffer, global_frame, transform_timeout);
+  }

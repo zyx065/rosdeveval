@@ -1,0 +1,30 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_autonomous_emergency_braking
+ros_package: autoware_autonomous_emergency_braking
+file_path: src/node.cpp
+method_name: AEB::onCheckCollision
+requirement: |
+  /**
+  * @brief Checks for potential collisions and updates diagnostic status accordingly.
+  * 
+  * @param[out] stat Diagnostic status wrapper to be populated with collision assessment results.
+  */
+category: ros_architecture
+type: has_topic,has_message,has_timer
+signature: |
+  void AEB::onCheckCollision(DiagnosticStatusWrapper & stat)
+additional_information: 
+  function_related_variable: |
+    CollisionDataKeeper collision_data_keeper_;
+    bool publish_debug_markers_;
+    rclcpp::Publisher<MarkerArray>::SharedPtr debug_marker_publisher_;
+    rclcpp::Publisher<MarkerArray>::SharedPtr virtual_wall_publisher_;
+    rclcpp::Publisher<MetricArray>::SharedPtr metrics_pub_;
+  function_related_function: |
+    bool checkCollision(MarkerArray & debug_markers);
+    bool checkCollisionExpired()
+    void addCollisionMarker(const ObjectData & data, MarkerArray & debug_markers);
+    void addVirtualStopWallMarker(MarkerArray & markers);
+test: test_aeb
+test_cases: []

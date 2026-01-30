@@ -1,0 +1,29 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_pid_longitudinal_controller
+ros_package: autoware_pid_longitudinal_controller
+file_path: src/longitudinal_controller_utils.cpp
+method_name: getPitchByTraj
+requirement: |
+  /**
+  * Calculates the pitch angle of the trajectory at a given point based on wheelbase distance.
+  * 
+  * @param trajectory The trajectory containing a sequence of points with 3D positions.
+  * @param start_idx The index in the trajectory from which to begin searching for pitch calculation.
+  * @param wheel_base The distance between front and rear wheels used to determine calculation points.
+  * @return The calculated pitch angle in radians. Returns 0.0 if trajectory has insufficient points.
+  */
+category: utilities
+type: has_message
+signature: |
+  double getPitchByTraj(
+    const Trajectory & trajectory, const size_t start_idx, const double wheel_base)
+additional_information: 
+  function_related_class: |
+    namespace autoware::universe_utils{
+      double calcDistance3d(const Point1 & point1, const Point2 & point2)
+      double calcElevationAngle(const geometry_msgs::msg::Point & p_from, const geometry_msgs::msg::Point & p_to);
+    }
+test: test_longitudinal_controller
+test_cases: 
+- getPitchByTraj

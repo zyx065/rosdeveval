@@ -1,0 +1,36 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/constraint_samplers
+ros_package: moveit_core
+file_path: src/union_constraint_sampler.cpp
+method_name: UnionConstraintSampler::sample
+requirement: |
+  /**
+  * Samples a robot state by applying a sequence of constraint samplers.
+  * 
+  * The method initializes the state to the reference state and applies random positions to the joint model group.
+  * It then iterates through the constraint samplers, applying each one sequentially to further constrain the state.
+  * 
+  * @param[out] state The sampled robot state that satisfies all constraints.
+  * @param reference_state The reference state used for initialization.
+  * @param max_attempts Maximum number of sampling attempts for each constraint sampler.
+  * @return True if sampling was successful, false otherwise.
+  */
+category: utilities
+type: []
+signature: |
+  bool UnionConstraintSampler::sample(moveit::core::RobotState& state, const moveit::core::RobotState& reference_state,
+                                      unsigned int max_attempts)
+additional_information: 
+  function_related_variable: 
+    std::vector<ConstraintSamplerPtr> samplers_;
+  function_related_function: 
+    moveit::core::RobotState::setToRandomPositions(moveit::core::JointModelGroup jmg)
+    moveit::core::RobotState::updateLinkTransforms()
+    ConstraintSampler::sample(moveit::core::RobotState& state, const moveit::core::RobotState& reference_state, unsigned int max_attempts) = 0;
+test: test_constraint_samplers
+test_cases: 
+- UnionConstraintSampler
+- JointVersusPoseConstraintSamplerManager
+- MixedJointAndIkSamplerManager
+- SubgroupPoseConstraintsSampler

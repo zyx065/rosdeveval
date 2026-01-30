@@ -1,0 +1,41 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_costmap_2d
+ros_package: nav2_costmap_2d
+file_path: plugins/costmap_filters/binary_filter.cpp
+method_name: BinaryFilter::filterInfoCallback
+requirement: |
+  /**
+  * @brief Callback for processing costmap filter info updates.
+  * 
+  * Receives and validates new filter configuration parameters, then reinitializes the filter mask subscriber.
+  * 
+  * @param msg Shared pointer to the CostmapFilterInfo message containing new filter parameters.
+  */
+category: ros_architecture
+type: has_logger,has_parameter,has_message,has_topic
+signature: |
+  void BinaryFilter::filterInfoCallback(
+    const nav2_msgs::msg::CostmapFilterInfo::SharedPtr msg)
+additional_information: 
+  function_related_variable: |
+    // Working with filter info and mask
+    rclcpp::Subscription<nav2_msgs::msg::CostmapFilterInfo>::SharedPtr filter_info_sub_;
+    rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr mask_sub_;
+
+    rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Bool>::SharedPtr binary_state_pub_;
+
+    nav_msgs::msg::OccupancyGrid::SharedPtr filter_mask_;
+
+    std::string mask_frame_;  // Frame where mask located in
+    std::string global_frame_;  // Frame of currnet layer (master_grid)
+
+    double base_, multiplier_;
+    // Filter values higher than this threshold,
+    // will set binary state to non-default
+    double flip_threshold_;
+
+    bool default_state_;  // Default Binary Filter state
+    bool binary_state_;  // Current Binary Filter state
+test: binary_filter_test
+test_cases: []

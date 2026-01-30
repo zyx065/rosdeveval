@@ -1,0 +1,31 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_route
+ros_package: nav2_route
+file_path: src/plugins/edge_cost_functions/dynamic_edges_scorer.cpp
+method_name: DynamicEdgesScorer::closedEdgesCb
+requirement: |
+  /**
+  * @brief Callback for updating edge closures and dynamic costs.
+  * 
+  * Handles requests to close edges, open previously closed edges, and adjust edge costs dynamically.
+  * 
+  * @param[in] request Contains lists of edges to close, open, and adjust costs for.
+  * @param[out] response Success flag indicating the request was processed.
+  */
+category: ros_architecture
+type: has_logger
+signature: |
+  void DynamicEdgesScorer::closedEdgesCb(
+    const std::shared_ptr<rmw_request_id_t>,
+    const std::shared_ptr<nav2_msgs::srv::DynamicEdges::Request> request,
+    std::shared_ptr<nav2_msgs::srv::DynamicEdges::Response> response)
+additional_information: 
+  function_related_variable: |
+    rclcpp::Logger logger_{rclcpp::get_logger("DynamicEdgesScorer")};
+    std::string name_;
+    std::set<unsigned int> closed_edges_;
+    std::unordered_map<unsigned int, float> dynamic_penalties_;
+    rclcpp::Service<nav2_msgs::srv::DynamicEdges>::SharedPtr service_;
+test: test_edge_scorers
+test_cases: []

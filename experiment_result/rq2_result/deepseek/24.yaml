@@ -1,0 +1,103 @@
+compilation.log: |
+  Starting >>> autoware_trajectory_follower_node
+  --- stderr: autoware_trajectory_follower_node
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_trajectory_follower_node/src/simple_trajectory_follower.cpp: In member function ‘void simple_trajectory_follower::SimpleTrajectoryFollower::onTimer()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_trajectory_follower_node/src/simple_trajectory_follower.cpp:63:9: error: ‘using Control = struct autoware_control_msgs::msg::Control_<std::allocator<void> >’ {aka ‘struct autoware_control_msgs::msg::Control_<std::allocator<void> >’} has no member named ‘steering’
+     63 |     cmd.steering = calcSteerCmd();
+        |         ^~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_trajectory_follower_node/src/simple_trajectory_follower.cpp:66:9: error: ‘using Control = struct autoware_control_msgs::msg::Control_<std::allocator<void> >’ {aka ‘struct autoware_control_msgs::msg::Control_<std::allocator<void> >’} has no member named ‘acceleration’
+     66 |     cmd.acceleration = calcAccCmd();
+        |         ^~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_trajectory_follower_node/src/simple_trajectory_follower.cpp:70:13: error: ‘using Control = struct autoware_control_msgs::msg::Control_<std::allocator<void> >’ {aka ‘struct autoware_control_msgs::msg::Control_<std::allocator<void> >’} has no member named ‘target_velocity’
+     70 |         cmd.target_velocity = target_velocity_;
+        |             ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_trajectory_follower_node/src/simple_trajectory_follower.cpp:70:31: error: ‘target_velocity_’ was not declared in this scope
+     70 |         cmd.target_velocity = target_velocity_;
+        |                               ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_trajectory_follower_node/src/simple_trajectory_follower.cpp:72:13: error: ‘using Control = struct autoware_control_msgs::msg::Control_<std::allocator<void> >’ {aka ‘struct autoware_control_msgs::msg::Control_<std::allocator<void> >’} has no member named ‘target_velocity’
+     72 |         cmd.target_velocity = closest_traj_point_.velocity;
+        |             ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_trajectory_follower_node/src/simple_trajectory_follower.cpp:72:51: error: ‘using TrajectoryPoint = struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’} has no member named ‘velocity’
+     72 |         cmd.target_velocity = closest_traj_point_.velocity;
+        |                                                   ^~~~~~~~
+  gmake[2]: *** [CMakeFiles/simple_trajectory_follower.dir/build.make:76: CMakeFiles/simple_trajectory_follower.dir/src/simple_trajectory_follower.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:215: CMakeFiles/simple_trajectory_follower.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_trajectory_follower_node [7.23s, exited with code 2]
+
+  Summary: 0 packages finished [8.58s]
+    1 package failed: autoware_trajectory_follower_node
+    1 package had stderr output: autoware_trajectory_follower_node
+generate_code.cpp: |-
+  void SimpleTrajectoryFollower::onTimer()
+  {
+      // Check if trajectory data is ready
+      if (!processData()) {
+          RCLCPP_INFO_THROTTLE(
+              get_logger(),
+              *get_clock(),
+              1000,
+              "Waiting for trajectory data...");
+          return;
+      }
+
+      // Update the closest trajectory point
+      updateClosest();
+
+      // Create control command message
+      Control cmd;
+      cmd.stamp = this->now();
+
+      // Calculate steering command
+      cmd.steering = calcSteerCmd();
+
+      // Calculate acceleration command
+      cmd.acceleration = calcAccCmd();
+
+      // Set target velocity (use external if specified, otherwise use trajectory's)
+      if (use_external_target_vel_) {
+          cmd.target_velocity = target_velocity_;
+      } else {
+          cmd.target_velocity = closest_traj_point_.velocity;
+      }
+
+      // Publish the control command
+      pub_cmd_->publish(cmd);
+  }
+ground_truth.cpp: |-
+  void SimpleTrajectoryFollower::onTimer()
+  {
+    if (!processData()) {
+      RCLCPP_INFO(get_logger(), "data not ready");
+      return;
+    }
+
+    updateClosest();
+
+    Control cmd;
+    cmd.stamp = cmd.lateral.stamp = cmd.longitudinal.stamp = get_clock()->now();
+    cmd.lateral.steering_tire_angle = static_cast<float>(calcSteerCmd());
+    cmd.longitudinal.velocity = use_external_target_vel_
+                                  ? static_cast<float>(external_target_vel_)
+                                  : closest_traj_point_.longitudinal_velocity_mps;
+    cmd.longitudinal.acceleration = static_cast<float>(calcAccCmd());
+    pub_cmd_->publish(cmd);
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Message Issue - Improper Message Type Usage Issue
+  - ROS Message Issue - Message Initialization Issue
+  - ROS Parameter Issue - Use Non-existent Parameter Issue
+  - ROS Timer Issue - Clock Source Instantiation and Synchronization Issue
+  - ROS Logger Issue - Log Level and Frequency Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Domain Library Issue - Domain Specific Library Utilization Error
+
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

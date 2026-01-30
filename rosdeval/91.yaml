@@ -1,0 +1,22 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_probabilistic_occupancy_grid_map
+ros_package: autoware_probabilistic_occupancy_grid_map
+file_path: lib/fusion_policy/fusion_policy.cpp
+method_name: logOddsFusion
+requirement: |
+  /**
+  * Fuses multiple probabilities into a single probability using log-odds fusion.
+  * 
+  * @param probabilities The vector of input probabilities to be fused. Values are 
+  *                      clamped to [EPSILON_PROB, 1-EPSILON_PROB] for numerical stability.
+  * @return The fused probability value between 0.0 and 1.0.
+  */
+category: utilities
+type: []
+signature: |
+  double logOddsFusion(const std::vector<double> & probabilities)
+additional_information: []
+test: fusion_policy_unit_tests
+test_cases: 
+- TestLogOddsUpdateRule

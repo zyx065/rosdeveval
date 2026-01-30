@@ -1,0 +1,38 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_graceful_controller
+ros_package: nav2_graceful_controller
+file_path: src/graceful_controller.cpp
+method_name: GracefulController::configure
+requirement: |
+  /**
+  * Configures the controller with necessary components and parameters.
+  * 
+  * @param parent Parent lifecycle node for component management.
+  * @param name Plugin name for namespace and parameter handling.
+  * @param tf TF buffer for coordinate transformations.
+  * @param costmap_ros Costmap for collision checking and environment data.
+  */
+category: ros_architecture
+type: has_topic,has_logger,has_domain_library
+signature: |
+  void GracefulController::configure(
+    const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
+    std::string name, const std::shared_ptr<tf2_ros::Buffer> tf,
+    const std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros)
+additional_information: 
+  function_related_function: |
+    std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
+    std::string plugin_name_;
+    std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros_;
+    rclcpp::Logger logger_{rclcpp::get_logger("GracefulController")};
+    std::unique_ptr<nav2_graceful_controller::PathHandler> path_handler_;
+    std::unique_ptr<nav2_graceful_controller::ParameterHandler> param_handler_;
+    std::unique_ptr<nav2_graceful_controller::SmoothControlLaw> control_law_;
+    Parameters * params_;
+    std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::Path>> transformed_plan_pub_;
+    std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<nav_msgs::msg::Path>> local_plan_pub_;
+    std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::PointStamped>> motion_target_pub_;
+    std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<visualization_msgs::msg::Marker>> slowdown_pub_;
+test: test_graceful_controller
+test_cases: []

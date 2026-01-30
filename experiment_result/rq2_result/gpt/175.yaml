@@ -1,0 +1,259 @@
+compilation.log: |
+  Starting >>> nav2_smac_planner
+  --- stderr: nav2_smac_planner
+  /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp: In member function ‘virtual void nav2_smac_planner::SmacPlanner2D::configure(const WeakPtr&, std::string, std::shared_ptr<tf2_ros::Buffer>, std::shared_ptr<nav2_costmap_2d::Costmap2DROS>)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:92:22: error: no matching function for call to ‘nav2_smac_planner::AStarAlgorithm<nav2_smac_planner::Node2D>::initialize(bool&, int&, int&, nav2_smac_planner::MotionModel&)’
+     92 |   _a_star->initialize(_allow_unknown, _max_iterations, _max_on_approach_iterations, _motion_model);
+        |   ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/smac_planner_2d.hpp:23,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:21:
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/a_star.hpp:92:8: note: candidate: ‘void nav2_smac_planner::AStarAlgorithm<NodeT>::initialize(const bool&, int&, const int&, const double&, const float&, const unsigned int&) [with NodeT = nav2_smac_planner::Node2D]’
+     92 |   void initialize(
+        |        ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/a_star.hpp:92:8: note:   candidate expects 6 arguments, 4 provided
+  /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:95:69: error: no matching function for call to ‘nav2_smac_planner::GridCollisionChecker::GridCollisionChecker(nav2_costmap_2d::Costmap2D*&, bool&)’
+     95 |   _collision_checker = GridCollisionChecker(_costmap, _allow_unknown);
+        |                                                                     ^
+  In file included from /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/node_2d.hpp:29,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/analytic_expansion.hpp:23,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/a_star.hpp:30,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/smac_planner_2d.hpp:23,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:21:
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/collision_checker.hpp:41:3: note: candidate: ‘nav2_smac_planner::GridCollisionChecker::GridCollisionChecker(nav2_costmap_2d::Costmap2D*, unsigned int, rclcpp_lifecycle::LifecycleNode::SharedPtr)’
+     41 |   GridCollisionChecker(
+        |   ^~~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/collision_checker.hpp:41:3: note:   candidate expects 3 arguments, 2 provided
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/collision_checker.hpp:29:7: note: candidate: ‘nav2_smac_planner::GridCollisionChecker::GridCollisionChecker(const nav2_smac_planner::GridCollisionChecker&)’
+     29 | class GridCollisionChecker
+        |       ^~~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/collision_checker.hpp:29:7: note:   candidate expects 1 argument, 2 provided
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/collision_checker.hpp:29:7: note: candidate: ‘nav2_smac_planner::GridCollisionChecker::GridCollisionChecker(nav2_smac_planner::GridCollisionChecker&&)’
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/collision_checker.hpp:29:7: note:   candidate expects 1 argument, 2 provided
+  In file included from /usr/include/c++/11/memory:76,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:16:
+  /usr/include/c++/11/bits/unique_ptr.h: In instantiation of ‘typename std::_MakeUniq<_Tp>::__single_object std::make_unique(_Args&& ...) [with _Tp = nav2_smac_planner::AStarAlgorithm<nav2_smac_planner::Node2D>; _Args = {}; typename std::_MakeUniq<_Tp>::__single_object = std::unique_ptr<nav2_smac_planner::AStarAlgorithm<nav2_smac_planner::Node2D> >]’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:91:53:   required from here
+  /usr/include/c++/11/bits/unique_ptr.h:962:30: error: no matching function for call to ‘nav2_smac_planner::AStarAlgorithm<nav2_smac_planner::Node2D>::AStarAlgorithm()’
+    962 |     { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+        |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/smac_planner_2d.hpp:23,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:21:
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/a_star.hpp:75:12: note: candidate: ‘nav2_smac_planner::AStarAlgorithm<NodeT>::AStarAlgorithm(const nav2_smac_planner::MotionModel&, const nav2_smac_planner::SearchInfo&) [with NodeT = nav2_smac_planner::Node2D]’
+     75 |   explicit AStarAlgorithm(const MotionModel & motion_model, const SearchInfo & search_info);
+        |            ^~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/a_star.hpp:75:12: note:   candidate expects 2 arguments, 0 provided
+  In file included from /usr/include/c++/11/memory:76,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:16:
+  /usr/include/c++/11/bits/unique_ptr.h: In instantiation of ‘typename std::_MakeUniq<_Tp>::__single_object std::make_unique(_Args&& ...) [with _Tp = nav2_smac_planner::Smoother; _Args = {}; typename std::_MakeUniq<_Tp>::__single_object = std::unique_ptr<nav2_smac_planner::Smoother>]’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:98:41:   required from here
+  /usr/include/c++/11/bits/unique_ptr.h:962:30: error: no matching function for call to ‘nav2_smac_planner::Smoother::Smoother()’
+    962 |     { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+        |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/smac_planner_2d.hpp:24,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:21:
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/smoother.hpp:93:12: note: candidate: ‘nav2_smac_planner::Smoother::Smoother(const nav2_smac_planner::SmootherParams&)’
+     93 |   explicit Smoother(const SmootherParams & params);
+        |            ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/smoother.hpp:93:12: note:   candidate expects 1 argument, 0 provided
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/smoother.hpp:87:7: note: candidate: ‘nav2_smac_planner::Smoother::Smoother(const nav2_smac_planner::Smoother&)’
+     87 | class Smoother
+        |       ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/smoother.hpp:87:7: note:   candidate expects 1 argument, 0 provided
+  In file included from /usr/include/c++/11/memory:76,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:16:
+  /usr/include/c++/11/bits/unique_ptr.h: In instantiation of ‘typename std::_MakeUniq<_Tp>::__single_object std::make_unique(_Args&& ...) [with _Tp = nav2_smac_planner::CostmapDownsampler; _Args = {nav2_costmap_2d::Costmap2D*&, int&}; typename std::_MakeUniq<_Tp>::__single_object = std::unique_ptr<nav2_smac_planner::CostmapDownsampler>]’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:102:64:   required from here
+  /usr/include/c++/11/bits/unique_ptr.h:962:30: error: no matching function for call to ‘nav2_smac_planner::CostmapDownsampler::CostmapDownsampler(nav2_costmap_2d::Costmap2D*&, int&)’
+    962 |     { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+        |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/node_hybrid.hpp:33,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/node_2d.hpp:30,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/analytic_expansion.hpp:23,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/a_star.hpp:30,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/smac_planner_2d.hpp:23,
+                   from /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_2d.cpp:21:
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/costmap_downsampler.hpp:38:3: note: candidate: ‘nav2_smac_planner::CostmapDownsampler::CostmapDownsampler()’
+     38 |   CostmapDownsampler();
+        |   ^~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/costmap_downsampler.hpp:38:3: note:   candidate expects 0 arguments, 2 provided
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner_2d.dir/build.make:76: CMakeFiles/nav2_smac_planner_2d.dir/src/smac_planner_2d.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:222: CMakeFiles/nav2_smac_planner_2d.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_smac_planner [6.26s, exited with code 2]
+
+  Summary: 0 packages finished [6.57s]
+    1 package failed: nav2_smac_planner
+    1 package had stderr output: nav2_smac_planner
+generate_code.cpp: |-
+  void SmacPlanner2D::configure(
+    const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
+    std::string name, std::shared_ptr<tf2_ros::Buffer> /*tf*/,
+    std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros)
+  {
+    _node = parent;
+    auto node = _node.lock();
+    if (!node) {
+      throw std::runtime_error("Failed to lock node in SmacPlanner2D::configure");
+    }
+
+    _name = name;
+    _logger = rclcpp::get_logger(name);
+    _clock = node->get_clock();
+    _costmap = costmap_ros->getCostmap();
+    _global_frame = costmap_ros->getGlobalFrameID();
+
+    // Declare parameters
+    node->declare_parameter(name + ".tolerance", 0.0);
+    node->declare_parameter(name + ".downsample_costmap", false);
+    node->declare_parameter(name + ".downsampling_factor", 1);
+    node->declare_parameter(name + ".allow_unknown", true);
+    node->declare_parameter(name + ".max_iterations", 10000);
+    node->declare_parameter(name + ".max_on_approach_iterations", 1000);
+    node->declare_parameter(name + ".use_final_approach_orientation", true);
+    node->declare_parameter(name + ".max_planning_time", 5.0);
+    node->declare_parameter(name + ".motion_model", "DUBIN");
+
+    // Get parameters
+    node->get_parameter(name + ".tolerance", _tolerance);
+    node->get_parameter(name + ".downsample_costmap", _downsample_costmap);
+    node->get_parameter(name + ".downsampling_factor", _downsampling_factor);
+    node->get_parameter(name + ".allow_unknown", _allow_unknown);
+    node->get_parameter(name + ".max_iterations", _max_iterations);
+    node->get_parameter(name + ".max_on_approach_iterations", _max_on_approach_iterations);
+    node->get_parameter(name + ".use_final_approach_orientation", _use_final_approach_orientation);
+    node->get_parameter(name + ".max_planning_time", _max_planning_time);
+    node->get_parameter(name + ".motion_model", _motion_model_for_search);
+
+    // Initialize motion model
+    _motion_model = fromString(_motion_model_for_search);
+
+    // Initialize A* algorithm
+    _a_star = std::make_unique<AStarAlgorithm<Node2D>>();
+    _a_star->initialize(_allow_unknown, _max_iterations, _max_on_approach_iterations, _motion_model);
+
+    // Initialize collision checker
+    _collision_checker = GridCollisionChecker(_costmap, _allow_unknown);
+
+    // Initialize smoother
+    _smoother = std::make_unique<Smoother>();
+
+    // Initialize costmap downsampler if required
+    if (_downsample_costmap && _downsampling_factor > 1) {
+      _costmap_downsampler = std::make_unique<CostmapDownsampler>(_costmap, _downsampling_factor);
+    }
+
+    // Initialize dynamic parameters callback
+    _dyn_params_handler = node->add_on_set_parameters_callback(
+      std::bind(&SmacPlanner2D::dynamicParametersCallback, this, std::placeholders::_1));
+
+    // Initialize raw plan publisher
+    _raw_plan_publisher = node->create_publisher<nav_msgs::msg::Path>(
+      name + "/plan", rclcpp::QoS(1).transient_local());
+
+    RCLCPP_INFO(_logger, "SmacPlanner2D configured successfully");
+  }
+ground_truth.cpp: |-
+  void SmacPlanner2D::configure(
+    const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
+    std::string name, std::shared_ptr<tf2_ros::Buffer>/*tf*/,
+    std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros)
+  {
+    _node = parent;
+    auto node = parent.lock();
+    _logger = node->get_logger();
+    _clock = node->get_clock();
+    _costmap = costmap_ros->getCostmap();
+    _name = name;
+    _global_frame = costmap_ros->getGlobalFrameID();
+
+    RCLCPP_INFO(_logger, "Configuring %s of type SmacPlanner2D", name.c_str());
+
+    // General planner params
+    nav2_util::declare_parameter_if_not_declared(
+      node, name + ".tolerance", rclcpp::ParameterValue(0.125));
+    _tolerance = static_cast<float>(node->get_parameter(name + ".tolerance").as_double());
+    nav2_util::declare_parameter_if_not_declared(
+      node, name + ".downsample_costmap", rclcpp::ParameterValue(false));
+    node->get_parameter(name + ".downsample_costmap", _downsample_costmap);
+    nav2_util::declare_parameter_if_not_declared(
+      node, name + ".downsampling_factor", rclcpp::ParameterValue(1));
+    node->get_parameter(name + ".downsampling_factor", _downsampling_factor);
+    nav2_util::declare_parameter_if_not_declared(
+      node, name + ".cost_travel_multiplier", rclcpp::ParameterValue(1.0));
+    node->get_parameter(name + ".cost_travel_multiplier", _search_info.cost_penalty);
+
+    nav2_util::declare_parameter_if_not_declared(
+      node, name + ".allow_unknown", rclcpp::ParameterValue(true));
+    node->get_parameter(name + ".allow_unknown", _allow_unknown);
+    nav2_util::declare_parameter_if_not_declared(
+      node, name + ".max_iterations", rclcpp::ParameterValue(1000000));
+    node->get_parameter(name + ".max_iterations", _max_iterations);
+    nav2_util::declare_parameter_if_not_declared(
+      node, name + ".max_on_approach_iterations", rclcpp::ParameterValue(1000));
+    node->get_parameter(name + ".max_on_approach_iterations", _max_on_approach_iterations);
+    nav2_util::declare_parameter_if_not_declared(
+      node, name + ".use_final_approach_orientation", rclcpp::ParameterValue(false));
+    node->get_parameter(name + ".use_final_approach_orientation", _use_final_approach_orientation);
+
+    nav2_util::declare_parameter_if_not_declared(
+      node, name + ".max_planning_time", rclcpp::ParameterValue(2.0));
+    node->get_parameter(name + ".max_planning_time", _max_planning_time);
+
+    _motion_model = MotionModel::TWOD;
+
+    if (_max_on_approach_iterations <= 0) {
+      RCLCPP_INFO(
+        _logger, "On approach iteration selected as <= 0, "
+        "disabling tolerance and on approach iterations.");
+      _max_on_approach_iterations = std::numeric_limits<int>::max();
+    }
+
+    if (_max_iterations <= 0) {
+      RCLCPP_INFO(
+        _logger, "maximum iteration selected as <= 0, "
+        "disabling maximum iterations.");
+      _max_iterations = std::numeric_limits<int>::max();
+    }
+
+    // Initialize collision checker
+    _collision_checker = GridCollisionChecker(_costmap, 1 /*for 2D, most be 1*/, node);
+    _collision_checker.setFootprint(
+      costmap_ros->getRobotFootprint(),
+      true /*for 2D, most use radius*/,
+      0.0 /*for 2D cost at inscribed isn't relevent*/);
+
+    // Initialize A* template
+    _a_star = std::make_unique<AStarAlgorithm<Node2D>>(_motion_model, _search_info);
+    _a_star->initialize(
+      _allow_unknown,
+      _max_iterations,
+      _max_on_approach_iterations,
+      _max_planning_time,
+      0.0 /*unused for 2D*/,
+      1.0 /*unused for 2D*/);
+
+    // Initialize path smoother
+    SmootherParams params;
+    params.get(node, name);
+    params.holonomic_ = true;  // So smoother will treat this as a grid search
+    _smoother = std::make_unique<Smoother>(params);
+    _smoother->initialize(1e-50 /*No valid minimum turning radius for 2D*/);
+
+    // Initialize costmap downsampler
+    if (_downsample_costmap && _downsampling_factor > 1) {
+      std::string topic_name = "downsampled_costmap";
+      _costmap_downsampler = std::make_unique<CostmapDownsampler>();
+      _costmap_downsampler->on_configure(
+        node, _global_frame, topic_name, _costmap, _downsampling_factor);
+    }
+
+    _raw_plan_publisher = node->create_publisher<nav_msgs::msg::Path>("unsmoothed_plan", 1);
+
+    RCLCPP_INFO(
+      _logger, "Configured plugin %s of type SmacPlanner2D with "
+      "tolerance %.2f, maximum iterations %i, "
+      "max on approach iterations %i, and %s.",
+      _name.c_str(), _tolerance, _max_iterations, _max_on_approach_iterations,
+      _allow_unknown ? "allowing unknown traversal" : "not allowing unknown traversal");
+  }

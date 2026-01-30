@@ -1,0 +1,23 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/robot_model
+ros_package: moveit_core
+file_path: src/aabb.cpp
+method_name: moveit::core::AABB::extendWithTransformedBox
+requirement: |
+  /**
+  * Expands this axis-aligned bounding box to include an oriented box after transformation.
+  * 
+  * @param transform The transformation applied to the box before inclusion.
+  * @param box The half-extents (size/2) of the box to be transformed and included.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  void moveit::core::AABB::extendWithTransformedBox(const Eigen::Isometry3d& transform, const Eigen::Vector3d& box)
+additional_information: 
+  repos_variable: []
+  repos_function: []
+test: test_aabb
+test_cases: 
+- TestPR2

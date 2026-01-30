@@ -1,0 +1,25 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_detected_object_feature_remover
+ros_package: autoware_detected_object_feature_remover
+file_path: src/detected_object_feature_remover_node.cpp
+method_name: DetectedObjectFeatureRemover::objectCallback
+requirement: |
+  /**
+  * @brief Processes detected objects by converting and publishing them.
+  * 
+  * @param input The input detected objects with features to process.
+  */
+category: ros_architecture
+type: has_topic,has_message
+signature: |
+  void DetectedObjectFeatureRemover::objectCallback(
+    const DetectedObjectsWithFeature::ConstSharedPtr input)
+additional_information: 
+  function_related_variable: |
+    rclcpp::Publisher<DetectedObjects>::SharedPtr pub_;
+    std::unique_ptr<autoware::universe_utils::PublishedTimePublisher> published_time_publisher_;
+  function_related_function: |
+    void DetectedObjectFeatureRemover::convert(const DetectedObjectsWithFeature & objs_with_feature, DetectedObjects & objs)
+test: test_autoware_detected_object_feature_remover
+test_cases: []

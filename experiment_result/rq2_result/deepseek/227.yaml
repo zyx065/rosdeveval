@@ -1,0 +1,37 @@
+compilation.log: |
+  Starting >>> nav2_map_server
+  Finished <<< nav2_map_server [0.43s]
+
+  Summary: 1 package finished [0.73s]
+generate_code.cpp: |-
+  nav2_util::CallbackReturn
+  CostmapFilterInfoServer::on_activate(const rclcpp_lifecycle::State & /*state*/)
+  {
+    publisher_->on_activate();
+    createBond();
+    return nav2_util::CallbackReturn::SUCCESS;
+  }
+ground_truth.cpp: |-
+  nav2_util::CallbackReturn
+  CostmapFilterInfoServer::on_activate(const rclcpp_lifecycle::State & /*state*/)
+  {
+    RCLCPP_INFO(get_logger(), "Activating");
+
+    publisher_->on_activate();
+    auto costmap_filter_info = std::make_unique<nav2_msgs::msg::CostmapFilterInfo>(msg_);
+    publisher_->publish(std::move(costmap_filter_info));
+
+    // create bond connection
+    createBond();
+
+    return nav2_util::CallbackReturn::SUCCESS;
+  }
+architecture-codes:
+  - ROS Logger Issue - ROS Logger Missing Issue 
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue 
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming

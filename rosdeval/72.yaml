@@ -1,0 +1,23 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_costmap_generator
+ros_package: autoware_costmap_generator
+file_path: src/costmap_generator.cpp
+method_name: CostmapGenerator::loadParkingAreasFromLaneletMap
+requirement: |
+  /**
+  * @brief Extracts parking areas and parking spaces from a Lanelet map and converts them to polygons.
+  * 
+  * @param[in] lanelet_map Pointer to the Lanelet map containing parking area definitions.
+  * @param[out] area_polygons Vector to store the generated polygons representing parking areas.
+  */
+category: utilities
+type: has_domain_library,has_message
+signature: |
+  void CostmapGenerator::loadParkingAreasFromLaneletMap(
+    const lanelet::LaneletMapPtr lanelet_map,
+    std::vector<geometry_msgs::msg::Polygon> & area_polygons)
+additional_information: []
+test: test_autoware_costmap_generator
+test_cases: 
+- testLoadAreasFromLaneletMap

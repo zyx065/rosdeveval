@@ -1,0 +1,194 @@
+compilation.log: |
+  Starting >>> nav2_costmap_2d
+  --- stderr: nav2_costmap_2d
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.hpp:48,
+                   from /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp:60,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:42:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp: In member function ‘void nav2_costmap_2d::KeepoutFilter::maskCallback(nav_msgs::msg::OccupancyGrid_<std::allocator<void> >::SharedPtr)’:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:128:23: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘get_logger’
+    128 |     RCLCPP_WARN(this->get_logger(), "Received null OccupancyGrid message in maskCallback.");
+        |                       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:128:23: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘get_logger’
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:128:5: error: template argument 1 is invalid
+    128 |     RCLCPP_WARN(this->get_logger(), "Received null OccupancyGrid message in maskCallback.");
+        |     ^~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.hpp:48,
+                   from /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp:60,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:42:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:128:23: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘get_logger’
+    128 |     RCLCPP_WARN(this->get_logger(), "Received null OccupancyGrid message in maskCallback.");
+        |                       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:128:23: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘get_logger’
+    128 |     RCLCPP_WARN(this->get_logger(), "Received null OccupancyGrid message in maskCallback.");
+        |                       ^~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.hpp:48,
+                   from /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp:60,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:42:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:134:23: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘get_logger’
+    134 |     RCLCPP_WARN(this->get_logger(),
+        |                       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:134:23: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘get_logger’
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:134:5: error: template argument 1 is invalid
+    134 |     RCLCPP_WARN(this->get_logger(),
+        |     ^~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.hpp:48,
+                   from /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp:60,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:42:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:134:23: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘get_logger’
+    134 |     RCLCPP_WARN(this->get_logger(),
+        |                       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:134:23: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘get_logger’
+    134 |     RCLCPP_WARN(this->get_logger(),
+        |                       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:151:42: error: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Werror=sign-compare]
+    151 |     if (mask_costmap_->getSizeInCellsX() != static_cast<int>(msg->info.width) ||
+        |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:152:42: error: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Werror=sign-compare]
+    152 |         mask_costmap_->getSizeInCellsY() != static_cast<int>(msg->info.height) ||
+        |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.hpp:48,
+                   from /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp:60,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:42:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:182:21: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘get_logger’
+    182 |   RCLCPP_INFO(this->get_logger(), "Keepout filter mask updated successfully.");
+        |                     ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:182:21: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘get_logger’
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:182:3: error: template argument 1 is invalid
+    182 |   RCLCPP_INFO(this->get_logger(), "Keepout filter mask updated successfully.");
+        |   ^~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.hpp:48,
+                   from /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp:60,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:42:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:182:21: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘get_logger’
+    182 |   RCLCPP_INFO(this->get_logger(), "Keepout filter mask updated successfully.");
+        |                     ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:182:21: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘get_logger’
+    182 |   RCLCPP_INFO(this->get_logger(), "Keepout filter mask updated successfully.");
+        |                     ^~~~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/filters.dir/build.make:76: CMakeFiles/filters.dir/plugins/costmap_filters/keepout_filter.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:321: CMakeFiles/filters.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_costmap_2d [4.78s, exited with code 2]
+
+  Summary: 0 packages finished [5.10s]
+    1 package failed: nav2_costmap_2d
+    1 package had stderr output: nav2_costmap_2d
+generate_code.cpp: "void KeepoutFilter::maskCallback(\n  const nav_msgs::msg::OccupancyGrid::SharedPtr\
+  \ msg)\n{\n  // Check if the incoming message is valid\n  if (!msg) {\n    RCLCPP_WARN(this->get_logger(),\
+  \ \"Received null OccupancyGrid message in maskCallback.\");\n    return;\n  }\n\
+  \n  // Check if the mask frame matches the global frame\n  if (msg->header.frame_id\
+  \ != mask_frame_) {\n    RCLCPP_WARN(this->get_logger(), \n                \"Mask\
+  \ frame (%s) does not match the expected mask frame (%s). Ignoring mask update.\"\
+  ,\n                msg->header.frame_id.c_str(), mask_frame_.c_str());\n    return;\n\
+  \  }\n\n  // Create or update the mask_costmap_ based on the incoming OccupancyGrid\
+  \ message\n  if (!mask_costmap_) {\n    mask_costmap_ = std::make_unique<Costmap2D>(\n\
+  \      msg->info.width,\n      msg->info.height,\n      msg->info.resolution,\n\
+  \      msg->info.origin.position.x,\n      msg->info.origin.position.y\n    );\n\
+  \  } else {\n    // Resize the costmap if the dimensions have changed\n    if (mask_costmap_->getSizeInCellsX()\
+  \ != static_cast<int>(msg->info.width) ||\n        mask_costmap_->getSizeInCellsY()\
+  \ != static_cast<int>(msg->info.height) ||\n        mask_costmap_->getResolution()\
+  \ != msg->info.resolution ||\n        mask_costmap_->getOriginX() != msg->info.origin.position.x\
+  \ ||\n        mask_costmap_->getOriginY() != msg->info.origin.position.y) {\n  \
+  \    mask_costmap_->resizeMap(\n        msg->info.width,\n        msg->info.height,\n\
+  \        msg->info.resolution,\n        msg->info.origin.position.x,\n        msg->info.origin.position.y\n\
+  \      );\n    }\n  }\n\n  // Copy the data from the OccupancyGrid message to the\
+  \ mask_costmap_\n  unsigned int index = 0;\n  for (unsigned int y = 0; y < msg->info.height;\
+  \ ++y) {\n    for (unsigned int x = 0; x < msg->info.width; ++x) {\n      int8_t\
+  \ value = msg->data[index];\n      if (value == -1) {\n        // Unknown cells\
+  \ in the OccupancyGrid are set to NO_INFORMATION in the costmap\n        mask_costmap_->setCost(x,\
+  \ y, NO_INFORMATION);\n      } else {\n        // Map the OccupancyGrid values (0-100)\
+  \ to costmap values (0-255)\n        mask_costmap_->setCost(x, y, static_cast<unsigned\
+  \ char>(value * 255 / 100));\n      }\n      ++index;\n    }\n  }\n\n  RCLCPP_INFO(this->get_logger(),\
+  \ \"Keepout filter mask updated successfully.\");\n}"
+ground_truth.cpp: |-
+  void KeepoutFilter::maskCallback(
+    const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
+  {
+    std::lock_guard<CostmapFilter::mutex_t> guard(*getMutex());
+
+    rclcpp_lifecycle::LifecycleNode::SharedPtr node = node_.lock();
+    if (!node) {
+      throw std::runtime_error{"Failed to lock node"};
+    }
+
+    if (!mask_costmap_) {
+      RCLCPP_INFO(
+        logger_,
+        "KeepoutFilter: Received filter mask from %s topic.", mask_topic_.c_str());
+    } else {
+      RCLCPP_WARN(
+        logger_,
+        "KeepoutFilter: New filter mask arrived from %s topic. Updating old filter mask.",
+        mask_topic_.c_str());
+      mask_costmap_.reset();
+    }
+
+    // Making a new mask_costmap_
+    mask_costmap_ = std::make_unique<Costmap2D>(*msg);
+    mask_frame_ = msg->header.frame_id;
+  }

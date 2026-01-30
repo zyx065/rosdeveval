@@ -1,0 +1,36 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_costmap_2d
+ros_package: nav2_costmap_2d
+file_path: plugins/costmap_filters/speed_filter.cpp
+method_name: SpeedFilter::filterInfoCallback
+requirement: |
+  /**
+  * @brief Callback for processing incoming costmap filter info messages.
+  * 
+  * Updates the speed filter parameters and subscribes to the filter mask topic.
+  * 
+  * @param msg Shared pointer to the CostmapFilterInfo message containing filter configuration.
+  */
+category: ros_architecture
+type: has_parameter,has_logger
+signature: |
+  void SpeedFilter::filterInfoCallback(
+    const nav2_msgs::msg::CostmapFilterInfo::SharedPtr msg)
+additional_information: 
+  function_related_variable: |
+    rclcpp::Subscription<nav2_msgs::msg::CostmapFilterInfo>::SharedPtr filter_info_sub_;
+    rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr mask_sub_;
+
+    rclcpp_lifecycle::LifecyclePublisher<nav2_msgs::msg::SpeedLimit>::SharedPtr speed_limit_pub_;
+
+    nav_msgs::msg::OccupancyGrid::SharedPtr filter_mask_;
+
+    std::string mask_frame_;  // Frame where mask located in
+    std::string global_frame_;  // Frame of currnet layer (master_grid)
+
+    double base_, multiplier_;
+    bool percentage_;
+    double speed_limit_, speed_limit_prev_;
+test: speed_filter_test
+test_cases: []

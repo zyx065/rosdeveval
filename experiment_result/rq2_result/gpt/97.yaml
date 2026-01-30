@@ -1,0 +1,48 @@
+compilation.log: |
+  Starting >>> autoware_object_recognition_utils
+  Finished <<< autoware_object_recognition_utils [10.6s]
+
+  Summary: 1 package finished [12.0s]
+generate_code.cpp: |-
+  double get2dIoU(const T1 source_object, const T2 target_object, const double min_union_area = 0.01)
+  {
+    // Convert source and target objects to Polygon2d
+    Polygon2d source_polygon = autoware::universe_utils::toPolygon2d(source_object);
+    Polygon2d target_polygon = autoware::universe_utils::toPolygon2d(target_object);
+
+    // Ensure polygons are in counter-clockwise order
+    if (autoware::universe_utils::isClockwise(source_polygon)) {
+      source_polygon = autoware::universe_utils::inverseClockwise(source_polygon);
+    }
+    if (autoware::universe_utils::isClockwise(target_polygon)) {
+      target_polygon = autoware::universe_utils::inverseClockwise(target_polygon);
+    }
+
+    // Calculate intersection and union areas
+    double intersection_area = getIntersectionArea(source_polygon, target_polygon);
+    double union_area = getUnionArea(source_polygon, target_polygon);
+
+    // Check if union area is below the minimum threshold
+    if (union_area < min_union_area) {
+      return 0.0;
+    }
+
+    // Calculate and return IoU
+    return intersection_area / union_area;
+  }
+ground_truth.cpp: |-
+  double get2dIoU(const T1 source_object, const T2 target_object, const double min_union_area = 0.01)
+  {
+    const auto source_polygon = autoware::universe_utils::toPolygon2d(source_object);
+    if (boost::geometry::area(source_polygon) < MIN_AREA) return 0.0;
+    const auto target_polygon = autoware::universe_utils::toPolygon2d(target_object);
+    if (boost::geometry::area(target_polygon) < MIN_AREA) return 0.0;
+
+    const double intersection_area = getIntersectionArea(source_polygon, target_polygon);
+    if (intersection_area < MIN_AREA) return 0.0;
+    const double union_area = getUnionArea(source_polygon, target_polygon);
+
+    const double iou =
+      union_area < min_union_area ? 0.0 : std::min(1.0, intersection_area / union_area);
+    return iou;
+  }

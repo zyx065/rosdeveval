@@ -1,0 +1,129 @@
+compilation.log: |
+  Starting >>> autoware_velocity_smoother
+  --- stderr: autoware_velocity_smoother
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/trajectory_utils.cpp: In function ‘std::vector<double> autoware::velocity_smoother::trajectory_utils::calcTrajectoryCurvatureFrom3Points(const TrajectoryPoints&, size_t)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/trajectory_utils.cpp:195:22: error: ‘getPoint’ was not declared in this scope; did you mean ‘autoware::universe_utils::getPoint’?
+    195 |     const auto& p1 = getPoint(trajectory[start_idx]);
+        |                      ^~~~~~~~
+        |                      autoware::universe_utils::getPoint
+  In file included from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/trajectory.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/trajectory_utils.cpp:18:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:102:27: note: ‘autoware::universe_utils::getPoint’ declared here
+    102 | geometry_msgs::msg::Point getPoint(const T & p)
+        |                           ^~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/trajectory_utils.cpp:200:21: error: ‘calcCurvature’ was not declared in this scope
+    200 |     curvatures[i] = calcCurvature(p1, p2, p3);
+        |                     ^~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/trajectory_utils.cpp:200:21: note: suggested alternatives:
+  In file included from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/trajectory.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/trajectory_utils.cpp:18:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:443:8: note:   ‘autoware::universe_utils::calcCurvature’
+    443 | double calcCurvature(
+        |        ^~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/trajectory_utils.cpp:18:
+  /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/trajectory.hpp:954:21: note:   ‘autoware::motion_utils::calcCurvature’
+    954 | std::vector<double> calcCurvature(const T & points)
+        |                     ^~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/smoother.dir/build.make:160: CMakeFiles/smoother.dir/src/trajectory_utils.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:182: CMakeFiles/smoother.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_velocity_smoother [5.28s, exited with code 2]
+
+  Summary: 0 packages finished [6.64s]
+    1 package failed: autoware_velocity_smoother
+    1 package had stderr output: autoware_velocity_smoother
+generate_code.cpp: |
+  std::vector<double> calcTrajectoryCurvatureFrom3Points(
+    const TrajectoryPoints & trajectory, size_t idx_dist)
+  {
+    // Initialize curvature vector with zeros
+    std::vector<double> curvatures(trajectory.size(), 0.0);
+
+    // If trajectory has fewer than 3 points, return zero curvatures
+    if (trajectory.size() < 3) {
+      return curvatures;
+    }
+
+    // Constrain idx_dist to ensure valid sampling
+    idx_dist = std::max(static_cast<size_t>(1), 
+                        std::min(idx_dist, (trajectory.size() - 1) / 2));
+
+    // Compute curvature for each point
+    for (size_t i = 0; i < trajectory.size(); ++i) {
+      // Determine start and end indices for sampling
+      size_t start_idx = (i >= idx_dist) ? (i - idx_dist) : 0;
+      size_t end_idx = (i + idx_dist < trajectory.size()) ? (i + idx_dist) : (trajectory.size() - 1);
+
+      // Extract three points for curvature calculation
+      const auto& p1 = getPoint(trajectory[start_idx]);
+      const auto& p2 = getPoint(trajectory[i]);
+      const auto& p3 = getPoint(trajectory[end_idx]);
+
+      // Calculate curvature using three-point method
+      curvatures[i] = calcCurvature(p1, p2, p3);
+    }
+
+    return curvatures;
+  }
+ground_truth.cpp: |-
+  std::vector<double> calcTrajectoryCurvatureFrom3Points(
+    const TrajectoryPoints & trajectory, size_t idx_dist)
+  {
+    using autoware::universe_utils::calcCurvature;
+    using autoware::universe_utils::getPoint;
+
+    if (trajectory.size() < 3) {
+      const std::vector<double> k_arr(trajectory.size(), 0.0);
+      return k_arr;
+    }
+
+    // if the idx size is not enough, change the idx_dist
+    const auto max_idx_dist = static_cast<size_t>(std::floor((trajectory.size() - 1) / 2.0));
+    idx_dist = std::max(1ul, std::min(idx_dist, max_idx_dist));
+
+    if (idx_dist < 1) {
+      throw std::logic_error("idx_dist less than 1 is not expected");
+    }
+
+    // calculate curvature by circle fitting from three points
+    std::vector<double> k_arr(trajectory.size(), 0.0);
+
+    for (size_t i = 1; i + 1 < trajectory.size(); i++) {
+      double curvature = 0.0;
+      const auto p0 = getPoint(trajectory.at(i - std::min(idx_dist, i)));
+      const auto p1 = getPoint(trajectory.at(i));
+      const auto p2 = getPoint(trajectory.at(i + std::min(idx_dist, trajectory.size() - 1 - i)));
+      try {
+        curvature = calcCurvature(p0, p1, p2);
+      } catch (std::exception const & e) {
+        // ...code that handles the error...
+        RCLCPP_WARN(
+          rclcpp::get_logger("autoware_velocity_smoother").get_child("trajectory_utils"), "%s",
+          e.what());
+        if (i > 1) {
+          curvature = k_arr.at(i - 1);  // previous curvature
+        } else {
+          curvature = 0.0;
+        }
+      }
+      k_arr.at(i) = curvature;
+    }
+    // copy curvatures for the last and first points;
+    k_arr.at(0) = k_arr.at(1);
+    k_arr.back() = k_arr.at((trajectory.size() - 2));
+
+    return k_arr;
+  }
+architecture-codes:
+  - ROS Logger Issues - ROS Logger Missing Issue
+functionality-codes:
+  - Reference Error - Wrong method
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Domain Library Issues - Domain Specific Library Utilization Error
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

@@ -1,0 +1,59 @@
+compilation.log: |
+  Starting >>> autoware_control_validator
+  Finished <<< autoware_control_validator [21.2s]
+
+  Summary: 1 package finished [22.6s]
+generate_code.cpp: |-
+  void ControlValidator::on_predicted_trajectory(const Trajectory::ConstSharedPtr msg)
+  {
+      // Store the current predicted trajectory
+      current_predicted_trajectory_ = msg;
+
+      // Check if all required data is ready for validation
+      if (!is_data_ready()) {
+          return;
+      }
+
+      // Validate the predicted trajectory against the reference trajectory and current kinematics
+      validate(
+          *current_predicted_trajectory_,
+          *current_reference_trajectory_,
+          *current_kinematics_
+      );
+
+      // Publish debug information for visualization and diagnostics
+      publish_debug_info();
+
+      // Display the current validation status
+      display_status();
+  }
+ground_truth.cpp: |-
+  void ControlValidator::on_predicted_trajectory(const Trajectory::ConstSharedPtr msg)
+  {
+    stop_watch.tic();
+
+    current_predicted_trajectory_ = msg;
+    current_reference_trajectory_ = sub_reference_traj_->takeData();
+    current_kinematics_ = sub_kinematics_->takeData();
+
+    if (!is_data_ready()) return;
+
+    debug_pose_publisher_->clear_markers();
+
+    validate(*current_predicted_trajectory_, *current_reference_trajectory_, *current_kinematics_);
+
+    diag_updater_.force_update();
+
+    // for debug
+    publish_debug_info();
+    display_status();
+  }
+Architecture-codes:
+  - ROS Diagnostic Issues - Missing Diagnostic Operation
+  - Topic/Service Related Issues - Incomplete Topic/Service Initialization Issues
+Functionality-codes:
+  - Incomplete Code - Missing Multiple Steps
+  - Meet Requirement - No
+Root-cause-codes:
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

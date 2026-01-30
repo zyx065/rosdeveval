@@ -1,0 +1,108 @@
+compilation.log: |
+  Starting >>> autoware_planning_evaluator
+  --- stderr: autoware_planning_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp: In member function ‘void planning_diagnostics::PlanningEvaluatorNode::onModifiedGoal(autoware_planning_msgs::msg::PoseWithUuidStamped_<std::allocator<void> >::ConstSharedPtr, nav_msgs::msg::Odometry_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp:332:23: error: ‘autoware_planning_msgs::msg::PoseWithUuidStamped planning_diagnostics::MetricsCalculator::modified_goal_’ is private within this context
+    332 |   metrics_calculator_.modified_goal_ = *modified_goal_msg;
+        |                       ^~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/include/autoware/planning_evaluator/planning_evaluator_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/include/autoware/planning_evaluator/metrics_calculator.hpp:94:23: note: declared private here
+     94 |   PoseWithUuidStamped modified_goal_;
+        |                       ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp:335:54: error: cannot convert ‘const _pose_type’ {aka ‘const geometry_msgs::msg::Pose_<std::allocator<void> >’} to ‘const Odometry&’ {aka ‘const nav_msgs::msg::Odometry_<std::allocator<void> >&’}
+    335 |   metrics_calculator_.setEgoPose(ego_state_ptr->pose.pose);
+        |                                  ~~~~~~~~~~~~~~~~~~~~^~~~
+        |                                                      |
+        |                                                      const _pose_type {aka const geometry_msgs::msg::Pose_<std::allocator<void> >}
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/include/autoware/planning_evaluator/planning_evaluator_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/include/autoware/planning_evaluator/metrics_calculator.hpp:78:51: note:   initializing argument 1 of ‘void planning_diagnostics::MetricsCalculator::setEgoPose(const Odometry&)’
+     78 |   void setEgoPose(const nav_msgs::msg::Odometry & ego_odometry);
+        |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/planning_evaluator_node.dir/build.make:174: CMakeFiles/planning_evaluator_node.dir/src/planning_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:161: CMakeFiles/planning_evaluator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_planning_evaluator [13.7s, exited with code 2]
+
+  Summary: 0 packages finished [15.1s]
+    1 package failed: autoware_planning_evaluator
+    1 package had stderr output: autoware_planning_evaluator
+generate_code.cpp: |
+  void PlanningEvaluatorNode::onModifiedGoal(
+    const PoseWithUuidStamped::ConstSharedPtr modified_goal_msg,
+    const Odometry::ConstSharedPtr ego_state_ptr)
+  {
+    // Silently return if either input pointer is null
+    if (!modified_goal_msg || !ego_state_ptr) {
+      return;
+    }
+
+    // Set the modified goal in the metrics calculator
+    metrics_calculator_.modified_goal_ = *modified_goal_msg;
+
+    // Set the ego pose in the metrics calculator
+    metrics_calculator_.setEgoPose(ego_state_ptr->pose.pose);
+
+    // Only proceed if metrics output is enabled
+    if (!output_metrics_) {
+      return;
+    }
+
+    // Calculate metrics for each defined metric type
+    for (size_t i = 0; i < static_cast<size_t>(Metric::SIZE); ++i) {
+      Metric current_metric = static_cast<Metric>(i);
+      
+      // Calculate the metric using the metrics calculator
+      std::optional<Accumulator<double>> metric_result = 
+        metrics_calculator_.calculate(current_metric, metrics_calculator_.getEgoPose(), modified_goal_msg->pose);
+
+      // If a valid metric is calculated, add it to the metrics message
+      if (metric_result) {
+        AddMetricMsg(current_metric, *metric_result);
+      }
+    }
+  }
+ground_truth.cpp: |-
+  void PlanningEvaluatorNode::onModifiedGoal(
+    const PoseWithUuidStamped::ConstSharedPtr modified_goal_msg,
+    const Odometry::ConstSharedPtr ego_state_ptr)
+  {
+    if (!modified_goal_msg || !ego_state_ptr) {
+      return;
+    }
+    auto start = now();
+
+    for (Metric metric : metrics_) {
+      const auto metric_stat = metrics_calculator_.calculate(
+        Metric(metric), modified_goal_msg->pose, ego_state_ptr->pose.pose);
+      if (!metric_stat) {
+        continue;
+      }
+      if (output_metrics_) {
+        metric_accumulators_[static_cast<size_t>(metric)][0].add(metric_stat->min());
+        metric_accumulators_[static_cast<size_t>(metric)][1].add(metric_stat->max());
+        metric_accumulators_[static_cast<size_t>(metric)][2].add(metric_stat->mean());
+      }
+      if (metric_stat->count() > 0) {
+        AddMetricMsg(metric, *metric_stat);
+      }
+    }
+    auto runtime = (now() - start).seconds();
+    RCLCPP_DEBUG(
+      get_logger(), "Planning evaluation modified goal deviation calculation time: %2.2f ms",
+      runtime * 1e3);
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Message Related Issues - Improper Message Type Usage Issue
+  - ROS Logger Issues - ROS Logger Missing Issue
+functionality-codes:
+  - Meet Requirement - No
+  - Reference Error - Wrong Variable
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

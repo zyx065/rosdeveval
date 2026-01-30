@@ -1,0 +1,28 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_costmap_2d
+ros_package: nav2_costmap_2d
+file_path: plugins/costmap_filters/keepout_filter.cpp
+method_name: KeepoutFilter::maskCallback
+requirement: |
+  /**
+  * @brief Callback for processing incoming occupancy grid messages to update the keepout filter mask.
+  * 
+  * @param msg Shared pointer to the incoming occupancy grid message containing the filter mask data.
+  */
+category: ros_architecture
+type: has_logger,has_message
+signature: |
+  void KeepoutFilter::maskCallback(
+    const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
+additional_information: 
+  function_related_variable: |
+    rclcpp::Subscription<nav2_msgs::msg::CostmapFilterInfo>::SharedPtr filter_info_sub_;
+    rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr mask_sub_;
+
+    std::unique_ptr<Costmap2D> mask_costmap_;
+
+    std::string mask_frame_;  // Frame where mask located in
+    std::string global_frame_;  // Frame of currnet layer (master_grid)
+test: keepout_filter_test
+test_cases: []

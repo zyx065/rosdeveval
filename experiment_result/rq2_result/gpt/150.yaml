@@ -1,0 +1,54 @@
+compilation.log: |
+  Starting >>> moveit_core
+  Finished <<< moveit_core [0.86s]
+
+  Summary: 1 package finished [1.31s]
+generate_code.cpp: |-
+  bool UnionConstraintSampler::sample(moveit::core::RobotState& state, const moveit::core::RobotState& reference_state,
+                                      unsigned int max_attempts)
+  {
+      // Ensure the state is initialized to the reference state
+      state = reference_state;
+
+      // Set the state to random positions within the joint model group
+      state.setToRandomPositions(jmg_);
+      state.updateLinkTransforms();
+
+      // Iterate through the constraint samplers
+      for (const auto& sampler : samplers_)
+      {
+          // Attempt to sample using the current constraint sampler
+          if (!sampler->sample(state, reference_state, max_attempts))
+          {
+              // If sampling fails for any constraint sampler, return false
+              return false;
+          }
+      }
+
+      // If all samplers succeed, return true
+      return true;
+  }
+ground_truth.cpp: |-
+  bool UnionConstraintSampler::sample(moveit::core::RobotState& state, const moveit::core::RobotState& reference_state,
+                                      unsigned int max_attempts)
+  {
+    state = reference_state;
+    state.setToRandomPositions(jmg_);
+
+    if (!samplers_.empty())
+    {
+      if (!samplers_[0]->sample(state, reference_state, max_attempts))
+        return false;
+    }
+
+    for (std::size_t i = 1; i < samplers_.size(); ++i)
+    {
+      // ConstraintSampler::sample returns states with dirty link transforms (because it only writes values)
+      // but requires a state with clean link transforms as input. This means that we need to clean the link
+      // transforms between calls to ConstraintSampler::sample.
+      state.updateLinkTransforms();
+      if (!samplers_[i]->sample(state, state, max_attempts))
+        return false;
+    }
+    return true;
+  }

@@ -1,0 +1,35 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/distance_field
+ros_package: moveit_core
+file_path: src/distance_field.cpp
+method_name: DistanceField::getDistanceGradient
+requirement: |
+  /**
+  * Computes the distance value and its gradient at a given world coordinate.
+  * 
+  * @param x The x coordinate in world space.
+  * @param y The y coordinate in world space.
+  * @param z The z coordinate in world space.
+  * @param[out] gradient_x The computed gradient component in the x direction.
+  * @param[out] gradient_y The computed gradient component in the y direction.
+  * @param[out] gradient_z The computed gradient component in the z direction.
+  * @param[out] in_bounds Set to true if the point is within the valid bounds of the distance field.
+  * @return The distance value at the given point. Returns the uninitialized distance if out of bounds.
+  */
+category: utilities
+type: []
+signature: |
+  double DistanceField::getDistanceGradient(double x, double y, double z, double& gradient_x, double& gradient_y,
+                                            double& gradient_z, bool& in_bounds) const
+additional_information: 
+  function_related_variable:
+    int inv_twice_resolution_;
+  function_related_function:
+    virtual bool worldToGrid(double world_x, double world_y, double world_z, int& x, int& y, int& z) const = 0;
+    getXNumCells()
+    getUninitializedDistance()
+    virtual double getDistance(double x, double y, double z)
+test: test_distance_field
+test_cases: 
+- TestAddRemovePoints

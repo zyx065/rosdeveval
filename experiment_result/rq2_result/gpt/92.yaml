@@ -1,0 +1,61 @@
+compilation.log: |
+  Starting >>> autoware_geography_utils
+  Finished <<< autoware_geography_utils [3.34s]
+
+  Summary: 1 package finished [4.76s]
+generate_code.cpp: |-
+  LocalPoint project_forward(const GeoPoint & geo_point, const MapProjectorInfo & projector_info)
+  {
+    // Create a lanelet2 projector using the provided projector_info
+    std::unique_ptr<lanelet::Projector> projector = get_lanelet2_projector(projector_info);
+
+    // Convert the GeoPoint to a GPSPoint (lanelet::GPSPoint)
+    lanelet::GPSPoint gps_point;
+    gps_point.lat = geo_point.latitude;
+    gps_point.lon = geo_point.longitude;
+    gps_point.ele = geo_point.altitude;
+
+    // Use the projector to project the GPSPoint to local Cartesian coordinates
+    lanelet::BasicPoint3d projected_point = projector->forward(gps_point);
+
+    // Convert the projected point to LocalPoint
+    LocalPoint local_point;
+    local_point.x = projected_point.x();
+    local_point.y = projected_point.y();
+    local_point.z = projected_point.z();
+
+    return local_point;
+  }
+ground_truth.cpp: |-
+  LocalPoint project_forward(const GeoPoint & geo_point, const MapProjectorInfo & projector_info)
+  {
+    std::unique_ptr<lanelet::Projector> projector = get_lanelet2_projector(projector_info);
+    const lanelet::GPSPoint position{geo_point.latitude, geo_point.longitude, geo_point.altitude};
+
+    lanelet::BasicPoint3d projected_local_point;
+    if (projector_info.projector_type == MapProjectorInfo::MGRS) {
+      constexpr int mgrs_precision = 9;  // set precision as 100 micro meter
+      const auto mgrs_projector = dynamic_cast<lanelet::projection::MGRSProjector *>(projector.get());
+
+      // project x and y using projector
+      // note that the altitude is ignored in MGRS projection conventionally
+      projected_local_point = mgrs_projector->forward(position, mgrs_precision);
+    } else {
+      // project x and y using projector
+      // note that the original projector such as UTM projector does not compensate for the altitude
+      // offset
+      projected_local_point = projector->forward(position);
+
+      // correct z based on the map origin
+      // note that the converted altitude in local point is in the same vertical datum as the geo
+      // point
+      projected_local_point.z() = geo_point.altitude - projector_info.map_origin.altitude;
+    }
+
+    LocalPoint local_point;
+    local_point.x = projected_local_point.x();
+    local_point.y = projected_local_point.y();
+    local_point.z = projected_local_point.z();
+
+    return local_point;
+  }

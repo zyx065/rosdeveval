@@ -1,0 +1,48 @@
+compilation.log: |
+  Starting >>> autoware_detected_object_feature_remover
+  --- stderr: autoware_detected_object_feature_remover
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_feature_remover/src/detected_object_feature_remover_node.cpp: In member function ‘void autoware::detected_object_feature_remover::DetectedObjectFeatureRemover::objectCallback(tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_feature_remover/src/detected_object_feature_remover_node.cpp:46:32: error: ‘class autoware::universe_utils::PublishedTimePublisher’ has no member named ‘publish’; did you mean ‘std::map<rmw_gid_s, std::shared_ptr<rclcpp::Publisher<autoware_internal_msgs::msg::PublishedTime_<std::allocator<void> > > >, autoware::universe_utils::PublishedTimePublisher::GidCompare> autoware::universe_utils::PublishedTimePublisher::publishers_’? (not accessible from this context)
+     46 |     published_time_publisher_->publish();
+        |                                ^~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_feature_remover/src/detected_object_feature_remover_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_feature_remover/src/detected_object_feature_remover_node.cpp:15:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/published_time_publisher.hpp:110:80: note: declared private here
+    110 |   std::map<rmw_gid_t, rclcpp::Publisher<PublishedTime>::SharedPtr, GidCompare> publishers_;
+        |                                                                                ^~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_detected_object_feature_remover.dir/build.make:76: CMakeFiles/autoware_detected_object_feature_remover.dir/src/detected_object_feature_remover_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_detected_object_feature_remover.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_detected_object_feature_remover [4.12s, exited with code 2]
+
+  Summary: 0 packages finished [5.50s]
+    1 package failed: autoware_detected_object_feature_remover
+    1 package had stderr output: autoware_detected_object_feature_remover
+generate_code.cpp: |-
+  void DetectedObjectFeatureRemover::objectCallback(
+    const DetectedObjectsWithFeature::ConstSharedPtr input)
+  {
+    // Create an instance of DetectedObjects to hold the converted data
+    DetectedObjects converted_objects;
+
+    // Convert the input detected objects with features to detected objects
+    convert(*input, converted_objects);
+
+    // Publish the converted detected objects
+    pub_->publish(converted_objects);
+
+    // Publish the current time for synchronization or tracking purposes
+    if (published_time_publisher_) {
+      published_time_publisher_->publish();
+    }
+  }
+ground_truth.cpp: |-
+  void DetectedObjectFeatureRemover::objectCallback(
+    const DetectedObjectsWithFeature::ConstSharedPtr input)
+  {
+    DetectedObjects output;
+    convert(*input, output);
+    pub_->publish(output);
+    published_time_publisher_->publish_if_subscribed(pub_, output.header.stamp);
+  }

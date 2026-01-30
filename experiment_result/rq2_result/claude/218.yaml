@@ -1,0 +1,130 @@
+compilation.log: |
+  Starting >>> nav2_smac_planner
+  --- stderr: nav2_smac_planner
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_2d.cpp: In member function ‘void nav2_smac_planner::Node2D::getNeighbors(std::function<bool(const unsigned int&, nav2_smac_planner::Node2D*&)>&, nav2_smac_planner::GridCollisionChecker*, const bool&, nav2_smac_planner::Node2D::NodeVector&)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_2d.cpp:120:48: error: ‘class nav2_smac_planner::Node2D’ has no member named ‘index’; did you mean ‘_index’?
+    120 |   Coordinates current_coords = getCoords(this->index);
+        |                                                ^~~~~
+        |                                                _index
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_2d.cpp:132:62: error: ‘class nav2_smac_planner::GridCollisionChecker’ has no member named ‘getSizeX’
+    132 |     unsigned int neighbor_index = new_y * collision_checker->getSizeX() + new_x;
+        |                                                              ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_2d.cpp: In member function ‘void nav2_smac_planner::Node2D::getNeighbors(std::function<bool(const unsigned int&, nav2_smac_planner::Node2D*&)>&, nav2_smac_planner::GridCollisionChecker*, const bool&, nav2_smac_planner::Node2D::NodeVector&)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_2d.cpp:120:48: error: ‘class nav2_smac_planner::Node2D’ has no member named ‘index’; did you mean ‘_index’?
+    120 |   Coordinates current_coords = getCoords(this->index);
+        |                                                ^~~~~
+        |                                                _index
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_2d.cpp:132:62: error: ‘class nav2_smac_planner::GridCollisionChecker’ has no member named ‘getSizeX’
+    132 |     unsigned int neighbor_index = new_y * collision_checker->getSizeX() + new_x;
+        |                                                              ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_2d.cpp: In member function ‘void nav2_smac_planner::Node2D::getNeighbors(std::function<bool(const unsigned int&, nav2_smac_planner::Node2D*&)>&, nav2_smac_planner::GridCollisionChecker*, const bool&, nav2_smac_planner::Node2D::NodeVector&)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_2d.cpp:120:48: error: ‘class nav2_smac_planner::Node2D’ has no member named ‘index’; did you mean ‘_index’?
+    120 |   Coordinates current_coords = getCoords(this->index);
+        |                                                ^~~~~
+        |                                                _index
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_2d.cpp:132:62: error: ‘class nav2_smac_planner::GridCollisionChecker’ has no member named ‘getSizeX’
+    132 |     unsigned int neighbor_index = new_y * collision_checker->getSizeX() + new_x;
+        |                                                              ^~~~~~~~
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner_lattice.dir/build.make:188: CMakeFiles/nav2_smac_planner_lattice.dir/src/node_2d.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:248: CMakeFiles/nav2_smac_planner_lattice.dir/all] Error 2
+  gmake[1]: *** Waiting for unfinished jobs....
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner_2d.dir/build.make:188: CMakeFiles/nav2_smac_planner_2d.dir/src/node_2d.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:222: CMakeFiles/nav2_smac_planner_2d.dir/all] Error 2
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner.dir/build.make:188: CMakeFiles/nav2_smac_planner.dir/src/node_2d.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:196: CMakeFiles/nav2_smac_planner.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_smac_planner [5.23s, exited with code 2]
+
+  Summary: 0 packages finished [5.55s]
+    1 package failed: nav2_smac_planner
+    1 package had stderr output: nav2_smac_planner
+generate_code.cpp: |
+  void Node2D::getNeighbors(
+    std::function<bool(const unsigned int &, nav2_smac_planner::Node2D * &)> & NeighborGetter,
+    GridCollisionChecker * collision_checker,
+    const bool & traverse_unknown,
+    NodeVector & neighbors)
+  {
+    neighbors.clear();
+    
+    // Get current node coordinates
+    Coordinates current_coords = getCoords(this->index);
+    
+    // Define 8-connected neighborhood offsets (dx, dy)
+    const int dx[] = {-1, -1, -1,  0,  0,  1,  1,  1};
+    const int dy[] = {-1,  0,  1, -1,  1, -1,  0,  1};
+    
+    // Check each of the 8 neighbors
+    for (int i = 0; i < 8; ++i) {
+      int new_x = current_coords.x + dx[i];
+      int new_y = current_coords.y + dy[i];
+      
+      // Calculate neighbor index (assuming row-major ordering)
+      unsigned int neighbor_index = new_y * collision_checker->getSizeX() + new_x;
+      
+      // Get neighbor node
+      Node2D * neighbor_node = nullptr;
+      if (NeighborGetter(neighbor_index, neighbor_node)) {
+        // Check if node is valid (not visited and collision-free)
+        if (neighbor_node && !neighbor_node->wasVisited() && 
+            neighbor_node->isNodeValid(traverse_unknown, collision_checker)) {
+          neighbors.push_back(neighbor_node);
+        }
+      }
+    }
+  }
+ground_truth.cpp: |-
+  void Node2D::getNeighbors(
+    std::function<bool(const unsigned int &, nav2_smac_planner::Node2D * &)> & NeighborGetter,
+    GridCollisionChecker * collision_checker,
+    const bool & traverse_unknown,
+    NodeVector & neighbors)
+  {
+    // NOTE(stevemacenski): Irritatingly, the order here matters. If you start in free
+    // space and then expand 8-connected, the first set of neighbors will be all cost
+    // 1.0. Then its expansion will all be 2 * 1.0 but now multiple
+    // nodes are touching that node so the last cell to update the back pointer wins.
+    // Thusly, the ordering ends with the cardinal directions for both sets such that
+    // behavior is consistent in large free spaces between them.
+    // 100  50   0
+    // 100  50  50
+    // 100 100 100   where lower-middle '100' is visited with same cost by both bottom '50' nodes
+    // Therefore, it is valuable to have some low-potential across the entire map
+    // rather than a small inflation around the obstacles
+    int index;
+    NodePtr neighbor;
+    int node_i = this->getIndex();
+    const Coordinates parent = getCoords(this->getIndex());
+    Coordinates child;
+
+    for (unsigned int i = 0; i != _neighbors_grid_offsets.size(); ++i) {
+      index = node_i + _neighbors_grid_offsets[i];
+
+      // Check for wrap around conditions
+      child = getCoords(index);
+      if (fabs(parent.x - child.x) > 1 || fabs(parent.y - child.y) > 1) {
+        continue;
+      }
+
+      if (NeighborGetter(index, neighbor)) {
+        if (neighbor->isNodeValid(traverse_unknown, collision_checker) && !neighbor->wasVisited()) {
+          neighbors.push_back(neighbor);
+        }
+      }
+    }
+  }
+architecture-codes:
+  - Reference Error - Wrong Method
+  - Reference Error - Wrong Variable
+
+functionality-codes:
+  - Reference Error - Wrong Method
+  - Reference Error - Undefined Name 
+  - Conditional Checks Issues - Conditional Check Missing 
+  - Incomplete Code - Missing one step 
+
+Root Cause Analysis:
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase (didn't know about _neighbors_grid_offsets infrastructure)
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming (incorrect assumptions about class API)
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements (missed the importance of wrap-around checks in grid-based navigation)

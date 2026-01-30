@@ -1,0 +1,23 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_obstacle_stop_planner
+ros_package: autoware_obstacle_stop_planner
+file_path: src/node.cpp
+method_name: ObstacleStopPlannerNode::onPointCloud
+requirement: |
+  /**
+  * Processes incoming point cloud data for obstacle detection and publishes filtered point cloud.
+  * 
+  * @param[in] input_msg Input point cloud message to process.
+  */
+category: ros_architecture
+type: has_topic,has_domain_library,has_message
+signature: |
+  void ObstacleStopPlannerNode::onPointCloud(const PointCloud2::ConstSharedPtr input_msg)
+additional_information: 
+  function_related_variable: |
+    std::mutex mutex_;
+    PointCloud2::SharedPtr obstacle_ros_pointcloud_ptr_{nullptr};
+    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_obstacle_pointcloud_;
+test: test_autoware_obstacle_stop_planner
+test_cases: []

@@ -1,0 +1,46 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/evaluator/autoware_control_evaluator
+ros_package: autoware_control_evaluator
+file_path: src/control_evaluator_node.cpp
+method_name: ControlEvaluatorNode::onTimer
+requirement: |
+  /**
+  * @brief Evaluates and publishes vehicle control metrics periodically.
+  * 
+  * This method is called on a timer to collect vehicle state data and compute various
+  * control performance metrics including deviations from trajectory, kinematic state,
+  * boundary distances, and steering status.
+  * 
+  * @note This method publishes metrics via ROS topics and does not return any value.
+  */
+category: ros_architecture
+type: has_topic,has_message,has_timer
+signature: |
+  void ControlEvaluatorNode::onTimer()
+additional_information: 
+  function_related_variable: |
+    autoware::universe_utils::InterProcessPollingSubscriber<Odometry> odometry_sub_{this, "~/input/odometry"};
+    autoware::universe_utils::InterProcessPollingSubscriber<AccelWithCovarianceStamped> accel_sub_{ this, "~/input/acceleration"};
+    autoware::universe_utils::InterProcessPollingSubscriber<Trajectory> traj_sub_{this, "~/input/trajectory"};
+    autoware::universe_utils::InterProcessPollingSubscriber<LaneletRoute, autoware::universe_utils::polling_policy::Newest>route_subscriber_{this, "~/input/route", rclcpp::QoS{1}.transient_local()};
+    autoware::universe_utils::InterProcessPollingSubscriber<LaneletMapBin, autoware::universe_utils::polling_policy::Newest>vector_map_subscriber_{this, "~/input/vector_map", rclcpp::QoS{1}.transient_local()};
+    autoware::universe_utils::InterProcessPollingSubscriber<PathWithLaneId> behavior_path_subscriber_{this, "~/input/behavior_path"};
+    autoware::universe_utils::InterProcessPollingSubscriber<SteeringReport> steering_sub_{this, "~/input/steering_status"};
+    MetricArrayMsg metrics_msg_;
+    rclcpp::Publisher<MetricArrayMsg>::SharedPtr metrics_pub_;
+    rclcpp::Publisher<autoware_internal_debug_msgs::msg::Float64Stamped>::SharedPtr processing_time_pub_;
+  function_related_function: |
+    void AddMetricMsg(const Metric & metric, const double & metric_value);
+    void AddLateralDeviationMetricMsg(const Trajectory & traj, const Point & ego_point);
+    void AddYawDeviationMetricMsg(const Trajectory & traj, const Pose & ego_pose);
+    void AddGoalLongitudinalDeviationMetricMsg(const Pose & ego_pose);
+    void AddGoalLateralDeviationMetricMsg(const Pose & ego_pose);
+    void AddGoalYawDeviationMetricMsg(const Pose & ego_pose);
+    void AddBoundaryDistanceMetricMsg(const PathWithLaneId & behavior_path, const Pose & ego_pose);
+
+    void AddLaneletInfoMsg(const Pose & ego_pose);
+    void AddKinematicStateMetricMsg(const Odometry & odom, const AccelWithCovarianceStamped & accel_stamped);
+    void AddSteeringMetricMsg(const SteeringReport & steering_report);
+test: test_control_evaluator
+test_cases: []

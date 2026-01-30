@@ -1,0 +1,26 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_vehicle_cmd_gate
+ros_package: autoware_vehicle_cmd_gate
+file_path: src/vehicle_cmd_gate.cpp
+method_name: VehicleCmdGate::VehicleCmdGate
+requirement: |
+  /**
+  * @brief Constructs a VehicleCmdGate node for managing and filtering vehicle commands.
+  *
+  * @param node_options Node configuration options for ROS 2.
+  *
+  * Initializes publishers, subscribers, services, timers, and parameters for vehicle command
+  * management. Sets up command filtering, emergency handling, and diagnostics.
+  */
+category: ros_architecture
+type: has_message,has_topic,has_service,has_parameter,has_timer
+signature: |
+  VehicleCmdGate::VehicleCmdGate(const rclcpp::NodeOptions & node_options)
+  : Node("vehicle_cmd_gate", node_options), is_engaged_(false), updater_(this)
+additional_information: 
+  function_related_variable: |
+    using tier4_control_msgs::msg::GateMode;
+    GateMode current_gate_mode_;
+test: test_vehicle_cmd_gate
+test_cases: []

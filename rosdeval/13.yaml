@@ -1,0 +1,26 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_compare_map_segmentation
+ros_package: autoware_compare_map_segmentation
+file_path: src/distance_based_compare_map_filter/node.cpp
+method_name: DistanceBasedStaticMapLoader::onMapCallback
+requirement: |
+  /**
+  * @brief Callback for processing incoming point cloud map messages.
+  * 
+  * Converts the ROS point cloud message to a PCL point cloud and initializes the internal KD-tree
+  * for nearest neighbor searches. The map frame ID is stored for transform lookup.
+  * 
+  * @param[in] map Shared pointer to the incoming sensor_msgs::PointCloud2 message.
+  */
+category: ros_architecture
+type: has_domain_library
+signature: |
+  void DistanceBasedStaticMapLoader::onMapCallback(
+    const sensor_msgs::msg::PointCloud2::ConstSharedPtr map)
+additional_information: 
+  function_related_variable: |
+    FilteredPointCloudConstPtr map_ptr_;
+    pcl::search::Search<pcl::PointXYZ>::Ptr tree_;
+test: test_distance_based_compare_map_filter
+test_cases: []

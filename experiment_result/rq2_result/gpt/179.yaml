@@ -1,0 +1,34 @@
+compilation.log: |
+  Starting >>> nav2_velocity_smoother
+  Finished <<< nav2_velocity_smoother [0.21s]
+
+  Summary: 1 package finished [0.51s]
+generate_code.cpp: |-
+  void VelocitySmoother::inputCommandCallback(const geometry_msgs::msg::Twist::SharedPtr msg)
+  {
+      // Validate the incoming twist message using the utility function
+      if (!nav2_util::validateTwist(*msg)) {
+          RCLCPP_WARN(this->get_logger(), "Received invalid velocity command. Ignoring.");
+          return;
+      }
+
+      // Store the validated command for further processing
+      command_ = msg;
+
+      // Update the timestamp of the last received command
+      last_command_time_ = this->now();
+
+      RCLCPP_DEBUG(this->get_logger(), "Received valid velocity command.");
+  }
+ground_truth.cpp: |-
+  void VelocitySmoother::inputCommandCallback(const geometry_msgs::msg::Twist::SharedPtr msg)
+  {
+    // If message contains NaN or Inf, ignore
+    if (!nav2_util::validateTwist(*msg)) {
+      RCLCPP_ERROR(get_logger(), "Velocity message contains NaNs or Infs! Ignoring as invalid!");
+      return;
+    }
+
+    command_ = msg;
+    last_command_time_ = now();
+  }

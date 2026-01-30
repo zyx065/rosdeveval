@@ -1,0 +1,33 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_velocity_smoother
+ros_package: autoware_velocity_smoother
+file_path: src/trajectory_utils.cpp
+method_name: calcTrajectoryCurvatureFrom3Points
+requirement: |
+  /**
+  * Calculates curvature values for a trajectory using three-point circle fitting.
+  * 
+  * Computes the curvature at each trajectory point by fitting circles through sets of three points
+  * spaced along the trajectory. For trajectories with fewer than 3 points, returns zero curvature.
+  * 
+  * @param trajectory The input trajectory points to calculate curvature for.
+  * @param idx_dist The sampling distance index between points used for circle fitting.
+  *                 Will be automatically constrained based on trajectory length.
+  * 
+  * @return Vector of curvature values corresponding to each point in the input trajectory.
+  * 
+  * @throws std::logic_error If idx_dist is less than 1 after constraint adjustment.
+  */
+category: utilities
+type: has_logger
+signature: |
+  std::vector<double> calcTrajectoryCurvatureFrom3Points(
+    const TrajectoryPoints & trajectory, size_t idx_dist)
+additional_information: 
+  function_related_variable: |
+    using autoware::universe_utils::calcCurvature;
+    using autoware::universe_utils::getPoint;
+test: test_smoother_functions
+test_cases: 
+- CalcTrajectoryCurvatureFrom3Points

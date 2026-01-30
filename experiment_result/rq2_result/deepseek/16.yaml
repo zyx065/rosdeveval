@@ -1,0 +1,90 @@
+compilation.log: |
+  Starting >>> autoware_autonomous_emergency_braking
+  --- stderr: autoware_autonomous_emergency_braking
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp: In member function ‘void autoware::motion::control::autonomous_emergency_braking::AEB::onCheckCollision(diagnostic_updater::DiagnosticStatusWrapper&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:435:54: error: ‘class autoware::motion::control::autonomous_emergency_braking::CollisionDataKeeper’ has no member named ‘checkCollision’; did you mean ‘checkCollisionExpired’?
+    435 |     bool collision_detected = collision_data_keeper_.checkCollision(debug_markers);
+        |                                                      ^~~~~~~~~~~~~~
+        |                                                      checkCollisionExpired
+  gmake[2]: *** [CMakeFiles/autoware_autonomous_emergency_braking_node.dir/build.make:76: CMakeFiles/autoware_autonomous_emergency_braking_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:187: CMakeFiles/autoware_autonomous_emergency_braking_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_autonomous_emergency_braking [17.8s, exited with code 2]
+
+  Summary: 0 packages finished [19.2s]
+    1 package failed: autoware_autonomous_emergency_braking
+    1 package had stderr output: autoware_autonomous_emergency_braking
+generate_code.cpp: "void AEB::onCheckCollision(DiagnosticStatusWrapper & stat)\n{\n\
+  \    // Initialize diagnostic status\n    stat.summary(DiagnosticStatus::OK, \"\
+  No collision detected\");\n\n    // Check if collision data is expired\n    if (collision_data_keeper_.checkCollisionExpired())\
+  \ {\n        stat.summary(DiagnosticStatus::WARN, \"Collision data expired\");\n\
+  \        return;\n    }\n\n    MarkerArray debug_markers;\n    MarkerArray virtual_wall_markers;\n\
+  \n    // Check for collision\n    bool collision_detected = collision_data_keeper_.checkCollision(debug_markers);\n\
+  \    if (collision_detected) {\n        stat.summary(DiagnosticStatus::ERROR, \"\
+  Collision detected\");\n        \n        // Add virtual stop wall marker if collision\
+  \ is detected\n        addVirtualStopWallMarker(virtual_wall_markers);\n    }\n\n\
+  \    // Publish debug markers if enabled\n    if (publish_debug_markers_) {\n  \
+  \      debug_marker_publisher_->publish(debug_markers);\n    }\n\n    // Publish\
+  \ virtual wall markers\n    virtual_wall_publisher_->publish(virtual_wall_markers);\n\
+  \n    // Publish metrics (optional, if needed)\n    // MetricArray metrics;\n  \
+  \  // metrics_pub_->publish(metrics);\n}"
+ground_truth.cpp: |-
+  void AEB::onCheckCollision(DiagnosticStatusWrapper & stat)
+  {
+    MarkerArray debug_markers;
+    MarkerArray virtual_wall_marker;
+    auto metrics = MetricArray();
+    checkCollision(debug_markers);
+
+    if (!collision_data_keeper_.checkCollisionExpired()) {
+      const std::string error_msg = "[AEB]: Emergency Brake";
+      const auto diag_level = DiagnosticStatus::ERROR;
+      stat.summary(diag_level, error_msg);
+      const auto & data = collision_data_keeper_.get();
+      if (data.has_value()) {
+        stat.addf("RSS", "%.2f", data.value().rss);
+        stat.addf("Distance", "%.2f", data.value().distance_to_object);
+        stat.addf("Object Speed", "%.2f", data.value().velocity);
+        if (publish_debug_markers_) {
+          addCollisionMarker(data.value(), debug_markers);
+        }
+      }
+      addVirtualStopWallMarker(virtual_wall_marker);
+
+      {
+        auto metric = Metric();
+        metric.name = "decision";
+        metric.value = "brake";
+        metrics.metric_array.push_back(metric);
+      }
+
+    } else {
+      const std::string error_msg = "[AEB]: No Collision";
+      const auto diag_level = DiagnosticStatus::OK;
+      stat.summary(diag_level, error_msg);
+    }
+
+    // publish debug markers
+    debug_marker_publisher_->publish(debug_markers);
+    virtual_wall_publisher_->publish(virtual_wall_marker);
+    // publish metrics
+    metrics.stamp = get_clock()->now();
+    metrics_pub_->publish(metrics);
+  }
+architecture-codes:
+  - ROS Message Issue - Message Operation Issue
+  - ROS Diagnostic Issue - Incomplete Diagnostic Lifecycle Implementation Issue
+  - ROS Logger Issue - Log Level and Frequency Issue
+
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

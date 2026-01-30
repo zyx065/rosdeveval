@@ -1,0 +1,122 @@
+compilation.log: |
+  Starting >>> nav2_costmap_2d
+  --- stderr: nav2_costmap_2d
+  /root/repos/nav_ws/src/nav2_costmap_2d/src/array_parser.cpp: In function ‘std::vector<std::vector<float> > nav2_costmap_2d::parseVVF(const string&, std::string&)’:
+  /root/repos/nav_ws/src/nav2_costmap_2d/src/array_parser.cpp:50:56: error: cannot convert ‘std::__cxx11::basic_string<char>::iterator’ to ‘const char*’
+     50 |     trimmed_input.erase(std::remove(trimmed_input.begin(), trimmed_input.end(), ' '), trimmed_input.end());
+        |                                     ~~~~~~~~~~~~~~~~~~~^~
+        |                                                        |
+        |                                                        std::__cxx11::basic_string<char>::iterator
+  In file included from /usr/include/c++/11/cstdio:42,
+                   from /root/repos/nav_ws/src/nav2_costmap_2d/src/array_parser.cpp:32:
+  /usr/include/stdio.h:152:32: note:   initializing argument 1 of ‘int remove(const char*)’
+    152 | extern int remove (const char *__filename) __THROW;
+        |                    ~~~~~~~~~~~~^~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/nav2_costmap_2d_core.dir/build.make:76: CMakeFiles/nav2_costmap_2d_core.dir/src/array_parser.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:269: CMakeFiles/nav2_costmap_2d_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_costmap_2d [0.69s, exited with code 2]
+
+  Summary: 0 packages finished [0.95s]
+    1 package failed: nav2_costmap_2d
+    1 package had stderr output: nav2_costmap_2d
+generate_code.cpp: "std::vector<std::vector<float>> parseVVF(const std::string & input,\
+  \ std::string & error_return)\n{\n    std::vector<std::vector<float>> result;\n\
+  \    std::string trimmed_input = input;\n    \n    // Remove spaces from the input\
+  \ string\n    trimmed_input.erase(std::remove(trimmed_input.begin(), trimmed_input.end(),\
+  \ ' '), trimmed_input.end());\n\n    // Check if the input starts with \"[[\" and\
+  \ ends with \"]]\"\n    if (trimmed_input.size() < 4 || trimmed_input.substr(0,\
+  \ 2) != \"[[\" || trimmed_input.substr(trimmed_input.size() - 2) != \"]]\") {\n\
+  \        error_return = \"Input does not start with [[ or end with ]]\";\n     \
+  \   return result;\n    }\n\n    // Remove the outer brackets\n    trimmed_input\
+  \ = trimmed_input.substr(2, trimmed_input.size() - 4);\n\n    // Split the input\
+  \ into individual vectors\n    size_t start = 0;\n    size_t end = 0;\n    while\
+  \ ((end = trimmed_input.find(\"],[\", start)) != std::string::npos) {\n        std::string\
+  \ vector_str = trimmed_input.substr(start, end - start);\n        start = end +\
+  \ 3; // Move past \"],[\"\n        \n        // Parse the individual vector\n  \
+  \      std::vector<float> parsed_vector;\n        size_t vec_start = 0;\n      \
+  \  size_t vec_end = 0;\n        while ((vec_end = vector_str.find(',', vec_start))\
+  \ != std::string::npos) {\n            std::string num_str = vector_str.substr(vec_start,\
+  \ vec_end - vec_start);\n            try {\n                parsed_vector.push_back(std::stof(num_str));\n\
+  \            } catch (const std::invalid_argument &) {\n                error_return\
+  \ = \"Invalid float value in input: \" + num_str;\n                return result;\n\
+  \            }\n            vec_start = vec_end + 1; // Move past \",\"\n      \
+  \  }\n\n        // Handle the last number in the vector\n        try {\n       \
+  \     parsed_vector.push_back(std::stof(vector_str.substr(vec_start)));\n      \
+  \  } catch (const std::invalid_argument &) {\n            error_return = \"Invalid\
+  \ float value in input: \" + vector_str.substr(vec_start);\n            return result;\n\
+  \        }\n\n        result.push_back(parsed_vector);\n    }\n\n    // Handle the\
+  \ last vector\n    std::string vector_str = trimmed_input.substr(start);\n    std::vector<float>\
+  \ parsed_vector;\n    size_t vec_start = 0;\n    size_t vec_end = 0;\n    while\
+  \ ((vec_end = vector_str.find(',', vec_start)) != std::string::npos) {\n       \
+  \ std::string num_str = vector_str.substr(vec_start, vec_end - vec_start);\n   \
+  \     try {\n            parsed_vector.push_back(std::stof(num_str));\n        }\
+  \ catch (const std::invalid_argument &) {\n            error_return = \"Invalid\
+  \ float value in input: \" + num_str;\n            return result;\n        }\n \
+  \       vec_start = vec_end + 1; // Move past \",\"\n    }\n\n    // Handle the\
+  \ last number in the vector\n    try {\n        parsed_vector.push_back(std::stof(vector_str.substr(vec_start)));\n\
+  \    } catch (const std::invalid_argument &) {\n        error_return = \"Invalid\
+  \ float value in input: \" + vector_str.substr(vec_start);\n        return result;\n\
+  \    }\n\n    result.push_back(parsed_vector);\n\n    return result;\n}"
+ground_truth.cpp: |-
+  std::vector<std::vector<float>> parseVVF(const std::string & input, std::string & error_return)
+  {
+    std::vector<std::vector<float>> result;
+
+    std::stringstream input_ss(input);
+    int depth = 0;
+    std::vector<float> current_vector;
+    while (!!input_ss && !input_ss.eof()) {
+      switch (input_ss.peek()) {
+        case EOF:
+          break;
+        case '[':
+          depth++;
+          if (depth > 2) {
+            error_return = "Array depth greater than 2";
+            return result;
+          }
+          input_ss.get();
+          current_vector.clear();
+          break;
+        case ']':
+          depth--;
+          if (depth < 0) {
+            error_return = "More close ] than open [";
+            return result;
+          }
+          input_ss.get();
+          if (depth == 1) {
+            result.push_back(current_vector);
+          }
+          break;
+        case ',':
+        case ' ':
+        case '\t':
+          input_ss.get();
+          break;
+        default:  // All other characters should be part of the numbers.
+          if (depth != 2) {
+            std::stringstream err_ss;
+            err_ss << "Numbers at depth other than 2. Char was '" << char(input_ss.peek()) << "'.";
+            error_return = err_ss.str();
+            return result;
+          }
+          float value;
+          input_ss >> value;
+          if (!!input_ss) {
+            current_vector.push_back(value);
+          }
+          break;
+      }
+    }
+
+    if (depth != 0) {
+      error_return = "Unterminated vector string.";
+    } else {
+      error_return = "";
+    }
+
+    return result;
+  }

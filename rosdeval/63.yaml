@@ -1,0 +1,25 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_velocity_smoother
+ros_package: autoware_velocity_smoother
+file_path: src/node.cpp
+method_name: VelocitySmootherNode::publishClosestVelocity
+requirement: |
+  /**
+  * Publishes the velocity of the closest trajectory point to the current pose.
+  * 
+  * @param trajectory The trajectory points to search for the closest point.
+  * @param current_pose The current pose used to find the closest trajectory point.
+  * @param pub Publisher to send the velocity data.
+  */
+category: ros_architecture
+type: has_timer,has_message,has_topic
+signature: |
+  void VelocitySmootherNode::publishClosestVelocity(
+    const TrajectoryPoints & trajectory, const Pose & current_pose,
+    const rclcpp::Publisher<Float32Stamped>::SharedPtr pub) const
+additional_information:
+  function_related_function: |
+    TrajectoryPoint calcProjectedTrajectoryPoint(const TrajectoryPoints & trajectory, const Pose & pose) const;
+test: test_autoware_velocity_smoother
+test_cases: []

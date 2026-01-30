@@ -1,0 +1,123 @@
+compilation.log: |
+  Starting >>> autoware_costmap_generator
+  --- stderr: autoware_costmap_generator
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp: In constructor ‘autoware::costmap_generator::CostmapGenerator::CostmapGenerator(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:170:69: error: ‘Float64Stamped’ is not a member of ‘tier4_debug_msgs::msg’; did you mean ‘autoware_internal_debug_msgs::msg::Float64Stamped’?
+    170 |   pub_processing_time_ms_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>("debug/processing_time_ms", 1);
+        |                                                                     ^~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/float64_stamped.hpp:7,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:61,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/detail/float64_stamped__struct.hpp:139:7: note: ‘autoware_internal_debug_msgs::msg::Float64Stamped’ declared here
+    139 | using Float64Stamped =
+        |       ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:170:84: error: no matching function for call to ‘autoware::costmap_generator::CostmapGenerator::create_publisher<<expression error> >(const char [25], int)’
+    170 |   pub_processing_time_ms_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>("debug/processing_time_ms", 1);
+        |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:1321,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:22,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/grid_map_ros/message_traits.hpp:5,
+                   from /opt/ros/humble/include/grid_map_ros/grid_map_ros.hpp:13,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/utils/objects_to_costmap.hpp:48,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:48,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /opt/ros/humble/include/rclcpp/rclcpp/node_impl.hpp:73:1: note: candidate: ‘template<class MessageT, class AllocatorT, class PublisherT> std::shared_ptr<PublisherT> rclcpp::Node::create_publisher(const string&, const rclcpp::QoS&, const rclcpp::PublisherOptionsWithAllocator<AllocatorT>&)’
+     73 | Node::create_publisher(
+        | ^~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/node_impl.hpp:73:1: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:170:84: error: template argument 1 is invalid
+    170 |   pub_processing_time_ms_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>("debug/processing_time_ms", 1);
+        |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:23,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:50,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp: In function ‘void __static_initialization_and_destruction_0(int, int)’:
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp:51:13: warning: ‘parameter_traits::OK’ is deprecated: When returning tl::expected<void, std::string> default construct for OK with `{}`. [-Wdeprecated-declarations]
+     51 | auto static OK
+        |             ^~
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp:51:13: note: declared here
+  gmake[2]: *** [CMakeFiles/costmap_generator_node.dir/build.make:76: CMakeFiles/costmap_generator_node.dir/src/costmap_generator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:218: CMakeFiles/costmap_generator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_costmap_generator [29.6s, exited with code 2]
+
+  Summary: 0 packages finished [31.0s]
+    1 package failed: autoware_costmap_generator
+    1 package had stderr output: autoware_costmap_generator
+generate_code.cpp: |-
+  CostmapGenerator::CostmapGenerator(const rclcpp::NodeOptions & node_options)
+  : Node("costmap_generator", node_options), tf_buffer_(this->get_clock()), tf_listener_(tf_buffer_)
+  {
+    // Initialize parameter listener
+    param_listener_ = std::make_shared<::costmap_generator_node::ParamListener>(this->get_node_parameters_interface());
+    param_ = std::make_shared<::costmap_generator_node::Params>(param_listener_->get_params());
+
+    // Initialize publishers
+    pub_costmap_ = create_publisher<grid_map_msgs::msg::GridMap>("output/grid_map", 1);
+    pub_occupancy_grid_ = create_publisher<nav_msgs::msg::OccupancyGrid>("output/occupancy_grid", 1);
+    pub_processing_time_ = create_publisher<autoware::universe_utils::ProcessingTimeDetail>("debug/processing_time", 1);
+    pub_processing_time_ms_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>("debug/processing_time_ms", 1);
+
+    // Initialize subscriber
+    sub_lanelet_bin_map_ = create_subscription<autoware_map_msgs::msg::LaneletMapBin>(
+      "input/lanelet2_map", rclcpp::QoS(1).transient_local(),
+      std::bind(&CostmapGenerator::onLaneletMapBin, this, std::placeholders::_1));
+
+    // Initialize timer
+    const auto period_ns = rclcpp::Rate(param_->update_rate).period();
+    timer_ = rclcpp::create_timer(
+      this, get_clock(), period_ns, std::bind(&CostmapGenerator::onTimer, this));
+
+    // Initialize time keeper
+    time_keeper_ = std::make_shared<autoware::universe_utils::TimeKeeper>();
+
+    // Initialize grid map
+    initGridmap();
+  }
+ground_truth.cpp: |-
+  CostmapGenerator::CostmapGenerator(const rclcpp::NodeOptions & node_options)
+  : Node("costmap_generator", node_options), tf_buffer_(this->get_clock()), tf_listener_(tf_buffer_)
+  {
+    param_listener_ = std::make_shared<::costmap_generator_node::ParamListener>(
+      this->get_node_parameters_interface());
+    param_ = std::make_shared<::costmap_generator_node::Params>(param_listener_->get_params());
+
+    // Lanelet map subscriber
+    sub_lanelet_bin_map_ = this->create_subscription<autoware_map_msgs::msg::LaneletMapBin>(
+      "~/input/vector_map", rclcpp::QoS{1}.transient_local(),
+      std::bind(&CostmapGenerator::onLaneletMapBin, this, std::placeholders::_1));
+
+    // Publishers
+    pub_costmap_ = this->create_publisher<grid_map_msgs::msg::GridMap>("~/output/grid_map", 1);
+    pub_occupancy_grid_ =
+      this->create_publisher<nav_msgs::msg::OccupancyGrid>("~/output/occupancy_grid", 1);
+    pub_processing_time_ =
+      create_publisher<autoware::universe_utils::ProcessingTimeDetail>("processing_time", 1);
+    time_keeper_ = std::make_shared<autoware::universe_utils::TimeKeeper>(pub_processing_time_);
+    pub_processing_time_ms_ =
+      this->create_publisher<autoware_internal_debug_msgs::msg::Float64Stamped>(
+        "~/debug/processing_time_ms", 1);
+
+    // Timer
+    const auto period_ns = rclcpp::Rate(param_->update_rate).period();
+    timer_ =
+      rclcpp::create_timer(this, get_clock(), period_ns, std::bind(&CostmapGenerator::onTimer, this));
+
+    // Initialize
+    initGridmap();
+  }
+architecture-codes:
+    - ROS Message Issue - Improper Message Type Usage Issue
+    - Topic/Service Issue - Topic/Service Name Mismatch Issue
+
+functionality-codes:
+    - Incomplete Code Issue - Missing One Step Issue
+    - Domain Library Issue - Domain Specific Library Utilization Error
+
+root-cause-codes:
+    - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+    - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+    - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

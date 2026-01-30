@@ -1,0 +1,71 @@
+compilation.log: |
+  Starting >>> nav2_costmap_2d
+  Finished <<< nav2_costmap_2d [0.68s]
+
+  Summary: 1 package finished [0.92s]
+generate_code.cpp: |-
+  bool Costmap2D::copyWindow(
+    const Costmap2D & source,
+    unsigned int sx0, unsigned int sy0, unsigned int sxn, unsigned int syn,
+    unsigned int dx0, unsigned int dy0)
+  {
+    // Check if source window is valid
+    if (sx0 >= source.getSizeInCellsX() || sy0 >= source.getSizeInCellsY() ||
+        sxn > source.getSizeInCellsX() || syn > source.getSizeInCellsY() ||
+        sx0 >= sxn || sy0 >= syn)
+    {
+      return false;
+    }
+
+    // Calculate window dimensions
+    unsigned int window_size_x = sxn - sx0;
+    unsigned int window_size_y = syn - sy0;
+
+    // Check if destination window fits
+    if (dx0 + window_size_x > size_x_ || dy0 + window_size_y > size_y_)
+    {
+      return false;
+    }
+
+    // Perform the copy using copyMapRegion
+    copyMapRegion(
+      source.costmap_, sx0, sy0, source.getSizeInCellsX(),
+      costmap_, dx0, dy0, size_x_,
+      window_size_x, window_size_y);
+
+    return true;
+  }
+ground_truth.cpp: |-
+  bool Costmap2D::copyWindow(
+    const Costmap2D & source,
+    unsigned int sx0, unsigned int sy0, unsigned int sxn, unsigned int syn,
+    unsigned int dx0, unsigned int dy0)
+  {
+    const unsigned int sz_x = sxn - sx0;
+    const unsigned int sz_y = syn - sy0;
+
+    if (sxn > source.getSizeInCellsX() || syn > source.getSizeInCellsY()) {
+      return false;
+    }
+
+    if (dx0 + sz_x > size_x_ || dy0 + sz_y > size_y_) {
+      return false;
+    }
+
+    copyMapRegion(
+      source.costmap_, sx0, sy0, source.size_x_,
+      costmap_, dx0, dy0, size_x_,
+      sz_x, sz_y);
+    return true;
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Domain Library Issue - Domain Specific Library Utilization Error 
+  - Condition Issue - Condition Check Logic Misapplication Issue 
+  - Incomplete Code Issue - Missing One Step Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic 
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries 
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase 

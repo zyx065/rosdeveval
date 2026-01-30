@@ -1,0 +1,86 @@
+compilation.log: |
+  Starting >>> autoware_geography_utils
+  Finished <<< autoware_geography_utils [2.23s]
+
+  Summary: 1 package finished [3.67s]
+generate_code.cpp: |
+  double convert_height(
+    const double height, const double latitude, const double longitude,
+    const std::string & source_vertical_datum, const std::string & target_vertical_datum)
+  {
+      // Check if source and target datums are the same
+      if (source_vertical_datum == target_vertical_datum) {
+          return height;
+      }
+
+      // Common vertical datums
+      const std::vector<std::string> supported_datums = {
+          "WGS84", "EGM96", "EGM2008", "NAVD88", "MSL"
+      };
+
+      // Validate input datums
+      auto source_it = std::find(supported_datums.begin(), supported_datums.end(), source_vertical_datum);
+      auto target_it = std::find(supported_datums.begin(), supported_datums.end(), target_vertical_datum);
+
+      if (source_it == supported_datums.end() || target_it == supported_datums.end()) {
+          throw std::invalid_argument("Unsupported vertical datum conversion");
+      }
+
+      // Simplified conversion logic (placeholder for actual geoid transformation)
+      double geoid_separation = 0.0;
+
+      // Approximate geoid separation calculation based on latitude and longitude
+      // This is a simplified mock-up and should be replaced with accurate geoid model
+      if (source_vertical_datum == "WGS84" && target_vertical_datum == "EGM96") {
+          geoid_separation = 10.5 * std::sin(latitude * M_PI / 180.0) + 
+                            5.2 * std::cos(longitude * M_PI / 180.0);
+      }
+      else if (source_vertical_datum == "EGM96" && target_vertical_datum == "WGS84") {
+          geoid_separation = -10.5 * std::sin(latitude * M_PI / 180.0) - 
+                              5.2 * std::cos(longitude * M_PI / 180.0);
+      }
+      else {
+          // For other datum conversions, you would typically use a geoid transformation library
+          // such as PROJ or GeographicLib
+          throw std::invalid_argument("Conversion between specified datums not implemented");
+      }
+
+      // Convert height
+      double converted_height = height + geoid_separation;
+
+      return converted_height;
+  }
+ground_truth.cpp: |-
+  double convert_height(
+    const double height, const double latitude, const double longitude,
+    const std::string & source_vertical_datum, const std::string & target_vertical_datum)
+  {
+    if (source_vertical_datum == target_vertical_datum) {
+      return height;
+    }
+    static const std::map<std::pair<std::string, std::string>, HeightConversionFunction>
+      conversion_map{
+        {{"WGS84", "EGM2008"}, convert_wgs84_to_egm2008},
+        {{"EGM2008", "WGS84"}, convert_egm2008_to_wgs84},
+      };
+
+    const auto key = std::make_pair(source_vertical_datum, target_vertical_datum);
+    if (const auto it = conversion_map.find(key); it != conversion_map.end()) {
+      return it->second(height, latitude, longitude);
+    }
+
+    throw std::invalid_argument(
+      "Invalid conversion types: " + source_vertical_datum + " to " + target_vertical_datum);
+  }
+
+architecture-codes: []
+functionality-codes:
+  - Domain Library Issues - Lack of Domain Library Utilization
+  - Incomplete Code - Missing Multiple Steps
+  - Constant Value Error
+  - Reference Error - Wrong Method
+  - Garbage Code - Wrong Logical
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of Familiarity with the Existing Codebase

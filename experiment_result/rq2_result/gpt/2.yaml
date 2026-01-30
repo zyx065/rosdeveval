@@ -1,0 +1,144 @@
+compilation.log: |
+  Starting >>> autoware_kinematic_evaluator
+  --- stderr: autoware_kinematic_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp: In member function ‘void autoware::kinematic_diagnostics::KinematicEvaluatorNode::onOdom(nav_msgs::msg::Odometry_<std::allocator<void> >::SharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:113:77: error: ‘WINDOW_DURATION’ was not declared in this scope
+    113 |     while (!stamps_.empty() && (current_time - stamps_.front()).seconds() > WINDOW_DURATION) {
+        |                                                                             ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:131:27: error: ‘LINEAR_VELOCITY’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+    131 |     metrics_dict_[Metric::LINEAR_VELOCITY].add(linear_velocity);
+        |                           ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:132:27: error: ‘ANGULAR_VELOCITY’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+    132 |     metrics_dict_[Metric::ANGULAR_VELOCITY].add(angular_velocity);
+        |                           ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:135:47: error: ‘LINEAR_VELOCITY’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+    135 |     metric_stats_[static_cast<size_t>(Metric::LINEAR_VELOCITY)].push_back(metrics_dict_[Metric::LINEAR_VELOCITY]);
+        |                                               ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:135:97: error: ‘LINEAR_VELOCITY’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+    135 |     metric_stats_[static_cast<size_t>(Metric::LINEAR_VELOCITY)].push_back(metrics_dict_[Metric::LINEAR_VELOCITY]);
+        |                                                                                                 ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:136:47: error: ‘ANGULAR_VELOCITY’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+    136 |     metric_stats_[static_cast<size_t>(Metric::ANGULAR_VELOCITY)].push_back(metrics_dict_[Metric::ANGULAR_VELOCITY]);
+        |                                               ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:136:98: error: ‘ANGULAR_VELOCITY’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+    136 |     metric_stats_[static_cast<size_t>(Metric::ANGULAR_VELOCITY)].push_back(metrics_dict_[Metric::ANGULAR_VELOCITY]);
+        |                                                                                                  ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:139:54: error: ‘LINEAR_VELOCITY’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+    139 |     while (metric_stats_[static_cast<size_t>(Metric::LINEAR_VELOCITY)].size() > stamps_.size()) {
+        |                                                      ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:140:51: error: ‘LINEAR_VELOCITY’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+    140 |         metric_stats_[static_cast<size_t>(Metric::LINEAR_VELOCITY)].pop_front();
+        |                                                   ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:142:54: error: ‘ANGULAR_VELOCITY’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+    142 |     while (metric_stats_[static_cast<size_t>(Metric::ANGULAR_VELOCITY)].size() > stamps_.size()) {
+        |                                                      ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:143:51: error: ‘ANGULAR_VELOCITY’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+    143 |         metric_stats_[static_cast<size_t>(Metric::ANGULAR_VELOCITY)].pop_front();
+        |                                                   ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:155:41: error: ‘metricToString’ was not declared in this scope
+    155 |         diag_status.name = "Metric: " + metricToString(metric);
+        |                                         ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:159:87: error: ‘const class autoware::universe_utils::Accumulator<double>’ has no member named ‘getMin’
+    159 |         diag_status.values.push_back(createKeyValue("Min", std::to_string(metric_stat.getMin())));
+        |                                                                                       ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:159:38: error: ‘createKeyValue’ was not declared in this scope
+    159 |         diag_status.values.push_back(createKeyValue("Min", std::to_string(metric_stat.getMin())));
+        |                                      ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:160:87: error: ‘const class autoware::universe_utils::Accumulator<double>’ has no member named ‘getMax’
+    160 |         diag_status.values.push_back(createKeyValue("Max", std::to_string(metric_stat.getMax())));
+        |                                                                                       ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:161:88: error: ‘const class autoware::universe_utils::Accumulator<double>’ has no member named ‘getMean’
+    161 |         diag_status.values.push_back(createKeyValue("Mean", std::to_string(metric_stat.getMean())));
+        |                                                                                        ^~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_kinematic_evaluator.dir/build.make:90: CMakeFiles/autoware_kinematic_evaluator.dir/src/kinematic_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_kinematic_evaluator.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_kinematic_evaluator [5.08s, exited with code 2]
+
+  Summary: 0 packages finished [6.52s]
+    1 package failed: autoware_kinematic_evaluator
+    1 package had stderr output: autoware_kinematic_evaluator
+generate_code.cpp: |-
+  void KinematicEvaluatorNode::onOdom(const nav_msgs::msg::Odometry::SharedPtr msg)
+  {
+      // Extract the current time from the Odometry message
+      rclcpp::Time current_time = msg->header.stamp;
+
+      // Add the current timestamp to the deque
+      stamps_.push_back(current_time);
+
+      // Remove old timestamps to maintain a fixed window size
+      while (!stamps_.empty() && (current_time - stamps_.front()).seconds() > WINDOW_DURATION) {
+          stamps_.pop_front();
+      }
+
+      // Extract linear and angular velocities from the Odometry message
+      double linear_velocity = std::sqrt(
+          std::pow(msg->twist.twist.linear.x, 2) +
+          std::pow(msg->twist.twist.linear.y, 2) +
+          std::pow(msg->twist.twist.linear.z, 2)
+      );
+
+      double angular_velocity = std::sqrt(
+          std::pow(msg->twist.twist.angular.x, 2) +
+          std::pow(msg->twist.twist.angular.y, 2) +
+          std::pow(msg->twist.twist.angular.z, 2)
+      );
+
+      // Update the metrics dictionary with the new data
+      metrics_dict_[Metric::LINEAR_VELOCITY].add(linear_velocity);
+      metrics_dict_[Metric::ANGULAR_VELOCITY].add(angular_velocity);
+
+      // Update the metric statistics for the current window
+      metric_stats_[static_cast<size_t>(Metric::LINEAR_VELOCITY)].push_back(metrics_dict_[Metric::LINEAR_VELOCITY]);
+      metric_stats_[static_cast<size_t>(Metric::ANGULAR_VELOCITY)].push_back(metrics_dict_[Metric::ANGULAR_VELOCITY]);
+
+      // Remove old statistics to maintain a fixed window size
+      while (metric_stats_[static_cast<size_t>(Metric::LINEAR_VELOCITY)].size() > stamps_.size()) {
+          metric_stats_[static_cast<size_t>(Metric::LINEAR_VELOCITY)].pop_front();
+      }
+      while (metric_stats_[static_cast<size_t>(Metric::ANGULAR_VELOCITY)].size() > stamps_.size()) {
+          metric_stats_[static_cast<size_t>(Metric::ANGULAR_VELOCITY)].pop_front();
+      }
+
+      // Publish diagnostic messages
+      diagnostic_msgs::msg::DiagnosticArray diag_array;
+      diag_array.header.stamp = current_time;
+
+      for (const auto& metric_pair : metrics_dict_) {
+          Metric metric = metric_pair.first;
+          const Accumulator<double>& metric_stat = metric_pair.second;
+
+          diagnostic_msgs::msg::DiagnosticStatus diag_status;
+          diag_status.name = "Metric: " + metricToString(metric);
+          diag_status.level = diagnostic_msgs::msg::DiagnosticStatus::OK;
+          diag_status.message = "Metric statistics";
+
+          diag_status.values.push_back(createKeyValue("Min", std::to_string(metric_stat.getMin())));
+          diag_status.values.push_back(createKeyValue("Max", std::to_string(metric_stat.getMax())));
+          diag_status.values.push_back(createKeyValue("Mean", std::to_string(metric_stat.getMean())));
+
+          diag_array.status.push_back(diag_status);
+      }
+
+      metrics_pub_->publish(diag_array);
+  }
+ground_truth.cpp: |-
+  void KinematicEvaluatorNode::onOdom(const nav_msgs::msg::Odometry::SharedPtr msg)
+  {
+    DiagnosticArray metrics_msg;
+    metrics_msg.header.stamp = now();
+
+    for (Metric metric : metrics_) {
+      metrics_dict_[metric] = metrics_calculator_.updateStat(metric, *msg, metrics_dict_[metric]);
+      metric_stats_[static_cast<size_t>(metric)].push_back(metrics_dict_[metric]);
+      stamps_.push_back(metrics_msg.header.stamp);
+      if (metrics_dict_[metric].count() > 0) {
+        metrics_msg.status.push_back(generateDiagnosticStatus(metric, metrics_dict_[metric]));
+      }
+    }
+    if (!metrics_msg.status.empty()) {
+      metrics_pub_->publish(metrics_msg);
+    }
+  }

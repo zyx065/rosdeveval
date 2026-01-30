@@ -1,0 +1,98 @@
+compilation.log: |
+  Starting >>> nav2_costmap_2d
+  Finished <<< nav2_costmap_2d [0.45s]
+
+  Summary: 1 package finished [0.75s]
+generate_code.cpp: |
+  void KeepoutFilter::maskCallback(
+    const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
+  {
+    // Store the mask frame from the message
+    mask_frame_ = msg->header.frame_id;
+    
+    // Initialize or resize the mask costmap based on the incoming occupancy grid
+    if (!mask_costmap_) {
+      mask_costmap_ = std::make_unique<Costmap2D>(
+        msg->info.width, 
+        msg->info.height,
+        msg->info.resolution,
+        msg->info.origin.position.x,
+        msg->info.origin.position.y
+      );
+    } else {
+      // Resize if dimensions have changed
+      mask_costmap_->resizeMap(
+        msg->info.width, 
+        msg->info.height,
+        msg->info.resolution,
+        msg->info.origin.position.x,
+        msg->info.origin.position.y
+      );
+    }
+    
+    // Copy occupancy grid data to the mask costmap
+    unsigned char* costmap_data = mask_costmap_->getCharMap();
+    
+    for (unsigned int i = 0; i < msg->info.width * msg->info.height; ++i) {
+      int8_t occupancy_value = msg->data[i];
+      
+      // Convert occupancy grid values to costmap values
+      if (occupancy_value == -1) {
+        // Unknown space - treat as free for keepout filter
+        costmap_data[i] = nav2_costmap_2d::FREE_SPACE;
+      } else if (occupancy_value == 0) {
+        // Free space
+        costmap_data[i] = nav2_costmap_2d::FREE_SPACE;
+      } else {
+        // Occupied space - mark as keepout area
+        costmap_data[i] = nav2_costmap_2d::LETHAL_OBSTACLE;
+      }
+    }
+    
+    // Update the costmap's origin and orientation
+    mask_costmap_->updateOrigin(
+      msg->info.origin.position.x,
+      msg->info.origin.position.y
+    );
+  }
+ground_truth.cpp: |-
+  void KeepoutFilter::maskCallback(
+    const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
+  {
+    std::lock_guard<CostmapFilter::mutex_t> guard(*getMutex());
+
+    rclcpp_lifecycle::LifecycleNode::SharedPtr node = node_.lock();
+    if (!node) {
+      throw std::runtime_error{"Failed to lock node"};
+    }
+
+    if (!mask_costmap_) {
+      RCLCPP_INFO(
+        logger_,
+        "KeepoutFilter: Received filter mask from %s topic.", mask_topic_.c_str());
+    } else {
+      RCLCPP_WARN(
+        logger_,
+        "KeepoutFilter: New filter mask arrived from %s topic. Updating old filter mask.",
+        mask_topic_.c_str());
+      mask_costmap_.reset();
+    }
+
+    // Making a new mask_costmap_
+    mask_costmap_ = std::make_unique<Costmap2D>(*msg);
+    mask_frame_ = msg->header.frame_id;
+  }
+architecture-codes:
+  - ROS Logger Issues - ROS Logger Missing Issue
+  - Thread Safety Missing 
+  - Missing Node Lifecycle Management
+functionality-codes:
+  - Domain Library Issues - Lack of Domain Library Utilization
+  - Garbage Code - Meaningless code snippet
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Incomplete Code - Missing Multiple Steps
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing Codebase
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

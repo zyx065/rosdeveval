@@ -1,0 +1,32 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_mppi_controller
+ros_package: nav2_mppi_controller
+file_path: src/critics/twirling_critic.cpp
+method_name: TwirlingCritic::score
+requirement: |
+  /**
+  * Applies a penalty for rotational velocity when close to the goal pose.
+  * 
+  * @param data Container for state information and cumulative cost to be updated.
+  */
+category: utilities
+type: []
+signature: |
+  void TwirlingCritic::score(CriticData & data)
+additional_information: 
+  function_related_function: |
+    /**
+    * @brief Check if the robot pose is within tolerance to the goal
+    * @param pose_tolerance Pose tolerance to use
+    * @param robot Pose of robot
+    * @param goal Goal pose
+    * @return bool If robot is within tolerance to the goal
+    */
+    inline bool withinPositionGoalTolerance(
+      float pose_tolerance,
+      const geometry_msgs::msg::Pose & robot,
+      const geometry_msgs::msg::Pose & goal)
+test: critics_tests
+test_cases: 
+- TwirlingCritic

@@ -1,0 +1,84 @@
+compilation.log: |
+  Starting >>> autoware_autonomous_emergency_braking
+  --- stderr: autoware_autonomous_emergency_braking
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/utils.cpp: In function ‘autoware_perception_msgs::msg::PredictedObject autoware::motion::control::autonomous_emergency_braking::utils::transformObjectFrame(const PredictedObject&, const TransformStamped&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/utils.cpp:114:33: error: no match for ‘operator=’ (operand types are ‘tf2::Vector3’ and ‘tf2::Quaternion’)
+    114 |   angular_velocity = rotation * angular_velocity;
+        |                                 ^~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:21,
+                   from /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp:57,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:40,
+                   from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/trajectory.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/include/autoware/autonomous_emergency_braking/node.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/include/autoware/autonomous_emergency_braking/utils.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/utils.cpp:15:
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:38:28: note: candidate: ‘constexpr tf2::Vector3& tf2::Vector3::operator=(const tf2::Vector3&)’
+     38 | ATTRIBUTE_ALIGNED16(class) Vector3
+        |                            ^~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:38:28: note:   no known conversion for argument 1 from ‘tf2::Quaternion’ to ‘const tf2::Vector3&’
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:38:28: note: candidate: ‘constexpr tf2::Vector3& tf2::Vector3::operator=(tf2::Vector3&&)’
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:38:28: note:   no known conversion for argument 1 from ‘tf2::Quaternion’ to ‘tf2::Vector3&&’
+  gmake[2]: *** [CMakeFiles/autoware_autonomous_emergency_braking_helpers.dir/build.make:76: CMakeFiles/autoware_autonomous_emergency_braking_helpers.dir/src/utils.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:161: CMakeFiles/autoware_autonomous_emergency_braking_helpers.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_autonomous_emergency_braking [15.3s, exited with code 2]
+
+  Summary: 0 packages finished [16.9s]
+    1 package failed: autoware_autonomous_emergency_braking
+    1 package had stderr output: autoware_autonomous_emergency_braking
+generate_code.cpp: "PredictedObject transformObjectFrame(\n  const PredictedObject\
+  \ & input, const geometry_msgs::msg::TransformStamped & transform_stamped)\n{\n\
+  \  PredictedObject output = input;\n\n  // Transform pose\n  tf2::doTransform(input.kinematics.initial_pose_with_covariance.pose,\
+  \ \n                  output.kinematics.initial_pose_with_covariance.pose, \n  \
+  \                transform_stamped);\n\n  // Transform twist (needs to account for\
+  \ both linear and angular velocity)\n  geometry_msgs::msg::TwistWithCovariance transformed_twist;\n\
+  \  \n  // Transform linear velocity\n  geometry_msgs::msg::Vector3 linear_velocity;\n\
+  \  linear_velocity.x = input.kinematics.initial_twist_with_covariance.twist.linear.x;\n\
+  \  linear_velocity.y = input.kinematics.initial_twist_with_covariance.twist.linear.y;\n\
+  \  linear_velocity.z = input.kinematics.initial_twist_with_covariance.twist.linear.z;\n\
+  \  \n  tf2::doTransform(linear_velocity, \n                  transformed_twist.twist.linear,\
+  \ \n                  transform_stamped);\n\n  // Transform angular velocity (rotation\
+  \ only)\n  tf2::Quaternion rotation;\n  tf2::fromMsg(transform_stamped.transform.rotation,\
+  \ rotation);\n  \n  tf2::Vector3 angular_velocity(\n    input.kinematics.initial_twist_with_covariance.twist.angular.x,\n\
+  \    input.kinematics.initial_twist_with_covariance.twist.angular.y,\n    input.kinematics.initial_twist_with_covariance.twist.angular.z);\n\
+  \  \n  angular_velocity = rotation * angular_velocity;\n  transformed_twist.twist.angular.x\
+  \ = angular_velocity.x();\n  transformed_twist.twist.angular.y = angular_velocity.y();\n\
+  \  transformed_twist.twist.angular.z = angular_velocity.z();\n\n  // Copy covariance\
+  \ (assuming it's in the object's local frame, so it doesn't need transformation)\n\
+  \  transformed_twist.covariance = input.kinematics.initial_twist_with_covariance.covariance;\n\
+  \  output.kinematics.initial_twist_with_covariance = transformed_twist;\n\n  return\
+  \ output;\n}"
+ground_truth.cpp: |-
+  PredictedObject transformObjectFrame(
+    const PredictedObject & input, const geometry_msgs::msg::TransformStamped & transform_stamped)
+  {
+    PredictedObject output = input;
+    const auto & linear_twist = input.kinematics.initial_twist_with_covariance.twist.linear;
+    const auto & angular_twist = input.kinematics.initial_twist_with_covariance.twist.angular;
+    const auto & pose = input.kinematics.initial_pose_with_covariance.pose;
+
+    geometry_msgs::msg::Pose t_pose;
+    Vector3 t_linear_twist;
+    Vector3 t_angular_twist;
+
+    tf2::doTransform(pose, t_pose, transform_stamped);
+    tf2::doTransform(linear_twist, t_linear_twist, transform_stamped);
+    tf2::doTransform(angular_twist, t_angular_twist, transform_stamped);
+
+    output.kinematics.initial_pose_with_covariance.pose = t_pose;
+    output.kinematics.initial_twist_with_covariance.twist.linear = t_linear_twist;
+    output.kinematics.initial_twist_with_covariance.twist.angular = t_angular_twist;
+    return output;
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

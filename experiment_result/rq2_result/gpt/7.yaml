@@ -1,0 +1,125 @@
+compilation.log: |
+  Starting >>> autoware_gyro_odometer
+  --- stderr: autoware_gyro_odometer
+  /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp: In constructor ‘autoware::gyro_odometer::GyroOdometerNode::GyroOdometerNode(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:63:45: error: ‘localization_util’ is not a member of ‘autoware’
+     63 |   diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(this);
+        |                                             ^~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:63:23: error: parse error in template argument list
+     63 |   diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(this);
+        |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:63:82: error: no matching function for call to ‘make_unique<<expression error> >(autoware::gyro_odometer::GyroOdometerNode*)’
+     63 |   diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(this);
+        |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+  In file included from /usr/include/c++/11/memory:76,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/diagnostics_interface.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:15:
+  /usr/include/c++/11/bits/unique_ptr.h:961:5: note: candidate: ‘template<class _Tp, class ... _Args> typename std::_MakeUniq<_Tp>::__single_object std::make_unique(_Args&& ...)’
+    961 |     make_unique(_Args&&... __args)
+        |     ^~~~~~~~~~~
+  /usr/include/c++/11/bits/unique_ptr.h:961:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:63:82: error: template argument 1 is invalid
+     63 |   diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(this);
+        |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+  In file included from /usr/include/c++/11/memory:76,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/diagnostics_interface.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:15:
+  /usr/include/c++/11/bits/unique_ptr.h:967:5: note: candidate: ‘template<class _Tp> typename std::_MakeUniq<_Tp>::__array std::make_unique(std::size_t)’
+    967 |     make_unique(size_t __num)
+        |     ^~~~~~~~~~~
+  /usr/include/c++/11/bits/unique_ptr.h:967:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:63:82: error: template argument 1 is invalid
+     63 |   diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(this);
+        |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+  In file included from /usr/include/c++/11/memory:76,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/diagnostics_interface.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:15:
+  /usr/include/c++/11/bits/unique_ptr.h:973:5: note: candidate: ‘template<class _Tp, class ... _Args> typename std::_MakeUniq<_Tp>::__invalid_type std::make_unique(_Args&& ...)’ (deleted)
+    973 |     make_unique(_Args&&...) = delete;
+        |     ^~~~~~~~~~~
+  /usr/include/c++/11/bits/unique_ptr.h:973:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_gyro_odometer/src/gyro_odometer_core.cpp:63:82: error: template argument 1 is invalid
+     63 |   diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(this);
+        |                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_gyro_odometer.dir/build.make:76: CMakeFiles/autoware_gyro_odometer.dir/src/gyro_odometer_core.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_gyro_odometer.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_gyro_odometer [4.39s, exited with code 2]
+
+  Summary: 0 packages finished [5.81s]
+    1 package failed: autoware_gyro_odometer
+    1 package had stderr output: autoware_gyro_odometer
+generate_code.cpp: |-
+  GyroOdometerNode::GyroOdometerNode(const rclcpp::NodeOptions & node_options)
+  : Node("gyro_odometer", node_options),
+    output_frame_(declare_parameter<std::string>("output_frame")),
+    message_timeout_sec_(declare_parameter<double>("message_timeout_sec")),
+    vehicle_twist_arrived_(false),
+    imu_arrived_(false)
+  {
+    // Initialize logger configuration
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+
+    // Initialize transform listener
+    transform_listener_ = std::make_shared<autoware::universe_utils::TransformListener>(this);
+
+    // Declare diagnostics module
+    diagnostics_ = std::make_unique<autoware::localization_util::DiagnosticsModule>(this);
+
+    // Subscribe to vehicle twist messages
+    vehicle_twist_sub_ = this->create_subscription<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "vehicle_twist", rclcpp::QoS(10),
+      std::bind(&GyroOdometerNode::callback_vehicle_twist, this, std::placeholders::_1));
+
+    // Publishers for raw twist messages
+    twist_raw_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("twist_raw", rclcpp::QoS(10));
+    twist_with_covariance_raw_pub_ = this->create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "twist_with_covariance_raw", rclcpp::QoS(10));
+
+    // Publishers for processed twist messages
+    twist_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("twist", rclcpp::QoS(10));
+    twist_with_covariance_pub_ = this->create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "twist_with_covariance", rclcpp::QoS(10));
+
+    // Log initialization success
+    RCLCPP_INFO(this->get_logger(), "GyroOdometerNode initialized successfully.");
+  }
+ground_truth.cpp: |-
+  GyroOdometerNode::GyroOdometerNode(const rclcpp::NodeOptions & node_options)
+  : Node("gyro_odometer", node_options),
+    output_frame_(declare_parameter<std::string>("output_frame")),
+    message_timeout_sec_(declare_parameter<double>("message_timeout_sec")),
+    vehicle_twist_arrived_(false),
+    imu_arrived_(false)
+  {
+    transform_listener_ = std::make_shared<autoware::universe_utils::TransformListener>(this);
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+
+    vehicle_twist_sub_ = create_subscription<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "vehicle/twist_with_covariance", rclcpp::QoS{100},
+      std::bind(&GyroOdometerNode::callback_vehicle_twist, this, std::placeholders::_1));
+
+    imu_sub_ = create_subscription<sensor_msgs::msg::Imu>(
+      "imu", rclcpp::QoS{100},
+      std::bind(&GyroOdometerNode::callback_imu, this, std::placeholders::_1));
+
+    twist_raw_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("twist_raw", rclcpp::QoS{10});
+    twist_with_covariance_raw_pub_ = create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "twist_with_covariance_raw", rclcpp::QoS{10});
+
+    twist_pub_ = create_publisher<geometry_msgs::msg::TwistStamped>("twist", rclcpp::QoS{10});
+    twist_with_covariance_pub_ = create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>(
+      "twist_with_covariance", rclcpp::QoS{10});
+
+    diagnostics_ =
+      std::make_unique<autoware::universe_utils::DiagnosticsInterface>(this, "gyro_odometer_status");
+
+    // TODO(YamatoAndo) createTimer
+  }

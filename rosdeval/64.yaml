@@ -1,0 +1,24 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_velocity_smoother
+ros_package: autoware_velocity_smoother
+file_path: src/node.cpp
+method_name: VelocitySmootherNode::publishClosestState
+requirement: |
+  /**
+  * @brief Publishes the closest trajectory state (velocity, acceleration, jerk) for debugging.
+  * 
+  * @param trajectory The trajectory points to search for the closest state to the ego vehicle.
+  */
+category: ros_architecture
+type: has_topic,has_message,has_timer
+signature: |
+  void VelocitySmootherNode::publishClosestState(const TrajectoryPoints & trajectory)
+additional_information:
+  function_related_function: |
+    TrajectoryPoint calcProjectedTrajectoryPointFromEgo(const TrajectoryPoints & trajectory) const;
+  function_related_variable: |
+    std::shared_ptr<rclcpp::Time> prev_time_;
+    double prev_acc_;
+test: test_autoware_velocity_smoother
+test_cases: []

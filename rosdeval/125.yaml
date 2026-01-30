@@ -1,0 +1,119 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_ros/moveit_servo
+ros_package: moveit_servo
+file_path: src/servo_calcs.cpp
+method_name: ServoCalcs::ServoCalcs
+requirement: |
+  /**
+  * @brief Constructs the ServoCalcs object for processing motion servo commands.
+  *
+  * @param node Shared pointer to the ROS node for communication.
+  * @param parameters Shared pointer to the servo configuration parameters.
+  * @param planning_scene_monitor Planning scene monitor for accessing robot state and environment.
+  */
+category: ros_architecture
+type: has_domain_library,has_logger,has_topic,has_service,has_message
+signature: |
+  ServoCalcs::ServoCalcs(const rclcpp::Node::SharedPtr& node,
+                         const std::shared_ptr<const moveit_servo::ServoParameters>& parameters,
+                         const planning_scene_monitor::PlanningSceneMonitorPtr& planning_scene_monitor)
+    : node_(node)
+    , parameters_(parameters)
+    , planning_scene_monitor_(planning_scene_monitor)
+    , stop_requested_(true)
+    , done_stopping_(false)
+    , paused_(false)
+    , robot_link_command_frame_(parameters->robot_link_command_frame)
+    , smoothing_loader_("moveit_core", "online_signal_smoothing::SmoothingBaseClass")
+additional_information: 
+  function_related_variable: |
+    const std::shared_ptr<const moveit_servo::ServoParameters> parameters_;
+    planning_scene_monitor::PlanningSceneMonitorPtr planning_scene_monitor_;
+    moveit::core::RobotStatePtr current_state_;
+    const moveit::core::JointModelGroup* joint_model_group_;
+    rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr twist_stamped_sub_;
+    rclcpp::Subscription<control_msgs::msg::JointJog>::SharedPtr joint_cmd_sub_;
+    rclcpp::Service<moveit_msgs::srv::ChangeDriftDimensions>::SharedPtr drift_dimensions_server_;
+    sensor_msgs::msg::JointState internal_joint_state_, original_joint_state_;
+    const moveit::core::JointModelGroup* joint_model_group_;
+    unsigned int num_joints_;
+    Eigen::ArrayXd delta_theta_;
+    std::map<std::string, std::size_t> joint_state_name_map_;
+    std::shared_ptr<online_signal_smoothing::SmoothingBaseClass> smoother_;
+    pluginlib::ClassLoader<online_signal_smoothing::SmoothingBaseClass> smoothing_loader_;
+    Eigen::Isometry3d tf_moveit_to_robot_cmd_frame_;
+    Eigen::Isometry3d tf_moveit_to_ee_frame_;
+    kinematics::KinematicsBaseConstPtr ik_solver_;
+    const moveit::core::JointModelGroup* joint_model_group_;
+    bool use_inv_jacobian_ = false;
+    rclcpp::Service<moveit_msgs::srv::ChangeControlDimensions>::SharedPtr control_dimensions_server_;
+    rclcpp::Service<std_srvs::srv::Empty>::SharedPtr reset_servo_status_;
+    rclcpp::Subscription<std_msgs::msg::Float64>::SharedPtr collision_velocity_scale_sub_;
+    rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr status_pub_;
+    rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr trajectory_outgoing_cmd_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr multiarray_outgoing_cmd_pub_;
+  function_related_function: |
+    planning_scene_monitor::PlanningSceneMonitor::getStateMonitor()
+    planning_scene_monitor::PlanningSceneMonitor::getStateMonitor()::getCurrentState()
+    moveit::core::RobotState::getJointModelGroup()
+    rcl_interfaces::msg::SetParametersResult ServoCalcs::robotLinkCommandFrameCallback(const rclcpp::Parameter& parameter)
+  function_related_class: |
+    struct ServoParameters
+      {
+        using SharedConstPtr = std::shared_ptr<const ServoParameters>;
+
+        // Parameter namespace
+        const std::string ns;
+
+        // ROS Parameters
+        // Note that all of these are effectively const because the only way to create one of these
+        //  is as a shared_ptr to a constant struct.
+        bool use_gazebo{ false };
+        std::string status_topic{ "~/status" };
+        // Properties of incoming commands
+        std::string cartesian_command_in_topic{ "~/delta_twist_cmds" };
+        std::string joint_command_in_topic{ "~/delta_joint_cmds" };
+        std::string robot_link_command_frame{ "panda_link0" };
+        std::string command_in_type{ "unitless" };
+        double linear_scale{ 0.4 };
+        double rotational_scale{ 0.8 };
+        double joint_scale{ 0.5 };
+        // Properties of Servo calculations
+        double override_velocity_scaling_factor{ 0.0 };
+        // Properties of outgoing commands
+        std::string command_out_topic{ "/panda_arm_controller/joint_trajectory" };
+        double publish_period{ 0.034 };
+        std::string command_out_type{ "trajectory_msgs/JointTrajectory" };
+        bool publish_joint_positions{ true };
+        bool publish_joint_velocities{ true };
+        bool publish_joint_accelerations{ false };
+        // Plugins for smoothing outgoing commands
+        std::string joint_topic{ "/joint_states" };
+        std::string smoothing_filter_plugin_name{ "online_signal_smoothing::ButterworthFilterPlugin" };
+        // MoveIt properties
+        std::string move_group_name{ "panda_arm" };
+        std::string planning_frame{ "panda_link0" };
+        std::string ee_frame_name{ "panda_link8" };
+        bool is_primary_planning_scene_monitor = { true };
+        std::string monitored_planning_scene_topic{
+          planning_scene_monitor::PlanningSceneMonitor::DEFAULT_PLANNING_SCENE_TOPIC
+        };
+        // Stopping behaviour
+        double incoming_command_timeout{ 0.1 };
+        int num_outgoing_halt_msgs_to_publish{ 4 };
+        bool halt_all_joints_in_joint_mode{ true };
+        bool halt_all_joints_in_cartesian_mode{ true };
+        // Configure handling of singularities and joint limits
+        double lower_singularity_threshold{ 17.0 };
+        double hard_stop_singularity_threshold{ 30.0 };
+        double leaving_singularity_threshold_multiplier{ 2.0 };
+        double joint_limit_margin{ 0.1 };
+        bool low_latency_mode{ false };
+        // Collision checking
+        bool check_collisions{ true };
+        double collision_check_rate{ 10.0 };
+        double self_collision_proximity_threshold{ 0.01 };
+        double scene_collision_proximity_threshold{ 0.02 };
+test: servo_calcs_unit_tests
+test_cases: []

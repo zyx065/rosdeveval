@@ -1,0 +1,38 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_mppi_controller
+ros_package: nav2_mppi_controller
+file_path: src/path_handler.cpp
+method_name: PathHandler::isWithinInversionTolerances
+requirement: |
+  /**
+  * Checks if the robot's current pose is within inversion tolerances of the last pose in the inversion path.
+  * 
+  * @param robot_pose The current pose of the robot to check against the inversion path.
+  * @return True if the robot's position and orientation are within configured inversion tolerances, false otherwise.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  bool PathHandler::isWithinInversionTolerances(const geometry_msgs::msg::PoseStamped & robot_pose)
+additional_information: 
+  function_related_variable: |
+    std::string name_;
+    std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_;
+    std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
+    ParametersHandler * parameters_handler_;
+
+    nav_msgs::msg::Path global_plan_;
+    nav_msgs::msg::Path global_plan_up_to_inversion_;
+    rclcpp::Logger logger_{rclcpp::get_logger("MPPIController")};
+
+    double max_robot_pose_search_dist_{0};
+    double prune_distance_{0};
+    double transform_tolerance_{0};
+    float inversion_xy_tolerance_{0.2};
+    float inversion_yaw_tolerance{0.4};
+    bool enforce_path_inversion_{false};
+    unsigned int inversion_locale_{0u};
+test: path_handler_test
+test_cases: 
+- TestInversionToleranceChecks

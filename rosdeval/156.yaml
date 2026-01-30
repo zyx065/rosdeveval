@@ -1,0 +1,35 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_util
+ros_package: nav2_util
+file_path: src/odometry_utils.cpp
+method_name: OdomSmoother::OdomSmoother
+requirement: |
+  /**
+  * @brief Constructs an OdomSmoother to filter odometry data over a time window.
+  * 
+  * @param parent Weak pointer to the parent node for creating subscription
+  * @param filter_duration Duration in seconds for the smoothing time window
+  * @param odom_topic Topic name to subscribe for odometry messages
+  */
+category: ros_architecture
+type: has_topic,has_message
+signature: |
+  OdomSmoother::OdomSmoother(
+    const rclcpp::Node::WeakPtr & parent,
+    double filter_duration,
+    const std::string & odom_topic)
+  : odom_history_duration_(rclcpp::Duration::from_seconds(filter_duration))
+additional_information: 
+  function_related_variable: |
+    rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
+    nav_msgs::msg::Odometry odom_cumulate_;
+    geometry_msgs::msg::TwistStamped vel_smooth_;
+    std::mutex odom_mutex_;
+
+    rclcpp::Duration odom_history_duration_;
+    std::deque<nav_msgs::msg::Odometry> odom_history_;
+  function_related_function: 
+    void OdomSmoother::odomCallback(const nav_msgs::msg::Odometry::SharedPtr msg)
+test: test_odometry_utils
+test_cases: []

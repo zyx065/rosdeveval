@@ -1,0 +1,66 @@
+compilation.log: |
+  Starting >>> nav2_voxel_grid
+  Finished <<< nav2_voxel_grid [0.22s]
+
+  Summary: 1 package finished [0.51s]
+generate_code.cpp: |-
+  inline bool markVoxelInMap(
+      unsigned int x, unsigned int y, unsigned int z,
+      unsigned int marked_threshold)
+  {
+      // Check if coordinates are out of bounds
+      if (x >= size_x_ || y >= size_y_ || z >= size_z_)
+      {
+          RCLCPP_DEBUG(logger, "Coordinates out of bounds: (%u, %u, %u)", x, y, z);
+          return false;
+      }
+
+      // Calculate the index in the data array
+      unsigned int index = x + size_x_ * y + size_x_ * size_y_ * z;
+
+      // Mark the voxel (increment its count)
+      data_[index]++;
+
+      // Check if marked bits meet or exceed the threshold
+      if (bitsBelowThreshold(data_[index], marked_threshold))
+      {
+          return false;
+      }
+
+      // Mark the corresponding costmap cell as occupied
+      costmap[index] = 100; // Assuming 100 represents occupied in costmap
+
+      return true;
+  }
+ground_truth.cpp: |-
+  inline bool markVoxelInMap(
+      unsigned int x, unsigned int y, unsigned int z,
+      unsigned int marked_threshold)
+    {
+      if (x >= size_x_ || y >= size_y_ || z >= size_z_) {
+        RCLCPP_DEBUG(logger, "Error, voxel out of bounds.\n");
+        return false;
+      }
+
+      int index = y * size_x_ + x;
+      uint32_t * col = &data_[index];
+      uint32_t full_mask = ((uint32_t)1 << z << 16) | (1 << z);
+      *col |= full_mask;  // clear unknown and mark cell
+
+      unsigned int marked_bits = *col >> 16;
+
+      // make sure the number of bits in each is below our thresholds
+      return !bitsBelowThreshold(marked_bits, marked_threshold);
+    }
+architecture-codes: []
+functionality-codes:
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue 
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue 
+  - Incomplete Code Issue - Missing Multiple Steps Issue 
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic 
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

@@ -1,0 +1,152 @@
+compilation.log: "Starting >>> autoware_scenario_selector\n--- stderr: autoware_scenario_selector\n\
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:\
+  \ In constructor ‘autoware::scenario_selector::ScenarioSelectorNode::ScenarioSelectorNode(const\
+  \ rclcpp::NodeOptions&)’:\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:483:49:\
+  \ error: ‘tier4_debug_msgs’ was not declared in this scope; did you mean ‘tier4_planning_msgs’?\n\
+  \  483 |   pub_processing_time_ = this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>(\n\
+  \      |                                                 ^~~~~~~~~~~~~~~~\n    \
+  \  |                                                 tier4_planning_msgs\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:483:32:\
+  \ error: parse error in template argument list\n  483 |   pub_processing_time_ =\
+  \ this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>(\n      |      \
+  \                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:483:87:\
+  \ error: no matching function for call to ‘autoware::scenario_selector::ScenarioSelectorNode::create_publisher<<expression\
+  \ error> >(const char [22], rclcpp::QoS)’\n  483 |   pub_processing_time_ = this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>(\n\
+  \      |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n\
+  \  484 |     \"debug/processing_time\", rclcpp::QoS{1});\n      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+  \                                           \nIn file included from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:1321,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:22,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,\n \
+  \                from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/published_time_publisher.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/include/autoware/scenario_selector/node.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:15:\n\
+  /opt/ros/humble/include/rclcpp/rclcpp/node_impl.hpp:73:1: note: candidate: ‘template<class\
+  \ MessageT, class AllocatorT, class PublisherT> std::shared_ptr<PublisherT> rclcpp::Node::create_publisher(const\
+  \ string&, const rclcpp::QoS&, const rclcpp::PublisherOptionsWithAllocator<AllocatorT>&)’\n\
+  \   73 | Node::create_publisher(\n      | ^~~~\n/opt/ros/humble/include/rclcpp/rclcpp/node_impl.hpp:73:1:\
+  \ note:   template argument deduction/substitution failed:\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:483:87:\
+  \ error: template argument 1 is invalid\n  483 |   pub_processing_time_ = this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>(\n\
+  \      |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n\
+  \  484 |     \"debug/processing_time\", rclcpp::QoS{1});\n      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\
+  \                                           \ngmake[2]: *** [CMakeFiles/autoware_scenario_selector.dir/build.make:76:\
+  \ CMakeFiles/autoware_scenario_selector.dir/src/node.cpp.o] Error 1\ngmake[1]: ***\
+  \ [CMakeFiles/Makefile2:159: CMakeFiles/autoware_scenario_selector.dir/all] Error\
+  \ 2\ngmake: *** [Makefile:146: all] Error 2\n---\nFailed   <<< autoware_scenario_selector\
+  \ [14.8s, exited with code 2]\n\nSummary: 0 packages finished [16.1s]\n  1 package\
+  \ failed: autoware_scenario_selector\n  1 package had stderr output: autoware_scenario_selector\n"
+generate_code.cpp: |-
+  ScenarioSelectorNode::ScenarioSelectorNode(const rclcpp::NodeOptions & node_options)
+  : Node("scenario_selector", node_options),
+    current_scenario_(tier4_planning_msgs::msg::Scenario::EMPTY),
+    update_rate_(this->declare_parameter<double>("update_rate")),
+    th_max_message_delay_sec_(this->declare_parameter<double>("th_max_message_delay_sec")),
+    th_arrived_distance_m_(this->declare_parameter<double>("th_arrived_distance_m")),
+    th_stopped_time_sec_(this->declare_parameter<double>("th_stopped_time_sec")),
+    th_stopped_velocity_mps_(this->declare_parameter<double>("th_stopped_velocity_mps")),
+    enable_mode_switching_(this->declare_parameter<bool>("enable_mode_switching")),
+    is_parking_completed_(false)
+  {
+    // Initialize subscriptions
+    sub_lanelet_map_ = this->create_subscription<autoware_map_msgs::msg::LaneletMapBin>(
+      "input/lanelet_map", rclcpp::QoS{1},
+      std::bind(&ScenarioSelectorNode::onMap, this, std::placeholders::_1));
+
+    sub_route_ = this->create_subscription<autoware_planning_msgs::msg::LaneletRoute>(
+      "input/route", rclcpp::QoS{1},
+      std::bind(&ScenarioSelectorNode::onRoute, this, std::placeholders::_1));
+
+    sub_lane_driving_trajectory_ = this->create_subscription<autoware_planning_msgs::msg::Trajectory>(
+      "input/lane_driving/trajectory", rclcpp::QoS{1},
+      std::bind(&ScenarioSelectorNode::onLaneDrivingTrajectory, this, std::placeholders::_1));
+
+    sub_parking_trajectory_ = this->create_subscription<autoware_planning_msgs::msg::Trajectory>(
+      "input/parking/trajectory", rclcpp::QoS{1},
+      std::bind(&ScenarioSelectorNode::onParkingTrajectory, this, std::placeholders::_1));
+
+    sub_odom_ = std::make_shared<universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry, autoware::universe_utils::polling_policy::All>>(
+      this, "input/odometry");
+
+    sub_parking_state_ = std::make_shared<universe_utils::InterProcessPollingSubscriber<std_msgs::msg::Bool>>(
+      this, "input/parking_state");
+
+    sub_operation_mode_state_ = std::make_shared<universe_utils::InterProcessPollingSubscriber<autoware_adapi_v1_msgs::msg::OperationModeState>>(
+      this, "input/operation_mode_state");
+
+    // Initialize publishers
+    pub_trajectory_ = this->create_publisher<autoware_planning_msgs::msg::Trajectory>(
+      "output/trajectory", rclcpp::QoS{1});
+
+    pub_scenario_ = this->create_publisher<tier4_planning_msgs::msg::Scenario>(
+      "output/scenario", rclcpp::QoS{1});
+
+    pub_processing_time_ = this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>(
+      "debug/processing_time", rclcpp::QoS{1});
+
+    published_time_publisher_ = std::make_unique<autoware::universe_utils::PublishedTimePublisher>(
+      this, "debug/published_time");
+
+    // Initialize timer
+    const auto timer_period = std::chrono::duration_cast<std::chrono::nanoseconds>(
+      std::chrono::duration<double>(1.0 / update_rate_));
+    timer_ = this->create_wall_timer(
+      timer_period, std::bind(&ScenarioSelectorNode::onTimer, this));
+  }
+ground_truth.cpp: |-
+  ScenarioSelectorNode::ScenarioSelectorNode(const rclcpp::NodeOptions & node_options)
+  : Node("scenario_selector", node_options),
+    current_scenario_(tier4_planning_msgs::msg::Scenario::EMPTY),
+    update_rate_(this->declare_parameter<double>("update_rate")),
+    th_max_message_delay_sec_(this->declare_parameter<double>("th_max_message_delay_sec")),
+    th_arrived_distance_m_(this->declare_parameter<double>("th_arrived_distance_m")),
+    th_stopped_time_sec_(this->declare_parameter<double>("th_stopped_time_sec")),
+    th_stopped_velocity_mps_(this->declare_parameter<double>("th_stopped_velocity_mps")),
+    enable_mode_switching_(this->declare_parameter<bool>("enable_mode_switching")),
+    is_parking_completed_(false)
+  {
+    lane_driving_stop_time_ = {};
+    empty_parking_trajectory_time_ = {};
+
+    // Input
+    sub_lane_driving_trajectory_ = this->create_subscription<autoware_planning_msgs::msg::Trajectory>(
+      "input/lane_driving/trajectory", rclcpp::QoS{1},
+      std::bind(&ScenarioSelectorNode::onLaneDrivingTrajectory, this, std::placeholders::_1));
+
+    sub_parking_trajectory_ = this->create_subscription<autoware_planning_msgs::msg::Trajectory>(
+      "input/parking/trajectory", rclcpp::QoS{1},
+      std::bind(&ScenarioSelectorNode::onParkingTrajectory, this, std::placeholders::_1));
+
+    sub_lanelet_map_ = this->create_subscription<autoware_map_msgs::msg::LaneletMapBin>(
+      "input/lanelet_map", rclcpp::QoS{1}.transient_local(),
+      std::bind(&ScenarioSelectorNode::onMap, this, std::placeholders::_1));
+
+    sub_route_ = this->create_subscription<autoware_planning_msgs::msg::LaneletRoute>(
+      "input/route", rclcpp::QoS{1}.transient_local(),
+      std::bind(&ScenarioSelectorNode::onRoute, this, std::placeholders::_1));
+
+    sub_odom_ = decltype(sub_odom_)::element_type::create_subscription(
+      this, "input/odometry", rclcpp::QoS{100});
+
+    sub_parking_state_ = decltype(sub_parking_state_)::element_type::create_subscription(
+      this, "is_parking_completed", rclcpp::QoS{1});
+
+    sub_operation_mode_state_ =
+      decltype(sub_operation_mode_state_)::element_type::create_subscription(
+        this, "input/operation_mode_state", rclcpp::QoS{1});
+
+    // Output
+    pub_scenario_ =
+      this->create_publisher<tier4_planning_msgs::msg::Scenario>("output/scenario", rclcpp::QoS{1});
+    pub_trajectory_ = this->create_publisher<autoware_planning_msgs::msg::Trajectory>(
+      "output/trajectory", rclcpp::QoS{1});
+
+    // Timer Callback
+    const auto period_ns = rclcpp::Rate(static_cast<double>(update_rate_)).period();
+
+    timer_ = rclcpp::create_timer(
+      this, get_clock(), period_ns, std::bind(&ScenarioSelectorNode::onTimer, this));
+    published_time_publisher_ =
+      std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);
+    pub_processing_time_ = this->create_publisher<autoware_internal_debug_msgs::msg::Float64Stamped>(
+      "~/debug/processing_time_ms", 1);
+  }

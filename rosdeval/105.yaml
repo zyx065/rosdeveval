@@ -1,0 +1,24 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_obstacle_collision_checker
+ros_package: autoware_raw_vehicle_cmd_converter
+file_path: src/obstacle_collision_checker.cpp
+method_name: get_transformed_point_cloud
+requirement: |
+  /**
+  * Transforms a point cloud from one coordinate frame to another using the given transform.
+  * 
+  * @param pointcloud_msg The input point cloud message to be transformed.
+  * @param transform The transformation to apply to the point cloud.
+  * @return pcl::PointCloud<pcl::PointXYZ> The transformed point cloud in PCL format.
+  */
+category: utilities
+type: has_message,has_domain_library
+signature: |
+  pcl::PointCloud<pcl::PointXYZ> get_transformed_point_cloud(
+    const sensor_msgs::msg::PointCloud2 & pointcloud_msg,
+    const geometry_msgs::msg::Transform & transform)
+additional_information: []
+test: test_obstacle_collision_checker
+test_cases: 
+- getTransformedPointCloud

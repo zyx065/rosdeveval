@@ -1,0 +1,101 @@
+compilation.log: |
+  Starting >>> autoware_scenario_selector
+  --- stderr: autoware_scenario_selector
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp: In member function ‘void autoware::scenario_selector::ScenarioSelectorNode::onTimer()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:401:5: error: ‘tier4_debug_msgs’ has not been declared
+    401 |     tier4_debug_msgs::msg::Float64Stamped processing_time_msg;
+        |     ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:402:5: error: ‘processing_time_msg’ was not declared in this scope; did you mean ‘processing_time’?
+    402 |     processing_time_msg.data = processing_time.count() / 1000.0;  // Convert to milliseconds
+        |     ^~~~~~~~~~~~~~~~~~~
+        |     processing_time
+  gmake[2]: *** [CMakeFiles/autoware_scenario_selector.dir/build.make:76: CMakeFiles/autoware_scenario_selector.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_scenario_selector.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_scenario_selector [14.8s, exited with code 2]
+
+  Summary: 0 packages finished [16.1s]
+    1 package failed: autoware_scenario_selector
+    1 package had stderr output: autoware_scenario_selector
+generate_code.cpp: |-
+  void ScenarioSelectorNode::onTimer()
+  {
+      // Start timing the processing
+      auto start_time = std::chrono::steady_clock::now();
+
+      // Update internal data first
+      updateData();
+
+      // Check if data is ready for scenario selection
+      if (!isDataReady()) {
+          return;
+      }
+
+      // Select scenario if no current scenario is active
+      if (current_scenario_.empty()) {
+          current_scenario_ = selectScenarioByPosition();
+      }
+
+      // Update current scenario based on latest conditions
+      updateCurrentScenario();
+
+      // Prepare scenario message
+      tier4_planning_msgs::msg::Scenario scenario_msg;
+      scenario_msg.current_scenario = current_scenario_;
+
+      // Publish scenario
+      pub_scenario_->publish(scenario_msg);
+
+      // Calculate and publish processing time
+      auto end_time = std::chrono::steady_clock::now();
+      auto processing_time = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+
+      tier4_debug_msgs::msg::Float64Stamped processing_time_msg;
+      processing_time_msg.data = processing_time.count() / 1000.0;  // Convert to milliseconds
+      pub_processing_time_->publish(processing_time_msg);
+  }
+ground_truth.cpp: |-
+  void ScenarioSelectorNode::onTimer()
+  {
+    updateData();
+
+    if (!isDataReady()) {
+      return;
+    }
+
+    // Initialize Scenario
+    if (current_scenario_ == tier4_planning_msgs::msg::Scenario::EMPTY) {
+      current_scenario_ = selectScenarioByPosition();
+    }
+
+    updateCurrentScenario();
+    tier4_planning_msgs::msg::Scenario scenario;
+    scenario.current_scenario = current_scenario_;
+
+    if (current_scenario_ == tier4_planning_msgs::msg::Scenario::PARKING) {
+      scenario.activating_scenarios.push_back(current_scenario_);
+    }
+
+    pub_scenario_->publish(scenario);
+
+    // Publish ProcessingTime
+    autoware_internal_debug_msgs::msg::Float64Stamped processing_time_msg;
+    processing_time_msg.stamp = get_clock()->now();
+    processing_time_msg.data = stop_watch.toc();
+    pub_processing_time_->publish(processing_time_msg);
+  }
+architecture-codes:
+  - ROS Message Related Issues - Improper Message Type Usage Issue
+  - ROS Message Related Issues - Message Initialization Issues
+  - ROS Timer Issues - Timestamp Processing Missing 
+
+functionality-codes:
+  - Incomplete Code - Missing one step 
+  - Conditional Checks Issues - Conditional Check Logic Misapplication 
+  - Reference Error - Wrong Variable 
+
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming 
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase 
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic 

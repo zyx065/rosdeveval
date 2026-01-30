@@ -1,0 +1,64 @@
+compilation.log: |
+  Starting >>> autoware_kinematic_evaluator
+  --- stderr: autoware_kinematic_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp: In constructor ‘autoware::kinematic_diagnostics::KinematicEvaluatorNode::KinematicEvaluatorNode(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:36:73: error: converting to ‘const ParameterDescriptor’ {aka ‘const rcl_interfaces::msg::ParameterDescriptor_<std::allocator<void> >’} from initializer list would use explicit constructor ‘rcl_interfaces::msg::ParameterDescriptor_<ContainerAllocator>::ParameterDescriptor_(rosidl_runtime_cpp::MessageInitialization) [with ContainerAllocator = std::allocator<void>]’ [-Werror]
+     36 |   auto metrics_param = this->declare_parameter<std::vector<std::string>>("metrics", {});
+        |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:36:73: note: in C++11 and above a default constructor can be explicit
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:40:29: error: ‘fromString’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+     40 |     Metric metric = Metric::fromString(metric_name);
+        |                             ^~~~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/autoware_kinematic_evaluator.dir/build.make:90: CMakeFiles/autoware_kinematic_evaluator.dir/src/kinematic_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_kinematic_evaluator.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_kinematic_evaluator [4.89s, exited with code 2]
+
+  Summary: 0 packages finished [6.28s]
+    1 package failed: autoware_kinematic_evaluator
+    1 package had stderr output: autoware_kinematic_evaluator
+generate_code.cpp: "KinematicEvaluatorNode::KinematicEvaluatorNode(const rclcpp::NodeOptions\
+  \ & node_options)\n: Node(\"kinematic_evaluator\", node_options)\n{\n  // Initialize\
+  \ TF buffer and listener\n  tf_buffer_ptr_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());\n\
+  \  tf_listener_ptr_ = std::make_unique<tf2_ros::TransformListener>(*tf_buffer_ptr_);\n\
+  \n  // Declare and get parameters\n  output_file_str_ = this->declare_parameter<std::string>(\"\
+  output_file\", \"\");\n  auto metrics_param = this->declare_parameter<std::vector<std::string>>(\"\
+  metrics\", {});\n  \n  // Parse metrics from parameters\n  for (const auto & metric_name\
+  \ : metrics_param) {\n    Metric metric = Metric::fromString(metric_name);\n   \
+  \ metrics_.push_back(metric);\n    metrics_dict_[metric] = Accumulator<double>();\n\
+  \  }\n\n  // Subscribe to odometry topic\n  std::string odom_topic = this->declare_parameter<std::string>(\"\
+  odom_topic\", \"/odom\");\n  odom_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(\n\
+  \    odom_topic, rclcpp::QoS(10),\n    std::bind(&KinematicEvaluatorNode::onOdom,\
+  \ this, std::placeholders::_1));\n\n  // Create publisher for diagnostic metrics\n\
+  \  metrics_pub_ = this->create_publisher<DiagnosticArray>(\"kinematic_metrics\"\
+  , rclcpp::QoS(10));\n\n  RCLCPP_INFO(this->get_logger(), \"KinematicEvaluatorNode\
+  \ initialized.\");\n}"
+ground_truth.cpp: |-
+  KinematicEvaluatorNode::KinematicEvaluatorNode(const rclcpp::NodeOptions & node_options)
+  : Node("kinematic_evaluator", node_options)
+  {
+    tf_buffer_ptr_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+    tf_listener_ptr_ = std::make_unique<tf2_ros::TransformListener>(*tf_buffer_ptr_);
+
+    odom_sub_ = create_subscription<nav_msgs::msg::Odometry>(
+      "~/input/twist", rclcpp::QoS{1},
+      std::bind(&KinematicEvaluatorNode::onOdom, this, std::placeholders::_1));
+
+    output_file_str_ = declare_parameter<std::string>("output_file");
+    if (output_file_str_.empty()) {
+      RCLCPP_INFO(
+        get_logger(),
+        "Output file not specified, the results will NOT be saved!"
+        "Provide output_file parameter to store the results.");
+    }
+    // List of metrics to calculate
+    metrics_pub_ = create_publisher<DiagnosticArray>("~/metrics", 1);
+    for (const std::string & selected_metric :
+         declare_parameter<std::vector<std::string>>("selected_metrics")) {
+      Metric metric = str_to_metric.at(selected_metric);
+      metrics_dict_[metric] = Accumulator<double>();
+      metrics_.push_back(metric);
+    }
+  }

@@ -1,0 +1,32 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_control_validator
+ros_package: autoware_control_validator
+file_path: src/control_validator.cpp
+method_name: ControlValidator::on_predicted_trajectory
+requirement: |
+  /**
+  * @brief Callback for processing predicted trajectory messages and performing control validation.
+  * 
+  * @param msg Shared pointer to the incoming predicted trajectory message.
+  */
+category: ros_architecture
+type: has_message,has_topic,has_timer
+signature: |
+  void ControlValidator::on_predicted_trajectory(const Trajectory::ConstSharedPtr msg)
+additional_information: 
+  function_related_variable: |
+    Trajectory::ConstSharedPtr current_predicted_trajectory_;
+    Trajectory::ConstSharedPtr current_reference_trajectory_;
+    universe_utils::InterProcessPollingSubscriber<Trajectory>::SharedPtr sub_reference_traj_;
+    universe_utils::InterProcessPollingSubscriber<Odometry>::SharedPtr sub_kinematics_;
+    Odometry::ConstSharedPtr current_kinematics_;
+    std::shared_ptr<ControlValidatorDebugMarkerPublisher> debug_pose_publisher_;
+    Updater diag_updater_{this};
+  function_related_function: |
+    bool is_data_ready();
+    void validate(const Trajectory & predicted_trajectory, const Trajectory & reference_trajectory,const Odometry & kinematics);
+    void publish_debug_info();
+    void display_status();
+test: test_autoware_control_validator
+test_cases: []

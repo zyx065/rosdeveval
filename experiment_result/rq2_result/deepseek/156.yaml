@@ -1,0 +1,57 @@
+compilation.log: |
+  Starting >>> nav2_util
+  Finished <<< nav2_util [0.34s]
+
+  Summary: 1 package finished [0.65s]
+generate_code.cpp: |-
+  OdomSmoother::OdomSmoother(
+    const rclcpp::Node::WeakPtr & parent,
+    double filter_duration,
+    const std::string & odom_topic)
+  : odom_history_duration_(rclcpp::Duration::from_seconds(filter_duration))
+  {
+    auto node = parent.lock();
+    if (!node) {
+      throw std::runtime_error("Unable to lock parent node");
+    }
+
+    odom_sub_ = node->create_subscription<nav_msgs::msg::Odometry>(
+      odom_topic,
+      rclcpp::SensorDataQoS(),
+      std::bind(&OdomSmoother::odomCallback, this, std::placeholders::_1));
+
+    // Initialize cumulative odometry and smoothed velocity
+    odom_cumulate_ = nav_msgs::msg::Odometry();
+    vel_smooth_ = geometry_msgs::msg::TwistStamped();
+  }
+ground_truth.cpp: |-
+  OdomSmoother::OdomSmoother(
+    const rclcpp::Node::WeakPtr & parent,
+    double filter_duration,
+    const std::string & odom_topic)
+  : odom_history_duration_(rclcpp::Duration::from_seconds(filter_duration))
+  {
+    auto node = parent.lock();
+    odom_sub_ = node->create_subscription<nav_msgs::msg::Odometry>(
+      odom_topic,
+      rclcpp::SystemDefaultsQoS(),
+      std::bind(&OdomSmoother::odomCallback, this, std::placeholders::_1));
+
+    odom_cumulate_.twist.twist.linear.x = 0;
+    odom_cumulate_.twist.twist.linear.y = 0;
+    odom_cumulate_.twist.twist.linear.z = 0;
+    odom_cumulate_.twist.twist.angular.x = 0;
+    odom_cumulate_.twist.twist.angular.y = 0;
+    odom_cumulate_.twist.twist.angular.z = 0;
+  }
+architecture-codes:
+  - Topic/Service Issue - QoS Policy Incompatibility Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements

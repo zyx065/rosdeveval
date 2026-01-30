@@ -1,0 +1,71 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_autonomous_emergency_braking
+ros_package: autoware_autonomous_emergency_braking
+file_path: src/node.cpp
+method_name: AEB::onParameter
+requirement: |
+ @brief Handles parameter updates for the AEB (Autonomous Emergency Braking) system.
+ 
+ This method updates various parameters related to the AEB system based on the provided parameter list.
+ 
+ @param parameters A vector of parameters to be updated.
+ @return rcl_interfaces::msg::SetParametersResult A result indicating the success or failure of the parameter update.
+category: ros_architecture
+type: has_parameter,has_message
+signature: |
+  rcl_interfaces::msg::SetParametersResult AEB::onParameter(
+    const std::vector<rclcpp::Parameter> & parameters)
+additional_information: 
+  function_related_class: |
+    bool updateParam(const std::vector<rclcpp::Parameter> & params, const std::string & name, T & value)
+    {
+      const auto itr = std::find_if(
+        params.cbegin(), params.cend(),
+        [&name](const rclcpp::Parameter & p) { return p.get_name() == name; });
+
+      // Not found
+      if (itr == params.cend()) {
+        return false;
+      }
+
+      value = itr->template get_value<T>();
+      return true;
+    }
+  repos_related_variable: |
+    bool publish_debug_pointcloud_;
+    bool publish_debug_markers_;
+    bool use_predicted_trajectory_;
+    bool use_imu_path_;
+    bool limit_imu_path_lat_dev_;
+    bool limit_imu_path_length_;
+    bool use_pointcloud_data_;
+    bool use_predicted_object_data_;
+    bool use_object_velocity_calculation_;
+    bool check_autoware_state_;
+    double imu_path_lat_dev_threshold_;
+    double path_footprint_extra_margin_;
+    double speed_calculation_expansion_margin_;
+    double detection_range_min_height_;
+    double detection_range_max_height_margin_;
+    double voxel_grid_x_;
+    double voxel_grid_y_;
+    double voxel_grid_z_;
+    double min_generated_imu_path_length_;
+    double max_generated_imu_path_length_;
+    double expand_width_;
+    double longitudinal_offset_margin_;
+    double t_response_;
+    double a_ego_min_;
+    double a_obj_min_;
+    double cluster_tolerance_;
+    double cluster_minimum_height_;
+    int minimum_cluster_size_;
+    int maximum_cluster_size_;
+    double imu_prediction_time_horizon_;
+    double imu_prediction_time_interval_;
+    double mpc_prediction_time_horizon_;
+    double mpc_prediction_time_interval_;
+    CollisionDataKeeper collision_data_keeper_;
+test: test_aeb
+test_cases: []

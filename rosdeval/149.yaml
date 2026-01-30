@@ -1,0 +1,25 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/robot_trajectory
+ros_package: moveit_core
+file_path: src/robot_trajectory.cpp
+method_name: path_length
+requirement: |
+  /**
+  * Calculates the total path length of a robot trajectory.
+  * 
+  * @param trajectory The robot trajectory to measure.
+  * @return The total length of the trajectory path in distance units.
+  */
+category: utilities
+type: []
+signature: |
+  double path_length(RobotTrajectory const& trajectory)
+additional_information: 
+  function_related_class: |
+    RobotTrajectory
+      std::size_t getWayPointCount() const
+      const moveit::core::RobotState& getWayPoint(std::size_t index) const
+test: test_robot_trajectory
+test_cases: 
+- RobotTrajectoryLength

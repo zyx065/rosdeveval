@@ -1,0 +1,25 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_autonomous_emergency_braking
+ros_package: autoware_autonomous_emergency_braking
+file_path: src/node.cpp
+method_name: AEB::onImu
+requirement: |
+  /**
+  * Processes IMU messages by transforming angular velocity to the base_link frame.
+  * 
+  * @param[in] input_msg The input IMU message containing angular velocity data in its original frame.
+  */
+category: ros_architecture
+type: has_message,has_domain_library
+signature: |
+  void AEB::onImu(const Imu::ConstSharedPtr input_msg)
+additional_information: 
+  function_related_variable: |
+    tf2_ros::Buffer tf_buffer_{get_clock()};
+    tf2_ros::TransformListener tf_listener_{tf_buffer_};
+    Vector3::SharedPtr angular_velocity_ptr_{nullptr};
+  function_related_function: |
+    std::optional<geometry_msgs::msg::TransformStamped> getTransform(const std::string & target_frame, const std::string & source_frame,const tf2_ros::Buffer & tf_buffer, const rclcpp::Logger & logger)
+test: test_aeb
+test_cases: []

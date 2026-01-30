@@ -1,0 +1,50 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_ground_segmentation
+ros_package: autoware_vehicle_cmd_gate
+file_path: src/scan_ground_filter/node.cpp
+method_name: ScanGroundFilterComponent::ScanGroundFilterComponent
+requirement: |
+  /**
+  * @brief Constructs a ScanGroundFilterComponent for ground point cloud segmentation.
+  * 
+  * @param options Node configuration options for initializing the filter.
+  */
+category: ros_architecture
+type: has_topic,has_parameter,has_timer
+signature: |
+  ScanGroundFilterComponent::ScanGroundFilterComponent(const rclcpp::NodeOptions & options)
+  : autoware::pointcloud_preprocessor::Filter("ScanGroundFilter", options)
+additional_information: 
+  function_related_variable: |
+    bool elevation_grid_mode_;
+    float radial_divider_angle_rad_;  // distance in rads between dividers
+    size_t radial_dividers_num_;
+    // common thresholds
+    float global_slope_max_angle_rad_;  // radians
+    float local_slope_max_angle_rad_;   // radians
+    float global_slope_max_ratio_;
+    float local_slope_max_ratio_;
+    float split_points_distance_tolerance_;  // distance in meters between concentric divisions
+    VehicleInfo vehicle_info_;
+    // non-grid mode parameters
+    bool use_virtual_ground_point_;
+    float split_height_distance_;  // useful for close points
+    bool use_recheck_ground_cluster_;  // to enable recheck ground cluster
+    bool use_lowest_point_; 
+    float detection_range_z_max_;
+    float low_priority_region_x_;
+    float center_pcl_shift_;
+    float non_ground_height_threshold_;
+    float grid_size_m_;
+    float grid_mode_switch_radius_;  // non linear grid size switching distance
+    uint16_t gnd_grid_buffer_size_;
+    float virtual_lidar_z_;
+    OnSetParametersCallbackHandle::SharedPtr set_param_res_;
+    std::unique_ptr<autoware::universe_utils::StopWatch<std::chrono::milliseconds>> stop_watch_ptr_{nullptr};
+    std::unique_ptr<autoware::universe_utils::DebugPublisher> debug_publisher_ptr_{nullptr};
+    rclcpp::Publisher<autoware::universe_utils::ProcessingTimeDetail>::SharedPtr detailed_processing_time_publisher_;
+    std::shared_ptr<autoware::universe_utils::TimeKeeper> time_keeper_;
+    std::unique_ptr<GridGroundFilter> grid_ground_filter_ptr_;
+test: test_scan_ground_filter
+test_cases: []

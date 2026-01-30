@@ -1,0 +1,23 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_detected_object_validation
+ros_package: autoware_trajectory_follower_node
+file_path: src/lanelet_filter/lanelet_filter.cpp
+method_name: ObjectLaneletFilterNode::mapCallback
+requirement: |
+  /**
+  * @brief Processes an incoming Lanelet2 map message for lanelet-based object filtering.
+  * 
+  * @param map_msg The incoming Lanelet2 map data in binary format.
+  */
+category: ros_architecture
+type: has_message,has_domain_library
+signature: |
+  void ObjectLaneletFilterNode::mapCallback(
+    const autoware_map_msgs::msg::LaneletMapBin::ConstSharedPtr map_msg)
+additional_information: 
+  function_related_variable: |
+    std::string lanelet_frame_id_;
+    lanelet::LaneletMapPtr lanelet_map_ptr_;
+test: object_lanelet_filter_tests
+test_cases: []

@@ -1,0 +1,64 @@
+compilation.log: |
+  Starting >>> moveit_core
+  Finished <<< moveit_core [0.86s]
+
+  Summary: 1 package finished [1.31s]
+generate_code.cpp: |-
+  bool UnionConstraintSampler::sample(moveit::core::RobotState& state, const moveit::core::RobotState& reference_state,
+                                      unsigned int max_attempts)
+  {
+      // Initialize the state to the reference state
+      state = reference_state;
+
+      // Set random positions for the joint model group
+      state.setToRandomPositions(jmg_);
+      state.updateLinkTransforms();
+
+      // Iterate through each constraint sampler and apply it
+      for (const ConstraintSamplerPtr& sampler : samplers_)
+      {
+          if (!sampler)
+              continue;
+
+          // Attempt to sample with the current constraint
+          if (!sampler->sample(state, reference_state, max_attempts))
+              return false;
+      }
+
+      return true;
+  }
+ground_truth.cpp: |-
+  bool UnionConstraintSampler::sample(moveit::core::RobotState& state, const moveit::core::RobotState& reference_state,
+                                      unsigned int max_attempts)
+  {
+    state = reference_state;
+    state.setToRandomPositions(jmg_);
+
+    if (!samplers_.empty())
+    {
+      if (!samplers_[0]->sample(state, reference_state, max_attempts))
+        return false;
+    }
+
+    for (std::size_t i = 1; i < samplers_.size(); ++i)
+    {
+      // ConstraintSampler::sample returns states with dirty link transforms (because it only writes values)
+      // but requires a state with clean link transforms as input. This means that we need to clean the link
+      // transforms between calls to ConstraintSampler::sample.
+      state.updateLinkTransforms();
+      if (!samplers_[i]->sample(state, state, max_attempts))
+        return false;
+    }
+    return true;
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

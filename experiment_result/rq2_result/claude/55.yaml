@@ -1,0 +1,60 @@
+compilation.log: |
+  Starting >>> autoware_planning_validator
+  Finished <<< autoware_planning_validator [29.6s]
+
+  Summary: 1 package finished [31.0s]
+generate_code.cpp: |
+  void PlanningValidator::publishDebugInfo()
+  {
+      // Publish validation status
+      if (pub_status_) {
+          pub_status_->publish(validation_status_);
+      }
+
+      // If planning is not valid, add debug visualization markers
+      if (!isAllValid(validation_status_)) {
+          // Check if current kinematics and debug pose publisher are available
+          if (current_kinematics_ && debug_pose_publisher_) {
+              // Get the current vehicle pose from kinematics
+              geometry_msgs::msg::Pose current_pose = current_kinematics_->pose.pose;
+
+              // Push virtual wall at the vehicle's front position
+              debug_pose_publisher_->pushVirtualWall(current_pose);
+
+              // Push warning message at the vehicle's front position
+              debug_pose_publisher_->pushWarningMsg(
+                  current_pose, 
+                  "Planning Validation Failed: Invalid Trajectory"
+              );
+
+              // Publish debug visualization markers
+              debug_pose_publisher_->publish();
+          }
+      }
+  }
+ground_truth.cpp: |-
+  void PlanningValidator::publishDebugInfo()
+  {
+    validation_status_.stamp = get_clock()->now();
+    pub_status_->publish(validation_status_);
+
+    if (!isAllValid(validation_status_)) {
+      geometry_msgs::msg::Pose front_pose = current_kinematics_->pose.pose;
+      shiftPose(front_pose, vehicle_info_.front_overhang_m + vehicle_info_.wheel_base_m);
+      debug_pose_publisher_->pushVirtualWall(front_pose);
+      debug_pose_publisher_->pushWarningMsg(front_pose, "INVALID PLANNING");
+    }
+    debug_pose_publisher_->publish();
+  }
+architecture-codes:
+  - ROS Timer Issues - Timestamp Processing Missing
+
+functionality-codes:
+  - Incomplete Code - Missing One Step 
+  - Constant Value Error - Constant value error
+  - Conditional Checks Issues - Conditional Check Logic Misapplication 
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic 
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices 
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase 

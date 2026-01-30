@@ -1,0 +1,41 @@
+compilation.log: |
+  Starting >>> nav2_rotation_shim_controller
+  Finished <<< nav2_rotation_shim_controller [0.36s]
+
+  Summary: 1 package finished [0.66s]
+generate_code.cpp: |-
+  void RotationShimController::cleanup()
+  {
+    RCLCPP_INFO(logger_, "Cleaning up RotationShimController resources");
+
+    // Reset the primary controller
+    if (primary_controller_) {
+      RCLCPP_INFO(logger_, "Resetting primary controller: %s", plugin_name_.c_str());
+      primary_controller_.reset();
+    } else {
+      RCLCPP_WARN(logger_, "Primary controller is already null");
+    }
+
+    // Reset the position goal checker
+    if (position_goal_checker_) {
+      RCLCPP_INFO(logger_, "Resetting position goal checker");
+      position_goal_checker_.reset();
+    } else {
+      RCLCPP_WARN(logger_, "Position goal checker is already null");
+    }
+
+    RCLCPP_INFO(logger_, "RotationShimController cleanup complete");
+  }
+ground_truth.cpp: |-
+  void RotationShimController::cleanup()
+  {
+    RCLCPP_INFO(
+      logger_,
+      "Cleaning up controller: %s of type "
+      "nav2_rotation_shim_controller::RotationShimController",
+      plugin_name_.c_str());
+
+    primary_controller_->cleanup();
+    primary_controller_.reset();
+    position_goal_checker_.reset();
+  }

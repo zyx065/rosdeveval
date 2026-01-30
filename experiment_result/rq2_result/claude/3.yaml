@@ -1,0 +1,136 @@
+compilation.log: |
+  Starting >>> autoware_localization_evaluator
+  --- stderr: autoware_localization_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_localization_evaluator/src/localization_evaluator_node.cpp: In member function ‘void autoware::localization_diagnostics::LocalizationEvaluatorNode::syncCallback(const ConstSharedPtr&, const ConstSharedPtr&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_localization_evaluator/src/localization_evaluator_node.cpp:111:78: error: suggest parentheses around ‘&&’ within ‘||’ [-Werror=parentheses]
+    111 |     if (msg->pose.pose.position.x == 0.0 && msg->pose.pose.position.y == 0.0 && msg->pose.pose.position.z == 0.0 ||
+        |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_localization_evaluator/src/localization_evaluator_node.cpp:127:26: error: ‘POSITION_ERROR’ is not a member of ‘autoware::localization_diagnostics::Metric’
+    127 |             case Metric::POSITION_ERROR:
+        |                          ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_localization_evaluator/src/localization_evaluator_node.cpp:135:26: error: ‘ORIENTATION_ERROR’ is not a member of ‘autoware::localization_diagnostics::Metric’
+    135 |             case Metric::ORIENTATION_ERROR: {
+        |                          ^~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_localization_evaluator/src/localization_evaluator_node.cpp:149:31: error: ‘std::unordered_map<autoware::localization_diagnostics::Metric, autoware::universe_utils::Accumulator<double> >::mapped_type’ {aka ‘class autoware::universe_utils::Accumulator<double>’} has no member named ‘update’
+    149 |         metrics_dict_[metric].update(metric_value);
+        |                               ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_localization_evaluator/src/localization_evaluator_node.cpp:166:5: error: ‘diagnostic_publisher_’ was not declared in this scope
+    166 |     diagnostic_publisher_->publish(diagnostic_array);
+        |     ^~~~~~~~~~~~~~~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/autoware_localization_evaluator.dir/build.make:90: CMakeFiles/autoware_localization_evaluator.dir/src/localization_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_localization_evaluator.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_localization_evaluator [6.36s, exited with code 2]
+
+  Summary: 0 packages finished [7.76s]
+    1 package failed: autoware_localization_evaluator
+    1 package had stderr output: autoware_localization_evaluator
+generate_code.cpp: |
+  void LocalizationEvaluatorNode::syncCallback(
+    const Odometry::ConstSharedPtr & msg, const PoseWithCovarianceStamped::ConstSharedPtr & msg_ref)
+  {
+      // Check if either message has a zero-position pose
+      if (msg->pose.pose.position.x == 0.0 && msg->pose.pose.position.y == 0.0 && msg->pose.pose.position.z == 0.0 ||
+          msg_ref->pose.pose.position.x == 0.0 && msg_ref->pose.pose.position.y == 0.0 && msg_ref->pose.pose.position.z == 0.0) {
+          return;
+      }
+
+      // Store the timestamp
+      stamps_.push_back(msg->header.stamp);
+      if (stamps_.size() > metrics_dict_.size()) {
+          stamps_.pop_front();
+      }
+
+      // Calculate and update metrics
+      for (const auto& metric : metrics_) {
+          double metric_value = 0.0;
+
+          switch (metric) {
+              case Metric::POSITION_ERROR:
+                  metric_value = std::sqrt(
+                      std::pow(msg->pose.pose.position.x - msg_ref->pose.pose.position.x, 2) +
+                      std::pow(msg->pose.pose.position.y - msg_ref->pose.pose.position.y, 2) +
+                      std::pow(msg->pose.pose.position.z - msg_ref->pose.pose.position.z, 2)
+                  );
+                  break;
+
+              case Metric::ORIENTATION_ERROR: {
+                  tf2::Quaternion q1, q2;
+                  tf2::fromMsg(msg->pose.pose.orientation, q1);
+                  tf2::fromMsg(msg_ref->pose.pose.orientation, q2);
+                  metric_value = q1.angle(q2);
+                  break;
+              }
+
+              // Add more metrics as needed
+              default:
+                  continue;
+          }
+
+          // Update metric statistics
+          metrics_dict_[metric].update(metric_value);
+          metric_stats_[static_cast<size_t>(metric)].push_back(metrics_dict_[metric]);
+          
+          if (metric_stats_[static_cast<size_t>(metric)].size() > metrics_dict_.size()) {
+              metric_stats_[static_cast<size_t>(metric)].pop_front();
+          }
+      }
+
+      // Publish diagnostic status for each metric
+      diagnostic_msgs::msg::DiagnosticArray diagnostic_array;
+      diagnostic_array.header.stamp = msg->header.stamp;
+
+      for (const auto& metric : metrics_) {
+          diagnostic_msgs::msg::DiagnosticStatus status = generateDiagnosticStatus(metric, metrics_dict_[metric]);
+          diagnostic_array.status.push_back(status);
+      }
+
+      diagnostic_publisher_->publish(diagnostic_array);
+  }
+ground_truth.cpp: |-
+  void LocalizationEvaluatorNode::syncCallback(
+    const Odometry::ConstSharedPtr & msg, const PoseWithCovarianceStamped::ConstSharedPtr & msg_ref)
+  {
+    RCLCPP_DEBUG(
+      get_logger(), "Received two messages at time stamps: %d.%d and %d.%d", msg->header.stamp.sec,
+      msg->header.stamp.nanosec, msg_ref->header.stamp.sec, msg_ref->header.stamp.nanosec);
+
+    DiagnosticArray metrics_msg;
+    metrics_msg.header.stamp = now();
+
+    geometry_msgs::msg::Point p_lc, p_gt;
+    p_lc = msg->pose.pose.position;
+    p_gt = msg_ref->pose.pose.position;
+    if ((p_lc.x == 0 && p_lc.y == 0 && p_lc.z == 0) || (p_gt.x == 0 && p_gt.y == 0 && p_gt.z == 0)) {
+      RCLCPP_INFO(get_logger(), "Received position equals zero, waiting for valid data.");
+      return;
+    }
+    for (Metric metric : metrics_) {
+      metrics_dict_[metric] = metrics_calculator_.updateStat(
+        metrics_dict_[metric], metric, msg->pose.pose.position, msg_ref->pose.pose.position);
+      metric_stats_[static_cast<size_t>(metric)].push_back(metrics_dict_[metric]);
+      stamps_.push_back(metrics_msg.header.stamp);
+      if (metrics_dict_[metric].count() > 0) {
+        metrics_msg.status.push_back(generateDiagnosticStatus(metric, metrics_dict_[metric]));
+      }
+    }
+    if (!metrics_msg.status.empty()) {
+      metrics_pub_->publish(metrics_msg);
+    }
+  }
+architecture-codes:
+- ROS Logger Issues - ROS Logger Missing Issue
+- ROS Message Related Issues - Improper Message Type Usage Issue
+- Topic/Service Related Issues - use error topic
+- ROS Timer Issues - Timestamp Processing Errors
+functionality-codes:
+- Reference Error - Undefined Name 
+- Incomplete Code - Missing Multiple Steps
+- Conditional Checks Issues - Conditional Check Logic Misapplication
+- Operation/Calculation Error
+root-cause-codes:
+- Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+- Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+- Weakness in System-Level Integration - Lack of familiarity with the existing codebase

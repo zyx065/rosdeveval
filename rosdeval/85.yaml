@@ -1,0 +1,21 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_pid_longitudinal_controller
+ros_package: autoware_perception_online_evaluator
+file_path: src/longitudinal_controller_utils.cpp
+method_name: getPitchByPose
+requirement: |
+  /**
+  * Extracts the pitch angle from a quaternion orientation.
+  * 
+  * @param quaternion_msg The quaternion representing the orientation.
+  * @return The pitch angle in radians.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  double getPitchByPose(const Quaternion & quaternion_msg)
+additional_information: []
+test: test_longitudinal_controller
+test_cases: 
+- getPitchByPose

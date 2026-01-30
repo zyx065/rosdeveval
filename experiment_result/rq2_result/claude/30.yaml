@@ -1,0 +1,75 @@
+compilation.log: |
+  Starting >>> autoware_vehicle_cmd_gate
+  --- stderr: autoware_vehicle_cmd_gate
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp: In member function ‘void autoware::vehicle_cmd_gate::VehicleCmdGate::onExternalEmergencyStopService(std::shared_ptr<rmw_request_id_s>, tier4_external_api_msgs::srv::SetEmergency_Request_<std::allocator<void> >::SharedPtr, tier4_external_api_msgs::srv::SetEmergency_Response_<std::allocator<void> >::SharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:818:19: error: ‘using element_type = struct tier4_external_api_msgs::srv::SetEmergency_Response_<std::allocator<void> >’ {aka ‘struct tier4_external_api_msgs::srv::SetEmergency_Response_<std::allocator<void> >’} has no member named ‘success’
+    818 |         response->success = set_result;
+        |                   ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:819:19: error: ‘using element_type = struct tier4_external_api_msgs::srv::SetEmergency_Response_<std::allocator<void> >’ {aka ‘struct tier4_external_api_msgs::srv::SetEmergency_Response_<std::allocator<void> >’} has no member named ‘message’
+    819 |         response->message = set_result ? "Emergency stop set successfully" : "Failed to set emergency stop";
+        |                   ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:825:19: error: ‘using element_type = struct tier4_external_api_msgs::srv::SetEmergency_Response_<std::allocator<void> >’ {aka ‘struct tier4_external_api_msgs::srv::SetEmergency_Response_<std::allocator<void> >’} has no member named ‘success’
+    825 |         response->success = clear_result;
+        |                   ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:826:19: error: ‘using element_type = struct tier4_external_api_msgs::srv::SetEmergency_Response_<std::allocator<void> >’ {aka ‘struct tier4_external_api_msgs::srv::SetEmergency_Response_<std::allocator<void> >’} has no member named ‘message’
+    826 |         response->message = clear_result ? "Emergency stop cleared successfully" : "Failed to clear emergency stop";
+        |                   ^~~~~~~
+  gmake[2]: *** [CMakeFiles/vehicle_cmd_gate_node.dir/build.make:76: CMakeFiles/vehicle_cmd_gate_node.dir/src/vehicle_cmd_gate.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:206: CMakeFiles/vehicle_cmd_gate_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_vehicle_cmd_gate [19.5s, exited with code 2]
+
+  Summary: 0 packages finished [20.8s]
+    1 package failed: autoware_vehicle_cmd_gate
+    1 package had stderr output: autoware_vehicle_cmd_gate
+generate_code.cpp: |-
+  void VehicleCmdGate::onExternalEmergencyStopService(
+    const std::shared_ptr<rmw_request_id_t> request_header,
+    const SetEmergency::Request::SharedPtr request, const SetEmergency::Response::SharedPtr response)
+  {
+      // Check if the emergency flag is set
+      if (request->emergency)
+      {
+          // Call the set external emergency stop service handler
+          bool set_result = onSetExternalEmergencyStopService(request_header, nullptr, nullptr);
+          response->success = set_result;
+          response->message = set_result ? "Emergency stop set successfully" : "Failed to set emergency stop";
+      }
+      else
+      {
+          // Call the clear external emergency stop service handler
+          bool clear_result = onClearExternalEmergencyStopService(request_header, nullptr, nullptr);
+          response->success = clear_result;
+          response->message = clear_result ? "Emergency stop cleared successfully" : "Failed to clear emergency stop";
+      }
+  }
+ground_truth.cpp: |-
+  void VehicleCmdGate::onExternalEmergencyStopService(
+    const std::shared_ptr<rmw_request_id_t> request_header,
+    const SetEmergency::Request::SharedPtr request, const SetEmergency::Response::SharedPtr response)
+  {
+    auto req = std::make_shared<Trigger::Request>();
+    auto res = std::make_shared<Trigger::Response>();
+    if (request->emergency) {
+      onSetExternalEmergencyStopService(request_header, req, res);
+    } else {
+      onClearExternalEmergencyStopService(request_header, req, res);
+    }
+
+    if (res->success) {
+      response->status = tier4_api_utils::response_success(res->message);
+    } else {
+      response->status = tier4_api_utils::response_error(res->message);
+    }
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Message Related Issues - Improper Message Type Usage Issue
+  - Topic/Service Related Issues - Incomplete Topic/Service Initialization Issues
+functionality-codes:
+  - Meet Requirement - No
+  - Reference Error - Wrong Variable
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

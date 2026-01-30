@@ -1,0 +1,31 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_waypoint_follower
+ros_package: nav2_waypoint_follower
+file_path: src/waypoint_follower.cpp
+method_name: WaypointFollower::on_configure
+requirement: |
+  /**
+  * Configures the waypoint follower node and initializes required components.
+  * 
+  * @return nav2_util::CallbackReturn::SUCCESS if configuration succeeds
+  */
+category: ros_architecture
+type: has_logger,has_parameter,has_service,has_action
+signature: |
+  nav2_util::CallbackReturn
+  WaypointFollower::on_configure(const rclcpp_lifecycle::State & /*state*/)
+additional_information: 
+  function_related_variable: |
+    bool stop_on_failure_;
+    int loop_rate_;
+    std::string waypoint_task_executor_id_;
+    rclcpp::CallbackGroup::SharedPtr callback_group_;
+    rclcpp::executors::SingleThreadedExecutor callback_group_executor_;
+    ActionClient::SharedPtr nav_to_pose_client_;
+    std::unique_ptr<ActionServer> action_server_;
+    std::string waypoint_task_executor_type_;
+  function_related_function: |
+    void followWaypoints();  
+test: test_task_executors
+test_cases: []

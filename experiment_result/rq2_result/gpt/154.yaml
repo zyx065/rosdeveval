@@ -1,0 +1,97 @@
+compilation.log: |
+  Starting >>> autoware_autonomous_emergency_braking
+  --- stderr: autoware_autonomous_emergency_braking
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/utils.cpp: In function ‘autoware_perception_msgs::msg::PredictedObject autoware::motion::control::autonomous_emergency_braking::utils::transformObjectFrame(const PredictedObject&, const TransformStamped&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/utils.cpp:90:46: error: ‘const _kinematics_type’ {aka ‘const struct autoware_perception_msgs::msg::PredictedObjectKinematics_<std::allocator<void> >’} has no member named ‘pose_with_covariance’; did you mean ‘initial_pose_with_covariance’?
+     90 |   input_pose_stamped.pose = input.kinematics.pose_with_covariance.pose;
+        |                                              ^~~~~~~~~~~~~~~~~~~~
+        |                                              initial_pose_with_covariance
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/utils.cpp:96:33: error: ‘using _kinematics_type = struct autoware_perception_msgs::msg::PredictedObjectKinematics_<std::allocator<void> >’ {aka ‘struct autoware_perception_msgs::msg::PredictedObjectKinematics_<std::allocator<void> >’} has no member named ‘pose_with_covariance’; did you mean ‘initial_pose_with_covariance’?
+     96 |   transformed_object.kinematics.pose_with_covariance.pose = transformed_pose_stamped.pose;
+        |                                 ^~~~~~~~~~~~~~~~~~~~
+        |                                 initial_pose_with_covariance
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/utils.cpp:99:23: error: ‘TwistStamped’ is not a member of ‘geometry_msgs::msg’; did you mean ‘PointStamped’?
+     99 |   geometry_msgs::msg::TwistStamped input_twist_stamped;
+        |                       ^~~~~~~~~~~~
+        |                       PointStamped
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/utils.cpp:100:3: error: ‘input_twist_stamped’ was not declared in this scope; did you mean ‘input_pose_stamped’?
+    100 |   input_twist_stamped.twist = input.kinematics.twist_with_covariance.twist;
+        |   ^~~~~~~~~~~~~~~~~~~
+        |   input_pose_stamped
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/utils.cpp:100:48: error: ‘const _kinematics_type’ {aka ‘const struct autoware_perception_msgs::msg::PredictedObjectKinematics_<std::allocator<void> >’} has no member named ‘twist_with_covariance’; did you mean ‘initial_twist_with_covariance’?
+    100 |   input_twist_stamped.twist = input.kinematics.twist_with_covariance.twist;
+        |                                                ^~~~~~~~~~~~~~~~~~~~~
+        |                                                initial_twist_with_covariance
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/utils.cpp:103:23: error: ‘TwistStamped’ is not a member of ‘geometry_msgs::msg’; did you mean ‘PointStamped’?
+    103 |   geometry_msgs::msg::TwistStamped transformed_twist_stamped;
+        |                       ^~~~~~~~~~~~
+        |                       PointStamped
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/utils.cpp:104:41: error: ‘transformed_twist_stamped’ was not declared in this scope; did you mean ‘transformed_pose_stamped’?
+    104 |   tf2::doTransform(input_twist_stamped, transformed_twist_stamped, transform_stamped);
+        |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~
+        |                                         transformed_pose_stamped
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/utils.cpp:106:33: error: ‘using _kinematics_type = struct autoware_perception_msgs::msg::PredictedObjectKinematics_<std::allocator<void> >’ {aka ‘struct autoware_perception_msgs::msg::PredictedObjectKinematics_<std::allocator<void> >’} has no member named ‘twist_with_covariance’; did you mean ‘initial_twist_with_covariance’?
+    106 |   transformed_object.kinematics.twist_with_covariance.twist = transformed_twist_stamped.twist;
+        |                                 ^~~~~~~~~~~~~~~~~~~~~
+        |                                 initial_twist_with_covariance
+  gmake[2]: *** [CMakeFiles/autoware_autonomous_emergency_braking_helpers.dir/build.make:76: CMakeFiles/autoware_autonomous_emergency_braking_helpers.dir/src/utils.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:161: CMakeFiles/autoware_autonomous_emergency_braking_helpers.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_autonomous_emergency_braking [14.8s, exited with code 2]
+
+  Summary: 0 packages finished [16.2s]
+    1 package failed: autoware_autonomous_emergency_braking
+    1 package had stderr output: autoware_autonomous_emergency_braking
+generate_code.cpp: |-
+  PredictedObject transformObjectFrame(
+    const PredictedObject & input, const geometry_msgs::msg::TransformStamped & transform_stamped)
+  {
+    // Create a new PredictedObject to store the transformed data
+    PredictedObject transformed_object = input;
+
+    // Transform the pose
+    geometry_msgs::msg::PoseStamped input_pose_stamped;
+    input_pose_stamped.pose = input.kinematics.pose_with_covariance.pose;
+    input_pose_stamped.header = transform_stamped.header;
+
+    geometry_msgs::msg::PoseStamped transformed_pose_stamped;
+    tf2::doTransform(input_pose_stamped, transformed_pose_stamped, transform_stamped);
+
+    transformed_object.kinematics.pose_with_covariance.pose = transformed_pose_stamped.pose;
+
+    // Transform the twist
+    geometry_msgs::msg::TwistStamped input_twist_stamped;
+    input_twist_stamped.twist = input.kinematics.twist_with_covariance.twist;
+    input_twist_stamped.header = transform_stamped.header;
+
+    geometry_msgs::msg::TwistStamped transformed_twist_stamped;
+    tf2::doTransform(input_twist_stamped, transformed_twist_stamped, transform_stamped);
+
+    transformed_object.kinematics.twist_with_covariance.twist = transformed_twist_stamped.twist;
+
+    // Return the transformed object
+    return transformed_object;
+  }
+ground_truth.cpp: |-
+  PredictedObject transformObjectFrame(
+    const PredictedObject & input, const geometry_msgs::msg::TransformStamped & transform_stamped)
+  {
+    PredictedObject output = input;
+    const auto & linear_twist = input.kinematics.initial_twist_with_covariance.twist.linear;
+    const auto & angular_twist = input.kinematics.initial_twist_with_covariance.twist.angular;
+    const auto & pose = input.kinematics.initial_pose_with_covariance.pose;
+
+    geometry_msgs::msg::Pose t_pose;
+    Vector3 t_linear_twist;
+    Vector3 t_angular_twist;
+
+    tf2::doTransform(pose, t_pose, transform_stamped);
+    tf2::doTransform(linear_twist, t_linear_twist, transform_stamped);
+    tf2::doTransform(angular_twist, t_angular_twist, transform_stamped);
+
+    output.kinematics.initial_pose_with_covariance.pose = t_pose;
+    output.kinematics.initial_twist_with_covariance.twist.linear = t_linear_twist;
+    output.kinematics.initial_twist_with_covariance.twist.angular = t_angular_twist;
+    return output;
+  }

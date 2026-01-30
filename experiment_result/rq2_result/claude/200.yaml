@@ -1,0 +1,53 @@
+compilation.log: |
+  Starting >>> nav2_util
+  Finished <<< nav2_util [0.44s]
+
+  Summary: 1 package finished [0.70s]
+generate_code.cpp: |-
+  bool getCurrentPose(
+    geometry_msgs::msg::PoseStamped & global_pose,
+    tf2_ros::Buffer & tf_buffer, const std::string global_frame,
+    const std::string robot_frame, const double transform_timeout,
+    const rclcpp::Time stamp)
+  {
+    try {
+      // Create identity pose in robot frame
+      geometry_msgs::msg::PoseStamped robot_pose;
+      robot_pose.header.frame_id = robot_frame;
+      robot_pose.header.stamp = stamp;
+      robot_pose.pose.position.x = 0.0;
+      robot_pose.pose.position.y = 0.0;
+      robot_pose.pose.position.z = 0.0;
+      robot_pose.pose.orientation.x = 0.0;
+      robot_pose.pose.orientation.y = 0.0;
+      robot_pose.pose.orientation.z = 0.0;
+      robot_pose.pose.orientation.w = 1.0;
+
+      // Transform the robot pose to global frame
+      return transformPoseInTargetFrame(robot_pose, global_pose, tf_buffer, global_frame, transform_timeout);
+    }
+    catch (const tf2::TransformException & ex) {
+      return false;
+    }
+  }
+ground_truth.cpp: |-
+  bool getCurrentPose(
+    geometry_msgs::msg::PoseStamped & global_pose,
+    tf2_ros::Buffer & tf_buffer, const std::string global_frame,
+    const std::string robot_frame, const double transform_timeout,
+    const rclcpp::Time stamp)
+  {
+    tf2::toMsg(tf2::Transform::getIdentity(), global_pose.pose);
+    global_pose.header.frame_id = robot_frame;
+    global_pose.header.stamp = stamp;
+
+    return transformPoseInTargetFrame(
+      global_pose, global_pose, tf_buffer, global_frame, transform_timeout);
+  }
+architecture-codes: []
+functionality-codes:
+  - Domain Library Issues - Lack of Domain Library Utilization
+  - Incomplete Code - Missing one step
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

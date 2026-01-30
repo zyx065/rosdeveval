@@ -1,0 +1,33 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_route
+ros_package: nav2_route
+file_path: src/plugins/route_operations/collision_monitor.cpp
+method_name: CollisionMonitor::isInCollision
+requirement: |
+  /**
+  * @brief Checks if a line segment intersects with any high-cost areas in the costmap.
+  * 
+  * @param line The line segment to check for collisions
+  * @return true if the line segment intersects with a high-cost area, false otherwise
+  */
+category: utilities
+type: []
+signature: |
+  bool CollisionMonitor::isInCollision(const LineSegment & line)
+additional_information: 
+  function_related_variable: |
+    std::string name_, topic_;
+    std::atomic_bool reroute_;
+    rclcpp::Logger logger_{rclcpp::get_logger("CollisionMonitor")};
+    rclcpp::Clock::SharedPtr clock_;
+    rclcpp::Time last_check_time_;
+    rclcpp::Duration checking_duration_{0, 0};
+    float max_collision_dist_, max_cost_;
+    bool reroute_on_collision_;
+    unsigned int check_resolution_{1u};
+    std::shared_ptr<nav2_costmap_2d::CostmapSubscriber> costmap_subscriber_;
+    std::shared_ptr<nav2_costmap_2d::Costmap2D> costmap_{nullptr};
+test: test_collision_operation
+test_cases: 
+- test_costmap_apis

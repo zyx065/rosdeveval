@@ -1,0 +1,48 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/common/autoware_object_recognition_utils
+ros_package: autoware_object_recognition_utils
+file_path: include/autoware/object_recognition_utils/matching.hpp
+method_name: get2dIoU
+requirement: |
+  /**
+  * @brief Calculates the 2D Intersection over Union (IoU) between two objects.
+  * 
+  * @tparam T1 Type of the source object, must be convertible to Polygon2d.
+  * @tparam T2 Type of the target object, must be convertible to Polygon2d.
+  * @param source_object The first object for IoU calculation.
+  * @param target_object The second object for IoU calculation.
+  * @param min_union_area Minimum union area threshold below which IoU returns 0.0.
+  * @return double IoU value between 0.0 and 1.0, or 0.0 if union area is insufficient.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  double get2dIoU(const T1 source_object, const T2 target_object, const double min_union_area = 0.01)
+additional_information: 
+  function_related_class: |
+    namespace autoware::universe_utils
+    {
+      bool isClockwise(const Polygon2d & polygon);
+      Polygon2d inverseClockwise(const Polygon2d & polygon);
+      geometry_msgs::msg::Polygon rotatePolygon(
+        const geometry_msgs::msg::Polygon & polygon, const double & angle);
+      /// @brief rotate a polygon by some angle around the origin
+      /// @param[in] polygon input polygon
+      /// @param[in] angle angle of rotation [rad]
+      /// @return rotated polygon
+      Polygon2d rotatePolygon(const Polygon2d & polygon, const double angle);
+      Polygon2d toPolygon2d(
+        const geometry_msgs::msg::Pose & pose, const autoware_perception_msgs::msg::Shape & shape);
+      Polygon2d toPolygon2d(
+        const geometry_msgs::msg::Pose & pose, const autoware_perception_msgs::msg::Shape & shape);
+      Polygon2d toPolygon2d(const autoware_perception_msgs::msg::DetectedObject & object);
+      Polygon2d toPolygon2d(const autoware_perception_msgs::msg::TrackedObject & object);
+      Polygon2d toPolygon2d(const autoware_perception_msgs::msg::PredictedObject & object);
+    }
+  function_related_function: |
+    inline double getIntersectionArea(const Polygon2d & source_polygon, const Polygon2d & target_polygon)
+    inline double getUnionArea(const Polygon2d & source_polygon, const Polygon2d & target_polygon)
+test: test_object_recognition_utils
+test_cases: 
+- test_get2dIoU

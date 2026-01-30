@@ -1,0 +1,32 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_voxel_grid
+ros_package: nav2_voxel_grid
+file_path: include/nav2_voxel_grid/voxel_grid.hpp
+method_name: markVoxelInMap
+requirement: |
+  /// @brief Marks a voxel as occupied and checks if it exceeds the marked threshold.
+  /// @param x The x-coordinate of the voxel in the map grid.
+  /// @param y The y-coordinate of the voxel in the map grid.
+  /// @param z The z-coordinate of the voxel in the map grid.
+  /// @param marked_threshold The minimum number of marks required to consider the voxel as occupied.
+  /// @return True if the voxel's mark count meets or exceeds the threshold after marking, false otherwise.
+  /// @note Returns false and logs a debug message if the coordinates are out of map bounds.
+category: utilities
+type: has_logger
+signature: |
+  inline bool markVoxelInMap(
+    unsigned int x, unsigned int y, unsigned int z,
+    unsigned int marked_threshold)
+additional_information: 
+  function_related_variable: |
+    unsigned int size_x_, size_y_, size_z_;
+    uint32_t * data_;
+    unsigned char * costmap;
+    rclcpp::Logger logger;
+  function_related_function: |
+    inline bool bitsBelowThreshold(unsigned int n, unsigned int bit_threshold)
+test: voxel_grid_tests
+test_cases: 
+- MarkAndClear
+- clearVoxelLineInMap

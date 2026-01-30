@@ -1,0 +1,43 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/common/autoware_motion_utils
+ros_package: autoware_motion_utils
+file_path: src/trajectory/interpolation.cpp
+method_name: calcInterpolatedPoint
+requirement: |
+  /**
+  * Calculates an interpolated path point along the given path that is closest to the target pose.
+  * 
+  * @param path The reference path with lane IDs to interpolate from.
+  * @param target_pose The target pose used to find the nearest segment for interpolation.
+  * @param use_zero_order_hold_for_twist If true, uses current point's twist values instead of interpolating.
+  * @param dist_threshold Maximum distance threshold for segment search.
+  * @param yaw_threshold Maximum yaw angle threshold for segment search.
+  * @return Interpolated PathPointWithLaneId containing pose, velocities, and heading rate.
+  */
+category: utilities
+type: has_message
+signature: |
+  PathPointWithLaneId calcInterpolatedPoint(
+    const PathWithLaneId & path, const geometry_msgs::msg::Pose & target_pose,
+    const bool use_zero_order_hold_for_twist, const double dist_threshold, const double yaw_threshold)
+additional_information: 
+  function_related_class: |
+    namespace autoware::motion_utils{
+      size_t findFirstNearestSegmentIndexWithSoftConstraints(const T & points, const geometry_msgs::msg::Pose & pose,const double dist_threshold = std::numeric_limits<double>::max(),const double yaw_threshold = std::numeric_limits<double>::max())
+    }
+    namespace autoware::universe_utils{
+      tf2::Vector3 point2tfVector(const Point1 & src, const Point2 & dst)
+      geometry_msgs::msg::Pose calcInterpolatedPose(const T & points, const double target_length)
+    }
+    namespace autoware::interpolation
+    {
+      double lerp(const double src_val, const double dst_val, const double ratio);
+      std::vector<double> lerp(const std::vector<double> & base_keys, const std::vector<double> & base_values,const std::vector<double> & query_keys);
+      double lerp(const std::vector<double> & base_keys, const std::vector<double> & base_values,const double query_key);
+    }  // namespace autoware::interpolation
+test: test_autoware_motion_utils
+test_cases: 
+- interpolate_path_for_trajectory
+- interpolate_path_for_path
+- interpolate_points_with_length

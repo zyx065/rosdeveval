@@ -1,0 +1,31 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module
+ros_package: autoware_velocity_smoother
+file_path: src/object_filtering.cpp
+method_name: filter_predicted_objects
+requirement: |
+  /**
+  * Filters predicted objects based on velocity, proximity, and collision criteria.
+  * 
+  * @param objects The list of objects to filter.
+  * @param ego_data Current ego vehicle state and trajectory data.
+  * @param params Planner parameters containing filtering thresholds.
+  * @param hysteresis Hysteresis value for range checking to prevent flickering.
+  * @return Filtered list of predicted objects that meet all criteria.
+  */
+category: utilities
+type: has_message,has_parameter
+signature: |
+  std::vector<autoware_perception_msgs::msg::PredictedObject> filter_predicted_objects(
+    const std::vector<PlannerData::Object> & objects, const EgoData & ego_data,
+    const PlannerParam & params, const double hysteresis)
+additional_information: 
+  function_related_function: |
+    bool is_vehicle(const autoware_perception_msgs::msg::PredictedObject & object)
+    bool is_in_range(const autoware_perception_msgs::msg::PredictedObject & object,const TrajectoryPoints & ego_trajectory, const PlannerParam & params, const double hysteresis)
+    bool is_not_too_close(const autoware_perception_msgs::msg::PredictedObject & object, const EgoData & ego_data,const double & ego_longitudinal_offset)
+    bool is_unavoidable(const autoware_perception_msgs::msg::PredictedObject & object,const geometry_msgs::msg::Pose & ego_pose,const std::optional<geometry_msgs::msg::Pose> & ego_earliest_stop_pose,const PlannerParam & params)
+test: test_autoware_motion_velocity_dynamic_obstacle_stop_module
+test_cases: 
+- filterPredictedObjects

@@ -1,0 +1,28 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_waypoint_follower
+ros_package: nav2_waypoint_follower
+file_path: src/waypoint_follower.cpp
+method_name: WaypointFollower::on_activate
+requirement: |
+  /**
+  * @brief Activates the waypoint follower component.
+  * 
+  * @return nav2_util::CallbackReturn SUCCESS if activation completed successfully
+  * 
+  * @note This method activates the action server, sets up dynamic parameters callback,
+  * and establishes bond connection for lifecycle management.
+  */
+category: ros_architecture
+type: has_logger,has_topic
+signature: |
+  nav2_util::CallbackReturn
+  WaypointFollower::on_activate(const rclcpp_lifecycle::State & /*state*/)
+additional_information: 
+  function_related_variable: |
+    std::unique_ptr<ActionServer> action_server_;
+    rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr dyn_params_handler_;
+    rcl_interfaces::msg::SetParametersResult dynamicParametersCallback(std::vector<rclcpp::Parameter> parameters);
+    createBond()
+test: test_task_executors
+test_cases: []

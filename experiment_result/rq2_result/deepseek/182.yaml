@@ -1,0 +1,78 @@
+compilation.log: |
+  Starting >>> nav2_constrained_smoother
+  --- stderr: nav2_constrained_smoother
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp: In member function ‘virtual void nav2_constrained_smoother::ConstrainedSmoother::configure(const WeakPtr&, std::string, std::shared_ptr<tf2_ros::Buffer>, std::shared_ptr<nav2_costmap_2d::CostmapSubscriber>, std::shared_ptr<nav2_costmap_2d::FootprintSubscriber>)’:
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp:59:20: error: ‘struct nav2_constrained_smoother::SmootherParams’ has no member named ‘do_refinement’
+     59 |   smoother_params_.do_refinement = do_refinement;
+        |                    ^~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp:63:21: error: ‘struct nav2_constrained_smoother::OptimizerParams’ has no member named ‘weight_max’
+     63 |   optimizer_params_.weight_max = node->declare_parameter<double>(plugin_name_ + ".weight_max", 1.0);
+        |                     ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp:64:21: error: ‘struct nav2_constrained_smoother::OptimizerParams’ has no member named ‘weight_smoothness’
+     64 |   optimizer_params_.weight_smoothness = node->declare_parameter<double>(plugin_name_ + ".weight_smoothness", 1.0);
+        |                     ^~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp:65:21: error: ‘struct nav2_constrained_smoother::OptimizerParams’ has no member named ‘weight_length’
+     65 |   optimizer_params_.weight_length = node->declare_parameter<double>(plugin_name_ + ".weight_length", 1.0);
+        |                     ^~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_constrained_smoother/src/constrained_smoother.cpp:45:57: error: unused parameter ‘footprint_sub’ [-Werror=unused-parameter]
+     45 |   std::shared_ptr<nav2_costmap_2d::FootprintSubscriber> footprint_sub)
+        |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/nav2_constrained_smoother.dir/build.make:76: CMakeFiles/nav2_constrained_smoother.dir/src/constrained_smoother.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:174: CMakeFiles/nav2_constrained_smoother.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_constrained_smoother [5.71s, exited with code 2]
+
+  Summary: 0 packages finished [6.02s]
+    1 package failed: nav2_constrained_smoother
+    1 package had stderr output: nav2_constrained_smoother
+generate_code.cpp: "void ConstrainedSmoother::configure(\n  const rclcpp_lifecycle::LifecycleNode::WeakPtr\
+  \ & parent,\n  std::string name, std::shared_ptr<tf2_ros::Buffer> tf,\n  std::shared_ptr<nav2_costmap_2d::CostmapSubscriber>\
+  \ costmap_sub,\n  std::shared_ptr<nav2_costmap_2d::FootprintSubscriber> footprint_sub)\n\
+  {\n  plugin_name_ = name;\n  tf_ = tf;\n  costmap_sub_ = costmap_sub;\n  auto node\
+  \ = parent.lock();\n  logger_ = node->get_logger();\n\n  // Get parameters\n  double\
+  \ max_time = node->declare_parameter<double>(plugin_name_ + \".max_time\", 0.1);\n\
+  \  bool do_refinement = node->declare_parameter<bool>(plugin_name_ + \".do_refinement\"\
+  , true);\n  \n  // Smoother parameters\n  smoother_params_.max_time = max_time;\n\
+  \  smoother_params_.do_refinement = do_refinement;\n\n  // Optimizer parameters\n\
+  \  optimizer_params_.max_iterations = node->declare_parameter<int>(plugin_name_\
+  \ + \".max_iterations\", 1000);\n  optimizer_params_.weight_max = node->declare_parameter<double>(plugin_name_\
+  \ + \".weight_max\", 1.0);\n  optimizer_params_.weight_smoothness = node->declare_parameter<double>(plugin_name_\
+  \ + \".weight_smoothness\", 1.0);\n  optimizer_params_.weight_length = node->declare_parameter<double>(plugin_name_\
+  \ + \".weight_length\", 1.0);\n\n  // Initialize smoother\n  smoother_ = std::make_unique<nav2_constrained_smoother::Smoother>();\n\
+  \  smoother_->initialize(optimizer_params_);\n}"
+ground_truth.cpp: |-
+  void ConstrainedSmoother::configure(
+    const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
+    std::string name, std::shared_ptr<tf2_ros::Buffer> tf,
+    std::shared_ptr<nav2_costmap_2d::CostmapSubscriber> costmap_sub,
+    std::shared_ptr<nav2_costmap_2d::FootprintSubscriber>)
+  {
+    auto node = parent.lock();
+    if (!node) {
+      throw std::runtime_error("Unable to lock node!");
+    }
+
+    costmap_sub_ = costmap_sub;
+    tf_ = tf;
+    plugin_name_ = name;
+    logger_ = node->get_logger();
+
+    smoother_ = std::make_unique<nav2_constrained_smoother::Smoother>();
+    optimizer_params_.get(node.get(), name);
+    smoother_params_.get(node.get(), name);
+    smoother_->initialize(optimizer_params_);
+  }
+architecture-codes:
+  - ROS Parameter Issue - Use Non-existent Parameter Issue 
+  - ROS Parameter Issue - Insufficient Parameter Design Issue 
+  - Topic/Service Issue - Callback Function Binding Issue
+
+functionality-codes:
+  - Condition Issue - Conditional Check Missing Issue 
+  - Incomplete Code Issue - Missing One Step Issue
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming 
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices 
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements 

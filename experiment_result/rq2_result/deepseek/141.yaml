@@ -1,0 +1,724 @@
+compilation.log: |
+  Starting >>> moveit_core
+  --- stderr: moveit_core
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp: In member function ‘Eigen::VectorXd trajectory_processing::Trajectory::getAcceleration(double) const’:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:12: error: no match for ‘operator==’ (operand types are ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ and ‘std::__cxx11::list<std::pair<double, bool> >::iterator’)
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |         ~~ ^~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        |         |                                   |
+        |         |                                   std::__cxx11::list<std::pair<double, bool> >::iterator
+        |         std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>
+  In file included from /usr/include/c++/11/bits/stl_algobase.h:64,
+                   from /usr/include/c++/11/memory:63,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/stl_pair.h:466:5: note: candidate: ‘template<class _T1, class _T2> constexpr bool std::operator==(const std::pair<_T1, _T2>&, const std::pair<_T1, _T2>&)’
+    466 |     operator==(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/stl_pair.h:466:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::pair<_T1, _T2>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/bits/stl_algobase.h:67,
+                   from /usr/include/c++/11/memory:63,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/stl_iterator.h:420:5: note: candidate: ‘template<class _Iterator> constexpr bool std::operator==(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_Iterator>&)’
+    420 |     operator==(const reverse_iterator<_Iterator>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/stl_iterator.h:420:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::reverse_iterator<_Iterator>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/bits/stl_algobase.h:67,
+                   from /usr/include/c++/11/memory:63,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/stl_iterator.h:459:5: note: candidate: ‘template<class _IteratorL, class _IteratorR> constexpr bool std::operator==(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_IteratorR>&)’
+    459 |     operator==(const reverse_iterator<_IteratorL>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/stl_iterator.h:459:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::reverse_iterator<_Iterator>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/bits/stl_algobase.h:67,
+                   from /usr/include/c++/11/memory:63,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/stl_iterator.h:1585:5: note: candidate: ‘template<class _IteratorL, class _IteratorR> constexpr bool std::operator==(const std::move_iterator<_IteratorL>&, const std::move_iterator<_IteratorR>&)’
+   1585 |     operator==(const move_iterator<_IteratorL>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/stl_iterator.h:1585:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::move_iterator<_IteratorL>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/bits/stl_algobase.h:67,
+                   from /usr/include/c++/11/memory:63,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/stl_iterator.h:1648:5: note: candidate: ‘template<class _Iterator> constexpr bool std::operator==(const std::move_iterator<_IteratorL>&, const std::move_iterator<_IteratorL>&)’
+   1648 |     operator==(const move_iterator<_Iterator>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/stl_iterator.h:1648:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::move_iterator<_IteratorL>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/memory:64,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/allocator.h:218:5: note: candidate: ‘template<class _T1, class _T2> bool std::operator==(const std::allocator<_Tp1>&, const std::allocator<_T2>&)’
+    218 |     operator==(const allocator<_T1>&, const allocator<_T2>&)
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/allocator.h:218:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::allocator<_Tp1>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/tuple:39,
+                   from /usr/include/c++/11/bits/unique_ptr.h:37,
+                   from /usr/include/c++/11/memory:76,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/array:276:5: note: candidate: ‘template<class _Tp, long unsigned int _Nm> bool std::operator==(const std::array<_Tp, _Nm>&, const std::array<_Tp, _Nm>&)’
+    276 |     operator==(const array<_Tp, _Nm>& __one, const array<_Tp, _Nm>& __two)
+        |     ^~~~~~~~
+  /usr/include/c++/11/array:276:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::array<_Tp, _Nm>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/bits/unique_ptr.h:37,
+                   from /usr/include/c++/11/memory:76,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/tuple:1524:5: note: candidate: ‘template<class ... _TElements, class ... _UElements> constexpr bool std::operator==(const std::tuple<_Tps ...>&, const std::tuple<_UTypes ...>&)’
+   1524 |     operator==(const tuple<_TElements...>& __t,
+        |     ^~~~~~~~
+  /usr/include/c++/11/tuple:1524:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::tuple<_Tps ...>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/memory:76,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/unique_ptr.h:753:5: note: candidate: ‘template<class _Tp, class _Dp, class _Up, class _Ep> bool std::operator==(const std::unique_ptr<_Tp, _Dp>&, const std::unique_ptr<_Up, _Ep>&)’
+    753 |     operator==(const unique_ptr<_Tp, _Dp>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/unique_ptr.h:753:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::unique_ptr<_Tp, _Dp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/memory:76,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/unique_ptr.h:760:5: note: candidate: ‘template<class _Tp, class _Dp> bool std::operator==(const std::unique_ptr<_Tp, _Dp>&, std::nullptr_t)’
+    760 |     operator==(const unique_ptr<_Tp, _Dp>& __x, nullptr_t) noexcept
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/unique_ptr.h:760:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::unique_ptr<_Tp, _Dp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/memory:76,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/unique_ptr.h:767:5: note: candidate: ‘template<class _Tp, class _Dp> bool std::operator==(std::nullptr_t, const std::unique_ptr<_Tp, _Dp>&)’
+    767 |     operator==(nullptr_t, const unique_ptr<_Tp, _Dp>& __x) noexcept
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/unique_ptr.h:767:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::__cxx11::list<std::pair<double, bool> >::iterator’ is not derived from ‘const std::unique_ptr<_Tp, _Dp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/iosfwd:40,
+                   from /usr/include/c++/11/bits/shared_ptr.h:52,
+                   from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/postypes.h:222:5: note: candidate: ‘template<class _StateT> bool std::operator==(const std::fpos<_StateT>&, const std::fpos<_StateT>&)’
+    222 |     operator==(const fpos<_StateT>& __lhs, const fpos<_StateT>& __rhs)
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/postypes.h:222:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::fpos<_StateT>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/bits/shared_ptr.h:53,
+                   from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/shared_ptr_base.h:1410:5: note: candidate: ‘template<class _Tp1, class _Tp2, __gnu_cxx::_Lock_policy _Lp> bool std::operator==(const std::__shared_ptr<_Tp1, _Lp>&, const std::__shared_ptr<_Tp2, _Lp>&)’
+   1410 |     operator==(const __shared_ptr<_Tp1, _Lp>& __a,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/shared_ptr_base.h:1410:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::__shared_ptr<_Tp1, _Lp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/bits/shared_ptr.h:53,
+                   from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/shared_ptr_base.h:1416:5: note: candidate: ‘template<class _Tp, __gnu_cxx::_Lock_policy _Lp> bool std::operator==(const std::__shared_ptr<_Tp, _Lp>&, std::nullptr_t)’
+   1416 |     operator==(const __shared_ptr<_Tp, _Lp>& __a, nullptr_t) noexcept
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/shared_ptr_base.h:1416:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::__shared_ptr<_Tp, _Lp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/bits/shared_ptr.h:53,
+                   from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/shared_ptr_base.h:1436:5: note: candidate: ‘template<class _Tp, __gnu_cxx::_Lock_policy _Lp> bool std::operator==(std::nullptr_t, const std::__shared_ptr<_Tp, _Lp>&)’
+   1436 |     operator==(nullptr_t, const __shared_ptr<_Tp, _Lp>& __a) noexcept
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/shared_ptr_base.h:1436:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::__cxx11::list<std::pair<double, bool> >::iterator’ is not derived from ‘const std::__shared_ptr<_Tp, _Lp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/shared_ptr.h:437:5: note: candidate: ‘template<class _Tp, class _Up> bool std::operator==(const std::shared_ptr<_Tp>&, const std::shared_ptr<_Tp>&)’
+    437 |     operator==(const shared_ptr<_Tp>& __a, const shared_ptr<_Up>& __b) noexcept
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/shared_ptr.h:437:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::shared_ptr<_Tp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/shared_ptr.h:443:5: note: candidate: ‘template<class _Tp> bool std::operator==(const std::shared_ptr<_Tp>&, std::nullptr_t)’
+    443 |     operator==(const shared_ptr<_Tp>& __a, nullptr_t) noexcept
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/shared_ptr.h:443:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::shared_ptr<_Tp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:18,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/shared_ptr.h:464:5: note: candidate: ‘template<class _Tp> bool std::operator==(std::nullptr_t, const std::shared_ptr<_Tp>&)’
+    464 |     operator==(nullptr_t, const shared_ptr<_Tp>& __a) noexcept
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/shared_ptr.h:464:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::__cxx11::list<std::pair<double, bool> >::iterator’ is not derived from ‘const std::shared_ptr<_Tp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/bits/basic_string.h:48,
+                   from /usr/include/c++/11/string:55,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:19,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/string_view:535:5: note: candidate: ‘template<class _CharT, class _Traits> constexpr bool std::operator==(std::basic_string_view<_CharT, _Traits>, std::basic_string_view<_CharT, _Traits>)’
+    535 |     operator==(basic_string_view<_CharT, _Traits> __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/string_view:535:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘std::basic_string_view<_CharT, _Traits>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/bits/basic_string.h:48,
+                   from /usr/include/c++/11/string:55,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:19,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/string_view:541:5: note: candidate: ‘template<class _CharT, class _Traits> constexpr bool std::operator==(std::basic_string_view<_CharT, _Traits>, std::__type_identity_t<std::basic_string_view<_CharT, _Traits> >)’
+    541 |     operator==(basic_string_view<_CharT, _Traits> __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/string_view:541:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘std::basic_string_view<_CharT, _Traits>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/bits/basic_string.h:48,
+                   from /usr/include/c++/11/string:55,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:19,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/string_view:564:5: note: candidate: ‘template<class _CharT, class _Traits> constexpr bool std::operator==(std::__type_identity_t<std::basic_string_view<_CharT, _Traits> >, std::basic_string_view<_CharT, _Traits>)’
+    564 |     operator==(__type_identity_t<basic_string_view<_CharT, _Traits>> __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/string_view:564:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_iterator<std::pair<double, bool> >’ is not derived from ‘std::basic_string_view<_CharT, _Traits>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/string:55,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:19,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/basic_string.h:6226:5: note: candidate: ‘template<class _CharT, class _Traits, class _Alloc> bool std::operator==(const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>&, const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>&)’
+   6226 |     operator==(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/basic_string.h:6226:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/string:55,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:19,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/basic_string.h:6234:5: note: candidate: ‘template<class _CharT> typename __gnu_cxx::__enable_if<std::__is_char<_Tp>::__value, bool>::__type std::operator==(const std::__cxx11::basic_string<_CharT>&, const std::__cxx11::basic_string<_CharT>&)’
+   6234 |     operator==(const basic_string<_CharT>& __lhs,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/basic_string.h:6234:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::__cxx11::basic_string<_CharT>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/string:55,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:19,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/basic_string.h:6248:5: note: candidate: ‘template<class _CharT, class _Traits, class _Alloc> bool std::operator==(const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>&, const _CharT*)’
+   6248 |     operator==(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/basic_string.h:6248:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/string:55,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:19,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/basic_string.h:6289:5: note: candidate: ‘template<class _CharT, class _Traits, class _Alloc> bool std::operator==(const _CharT*, const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>&)’
+   6289 |     operator==(const _CharT* __lhs,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/basic_string.h:6289:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   mismatched types ‘const _CharT*’ and ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/bits/locale_facets.h:48,
+                   from /usr/include/c++/11/bits/basic_ios.h:37,
+                   from /usr/include/c++/11/ios:44,
+                   from /usr/include/c++/11/ostream:38,
+                   from /opt/ros/humble/include/rcpputils/rcpputils/filesystem_helper.hpp:43,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:25,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/streambuf_iterator.h:226:5: note: candidate: ‘template<class _CharT, class _Traits> bool std::operator==(const std::istreambuf_iterator<_CharT, _Traits>&, const std::istreambuf_iterator<_CharT, _Traits>&)’
+    226 |     operator==(const istreambuf_iterator<_CharT, _Traits>& __a,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/streambuf_iterator.h:226:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::istreambuf_iterator<_CharT, _Traits>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/vector:67,
+                   from /opt/ros/humble/include/rcpputils/rcpputils/filesystem_helper.hpp:45,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:25,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/bits/stl_vector.h:1892:5: note: candidate: ‘template<class _Tp, class _Alloc> bool std::operator==(const std::vector<_Tp, _Alloc>&, const std::vector<_Tp, _Alloc>&)’
+   1892 |     operator==(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/stl_vector.h:1892:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::vector<_Tp, _Alloc>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/functional:59,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/utilities.hpp:19,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:25,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:40:
+  /usr/include/c++/11/bits/std_function.h:718:5: note: candidate: ‘template<class _Res, class ... _Args> bool std::operator==(const std::function<_Res(_ArgTypes ...)>&, std::nullptr_t)’
+    718 |     operator==(const function<_Res(_Args...)>& __f, nullptr_t) noexcept
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/std_function.h:718:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::function<_Res(_ArgTypes ...)>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/functional:59,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/utilities.hpp:19,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:25,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:40:
+  /usr/include/c++/11/bits/std_function.h:725:5: note: candidate: ‘template<class _Res, class ... _Args> bool std::operator==(std::nullptr_t, const std::function<_Res(_ArgTypes ...)>&)’
+    725 |     operator==(nullptr_t, const function<_Res(_Args...)>& __f) noexcept
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/std_function.h:725:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::__cxx11::list<std::pair<double, bool> >::iterator’ is not derived from ‘const std::function<_Res(_ArgTypes ...)>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/unordered_map:47,
+                   from /usr/include/c++/11/functional:61,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/utilities.hpp:19,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:25,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:40:
+  /usr/include/c++/11/bits/unordered_map.h:2134:5: note: candidate: ‘template<class _Key1, class _Tp1, class _Hash1, class _Pred1, class _Alloc1> bool std::operator==(const std::unordered_map<_Key1, _Tp1, _Hash1, _Pred1, _Alloc1>&, const std::unordered_map<_Key1, _Tp1, _Hash1, _Pred1, _Alloc1>&)’
+   2134 |     operator==(const unordered_map<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/unordered_map.h:2134:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::unordered_map<_Key1, _Tp1, _Hash1, _Pred1, _Alloc1>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/unordered_map:47,
+                   from /usr/include/c++/11/functional:61,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/utilities.hpp:19,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:25,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:40:
+  /usr/include/c++/11/bits/unordered_map.h:2148:5: note: candidate: ‘template<class _Key1, class _Tp1, class _Hash1, class _Pred1, class _Alloc1> bool std::operator==(const std::unordered_multimap<_Key1, _Tp1, _Hash1, _Pred1, _Alloc1>&, const std::unordered_multimap<_Key1, _Tp1, _Hash1, _Pred1, _Alloc1>&)’
+   2148 |     operator==(const unordered_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/unordered_map.h:2148:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::unordered_multimap<_Key1, _Tp1, _Hash1, _Pred1, _Alloc1>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/unordered_set:47,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/context.hpp:26,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/utilities.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:25,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:40:
+  /usr/include/c++/11/bits/unordered_set.h:1804:5: note: candidate: ‘template<class _Value1, class _Hash1, class _Pred1, class _Alloc1> bool std::operator==(const std::unordered_set<_Value1, _Hash1, _Pred1, _Alloc1>&, const std::unordered_set<_Value1, _Hash1, _Pred1, _Alloc1>&)’
+   1804 |     operator==(const unordered_set<_Value, _Hash, _Pred, _Alloc>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/unordered_set.h:1804:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::unordered_set<_Value1, _Hash1, _Pred1, _Alloc1>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/unordered_set:47,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/context.hpp:26,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/utilities.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:25,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:40:
+  /usr/include/c++/11/bits/unordered_set.h:1818:5: note: candidate: ‘template<class _Value1, class _Hash1, class _Pred1, class _Alloc1> bool std::operator==(const std::unordered_multiset<_Value1, _Hash1, _Pred1, _Alloc1>&, const std::unordered_multiset<_Value1, _Hash1, _Pred1, _Alloc1>&)’
+   1818 |     operator==(const unordered_multiset<_Value, _Hash, _Pred, _Alloc>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/unordered_set.h:1818:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::unordered_multiset<_Value1, _Hash1, _Pred1, _Alloc1>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/eigen3/Eigen/Core:50,
+                   from /usr/include/eigen3/Eigen/Geometry:11,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:42:
+  /usr/include/c++/11/complex:464:5: note: candidate: ‘template<class _Tp> constexpr bool std::operator==(const std::complex<_Tp>&, const std::complex<_Tp>&)’
+    464 |     operator==(const complex<_Tp>& __x, const complex<_Tp>& __y)
+        |     ^~~~~~~~
+  /usr/include/c++/11/complex:464:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::complex<_Tp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/eigen3/Eigen/Core:50,
+                   from /usr/include/eigen3/Eigen/Geometry:11,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:42:
+  /usr/include/c++/11/complex:469:5: note: candidate: ‘template<class _Tp> constexpr bool std::operator==(const std::complex<_Tp>&, const _Tp&)’
+    469 |     operator==(const complex<_Tp>& __x, const _Tp& __y)
+        |     ^~~~~~~~
+  /usr/include/c++/11/complex:469:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::complex<_Tp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/eigen3/Eigen/Core:50,
+                   from /usr/include/eigen3/Eigen/Geometry:11,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:42:
+  /usr/include/c++/11/complex:475:5: note: candidate: ‘template<class _Tp> constexpr bool std::operator==(const _Tp&, const std::complex<_Tp>&)’
+    475 |     operator==(const _Tp& __x, const complex<_Tp>& __y)
+        |     ^~~~~~~~
+  /usr/include/c++/11/complex:475:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::__cxx11::list<std::pair<double, bool> >::iterator’ is not derived from ‘const std::complex<_Tp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/list:63,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/bits/stl_list.h:2030:5: note: candidate: ‘template<class _Tp, class _Alloc> bool std::operator==(const std::__cxx11::list<_Tp, _Alloc>&, const std::__cxx11::list<_Tp, _Alloc>&)’
+   2030 |     operator==(const list<_Tp, _Alloc>& __x, const list<_Tp, _Alloc>& __y)
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/stl_list.h:2030:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::__cxx11::list<_Tp, _Alloc>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/map:61,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/include/moveit/robot_state/robot_state.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/bits/stl_map.h:1463:5: note: candidate: ‘template<class _Key, class _Tp, class _Compare, class _Alloc> bool std::operator==(const std::map<_Key, _Tp, _Compare, _Allocator>&, const std::map<_Key, _Tp, _Compare, _Allocator>&)’
+   1463 |     operator==(const map<_Key, _Tp, _Compare, _Alloc>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/stl_map.h:1463:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::map<_Key, _Tp, _Compare, _Allocator>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/map:62,
+                   from /opt/ros/humble/include/srdfdom/srdfdom/model.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/include/moveit/robot_state/robot_state.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/bits/stl_multimap.h:1128:5: note: candidate: ‘template<class _Key, class _Tp, class _Compare, class _Alloc> bool std::operator==(const std::multimap<_Key, _Tp, _Compare, _Allocator>&, const std::multimap<_Key, _Tp, _Compare, _Allocator>&)’
+   1128 |     operator==(const multimap<_Key, _Tp, _Compare, _Alloc>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/stl_multimap.h:1128:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::multimap<_Key, _Tp, _Compare, _Allocator>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:23,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematics_base/include/moveit/kinematics_base/kinematics_base.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/include/moveit/robot_state/robot_state.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/optional:1045:5: note: candidate: ‘template<class _Tp, class _Up> constexpr std::__optional_eq_t<_Tp, _Up> std::operator==(const std::optional<_Tp>&, const std::optional<_Up>&)’
+   1045 |     operator==(const optional<_Tp>& __lhs, const optional<_Up>& __rhs)
+        |     ^~~~~~~~
+  /usr/include/c++/11/optional:1045:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::optional<_Tp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:23,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematics_base/include/moveit/kinematics_base/kinematics_base.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/include/moveit/robot_state/robot_state.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/optional:1105:5: note: candidate: ‘template<class _Tp> constexpr bool std::operator==(const std::optional<_Tp>&, std::nullopt_t)’
+   1105 |     operator==(const optional<_Tp>& __lhs, nullopt_t) noexcept
+        |     ^~~~~~~~
+  /usr/include/c++/11/optional:1105:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::optional<_Tp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:23,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematics_base/include/moveit/kinematics_base/kinematics_base.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/include/moveit/robot_state/robot_state.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/optional:1116:5: note: candidate: ‘template<class _Tp> constexpr bool std::operator==(std::nullopt_t, const std::optional<_Tp>&)’
+   1116 |     operator==(nullopt_t, const optional<_Tp>& __rhs) noexcept
+        |     ^~~~~~~~
+  /usr/include/c++/11/optional:1116:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::__cxx11::list<std::pair<double, bool> >::iterator’ is not derived from ‘const std::optional<_Tp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:23,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematics_base/include/moveit/kinematics_base/kinematics_base.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/include/moveit/robot_state/robot_state.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/optional:1173:5: note: candidate: ‘template<class _Tp, class _Up> constexpr std::__optional_eq_t<_Tp, _Up> std::operator==(const std::optional<_Tp>&, const _Up&)’
+   1173 |     operator==(const optional<_Tp>& __lhs, const _Up& __rhs)
+        |     ^~~~~~~~
+  /usr/include/c++/11/optional:1173:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::optional<_Tp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:23,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematics_base/include/moveit/kinematics_base/kinematics_base.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/include/moveit/robot_state/robot_state.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/optional:1179:5: note: candidate: ‘template<class _Tp, class _Up> constexpr std::__optional_eq_t<_Up, _Tp> std::operator==(const _Up&, const std::optional<_Tp>&)’
+   1179 |     operator==(const _Up& __lhs, const optional<_Tp>& __rhs)
+        |     ^~~~~~~~
+  /usr/include/c++/11/optional:1179:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::__cxx11::list<std::pair<double, bool> >::iterator’ is not derived from ‘const std::optional<_Tp>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:28,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematics_base/include/moveit/kinematics_base/kinematics_base.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/include/moveit/robot_state/robot_state.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/variant:1232:3: note: candidate: ‘template<class ... _Types> constexpr bool std::operator==(const std::variant<_Types ...>&, const std::variant<_Types ...>&)’
+   1232 |   _VARIANT_RELATION_FUNCTION_TEMPLATE(==, equal)
+        |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /usr/include/c++/11/variant:1232:3: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::variant<_Types ...>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/set:61,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/include/moveit/robot_state/robot_state.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/bits/stl_set.h:985:5: note: candidate: ‘template<class _Key, class _Compare, class _Alloc> bool std::operator==(const std::set<_Key, _Compare, _Allocator>&, const std::set<_Key, _Compare, _Allocator>&)’
+    985 |     operator==(const set<_Key, _Compare, _Alloc>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/stl_set.h:985:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::set<_Key, _Compare, _Allocator>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/set:62,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/include/moveit/robot_state/robot_state.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/bits/stl_multiset.h:971:5: note: candidate: ‘template<class _Key, class _Compare, class _Alloc> bool std::operator==(const std::multiset<_Key, _Compare, _Allocator>&, const std::multiset<_Key, _Compare, _Allocator>&)’
+    971 |     operator==(const multiset<_Key, _Compare, _Alloc>& __x,
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/stl_multiset.h:971:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::multiset<_Key, _Compare, _Allocator>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/deque:67,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/bits/stl_deque.h:2247:5: note: candidate: ‘template<class _Tp, class _Alloc> bool std::operator==(const std::deque<_Tp, _Alloc>&, const std::deque<_Tp, _Alloc>&)’
+   2247 |     operator==(const deque<_Tp, _Alloc>& __x, const deque<_Tp, _Alloc>& __y)
+        |     ^~~~~~~~
+  /usr/include/c++/11/bits/stl_deque.h:2247:5: note:   template argument deduction/substitution failed:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:863:46: note:   ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ is not derived from ‘const std::deque<_Tp, _Alloc>’
+    863 |     if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())
+        |                                              ^
+  In file included from /usr/include/c++/11/list:63,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/bits/stl_list.h:334:7: note: candidate: ‘bool std::operator==(const _Self&, const _Self&)’
+    334 |       operator==(const _Self& __x, const _Self& __y) _GLIBCXX_NOEXCEPT
+        |       ^~~~~~~~
+  /usr/include/c++/11/bits/stl_list.h:334:49: note:   no known conversion for argument 2 from ‘std::__cxx11::list<std::pair<double, bool> >::iterator’ to ‘const _Self&’
+    334 |       operator==(const _Self& __x, const _Self& __y) _GLIBCXX_NOEXCEPT
+        |                                    ~~~~~~~~~~~~~^~~
+  In file included from /usr/include/c++/11/bits/ios_base.h:46,
+                   from /usr/include/c++/11/ios:42,
+                   from /usr/include/c++/11/ostream:38,
+                   from /opt/ros/humble/include/rcpputils/rcpputils/filesystem_helper.hpp:43,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/logger.hpp:25,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:39:
+  /usr/include/c++/11/system_error:362:3: note: candidate: ‘bool std::operator==(const std::error_code&, const std::error_code&)’
+    362 |   operator==(const error_code& __lhs, const error_code& __rhs) noexcept
+        |   ^~~~~~~~
+  /usr/include/c++/11/system_error:362:32: note:   no known conversion for argument 1 from ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ to ‘const std::error_code&’
+    362 |   operator==(const error_code& __lhs, const error_code& __rhs) noexcept
+        |              ~~~~~~~~~~~~~~~~~~^~~~~
+  /usr/include/c++/11/system_error:368:3: note: candidate: ‘bool std::operator==(const std::error_code&, const std::error_condition&)’
+    368 |   operator==(const error_code& __lhs, const error_condition& __rhs) noexcept
+        |   ^~~~~~~~
+  /usr/include/c++/11/system_error:368:32: note:   no known conversion for argument 1 from ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ to ‘const std::error_code&’
+    368 |   operator==(const error_code& __lhs, const error_condition& __rhs) noexcept
+        |              ~~~~~~~~~~~~~~~~~~^~~~~
+  /usr/include/c++/11/system_error:376:3: note: candidate: ‘bool std::operator==(const std::error_condition&, const std::error_condition&)’
+    376 |   operator==(const error_condition& __lhs,
+        |   ^~~~~~~~
+  /usr/include/c++/11/system_error:376:37: note:   no known conversion for argument 1 from ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ to ‘const std::error_condition&’
+    376 |   operator==(const error_condition& __lhs,
+        |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+  /usr/include/c++/11/system_error:408:3: note: candidate: ‘bool std::operator==(const std::error_condition&, const std::error_code&)’
+    408 |   operator==(const error_condition& __lhs, const error_code& __rhs) noexcept
+        |   ^~~~~~~~
+  /usr/include/c++/11/system_error:408:37: note:   no known conversion for argument 1 from ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ to ‘const std::error_condition&’
+    408 |   operator==(const error_condition& __lhs, const error_code& __rhs) noexcept
+        |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+  In file included from /usr/include/c++/11/future:48,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:19,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematics_base/include/moveit/kinematics_base/kinematics_base.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/include/moveit/robot_state/robot_state.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/bits/std_thread.h:287:3: note: candidate: ‘bool std::operator==(std::thread::id, std::thread::id)’
+    287 |   operator==(thread::id __x, thread::id __y) noexcept
+        |   ^~~~~~~~
+  /usr/include/c++/11/bits/std_thread.h:287:25: note:   no known conversion for argument 1 from ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ to ‘std::thread::id’
+    287 |   operator==(thread::id __x, thread::id __y) noexcept
+        |              ~~~~~~~~~~~^~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:28,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/kinematics_base/include/moveit/kinematics_base/kinematics_base.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/joint_model_group.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_model/include/moveit/robot_model/robot_model.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/include/moveit/robot_state/robot_state.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_trajectory/include/moveit/robot_trajectory/robot_trajectory.h:40,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/variant:1239:18: note: candidate: ‘constexpr bool std::operator==(std::monostate, std::monostate)’
+   1239 |   constexpr bool operator==(monostate, monostate) noexcept { return true; }
+        |                  ^~~~~~~~
+  /usr/include/c++/11/variant:1239:29: note:   no known conversion for argument 1 from ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ to ‘std::monostate’
+   1239 |   constexpr bool operator==(monostate, monostate) noexcept { return true; }
+        |                             ^~~~~~~~~
+  In file included from /usr/include/c++/11/list:63,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/include/moveit/trajectory_processing/time_optimal_trajectory_generation.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:45:
+  /usr/include/c++/11/bits/stl_list.h:248:7: note: candidate: ‘bool std::operator==(const _Self&, const _Self&)’
+    248 |       operator==(const _Self& __x, const _Self& __y) _GLIBCXX_NOEXCEPT
+        |       ^~~~~~~~
+  /usr/include/c++/11/bits/stl_list.h:248:31: note:   no known conversion for argument 1 from ‘std::_List_const_iterator<trajectory_processing::Trajectory::TrajectoryStep>’ to ‘const _Self&’
+    248 |       operator==(const _Self& __x, const _Self& __y) _GLIBCXX_NOEXCEPT
+        |                  ~~~~~~~~~~~~~^~~
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:135: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/time_optimal_trajectory_generation.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1920: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/all] Error 2
+  gmake[1]: *** Waiting for unfinished jobs....
+  gmake: *** [Makefile:149: all] Error 2
+  ---
+  Failed   <<< moveit_core [21.7s, exited with code 2]
+
+  Summary: 0 packages finished [22.2s]
+    1 package failed: moveit_core
+    1 package had stderr output: moveit_core
+generate_code.cpp: "Eigen::VectorXd Trajectory::getAcceleration(double time) const\n\
+  {\n    // Get the trajectory segment for the given time\n    auto it = getTrajectorySegment(time);\n\
+  \    \n    // If time is at the end of the trajectory, return zero acceleration\n\
+  \    if (it == path_.getSwitchingPoints().end() || time >= path_.getLength())\n\
+  \    {\n        return Eigen::VectorXd::Zero(joint_num_);\n    }\n    \n    // Get\
+  \ the current and next trajectory steps\n    auto next_it = it;\n    ++next_it;\n\
+  \    \n    // Calculate time difference between steps\n    double dt = next_it->time_\
+  \ - it->time_;\n    \n    // If time difference is zero, return zero acceleration\
+  \ to avoid division by zero\n    if (dt <= 0.0)\n    {\n        return Eigen::VectorXd::Zero(joint_num_);\n\
+  \    }\n    \n    // Calculate path velocity difference (delta_v)\n    double delta_v\
+  \ = next_it->path_vel_ - it->path_vel_;\n    \n    // Calculate tangential acceleration\
+  \ (a_t = delta_v / dt)\n    double a_t = delta_v / dt;\n    \n    // Get the path\
+  \ tangent and curvature at the current position\n    Eigen::VectorXd tangent = path_.getTangent(it->path_pos_);\n\
+  \    Eigen::VectorXd curvature = path_.getCurvature(it->path_pos_);\n    \n    //\
+  \ Calculate the normal acceleration (a_n = v^2 * curvature)\n    double v = it->path_vel_;\n\
+  \    Eigen::VectorXd a_n = v * v * curvature;\n    \n    // Total acceleration is\
+  \ the sum of tangential and normal components\n    Eigen::VectorXd acceleration\
+  \ = a_t * tangent + a_n;\n    \n    return acceleration;\n}"
+ground_truth.cpp: |-
+  Eigen::VectorXd Trajectory::getAcceleration(double time) const
+  {
+    std::list<TrajectoryStep>::const_iterator it = getTrajectorySegment(time);
+    std::list<TrajectoryStep>::const_iterator previous = it;
+    previous--;
+
+    double time_step = it->time_ - previous->time_;
+    const double acceleration =
+        2.0 * (it->path_pos_ - previous->path_pos_ - time_step * previous->path_vel_) / (time_step * time_step);
+
+    time_step = time - previous->time_;
+    const double path_pos =
+        previous->path_pos_ + time_step * previous->path_vel_ + 0.5 * time_step * time_step * acceleration;
+    const double path_vel = previous->path_vel_ + time_step * acceleration;
+    Eigen::VectorXd path_acc =
+        (path_.getTangent(path_pos) * path_vel - path_.getTangent(previous->path_pos_) * previous->path_vel_);
+    if (time_step > 0.0)
+      path_acc /= time_step;
+    return path_acc;
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+
+functionality-codes:
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

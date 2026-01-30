@@ -1,0 +1,58 @@
+compilation.log: |
+  Starting >>> autoware_planning_validator
+  Finished <<< autoware_planning_validator [28.9s]
+
+  Summary: 1 package finished [30.3s]
+generate_code.cpp: "void PlanningValidator::onTrajectory(const Trajectory::ConstSharedPtr\
+  \ msg)\n{\n    stop_watch_.tic(); // Start timing the processing\n    \n    // Store\
+  \ the current trajectory\n    current_trajectory_ = msg;\n    \n    // Check if\
+  \ required data is available\n    if (!isDataReady()) {\n        return;\n    }\n\
+  \    \n    // Perform trajectory validation\n    validate(*current_trajectory_);\n\
+  \    \n    // Publish the validated trajectory\n    publishTrajectory();\n    \n\
+  \    // Publish debug information if enabled\n    publishDebugInfo();\n    \n  \
+  \  // Calculate and publish processing time\n    const double processing_time_ms\
+  \ = stop_watch_.toc();\n    publishProcessingTime(processing_time_ms);\n    \n \
+  \   // Update diagnostics if enabled\n    if (publish_diag_ && diag_updater_) {\n\
+  \        diag_updater_->force_update();\n        displayStatus();\n    }\n}"
+ground_truth.cpp: |-
+  void PlanningValidator::onTrajectory(const Trajectory::ConstSharedPtr msg)
+  {
+    stop_watch_.tic(__func__);
+
+    current_trajectory_ = msg;
+
+    // receive data
+    current_kinematics_ = sub_kinematics_.takeData();
+
+    if (!isDataReady()) return;
+
+    if (publish_diag_ && !diag_updater_) {
+      setupDiag();  // run setup after all data is ready.
+    }
+
+    debug_pose_publisher_->clearMarkers();
+
+    validate(*current_trajectory_);
+
+    diag_updater_->force_update();
+
+    publishTrajectory();
+
+    // for debug
+    publishProcessingTime(stop_watch_.toc(__func__));
+    publishDebugInfo();
+    displayStatus();
+  }
+architecture-codes:
+  - ROS Timer Issue - Clock Source Usage Issue
+  - ROS Diagnostic Issue - Incomplete Diagnostic Lifecycle Implementation Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

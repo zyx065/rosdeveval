@@ -1,0 +1,27 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_map_based_prediction
+ros_package: autoware_map_based_prediction
+file_path: src/path_generator.cpp
+method_name: PathGenerator::generatePathToTargetPoint
+requirement: |
+  /**
+  * Generates a predicted path for an object moving directly toward a target point.
+  * 
+  * @param object The tracked object for which to generate the path, containing position and velocity data.
+  * @param point The target point (in world coordinates) that the object is moving toward.
+  * @return PredictedPath containing the predicted poses along the path to the target point.
+  */
+category: utilities
+type: has_message,has_timer
+signature: |
+  PredictedPath PathGenerator::generatePathToTargetPoint(
+    const TrackedObject & object, const Eigen::Vector2d & point) const
+additional_information: 
+  function_related_variable: |
+    std::shared_ptr<autoware::universe_utils::TimeKeeper> time_keeper_;
+  function_related_function: |
+    geometry_msgs::msg::Quaternion createQuaternionFromYaw(const double yaw);
+test: test_map_based_prediction
+test_cases: 
+- test_generatePathToTargetPoint

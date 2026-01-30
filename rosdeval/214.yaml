@@ -1,0 +1,48 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_mppi_controller
+ros_package: nav2_mppi_controller
+file_path: include/nav2_mppi_controller/tools/utils.hpp
+method_name: findPathFurthestReachedPoint
+requirement: |
+  /**
+  * @brief Evaluate furthest point idx of data.path which is
+  * nearset to some trajectory in data.trajectories
+  * @param data Data to use
+  * @return Idx of furthest path point reached by a set of trajectories
+  */
+category: utilities
+type: []
+signature: |
+  inline size_t findPathFurthestReachedPoint(const CriticData & data)
+additional_information: 
+  function_related_variable: 
+    rclcpp_lifecycle::LifecycleNode::WeakPtr parent_;
+    std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros_;
+    nav2_costmap_2d::Costmap2D * costmap_;
+    std::string name_;
+
+    std::shared_ptr<MotionModel> motion_model_;
+
+    ParametersHandler * parameters_handler_;
+    CriticManager critic_manager_;
+    NoiseGenerator noise_generator_;
+
+    models::OptimizerSettings settings_;
+
+    models::State state_;
+    models::ControlSequence control_sequence_;
+    std::array<mppi::models::Control, 4> control_history_;
+    models::Trajectories generated_trajectories_;
+    models::Path path_;
+    geometry_msgs::msg::Pose goal_;
+    xt::xtensor<float, 1> costs_;
+    CriticData critics_data_ = {
+      state_, generated_trajectories_, path_, goal_,
+      costs_, settings_.model_dt, false, nullptr, nullptr,
+      std::nullopt, std::nullopt};  /// Caution, keep references
+
+    rclcpp::Logger logger_{rclcpp::get_logger("MPPIController")};
+test: utils_test
+test_cases: 
+- FurthestAndClosestReachedPoint

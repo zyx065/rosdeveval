@@ -1,0 +1,25 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_rotation_shim_controller
+ros_package: nav2_rotation_shim_controller
+file_path: src/nav2_rotation_shim_controller.cpp
+method_name: RotationShimController::cleanup
+requirement: |
+  /**
+  * Cleans up resources and resets managed objects for the rotation shim controller.
+  * 
+  * @param primary_controller_ The primary controller instance to clean up and reset.
+  * @param position_goal_checker_ The goal checker instance to reset.
+  */
+category: ros_architecture
+type: has_logger
+signature: |
+  void RotationShimController::cleanup()
+additional_information: 
+  function_related_variable: |
+    nav2_core::Controller::Ptr primary_controller_;
+    std::unique_ptr<nav2_controller::PositionGoalChecker> position_goal_checker_;
+    rclcpp::Logger logger_ {rclcpp::get_logger("RotationShimController")};
+    std::string plugin_name_;
+test: test_shim_controller
+test_cases: []

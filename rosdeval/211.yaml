@@ -1,0 +1,46 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_mppi_controller
+ros_package: nav2_mppi_controller
+file_path: src/optimizer.cpp
+method_name: Optimizer::evalControl
+requirement: |
+  /**
+  * Computes an optimal velocity command to follow a path towards a goal.
+  * 
+  * @param[in] robot_pose The current stamped pose of the robot.
+  * @param[in] robot_speed The current velocity of the robot.
+  * @param[in] plan The path for the robot to follow.
+  * @param[in] goal The target goal pose.
+  * @param[in] goal_checker Pointer to the goal checker for validating goal achievement.
+  * @return Stamped velocity command representing the optimal control to execute.
+  */
+category: utilities
+type: []
+signature: |
+  geometry_msgs::msg::TwistStamped Optimizer::evalControl(
+    const geometry_msgs::msg::PoseStamped & robot_pose,
+    const geometry_msgs::msg::Twist & robot_speed,
+    const nav_msgs::msg::Path & plan,
+    const geometry_msgs::msg::Pose & goal,
+    nav2_core::GoalChecker * goal_checker)
+additional_information: 
+  function_related_variable: |
+    CriticData critics_data_ = {
+    state_, generated_trajectories_, path_, goal_,
+    costs_, settings_.model_dt, false, nullptr, nullptr,
+    std::nullopt, std::nullopt};  /// Caution, keep references
+
+    rclcpp::Logger logger_{rclcpp::get_logger("MPPIController")};
+    models::ControlSequence control_sequence_;
+    std::array<mppi::models::Control, 4> control_history_;
+    models::OptimizerSettings settings_;
+  function_related_function: 
+    void Optimizer::prepare(const geometry_msgs::msg::PoseStamped & robot_pose,const geometry_msgs::msg::Twist & robot_speed,const nav_msgs::msg::Path & plan,const geometry_msgs::msg::Pose & goal,nav2_core::GoalChecker * goal_checker)
+    void Optimizer::optimize()
+    bool Optimizer::fallback(bool fail)
+    geometry_msgs::msg::TwistStamped Optimizer::getControlFromSequenceAsTwist(const builtin_interfaces::msg::Time & stamp)
+    void Optimizer::shiftControlSequence()
+test: optimizer_smoke_test
+test_cases: 
+- OptimizerTest

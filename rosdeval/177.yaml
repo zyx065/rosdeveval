@@ -1,0 +1,48 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_velocity_smoother
+ros_package: nav2_velocity_smoother
+file_path: src/velocity_smoother.cpp
+method_name: VelocitySmoother::on_configure
+requirement: |
+  /**
+  * Configures the velocity smoother component and initializes parameters.
+  * 
+  * @param[in] state The lifecycle node's state during configuration.
+  * @return nav2_util::CallbackReturn SUCCESS if configuration succeeds, otherwise FAILURE.
+  * 
+  * @note This method declares and retrieves parameters for smoothing behavior, kinematic limits,
+  *       and operational mode (open-loop vs closed-loop), then initializes publishers/subscribers.
+  */
+category: ros_architecture
+type: has_logger,has_parameter,has_topic
+signature: |
+  nav2_util::CallbackReturn
+  VelocitySmoother::on_configure(const rclcpp_lifecycle::State &)
+additional_information: 
+  function_related_variable: |
+    double smoothing_frequency_;
+    double odom_duration_;
+    std::string odom_topic_;
+    bool open_loop_;
+    bool stopped_{true};
+    bool scale_velocities_;
+    std::vector<double> max_velocities_;
+    std::vector<double> min_velocities_;
+    std::vector<double> max_accels_;
+    std::vector<double> max_decels_;
+    std::vector<double> deadband_velocities_;
+    rclcpp::Duration velocity_timeout_{0, 0};
+    rclcpp::Time last_command_time_;
+    std::unique_ptr<nav2_util::OdomSmoother> odom_smoother_;
+    rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr smoothed_cmd_pub_;
+    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_sub_;
+    rclcpp::TimerBase::SharedPtr timer_;
+
+    rclcpp::Clock::SharedPtr clock_;
+    geometry_msgs::msg::Twist last_cmd_;
+    geometry_msgs::msg::Twist::SharedPtr command_;
+  function_related_function: |
+    void inputCommandCallback(const geometry_msgs::msg::Twist::SharedPtr msg);
+test: velocity_smoother_tests
+test_cases: []

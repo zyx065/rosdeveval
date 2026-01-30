@@ -1,0 +1,29 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_costmap_2d
+ros_package: nav2_costmap_2d
+file_path: src/footprint.cpp
+method_name: transformFootprint
+requirement: |
+  /**
+  * Transforms a footprint specification into a polygon at a given pose.
+  * 
+  * @param x The x coordinate of the footprint center.
+  * @param y The y coordinate of the footprint center.
+  * @param theta The orientation (yaw) of the footprint in radians.
+  * @param[in] footprint_spec The base footprint specification relative to origin.
+  * @param[out] oriented_footprint The output polygon stamped with transformed points.
+  */
+category: utilities
+type: has_message
+signature: |
+  void transformFootprint(
+    double x, double y, double theta,
+    const std::vector<geometry_msgs::msg::Point> & footprint_spec,
+    geometry_msgs::msg::PolygonStamped & oriented_footprint)
+additional_information: []
+test: test_collision_checker_exec
+test_cases: 
+- unknownSpace
+- FreeSpace
+- CollisionSpace

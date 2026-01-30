@@ -1,0 +1,20 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_mppi_controller
+ros_package: nav2_mppi_controller
+file_path: include/nav2_mppi_controller/tools/utils.hpp
+method_name: findFirstPathInversion
+requirement: |
+  /**
+  * @brief Find the iterator of the first pose at which there is an inversion on the path,
+  * @param path to check for inversion
+  * @return the first point after the inversion found in the path
+  */
+category: utilities
+type: []
+signature: |
+  inline unsigned int findFirstPathInversion(nav_msgs::msg::Path & path)                                                          
+additional_information: []
+test: utils_test
+test_cases: 
+- FindPathInversionTest

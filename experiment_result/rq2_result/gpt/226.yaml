@@ -1,0 +1,69 @@
+compilation.log: |
+  Starting >>> laser_filters
+  --- stderr: laser_filters
+  In file included from /root/repos/laser_filter_ws/src/laser_filters/src/laser_scan_filters.cpp:32:
+  /root/repos/laser_filter_ws/src/laser_filters/include/laser_filters/array_filter.h: In member function ‘virtual bool laser_filters::LaserArrayFilter::update(const LaserScan&, sensor_msgs::msg::LaserScan&)’:
+  /root/repos/laser_filter_ws/src/laser_filters/include/laser_filters/array_filter.h:101:17: error: ‘use_message_range_limits_’ was not declared in this scope
+    101 |             if (use_message_range_limits_)
+        |                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+  /root/repos/laser_filter_ws/src/laser_filters/include/laser_filters/array_filter.h:104:41: error: ‘lower_threshold_’ was not declared in this scope
+    104 |                 if (scan_in.ranges[i] < lower_threshold_)
+        |                                         ^~~~~~~~~~~~~~~~
+  /root/repos/laser_filter_ws/src/laser_filters/include/laser_filters/array_filter.h:106:42: error: ‘lower_replacement_value_’ was not declared in this scope
+    106 |                     scan_out.ranges[i] = lower_replacement_value_;
+        |                                          ^~~~~~~~~~~~~~~~~~~~~~~~
+  /root/repos/laser_filter_ws/src/laser_filters/include/laser_filters/array_filter.h:109:46: error: ‘upper_threshold_’ was not declared in this scope
+    109 |                 else if (scan_in.ranges[i] > upper_threshold_)
+        |                                              ^~~~~~~~~~~~~~~~
+  /root/repos/laser_filter_ws/src/laser_filters/include/laser_filters/array_filter.h:111:42: error: ‘upper_replacement_value_’ was not declared in this scope
+    111 |                     scan_out.ranges[i] = upper_replacement_value_;
+        |                                          ^~~~~~~~~~~~~~~~~~~~~~~~
+  /root/repos/laser_filter_ws/src/laser_filters/include/laser_filters/array_filter.h:128:34: error: ‘lower_replacement_value_’ was not declared in this scope
+    128 |             scan_out.ranges[i] = lower_replacement_value_;
+        |                                  ^~~~~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/laser_scan_filters.dir/build.make:76: CMakeFiles/laser_scan_filters.dir/src/laser_scan_filters.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:171: CMakeFiles/laser_scan_filters.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< laser_filters [5.65s, exited with code 2]
+
+  Summary: 0 packages finished [5.82s]
+    1 package failed: laser_filters
+    1 package had stderr output: laser_filters
+generate_code.cpp: |-
+  bool isShadow(const float r1, const float r2, const float included_angle)
+  {
+      // Calculate the tangent of the included angle
+      float angle_tan = std::tan(included_angle);
+
+      // Check if the angle tangent is within the specified thresholds
+      if (angle_tan >= min_angle_tan_ && angle_tan <= max_angle_tan_)
+      {
+          // Check if the first object is closer to the reference point than the second object
+          if (r1 < r2)
+          {
+              return true; // The first object casts a shadow on the second object
+          }
+      }
+
+      return false; // No shadow is cast
+  }
+ground_truth.cpp: |-
+  bool isShadow(const float r1, const float r2, const float included_angle)
+    {
+      const float perpendicular_y_ = r2 * sinf(included_angle);
+      const float perpendicular_x_ = r1 - r2 * cosf(included_angle);
+      const float perpendicular_tan_ = fabs(perpendicular_y_) / perpendicular_x_;
+
+      if (perpendicular_tan_ > 0)
+      {
+        if (perpendicular_tan_ < min_angle_tan_)
+          return true;
+      }
+      else
+      {
+        if (perpendicular_tan_ > max_angle_tan_)
+          return true;
+      }
+      return false;
+    }

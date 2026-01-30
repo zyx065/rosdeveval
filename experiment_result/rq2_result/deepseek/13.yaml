@@ -1,0 +1,54 @@
+compilation.log: |
+  Starting >>> autoware_compare_map_segmentation
+  Finished <<< autoware_compare_map_segmentation [28.4s]
+
+  Summary: 1 package finished [29.8s]
+generate_code.cpp: |-
+  void DistanceBasedStaticMapLoader::onMapCallback(
+    const sensor_msgs::msg::PointCloud2::ConstSharedPtr map)
+  {
+    // Convert ROS PointCloud2 to PCL PointCloud
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::fromROSMsg(*map, *cloud);
+
+    // Store the converted point cloud
+    map_ptr_ = cloud;
+
+    // Initialize KD-tree for nearest neighbor searches
+    tree_.reset(new pcl::search::KdTree<pcl::PointXYZ>(false));
+    tree_->setInputCloud(map_ptr_);
+  }
+ground_truth.cpp: |-
+  void DistanceBasedStaticMapLoader::onMapCallback(
+    const sensor_msgs::msg::PointCloud2::ConstSharedPtr map)
+  {
+    pcl::PointCloud<pcl::PointXYZ> map_pcl;
+    pcl::fromROSMsg<pcl::PointXYZ>(*map, map_pcl);
+    const auto map_pcl_ptr = pcl::make_shared<pcl::PointCloud<pcl::PointXYZ>>(map_pcl);
+    map_ptr_ = map_pcl_ptr;
+    *tf_map_input_frame_ = map_ptr_->header.frame_id;
+    if (!tree_) {
+      if (map_ptr_->isOrganized()) {
+        tree_.reset(new pcl::search::OrganizedNeighbor<pcl::PointXYZ>());
+      } else {
+        tree_.reset(new pcl::search::KdTree<pcl::PointXYZ>(false));
+      }
+    }
+    tree_->setInputCloud(map_ptr_);
+    is_initialized_.store(true, std::memory_order_release);
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Message Issue - Message Operation Issue
+
+functionality-codes:
+  - Condition Issue - Conditional Check Missing Issue
+  - Condition Issue - Conditional Check Missing Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

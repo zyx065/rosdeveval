@@ -1,0 +1,74 @@
+compilation.log: |
+  Starting >>> pilz_industrial_motion_planner
+  Finished <<< pilz_industrial_motion_planner [0.77s]
+
+  Summary: 1 package finished [1.23s]
+generate_code.cpp: |
+  bool pilz_industrial_motion_planner::isRobotStateStationary(const moveit::core::RobotState& state,
+                                                              const std::string& group, double EPSILON)
+  {
+      const moveit::core::JointModelGroup* joint_group = state.getJointModelGroup(group);
+      if (!joint_group)
+      {
+          return false;
+      }
+
+      // Get velocities for the joint group
+      Eigen::VectorXd velocities;
+      state.copyJointGroupVelocities(joint_group, velocities);
+      
+      // Check if all velocities are below epsilon
+      for (int i = 0; i < velocities.size(); ++i)
+      {
+          if (std::abs(velocities[i]) > EPSILON)
+          {
+              return false;
+          }
+      }
+
+      // Get accelerations for the joint group
+      Eigen::VectorXd accelerations;
+      state.copyJointGroupAccelerations(joint_group, accelerations);
+      
+      // Check if all accelerations are below epsilon
+      for (int i = 0; i < accelerations.size(); ++i)
+      {
+          if (std::abs(accelerations[i]) > EPSILON)
+          {
+              return false;
+          }
+      }
+
+      return true;
+  }
+ground_truth.cpp: |-
+  bool pilz_industrial_motion_planner::isRobotStateStationary(const moveit::core::RobotState& state,
+                                                              const std::string& group, double EPSILON)
+  {
+    Eigen::VectorXd joint_variable;
+    state.copyJointGroupVelocities(group, joint_variable);
+    if (joint_variable.norm() > EPSILON)
+    {
+      RCLCPP_DEBUG(LOGGER, "Joint velocities are not zero.");
+      return false;
+    }
+    state.copyJointGroupAccelerations(group, joint_variable);
+    if (joint_variable.norm() > EPSILON)
+    {
+      RCLCPP_DEBUG(LOGGER, "Joint accelerations are not zero.");
+      return false;
+    }
+    return true;
+  }
+architecture-codes:
+  - ROS Logger Issues - ROS Logger Missing Issue
+functionality-codes:
+  - Reference Error - Wrong method
+  - Operation/Calculation Error - Incorrect comparison operation
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Garbage Code - Meaningless code snippet
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practice
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

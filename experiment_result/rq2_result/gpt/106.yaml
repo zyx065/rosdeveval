@@ -1,0 +1,55 @@
+compilation.log: |
+  Starting >>> autoware_ekf_localizer
+  --- stderr: autoware_ekf_localizer
+  /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_ekf_localizer/src/state_transition.cpp: In function ‘autoware::ekf_localizer::Matrix6d autoware::ekf_localizer::create_state_transition_matrix(const Vector6d&, double)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/localization/autoware_ekf_localizer/src/state_transition.cpp:77:12: error: unused variable ‘wz’ [-Werror=unused-variable]
+     77 |     double wz = X_curr(5);       // Current angular velocity
+        |            ^~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/autoware_ekf_localizer.dir/build.make:146: CMakeFiles/autoware_ekf_localizer.dir/src/state_transition.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:175: CMakeFiles/autoware_ekf_localizer.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_ekf_localizer [1.31s, exited with code 2]
+
+  Summary: 0 packages finished [2.58s]
+    1 package failed: autoware_ekf_localizer
+    1 package had stderr output: autoware_ekf_localizer
+generate_code.cpp: |-
+  Matrix6d create_state_transition_matrix(const Vector6d & X_curr, const double dt)
+  {
+      // Extract current state variables
+      double yaw = X_curr(2);      // Current yaw angle
+      double vx = X_curr(4);       // Current linear velocity
+      double wz = X_curr(5);       // Current angular velocity
+
+      // Initialize the state transition matrix as an identity matrix
+      Matrix6d F = Matrix6d::Identity();
+
+      // Update the matrix based on the motion model
+      F(0, 2) = -vx * dt * sin(yaw);  // Partial derivative of x with respect to yaw
+      F(0, 4) = dt * cos(yaw);        // Partial derivative of x with respect to vx
+      F(1, 2) = vx * dt * cos(yaw);   // Partial derivative of y with respect to yaw
+      F(1, 4) = dt * sin(yaw);        // Partial derivative of y with respect to vx
+      F(2, 5) = dt;                   // Partial derivative of yaw with respect to wz
+
+      // Return the computed state transition matrix
+      return F;
+  }
+ground_truth.cpp: |-
+  Matrix6d create_state_transition_matrix(const Vector6d & X_curr, const double dt)
+  {
+    const double yaw = X_curr(IDX::YAW);
+    const double yaw_bias = X_curr(IDX::YAWB);
+    const double vx = X_curr(IDX::VX);
+
+    Matrix6d a = Matrix6d::Identity();
+    a(IDX::X, IDX::YAW) = -vx * sin(yaw + yaw_bias) * dt;
+    a(IDX::X, IDX::YAWB) = -vx * sin(yaw + yaw_bias) * dt;
+    a(IDX::X, IDX::VX) = cos(yaw + yaw_bias) * dt;
+    a(IDX::Y, IDX::YAW) = vx * cos(yaw + yaw_bias) * dt;
+    a(IDX::Y, IDX::YAWB) = vx * cos(yaw + yaw_bias) * dt;
+    a(IDX::Y, IDX::VX) = sin(yaw + yaw_bias) * dt;
+    a(IDX::YAW, IDX::WZ) = dt;
+    return a;
+  }

@@ -1,0 +1,97 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_path_optimizer
+ros_package: autoware_path_optimizer
+file_path: src/node.cpp
+method_name: PathOptimizer::PathOptimizer
+requirement: |
+  /**
+  * @brief Constructs a path optimizer node for trajectory optimization.
+  * 
+  * @param node_options Configuration options for the ROS 2 node.
+  */
+category: ros_architecture
+type: has_topic,has_parameter,has_timer,has_message
+signature: |
+  PathOptimizer::PathOptimizer(const rclcpp::NodeOptions & node_options)
+  : Node("path_optimizer", node_options),
+    vehicle_info_(autoware::vehicle_info_utils::VehicleInfoUtils(*this).getVehicleInfo()),
+    debug_data_ptr_(std::make_shared<DebugData>())
+additional_information: 
+  function_related_variable: |  
+    rclcpp::Publisher<Trajectory>::SharedPtr traj_pub_;
+    rclcpp::Publisher<MarkerArray>::SharedPtr virtual_wall_pub_;
+    rclcpp::Subscription<Path>::SharedPtr path_sub_;
+    autoware::universe_utils::InterProcessPollingSubscriber<Odometry> ego_odom_sub_{this, "~/input/odometry"};
+
+    rclcpp::Publisher<Trajectory>::SharedPtr debug_extended_traj_pub_;
+    rclcpp::Publisher<MarkerArray>::SharedPtr debug_markers_pub_;
+    rclcpp::Publisher<StringStamped>::SharedPtr debug_calculation_time_str_pub_;
+    rclcpp::Publisher<Float64Stamped>::SharedPtr debug_calculation_time_float_pub_;
+    rclcpp::Publisher<autoware::universe_utils::ProcessingTimeDetail>::SharedPtr debug_processing_time_detail_pub_;
+    
+    bool enable_pub_debug_marker_;
+    bool enable_pub_extra_debug_marker_;
+    bool enable_debug_info_;
+    bool enable_outside_drivable_area_stop_;
+    bool enable_skip_optimization_;
+    bool enable_reset_prev_optimization_;
+    bool use_footprint_polygon_for_outside_drivable_area_check_;
+    TrajectoryParam traj_param_{};
+    EgoNearestParam ego_nearest_param_{};
+    mutable std::shared_ptr<autoware::universe_utils::TimeKeeper> time_keeper_{nullptr};
+    std::shared_ptr<ReplanChecker> replan_checker_ptr_{nullptr};
+    std::shared_ptr<MPTOptimizer> mpt_optimizer_ptr_{nullptr};
+    OnSetParametersCallbackHandle::SharedPtr set_param_res_;
+    std::unique_ptr<autoware::universe_utils::LoggerLevelConfigure> logger_configure_;
+    std::unique_ptr<autoware::universe_utils::PublishedTimePublisher> published_time_publisher_;
+  function_related_function: |
+    void onPath(const Path::ConstSharedPtr path_ptr);
+    void initializePlanning();  
+    rcl_interfaces::msg::SetParametersResult onParam(const std::vector<rclcpp::Parameter> & parameters);
+  function_related_class: |
+    struct TrajectoryParam
+    {
+      TrajectoryParam() = default;
+      explicit TrajectoryParam(rclcpp::Node * node)
+      {
+        output_backward_traj_length =
+          node->declare_parameter<double>("common.output_backward_traj_length");
+        output_delta_arc_length = node->declare_parameter<double>("common.output_delta_arc_length");
+      }
+
+      void onParam(const std::vector<rclcpp::Parameter> & parameters)
+      {
+        using autoware::universe_utils::updateParam;
+
+        // common
+        updateParam<double>(
+          parameters, "common.output_backward_traj_length", output_backward_traj_length);
+        updateParam<double>(parameters, "common.output_delta_arc_length", output_delta_arc_length);
+      }
+
+      double output_delta_arc_length;
+      double output_backward_traj_length;
+    };
+
+    struct EgoNearestParam
+    {
+      EgoNearestParam() = default;
+      explicit EgoNearestParam(rclcpp::Node * node)
+      {
+        dist_threshold = node->declare_parameter<double>("ego_nearest_dist_threshold");
+        yaw_threshold = node->declare_parameter<double>("ego_nearest_yaw_threshold");
+      }
+
+      void onParam(const std::vector<rclcpp::Parameter> & parameters)
+      {
+        using autoware::universe_utils::updateParam;
+        updateParam<double>(parameters, "ego_nearest_dist_threshold", dist_threshold);
+        updateParam<double>(parameters, "ego_nearest_yaw_threshold", yaw_threshold);
+      }
+
+      double dist_threshold{0.0};
+      double yaw_threshold{0.0};
+    };
+test: test_autoware_path_optimizer
+test_cases: []

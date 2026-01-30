@@ -1,0 +1,200 @@
+compilation.log: |
+  Starting >>> nav2_smac_planner
+  --- stderr: nav2_smac_planner
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp: In member function ‘float nav2_smac_planner::NodeHybrid::getTraversalCost(nav2_smac_planner::NodeHybrid* const&)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:307:27: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘getCollisionCost’
+    307 |     if (std::isnan(child->getCollisionCost())) {
+        |                           ^~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:312:33: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘getEuclideanDistance’
+    312 |     float distance_cost = this->getEuclideanDistance(child);
+        |                                 ^~~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:324:33: error: ‘DIRECTION_CHANGE_PENALTY’ was not declared in this scope
+    324 |         direction_change_cost = DIRECTION_CHANGE_PENALTY;
+        |                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:328:16: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘isBackward’
+    328 |     if (child->isBackward()) {
+        |                ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:329:24: error: ‘REVERSE_PENALTY’ was not declared in this scope
+    329 |         reverse_cost = REVERSE_PENALTY;
+        |                        ^~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:334:25: error: ‘STEERING_PENALTY’ was not declared in this scope
+    334 |         steering_cost = STEERING_PENALTY;
+        |                         ^~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:338:40: error: ‘TRAVEL_COST_WEIGHT’ was not declared in this scope
+    338 |     float total_cost = distance_cost * TRAVEL_COST_WEIGHT +
+        |                                        ^~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:339:30: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘getCollisionCost’
+    339 |                       child->getCollisionCost() * COLLISION_COST_WEIGHT +
+        |                              ^~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:339:51: error: ‘COLLISION_COST_WEIGHT’ was not declared in this scope
+    339 |                       child->getCollisionCost() * COLLISION_COST_WEIGHT +
+        |                                                   ^~~~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp: In member function ‘float nav2_smac_planner::NodeHybrid::getTraversalCost(nav2_smac_planner::NodeHybrid* const&)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:307:27: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘getCollisionCost’
+    307 |     if (std::isnan(child->getCollisionCost())) {
+        |                           ^~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:312:33: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘getEuclideanDistance’
+    312 |     float distance_cost = this->getEuclideanDistance(child);
+        |                                 ^~~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp: In member function ‘float nav2_smac_planner::NodeHybrid::getTraversalCost(nav2_smac_planner::NodeHybrid* const&)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:307:27: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘getCollisionCost’
+    307 |     if (std::isnan(child->getCollisionCost())) {
+        |                           ^~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:312:33: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘getEuclideanDistance’
+    312 |     float distance_cost = this->getEuclideanDistance(child);
+        |                                 ^~~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:324:33: error: ‘DIRECTION_CHANGE_PENALTY’ was not declared in this scope
+    324 |         direction_change_cost = DIRECTION_CHANGE_PENALTY;
+        |                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:328:16: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘isBackward’
+    328 |     if (child->isBackward()) {
+        |                ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:324:33: error: ‘DIRECTION_CHANGE_PENALTY’ was not declared in this scope
+    324 |         direction_change_cost = DIRECTION_CHANGE_PENALTY;
+        |                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:328:16: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘isBackward’
+    328 |     if (child->isBackward()) {
+        |                ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:329:24: error: ‘REVERSE_PENALTY’ was not declared in this scope
+    329 |         reverse_cost = REVERSE_PENALTY;
+        |                        ^~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:329:24: error: ‘REVERSE_PENALTY’ was not declared in this scope
+    329 |         reverse_cost = REVERSE_PENALTY;
+        |                        ^~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:334:25: error: ‘STEERING_PENALTY’ was not declared in this scope
+    334 |         steering_cost = STEERING_PENALTY;
+        |                         ^~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:334:25: error: ‘STEERING_PENALTY’ was not declared in this scope
+    334 |         steering_cost = STEERING_PENALTY;
+        |                         ^~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:338:40: error: ‘TRAVEL_COST_WEIGHT’ was not declared in this scope
+    338 |     float total_cost = distance_cost * TRAVEL_COST_WEIGHT +
+        |                                        ^~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:339:30: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘getCollisionCost’
+    339 |                       child->getCollisionCost() * COLLISION_COST_WEIGHT +
+        |                              ^~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:338:40: error: ‘TRAVEL_COST_WEIGHT’ was not declared in this scope
+    338 |     float total_cost = distance_cost * TRAVEL_COST_WEIGHT +
+        |                                        ^~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:339:30: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘getCollisionCost’
+    339 |                       child->getCollisionCost() * COLLISION_COST_WEIGHT +
+        |                              ^~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:339:51: error: ‘COLLISION_COST_WEIGHT’ was not declared in this scope
+    339 |                       child->getCollisionCost() * COLLISION_COST_WEIGHT +
+        |                                                   ^~~~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:339:51: error: ‘COLLISION_COST_WEIGHT’ was not declared in this scope
+    339 |                       child->getCollisionCost() * COLLISION_COST_WEIGHT +
+        |                                                   ^~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner_lattice.dir/build.make:146: CMakeFiles/nav2_smac_planner_lattice.dir/src/node_hybrid.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:248: CMakeFiles/nav2_smac_planner_lattice.dir/all] Error 2
+  gmake[1]: *** Waiting for unfinished jobs....
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner.dir/build.make:146: CMakeFiles/nav2_smac_planner.dir/src/node_hybrid.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:196: CMakeFiles/nav2_smac_planner.dir/all] Error 2
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner_2d.dir/build.make:146: CMakeFiles/nav2_smac_planner_2d.dir/src/node_hybrid.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:222: CMakeFiles/nav2_smac_planner_2d.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_smac_planner [5.78s, exited with code 2]
+
+  Summary: 0 packages finished [6.11s]
+    1 package failed: nav2_smac_planner
+    1 package had stderr output: nav2_smac_planner
+generate_code.cpp: |-
+  float NodeHybrid::getTraversalCost(const NodePtr & child)
+  {
+      // Check for invalid collision cost
+      if (std::isnan(child->getCollisionCost())) {
+          throw std::runtime_error("Child node has invalid (NaN) collision cost");
+      }
+
+      // Calculate distance cost (Euclidean distance)
+      float distance_cost = this->getEuclideanDistance(child);
+
+      // Get motion primitive index for direction change penalty
+      unsigned int motion_primitive = child->getMotionPrimitiveIndex();
+
+      // Initialize cost components
+      float direction_change_cost = 0.0f;
+      float reverse_cost = 0.0f;
+      float steering_cost = 0.0f;
+
+      // Add penalty for direction changes (if not first movement)
+      if (this->getMotionPrimitiveIndex() != motion_primitive) {
+          direction_change_cost = DIRECTION_CHANGE_PENALTY;
+      }
+
+      // Add penalty for reverse driving
+      if (child->isBackward()) {
+          reverse_cost = REVERSE_PENALTY;
+      }
+
+      // Add penalty for non-straight motions (steering)
+      if (motion_primitive != 0) {  // Assuming 0 is straight motion
+          steering_cost = STEERING_PENALTY;
+      }
+
+      // Combine all cost components
+      float total_cost = distance_cost * TRAVEL_COST_WEIGHT +
+                        child->getCollisionCost() * COLLISION_COST_WEIGHT +
+                        direction_change_cost +
+                        reverse_cost +
+                        steering_cost;
+
+      return total_cost;
+  }
+ground_truth.cpp: |-
+  float NodeHybrid::getTraversalCost(const NodePtr & child)
+  {
+    const float normalized_cost = child->getCost() / 252.0;
+    if (std::isnan(normalized_cost)) {
+      throw std::runtime_error(
+              "Node attempted to get traversal "
+              "cost without a known SE2 collision cost!");
+    }
+
+    // this is the first node
+    if (getMotionPrimitiveIndex() == std::numeric_limits<unsigned int>::max()) {
+      return NodeHybrid::travel_distance_cost;
+    }
+
+    float travel_cost = 0.0;
+    float travel_cost_raw =
+      NodeHybrid::travel_distance_cost *
+      (motion_table.travel_distance_reward + motion_table.cost_penalty * normalized_cost);
+
+    if (child->getMotionPrimitiveIndex() == 0 || child->getMotionPrimitiveIndex() == 3) {
+      // New motion is a straight motion, no additional costs to be applied
+      travel_cost = travel_cost_raw;
+    } else {
+      if (getMotionPrimitiveIndex() == child->getMotionPrimitiveIndex()) {
+        // Turning motion but keeps in same direction: encourages to commit to turning if starting it
+        travel_cost = travel_cost_raw * motion_table.non_straight_penalty;
+      } else {
+        // Turning motion and changing direction: penalizes wiggling
+        travel_cost = travel_cost_raw *
+          (motion_table.non_straight_penalty + motion_table.change_penalty);
+      }
+    }
+
+    if (child->getMotionPrimitiveIndex() > 2) {
+      // reverse direction
+      travel_cost *= motion_table.reverse_penalty;
+    }
+
+    return travel_cost;
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue 
+  - ROS Parameter Issue - Use Non-existent Parameter Issue 
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue 
+  - Condition Issue - Condition Check Logic Misapplication Issue 
+  - Domain Library Issue - Lack of Domain Library Utilization Issue 
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic 
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming 
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries 
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase 

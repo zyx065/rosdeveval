@@ -1,0 +1,31 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/robot_state
+ros_package: moveit_core
+file_path: src/robot_state.cpp
+method_name: RobotState::interpolate
+requirement: |
+  /**
+  * Linearly interpolates the joint positions between this state and a target state.
+  * 
+  * @param[in] to The target robot state to interpolate towards.
+  * @param[in] t Interpolation parameter between 0.0 (this state) and 1.0 (target state).
+  * @param[out] state The resulting interpolated robot state.
+  * @param[in] joint_group The group of joints to interpolate; if nullptr, interpolates all active joints.
+  */
+category: utilities
+type: []
+signature: |
+  void RobotState::interpolate(const RobotState& to, double t, RobotState& state, const JointModelGroup* joint_group) const
+additional_information: 
+  function_related_variable: |
+    static const rclcpp::Logger LOGGER = rclcpp::get_logger("moveit_robot_state.robot_state");
+  function_related_function: |
+    void checkInterpolationParamBounds(const rclcpp::Logger& logger, double t)
+    JointModelGroup::getActiveJointModels()
+    JointModel::getFirstVariableIndex()
+    JointModel::interpolate(const double* from, const double* to, const double t, double* state)
+    RobotState::updateMimicJoints(const JointModelGroup* group)
+test: test_robot_state
+test_cases: 
+- testInterpolation

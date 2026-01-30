@@ -1,0 +1,66 @@
+compilation.log: |
+  Starting >>> autoware_costmap_generator
+  --- stderr: autoware_costmap_generator
+  In file included from /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:23,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:50,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp: In function ‘void __static_initialization_and_destruction_0(int, int)’:
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp:51:13: warning: ‘parameter_traits::OK’ is deprecated: When returning tl::expected<void, std::string> default construct for OK with `{}`. [-Wdeprecated-declarations]
+     51 | auto static OK
+        |             ^~
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp:51:13: note: declared here
+  ---
+  [Processing: autoware_costmap_generator]
+  Finished <<< autoware_costmap_generator [37.5s]
+
+  Summary: 1 package finished [39.0s]
+    1 package had stderr output: autoware_costmap_generator
+generate_code.cpp: |-
+  void CostmapGenerator::loadRoadAreasFromLaneletMap(
+    const lanelet::LaneletMapPtr lanelet_map,
+    std::vector<geometry_msgs::msg::Polygon> & area_polygons)
+  {
+    // Clear the output vector to ensure it's empty before populating
+    area_polygons.clear();
+
+    // Iterate through all lanelets in the lanelet map
+    for (const auto & lanelet : lanelet_map->laneletLayer) {
+      // Check if the lanelet is part of the road area
+      if (lanelet.hasAttribute("subtype") && lanelet.attribute("subtype").value() == "road") {
+        // Create a new polygon to represent the road area
+        geometry_msgs::msg::Polygon polygon;
+
+        // Extract the 2D boundary points of the lanelet
+        for (const auto & point : lanelet.polygon2d()) {
+          geometry_msgs::msg::Point32 p;
+          p.x = point.x();
+          p.y = point.y();
+          p.z = 0.0; // Assuming a flat 2D plane for the costmap
+          polygon.points.push_back(p);
+        }
+
+        // Add the polygon to the output vector
+        area_polygons.push_back(polygon);
+      }
+    }
+  }
+ground_truth.cpp: |-
+  void CostmapGenerator::loadRoadAreasFromLaneletMap(
+    const lanelet::LaneletMapPtr lanelet_map,
+    std::vector<geometry_msgs::msg::Polygon> & area_polygons)
+  {
+    // use all lanelets in map of subtype road to give way area
+    lanelet::ConstLanelets all_lanelets = lanelet::utils::query::laneletLayer(lanelet_map);
+    lanelet::ConstLanelets road_lanelets = lanelet::utils::query::roadLanelets(all_lanelets);
+
+    // convert lanelets to polygons and put into area_points array
+    for (const auto & ll : road_lanelets) {
+      geometry_msgs::msg::Polygon poly;
+      geometry_msgs::msg::Point32 pt;
+      for (const auto & p : ll.polygon3d().basicPolygon()) {
+        lanelet::utils::conversion::toGeomMsgPt32(p, &pt);
+        poly.points.push_back(pt);
+      }
+      area_polygons.push_back(poly);
+    }
+  }

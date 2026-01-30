@@ -1,0 +1,32 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/map/autoware_map_loader
+ros_package: autoware_map_loader
+file_path: src/pointcloud_map_loader/utils.cpp
+method_name: cylinder_and_box_overlap_exists
+requirement: |
+  /**
+  * Checks whether a 2D cylinder and a 3D axis-aligned bounding box overlap in the XY-plane.
+  * 
+  * The cylinder is treated as infinite in the Z-direction, effectively performing collision
+  * detection between the cylinder's circular base and the box's XY-projection.
+  * 
+  * @param center_x The x-coordinate of the cylinder's center.
+  * @param center_y The y-coordinate of the cylinder's center.
+  * @param radius The radius of the cylinder.
+  * @param box_min_point The minimum corner point of the axis-aligned bounding box.
+  * @param box_max_point The maximum corner point of the axis-aligned bounding box.
+  * @return true if the cylinder and box overlap in the XY-plane, false otherwise.
+  */
+category: utilities
+type: []
+signature: |
+  bool cylinder_and_box_overlap_exists(
+    const double center_x, const double center_y, const double radius,
+    const pcl::PointXYZ box_min_point, const pcl::PointXYZ box_max_point)
+additional_information: []
+test: test_cylinder_box_overlap
+test_cases: 
+- NoOverlap
+- Overlap1
+- Overlap2

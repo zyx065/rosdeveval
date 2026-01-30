@@ -1,0 +1,49 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_pid_longitudinal_controller
+ros_package: autoware_ground_segmentation
+file_path: src/smooth_stop.cpp
+method_name: SmoothStop::calculate
+requirement: |
+  /**
+  * Calculates a smooth stopping acceleration based on current motion state and stop distance.
+  * 
+  * @param stop_dist The current distance to the stop line (negative if exceeded).
+  * @param current_vel The current velocity of the vehicle.
+  * @param current_acc The current acceleration of the vehicle.
+  * @param vel_hist Historical velocity data used to predict stopping time.
+  * @param delay_time The system delay time to account for in calculations.
+  * @return double The calculated stopping acceleration value.
+  * @throws std::runtime_error If parameters have not been initialized.
+  */
+category: utilities
+type: has_timer,has_parameter
+signature: |
+  double SmoothStop::calculate(
+    const double stop_dist, const double current_vel, const double current_acc,
+    const std::vector<std::pair<rclcpp::Time, double>> & vel_hist, const double delay_time,
+    DebugValues & debug_values)
+additional_information: 
+  function_related_function: |
+    Params m_params; 
+    std::experimental::optional<double> calcTimeToStop(const std::vector<std::pair<rclcpp::Time, double>> & vel_hist) const;
+  function_related_class: |
+    struct Params
+    {
+      double max_strong_acc;
+      double min_strong_acc;
+      double weak_acc;
+      double weak_stop_acc;
+      double strong_stop_acc;
+
+      double min_fast_vel;
+      double min_running_vel;
+      double min_running_acc;
+      double weak_stop_time;
+
+      double weak_stop_dist;
+      double strong_stop_dist;
+    };
+test: test_longitudinal_controller
+test_cases: 
+- calculate_stopping_acceleration

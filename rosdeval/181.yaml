@@ -1,0 +1,26 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_collision_monitor
+ros_package: nav2_collision_monitor
+file_path: src/collision_monitor_node.cpp
+method_name: CollisionMonitor::cmdVelInCallback
+requirement: |
+  /**
+  * Processes incoming commanded velocity messages for collision monitoring.
+  * 
+  * @param[in] msg Shared pointer to the incoming Twist message containing linear and angular velocities.
+  *                Messages with NaN or infinite values are ignored.
+  */
+category: ros_architecture
+type: has_logger,has_message
+signature: |
+  void CollisionMonitor::cmdVelInCallback(geometry_msgs::msg::Twist::ConstSharedPtr msg)
+additional_information: 
+  function_related_class: |
+    namespace nav2_util{
+      bool validateTwist(const geometry_msgs::msg::Twist & msg);
+    }
+  function_related_function: |
+    void CollisionMonitor::process(const Velocity & cmd_vel_in)
+test: collision_monitor_node_test
+test_cases: []

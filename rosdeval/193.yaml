@@ -1,0 +1,36 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_route
+ros_package: nav2_route
+file_path: src/plugins/edge_cost_functions/semantic_scorer.cpp
+method_name: SemanticScorer::score
+requirement: |
+  /**
+  * Calculates a semantic cost for a given edge based on node and edge metadata.
+  * 
+  * @param edge The edge to be scored, providing access to node and edge metadata.
+  * @param cost Output parameter that will contain the calculated semantic cost.
+  * @return Always returns true.
+  */
+category: utilities
+type: []
+signature: |
+  bool SemanticScorer::score(
+    const EdgePtr edge,
+    const RouteRequest & /* route_request */,
+    const EdgeType & /* edge_type */, float & cost)
+additional_information: 
+  function_related_variable: |
+    pluginlib::ClassLoader<EdgeCostFunction> plugin_loader_;
+    std::vector<EdgeCostFunction::Ptr> plugins_;
+test: test_edge_scorers
+test_cases: 
+- test_api
+- test_invalid_edge_scoring
+- test_costmap_scoring
+- test_time_scoring
+- test_semantic_scoring_key
+- test_semantic_scoring_keys
+- test_goal_orientation_threshold
+- test_goal_orientation_scoring
+- test_start_pose_orientation_scoring

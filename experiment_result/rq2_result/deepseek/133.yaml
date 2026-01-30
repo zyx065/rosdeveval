@@ -1,0 +1,49 @@
+compilation.log: |
+  Starting >>> moveit_core
+  Finished <<< moveit_core [0.87s]
+
+  Summary: 1 package finished [1.32s]
+generate_code.cpp: "void RobotModelBuilder::addCollisionBox(const std::string& link_name,\
+  \ const std::vector<double>& dims,\n                                        geometry_msgs::msg::Pose\
+  \ origin)\n{\n    if (!is_valid_)\n    {\n        return;\n    }\n\n    if (dims.size()\
+  \ != 3)\n    {\n        RCLCPP_ERROR(rclcpp::get_logger(\"RobotModelBuilder\"),\
+  \ \"Invalid dimensions for collision box. Expected 3 elements, got %zu\", dims.size());\n\
+  \        is_valid_ = false;\n        return;\n    }\n\n    urdf::CollisionSharedPtr\
+  \ collision(new urdf::Collision());\n    urdf::BoxSharedPtr box(new urdf::Box());\n\
+  \    \n    box->dim = urdf::Vector3(dims[0], dims[1], dims[2]);\n    collision->geometry\
+  \ = box;\n    \n    // Set the origin pose\n    collision->origin.position.x = origin.position.x;\n\
+  \    collision->origin.position.y = origin.position.y;\n    collision->origin.position.z\
+  \ = origin.position.z;\n    collision->origin.rotation.x = origin.orientation.x;\n\
+  \    collision->origin.rotation.y = origin.orientation.y;\n    collision->origin.rotation.z\
+  \ = origin.orientation.z;\n    collision->origin.rotation.w = origin.orientation.w;\n\
+  \n    addLinkCollision(link_name, collision, origin);\n}"
+ground_truth.cpp: |-
+  void RobotModelBuilder::addCollisionBox(const std::string& link_name, const std::vector<double>& dims,
+                                          geometry_msgs::msg::Pose origin)
+  {
+    if (dims.size() != 3)
+    {
+      RCLCPP_ERROR(LOGGER, "There can only be 3 dimensions of a box (given %zu!)", dims.size());
+      is_valid_ = false;
+      return;
+    }
+    auto coll = std::make_shared<urdf::Collision>();
+    auto geometry = std::make_shared<urdf::Box>();
+    geometry->dim = urdf::Vector3(dims[0], dims[1], dims[2]);
+    coll->geometry = geometry;
+    addLinkCollision(link_name, coll, origin);
+  }
+architecture-codes:
+  - ROS Logger Issue - ROS Logger Missing Issue
+  - ROS Message Issue - Message Operation Issue
+
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

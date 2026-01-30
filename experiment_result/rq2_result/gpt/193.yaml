@@ -1,0 +1,73 @@
+compilation.log: |
+  Starting >>> nav2_route
+  --- stderr: nav2_route
+  /root/repos/nav_ws/src/nav2_route/src/plugins/edge_cost_functions/semantic_scorer.cpp: In member function ‘virtual bool nav2_route::SemanticScorer::score(nav2_route::EdgePtr, const nav2_route::RouteRequest&, const nav2_route::EdgeType&, float&)’:
+  /root/repos/nav_ws/src/nav2_route/src/plugins/edge_cost_functions/semantic_scorer.cpp:83:29: error: ‘plugins_’ was not declared in this scope; did you mean ‘plugin’?
+     83 |   for (const auto& plugin : plugins_)
+        |                             ^~~~~~~~
+        |                             plugin
+  /root/repos/nav_ws/src/nav2_route/src/plugins/edge_cost_functions/semantic_scorer.cpp:96:7: error: ‘ROS_WARN’ was not declared in this scope
+     96 |       ROS_WARN("SemanticScorer: Plugin failed to calculate cost for the edge.");
+        |       ^~~~~~~~
+  gmake[2]: *** [CMakeFiles/edge_scorers.dir/build.make:146: CMakeFiles/edge_scorers.dir/src/plugins/edge_cost_functions/semantic_scorer.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:266: CMakeFiles/edge_scorers.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_route [3.34s, exited with code 2]
+
+  Summary: 0 packages finished [3.60s]
+    1 package failed: nav2_route
+    1 package had stderr output: nav2_route
+generate_code.cpp: |-
+  bool SemanticScorer::score(
+    const EdgePtr edge,
+    const RouteRequest & /* route_request */,
+    const EdgeType & /* edge_type */, float & cost)
+  {
+    // Initialize the cost to 0
+    cost = 0.0f;
+
+    // Iterate through all the loaded plugins
+    for (const auto& plugin : plugins_)
+    {
+      float plugin_cost = 0.0f;
+
+      // Use the plugin to calculate its contribution to the cost
+      if (plugin->score(edge, plugin_cost))
+      {
+        // Accumulate the plugin's cost contribution
+        cost += plugin_cost;
+      }
+      else
+      {
+        // If a plugin fails to calculate the cost, log a warning and continue
+        ROS_WARN("SemanticScorer: Plugin failed to calculate cost for the edge.");
+      }
+    }
+
+    // Return true to indicate successful scoring
+    return true;
+  }
+ground_truth.cpp: |-
+  bool SemanticScorer::score(
+    const EdgePtr edge,
+    const RouteRequest & /* route_request */,
+    const EdgeType & /* edge_type */, float & cost)
+  {
+    float score = 0.0;
+    Metadata & node_mdata = edge->end->metadata;
+    Metadata & edge_mdata = edge->metadata;
+
+    // If a particular key is known to have semantic info, use it, else search
+    // each metadata key field to see if it matches
+    if (key_.empty()) {
+      metadataKeyScorer(node_mdata, score);
+      metadataKeyScorer(edge_mdata, score);
+    } else {
+      metadataValueScorer(node_mdata, score);
+      metadataValueScorer(edge_mdata, score);
+    }
+
+    cost = weight_ * score;
+    return true;
+  }

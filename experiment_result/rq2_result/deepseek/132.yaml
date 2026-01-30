@@ -1,0 +1,44 @@
+compilation.log: |
+  Starting >>> pilz_industrial_motion_planner
+  Finished <<< pilz_industrial_motion_planner [0.78s]
+
+  Summary: 1 package finished [1.23s]
+generate_code.cpp: "bool pilz_industrial_motion_planner::isRobotStateStationary(const\
+  \ moveit::core::RobotState& state,\n                                           \
+  \                 const std::string& group, double EPSILON)\n{\n    const moveit::core::JointModelGroup*\
+  \ joint_group = state.getJointModelGroup(group);\n    if (!joint_group)\n    {\n\
+  \        return false;\n    }\n\n    Eigen::VectorXd velocities;\n    state.copyJointGroupVelocities(joint_group,\
+  \ velocities);\n    \n    Eigen::VectorXd accelerations;\n    state.copyJointGroupAccelerations(joint_group,\
+  \ accelerations);\n\n    // Check if all velocities and accelerations are below\
+  \ EPSILON\n    return (velocities.array().abs().maxCoeff() < EPSILON) && \n    \
+  \       (accelerations.array().abs().maxCoeff() < EPSILON);\n}"
+ground_truth.cpp: |-
+  bool pilz_industrial_motion_planner::isRobotStateStationary(const moveit::core::RobotState& state,
+                                                              const std::string& group, double EPSILON)
+  {
+    Eigen::VectorXd joint_variable;
+    state.copyJointGroupVelocities(group, joint_variable);
+    if (joint_variable.norm() > EPSILON)
+    {
+      RCLCPP_DEBUG(LOGGER, "Joint velocities are not zero.");
+      return false;
+    }
+    state.copyJointGroupAccelerations(group, joint_variable);
+    if (joint_variable.norm() > EPSILON)
+    {
+      RCLCPP_DEBUG(LOGGER, "Joint accelerations are not zero.");
+      return false;
+    }
+    return true;
+  }
+architecture-codes:
+  - ROS Logger Issue - ROS Logger Missing Issue
+
+functionality-codes:
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Condition Issue - Condition Check Logic Misapplication Issue
+
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

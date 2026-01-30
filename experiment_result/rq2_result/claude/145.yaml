@@ -1,0 +1,57 @@
+compilation.log: |
+  Starting >>> moveit_core
+  Finished <<< moveit_core [0.76s]
+
+  Summary: 1 package finished [1.19s]
+generate_code.cpp: |
+  void RobotState::interpolate(const RobotState& to, double t, RobotState& state, const JointModelGroup* joint_group) const
+  {
+      checkInterpolationParamBounds(LOGGER, t);
+      
+      // Copy the current state to the output state as starting point
+      state = *this;
+      
+      // Get the joints to interpolate
+      const std::vector<const JointModel*>* joints_to_interpolate;
+      if (joint_group)
+      {
+          joints_to_interpolate = &joint_group->getActiveJointModels();
+      }
+      else
+      {
+          joints_to_interpolate = &robot_model_->getActiveJointModels();
+      }
+      
+      // Interpolate each joint
+      for (const JointModel* joint : *joints_to_interpolate)
+      {
+          const int first_index = joint->getFirstVariableIndex();
+          const double* from_values = &position_[first_index];
+          const double* to_values = &to.position_[first_index];
+          double* state_values = &state.position_[first_index];
+          
+          joint->interpolate(from_values, to_values, t, state_values);
+      }
+      
+      // Update mimic joints to maintain consistency
+      state.updateMimicJoints(joint_group);
+  }
+ground_truth.cpp: |-
+  void RobotState::interpolate(const RobotState& to, double t, RobotState& state, const JointModelGroup* joint_group) const
+  {
+    moveit::core::checkInterpolationParamBounds(LOGGER, t);
+    const std::vector<const JointModel*>& jm = joint_group->getActiveJointModels();
+    for (const JointModel* joint : jm)
+    {
+      const int idx = joint->getFirstVariableIndex();
+      joint->interpolate(position_ + idx, to.position_ + idx, t, state.position_ + idx);
+    }
+    state.updateMimicJoints(joint_group);
+  }
+architecture-codes: []
+functionality-codes:
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase
+  - Deficiencies in Domain Knowledge - Lack of development best practices

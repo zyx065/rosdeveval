@@ -1,0 +1,61 @@
+compilation.log: |
+  Starting >>> nav2_mppi_controller
+  Finished <<< nav2_mppi_controller [0.77s]
+
+  Summary: 1 package finished [1.07s]
+generate_code.cpp: |-
+  inline unsigned int findFirstPathInversion(nav_msgs::msg::Path & path)
+  {
+      // Check if the path has less than 2 poses, no inversion is possible
+      if (path.poses.size() < 2) {
+          return path.poses.size(); // Return size of path to indicate no inversion
+      }
+
+      // Iterate through the path to find the first inversion
+      for (unsigned int i = 1; i < path.poses.size(); ++i) {
+          // Get the current and previous poses
+          const auto &prev_pose = path.poses[i - 1].pose.position;
+          const auto &curr_pose = path.poses[i].pose.position;
+
+          // Calculate the difference in x and y coordinates
+          double dx = curr_pose.x - prev_pose.x;
+          double dy = curr_pose.y - prev_pose.y;
+
+          // Check if the direction of movement is inverted (negative dot product)
+          if (dx * prev_pose.x + dy * prev_pose.y < 0) {
+              return i; // Return the index of the first inversion
+          }
+      }
+
+      // If no inversion is found, return the size of the path
+      return path.poses.size();
+  }
+ground_truth.cpp: |-
+  inline unsigned int findFirstPathInversion(nav_msgs::msg::Path & path)
+  {
+    // At least 3 poses for a possible inversion
+    if (path.poses.size() < 3) {
+      return path.poses.size();
+    }
+
+    // Iterating through the path to determine the position of the path inversion
+    for (unsigned int idx = 1; idx < path.poses.size() - 1; ++idx) {
+      // We have two vectors for the dot product OA and AB. Determining the vectors.
+      float oa_x = path.poses[idx].pose.position.x -
+        path.poses[idx - 1].pose.position.x;
+      float oa_y = path.poses[idx].pose.position.y -
+        path.poses[idx - 1].pose.position.y;
+      float ab_x = path.poses[idx + 1].pose.position.x -
+        path.poses[idx].pose.position.x;
+      float ab_y = path.poses[idx + 1].pose.position.y -
+        path.poses[idx].pose.position.y;
+
+      // Checking for the existance of cusp, in the path, using the dot product.
+      float dot_product = (oa_x * ab_x) + (oa_y * ab_y);
+      if (dot_product < 0.0) {
+        return idx + 1;
+      }
+    }
+
+    return path.poses.size();
+  }

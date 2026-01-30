@@ -1,0 +1,44 @@
+compilation.log: |
+  Starting >>> autoware_mission_planner_universe
+  Finished <<< autoware_mission_planner_universe [27.0s]
+
+  Summary: 1 package finished [28.4s]
+generate_code.cpp: |-
+  bool is_in_parking_space(
+    const lanelet::ConstLineStrings3d & parking_spaces, const lanelet::ConstPoint3d & point)
+  {
+    for (const auto & parking_space : parking_spaces) {
+      // Convert the parking space boundary to a 2D polygon
+      lanelet::BasicPolygon2d polygon;
+      for (const auto & vertex : parking_space) {
+        polygon.emplace_back(vertex.x(), vertex.y());
+      }
+
+      // Check if the point is inside the polygon
+      if (boost::geometry::within(lanelet::BasicPoint2d(point.x(), point.y()), polygon)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+ground_truth.cpp: |-
+  bool is_in_parking_space(
+    const lanelet::ConstLineStrings3d & parking_spaces, const lanelet::ConstPoint3d & point)
+  {
+    for (const auto & parking_space : parking_spaces) {
+      lanelet::ConstPolygon3d parking_space_polygon;
+      if (!lanelet::utils::lineStringWithWidthToPolygon(parking_space, &parking_space_polygon)) {
+        continue;
+      }
+
+      const double distance = boost::geometry::distance(
+        lanelet::utils::to2D(parking_space_polygon).basicPolygon(),
+        lanelet::utils::to2D(point).basicPoint());
+      constexpr double th_distance = std::numeric_limits<double>::epsilon();
+      if (distance < th_distance) {
+        return true;
+      }
+    }
+    return false;
+  }

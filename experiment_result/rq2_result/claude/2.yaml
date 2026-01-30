@@ -1,0 +1,112 @@
+compilation.log: |
+  Starting >>> autoware_kinematic_evaluator
+  --- stderr: autoware_kinematic_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp: In member function ‘void autoware::kinematic_diagnostics::KinematicEvaluatorNode::onOdom(nav_msgs::msg::Odometry_<std::allocator<void> >::SharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:112:27: error: ‘LINEAR_VELOCITY’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+    112 |     metrics_dict_[Metric::LINEAR_VELOCITY].update(linear_velocity);
+        |                           ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:116:27: error: ‘ANGULAR_VELOCITY’ is not a member of ‘autoware::kinematic_diagnostics::Metric’
+    116 |     metrics_dict_[Metric::ANGULAR_VELOCITY].update(angular_velocity);
+        |                           ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:124:39: error: ‘max_window_size_’ was not declared in this scope
+    124 |         if (metric_stats_[i].size() > max_window_size_) {
+        |                                       ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:131:76: error: ‘window_duration_’ was not declared in this scope; did you mean ‘rmw_duration_t’?
+    131 |            (rclcpp::Time(msg->header.stamp) - stamps_.front()).seconds() > window_duration_) {
+        |                                                                            ^~~~~~~~~~~~~~~~
+        |                                                                            rmw_duration_t
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:136:9: error: ‘should_publish_metrics_’ was not declared in this scope
+    136 |     if (should_publish_metrics_) {
+        |         ^~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator/src/kinematic_evaluator_node.cpp:143:17: error: ‘generateMetricDiagnostics’ was not declared in this scope
+    143 |                 generateMetricDiagnostics(current_metric, metrics_dict_[current_metric])
+        |                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_kinematic_evaluator.dir/build.make:90: CMakeFiles/autoware_kinematic_evaluator.dir/src/kinematic_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_kinematic_evaluator.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_kinematic_evaluator [4.92s, exited with code 2]
+
+  Summary: 0 packages finished [6.33s]
+    1 package failed: autoware_kinematic_evaluator
+    1 package had stderr output: autoware_kinematic_evaluator
+generate_code.cpp: |
+  void KinematicEvaluatorNode::onOdom(const nav_msgs::msg::Odometry::SharedPtr msg)
+  {
+      // Store the current timestamp
+      stamps_.push_back(msg->header.stamp);
+
+      // Calculate and update linear velocity metric
+      double linear_velocity = std::hypot(msg->twist.twist.linear.x, 
+                                          msg->twist.twist.linear.y);
+      metrics_dict_[Metric::LINEAR_VELOCITY].update(linear_velocity);
+
+      // Calculate and update angular velocity metric
+      double angular_velocity = std::abs(msg->twist.twist.angular.z);
+      metrics_dict_[Metric::ANGULAR_VELOCITY].update(angular_velocity);
+
+      // Maintain a sliding window of recent metrics
+      for (size_t i = 0; i < static_cast<size_t>(Metric::SIZE); ++i) {
+          Metric current_metric = static_cast<Metric>(i);
+          metric_stats_[i].push_back(metrics_dict_[current_metric]);
+
+          // Limit the sliding window size if needed
+          if (metric_stats_[i].size() > max_window_size_) {
+              metric_stats_[i].pop_front();
+          }
+      }
+
+      // Remove old timestamps beyond the sliding window
+      while (!stamps_.empty() && 
+            (rclcpp::Time(msg->header.stamp) - stamps_.front()).seconds() > window_duration_) {
+          stamps_.pop_front();
+      }
+
+      // Publish diagnostic metrics periodically
+      if (should_publish_metrics_) {
+          DiagnosticArray diagnostic_array;
+          diagnostic_array.status.reserve(static_cast<size_t>(Metric::SIZE));
+
+          for (size_t i = 0; i < static_cast<size_t>(Metric::SIZE); ++i) {
+              Metric current_metric = static_cast<Metric>(i);
+              diagnostic_array.status.push_back(
+                  generateMetricDiagnostics(current_metric, metrics_dict_[current_metric])
+              );
+          }
+
+          metrics_pub_->publish(diagnostic_array);
+      }
+  }
+ground_truth.cpp: |-
+  void KinematicEvaluatorNode::onOdom(const nav_msgs::msg::Odometry::SharedPtr msg)
+  {
+    DiagnosticArray metrics_msg;
+    metrics_msg.header.stamp = now();
+
+    for (Metric metric : metrics_) {
+      metrics_dict_[metric] = metrics_calculator_.updateStat(metric, *msg, metrics_dict_[metric]);
+      metric_stats_[static_cast<size_t>(metric)].push_back(metrics_dict_[metric]);
+      stamps_.push_back(metrics_msg.header.stamp);
+      if (metrics_dict_[metric].count() > 0) {
+        metrics_msg.status.push_back(generateDiagnosticStatus(metric, metrics_dict_[metric]));
+      }
+    }
+    if (!metrics_msg.status.empty()) {
+      metrics_pub_->publish(metrics_msg);
+    }
+  }
+architecture-codes: 
+  - ROS Message Related Issues - Improper Message Type Usage Issue
+  - ROS Message Related Issues - Message Initialization Issues
+functionality-codes:
+  - Incomplete Code - Missing Multiple Steps
+  - ROS Message/Service Usage Issues - Incorrect Message Member Access
+  - Conditional Checks Issues - Conditional Check Missing
+  - Topic/Service Usage Error - Topic/Service Not Usage
+  - Garbage Code - Wrong Logical
+  - Reference Error - Undefined name
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

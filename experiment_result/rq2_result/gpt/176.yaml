@@ -1,0 +1,57 @@
+compilation.log: |
+  Starting >>> nav2_waypoint_follower
+  Finished <<< nav2_waypoint_follower [0.32s]
+
+  Summary: 1 package finished [0.67s]
+generate_code.cpp: |-
+  rcl_interfaces::msg::SetParametersResult
+  WaypointFollower::dynamicParametersCallback(std::vector<rclcpp::Parameter> parameters)
+  {
+      rcl_interfaces::msg::SetParametersResult result;
+      result.successful = true;
+
+      try {
+          for (const auto & parameter : parameters) {
+              if (parameter.get_name() == "loop_rate") {
+                  loop_rate_ = parameter.as_int();
+              } else if (parameter.get_name() == "stop_on_failure") {
+                  stop_on_failure_ = parameter.as_bool();
+              } else {
+                  // If an unknown parameter is passed, mark the result as unsuccessful
+                  result.successful = false;
+                  result.reason = "Unknown parameter: " + parameter.get_name();
+                  return result;
+              }
+          }
+      } catch (const std::exception & e) {
+          result.successful = false;
+          result.reason = "Exception occurred while updating parameters: " + std::string(e.what());
+      }
+
+      return result;
+  }
+ground_truth.cpp: |-
+  rcl_interfaces::msg::SetParametersResult
+  WaypointFollower::dynamicParametersCallback(std::vector<rclcpp::Parameter> parameters)
+  {
+    // No locking required as action server is running on same single threaded executor
+    rcl_interfaces::msg::SetParametersResult result;
+
+    for (auto parameter : parameters) {
+      const auto & type = parameter.get_type();
+      const auto & name = parameter.get_name();
+
+      if (type == ParameterType::PARAMETER_INTEGER) {
+        if (name == "loop_rate") {
+          loop_rate_ = parameter.as_int();
+        }
+      } else if (type == ParameterType::PARAMETER_BOOL) {
+        if (name == "stop_on_failure") {
+          stop_on_failure_ = parameter.as_bool();
+        }
+      }
+    }
+
+    result.successful = true;
+    return result;
+  }

@@ -1,0 +1,60 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_mission_planner_universe
+ros_package: autoware_mission_planner_universe
+file_path: src/lanelet2_plugins/utility_functions.cpp
+method_name: convert_linear_ring_to_polygon
+requirement: |
+  /**
+  * @brief Converts a LinearRing2d to a Polygon2d.
+  * 
+  * @param footprint The input linear ring representing a closed polygon with 6 points.
+  * @return Polygon2d The converted polygon object.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  autoware::universe_utils::Polygon2d convert_linear_ring_to_polygon(
+    autoware::universe_utils::LinearRing2d footprint)
+additional_information: 
+  function_related_class: |
+    class Polygon2d
+    {
+    public:
+      static std::optional<Polygon2d> create(
+        const PointList2d & outer, const std::vector<PointList2d> & inners) noexcept;
+
+      static std::optional<Polygon2d> create(
+        PointList2d && outer, std::vector<PointList2d> && inners) noexcept;
+
+      static std::optional<Polygon2d> create(
+        const autoware::universe_utils::Polygon2d & polygon) noexcept;
+
+      const PointList2d & outer() const noexcept { return outer_; }
+
+      PointList2d & outer() noexcept { return outer_; }
+
+      const std::vector<PointList2d> & inners() const noexcept { return inners_; }
+
+      std::vector<PointList2d> & inners() noexcept { return inners_; }
+
+      autoware::universe_utils::Polygon2d to_boost() const;
+
+    protected:
+      Polygon2d(const PointList2d & outer, const std::vector<PointList2d> & inners)
+      : outer_(outer), inners_(inners)
+      {
+      }
+
+      Polygon2d(PointList2d && outer, std::vector<PointList2d> && inners)
+      : outer_(std::move(outer)), inners_(std::move(inners))
+      {
+      }
+
+      PointList2d outer_;
+
+      std::vector<PointList2d> inners_;
+    };
+test: test_autoware_mission_planner
+test_cases: 
+- convertLinearRingToPolygon

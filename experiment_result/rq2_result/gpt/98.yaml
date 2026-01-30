@@ -1,0 +1,42 @@
+compilation.log: ""
+generate_code.cpp: |-
+  inline diagnostic_msgs::msg::DiagnosticStatus check_localization_accuracy(
+    const double ellipse_size, const double warn_ellipse_size, const double error_ellipse_size)
+  {
+    diagnostic_msgs::msg::DiagnosticStatus status;
+
+    if (ellipse_size > error_ellipse_size) {
+      status.level = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
+      status.message = "Localization accuracy is below acceptable limits (ERROR).";
+    } else if (ellipse_size > warn_ellipse_size) {
+      status.level = diagnostic_msgs::msg::DiagnosticStatus::WARN;
+      status.message = "Localization accuracy is approaching unacceptable limits (WARNING).";
+    } else {
+      status.level = diagnostic_msgs::msg::DiagnosticStatus::OK;
+      status.message = "Localization accuracy is within acceptable limits (OK).";
+    }
+
+    status.name = "Localization Accuracy Check";
+    status.hardware_id = "localization_system";
+
+    return status;
+  }
+ground_truth.cpp: |-
+  inline diagnostic_msgs::msg::DiagnosticStatus check_localization_accuracy(
+    const double ellipse_size, const double warn_ellipse_size, const double error_ellipse_size)
+  {
+    diagnostic_msgs::msg::DiagnosticStatus stat;
+
+    stat.level = diagnostic_msgs::msg::DiagnosticStatus::OK;
+    stat.message = "OK";
+    if (ellipse_size >= warn_ellipse_size) {
+      stat.level = diagnostic_msgs::msg::DiagnosticStatus::WARN;
+      stat.message = "ellipse size is too large";
+    }
+    if (ellipse_size >= error_ellipse_size) {
+      stat.level = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
+      stat.message = "ellipse size is over the expected range";
+    }
+
+    return stat;
+  }

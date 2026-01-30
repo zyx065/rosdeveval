@@ -1,0 +1,26 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/robot_trajectory
+ros_package: moveit_core
+file_path: src/robot_trajectory.cpp
+method_name: smoothness
+requirement: |
+  /**
+  * Calculates the smoothness metric for a robot trajectory based on angle deviations between segments.
+  * 
+  * @param trajectory The robot trajectory to evaluate.
+  * @return std::optional<double> Smoothness metric value if calculable (trajectory has >2 waypoints), 
+  *         otherwise std::nullopt. Lower values indicate smoother trajectories.
+  */
+category: utilities
+type: []
+signature: |
+  std::optional<double> smoothness(RobotTrajectory const& trajectory)
+additional_information: 
+  function_related_function: |
+    RobotTrajectory
+      std::size_t getWayPointCount() const
+      const moveit::core::RobotState& getWayPoint(std::size_t index) const
+test: test_robot_trajectory
+test_cases: 
+- RobotTrajectorySmoothness

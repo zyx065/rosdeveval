@@ -1,0 +1,32 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_velocity_smoother
+ros_package: nav2_velocity_smoother
+file_path: src/velocity_smoother.cpp
+method_name: VelocitySmoother::on_activate
+requirement: |
+  /**
+  * @brief Activates the velocity smoother component.
+  * 
+  * Initializes the command publisher, creates a smoothing timer, sets up dynamic 
+  * parameter callback, and establishes lifecycle bond connection.
+  * 
+  * @param[in] state The previous lifecycle state (unused in this implementation)
+  * @return nav2_util::CallbackReturn::SUCCESS upon successful activation
+  */
+category: ros_architecture
+type: has_logger,has_timer,has_parameter
+signature: |
+  nav2_util::CallbackReturn
+  VelocitySmoother::on_activate(const rclcpp_lifecycle::State &)
+additional_information: 
+  function_related_variable: |
+    rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr smoothed_cmd_pub_;
+    rclcpp::TimerBase::SharedPtr timer_;
+    rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr dyn_params_handler_;
+  function_related_function: |
+    void smootherTimer();
+    createBond();
+    rcl_interfaces::msg::SetParametersResult dynamicParametersCallback( std::vector<rclcpp::Parameter> parameters);
+test: velocity_smoother_tests
+test_cases: []

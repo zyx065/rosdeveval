@@ -1,0 +1,79 @@
+compilation.log: |
+  Starting >>> autoware_scenario_selector
+  [Processing: autoware_scenario_selector]
+  Finished <<< autoware_scenario_selector [45.5s]
+
+  Summary: 1 package finished [46.9s]
+generate_code.cpp: |
+  void ScenarioSelectorNode::onOdom(const nav_msgs::msg::Odometry::ConstSharedPtr msg)
+  {
+      // Update the current pose
+      current_pose_ = msg;
+
+      // Create a TwistStamped message from the odometry twist
+      auto current_twist = std::make_shared<geometry_msgs::msg::TwistStamped>();
+      current_twist->header = msg->header;
+      current_twist->twist = msg->twist.twist;
+
+      // Update the current twist
+      twist_ = current_twist;
+
+      // Add the current twist to the twist buffer
+      twist_buffer_.push_back(current_twist);
+
+      // Maintain a fixed-size buffer by removing old entries
+      while (twist_buffer_.size() > 10) {  // Adjust buffer size as needed
+          twist_buffer_.pop_front();
+      }
+
+      // Optional: Check if the vehicle is stopped based on twist magnitude
+      double linear_speed = std::sqrt(
+          std::pow(msg->twist.twist.linear.x, 2) + 
+          std::pow(msg->twist.twist.linear.y, 2) + 
+          std::pow(msg->twist.twist.linear.z, 2)
+      );
+
+      // Check if the vehicle is stopped (linear speed below a threshold)
+      if (linear_speed < 0.1) {  // Adjust threshold as needed
+          // Vehicle is considered stopped
+          // You can add additional logic or flag here
+      }
+  }
+ground_truth.cpp: |-
+  void ScenarioSelectorNode::onOdom(const nav_msgs::msg::Odometry::ConstSharedPtr msg)
+  {
+    current_pose_ = msg;
+    auto twist = std::make_shared<geometry_msgs::msg::TwistStamped>();
+    twist->header = msg->header;
+    twist->twist = msg->twist.twist;
+
+    twist_ = twist;
+    twist_buffer_.push_back(twist);
+
+    // Delete old data in buffer
+    while (true) {
+      const auto time_diff =
+        rclcpp::Time(msg->header.stamp) - rclcpp::Time(twist_buffer_.front()->header.stamp);
+
+      if (time_diff.seconds() < th_stopped_time_sec_) {
+        break;
+      }
+
+      twist_buffer_.pop_front();
+    }
+  }
+architecture-codes:
+  - ROS Parameter Related Issues - Use Non-exist Parameter 
+  - ROS Parameter Related Issues - Insufficient Parameter Design 
+  - ROS Timer Issues - Timestamp Processing Missing
+
+functionality-codes:
+  - Conditional Checks Issues - Conditional Check Logic Misapplication 
+  - Garbage Code - Meaningless code snippet 
+  - Constant Value Error - Constant value error 
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

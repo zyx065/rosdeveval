@@ -1,0 +1,88 @@
+compilation.log: |
+  Starting >>> autoware_motion_velocity_dynamic_obstacle_stop_module
+  --- stderr: autoware_motion_velocity_dynamic_obstacle_stop_module
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp: In function ‘bool autoware::motion_velocity_planner::dynamic_obstacle_stop::is_vehicle(const PredictedObject&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:38:57: error: ‘CAR’ is not a member of ‘autoware_perception_msgs::msg::PredictedObject’ {aka ‘autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >’}
+     38 |         autoware_perception_msgs::msg::PredictedObject::CAR,
+        |                                                         ^~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:39:57: error: ‘BUS’ is not a member of ‘autoware_perception_msgs::msg::PredictedObject’ {aka ‘autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >’}
+     39 |         autoware_perception_msgs::msg::PredictedObject::BUS,
+        |                                                         ^~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:40:57: error: ‘TRUCK’ is not a member of ‘autoware_perception_msgs::msg::PredictedObject’ {aka ‘autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >’}
+     40 |         autoware_perception_msgs::msg::PredictedObject::TRUCK,
+        |                                                         ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:41:57: error: ‘TRAILER’ is not a member of ‘autoware_perception_msgs::msg::PredictedObject’ {aka ‘autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >’}
+     41 |         autoware_perception_msgs::msg::PredictedObject::TRAILER,
+        |                                                         ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:42:57: error: ‘MOTORCYCLE’ is not a member of ‘autoware_perception_msgs::msg::PredictedObject’ {aka ‘autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >’}
+     42 |         autoware_perception_msgs::msg::PredictedObject::MOTORCYCLE,
+        |                                                         ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:43:57: error: ‘BICYCLE’ is not a member of ‘autoware_perception_msgs::msg::PredictedObject’ {aka ‘autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >’}
+     43 |         autoware_perception_msgs::msg::PredictedObject::BICYCLE
+        |                                                         ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:44:5: error: could not convert ‘{<expression error>, <expression error>, <expression error>, <expression error>, <expression error>, <expression error>}’ from ‘<brace-enclosed initializer list>’ to ‘const std::vector<unsigned char, std::allocator<unsigned char> >’
+     44 |     };
+        |     ^
+        |     |
+        |     <brace-enclosed initializer list>
+  gmake[2]: *** [CMakeFiles/autoware_motion_velocity_dynamic_obstacle_stop_module.dir/build.make:132: CMakeFiles/autoware_motion_velocity_dynamic_obstacle_stop_module.dir/src/object_filtering.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_motion_velocity_dynamic_obstacle_stop_module.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_motion_velocity_dynamic_obstacle_stop_module [9.90s, exited with code 2]
+
+  Summary: 0 packages finished [11.2s]
+    1 package failed: autoware_motion_velocity_dynamic_obstacle_stop_module
+    1 package had stderr output: autoware_motion_velocity_dynamic_obstacle_stop_module
+generate_code.cpp: |-
+  bool is_vehicle(const autoware_perception_msgs::msg::PredictedObject & object)
+  {
+      // Check if the object has classifications
+      if (object.classification.empty()) {
+          return false;
+      }
+
+      // Define vehicle type labels
+      const std::vector<uint8_t> vehicle_types = {
+          autoware_perception_msgs::msg::PredictedObject::CAR,
+          autoware_perception_msgs::msg::PredictedObject::BUS,
+          autoware_perception_msgs::msg::PredictedObject::TRUCK,
+          autoware_perception_msgs::msg::PredictedObject::TRAILER,
+          autoware_perception_msgs::msg::PredictedObject::MOTORCYCLE,
+          autoware_perception_msgs::msg::PredictedObject::BICYCLE
+      };
+
+      // Check if any classification matches vehicle types
+      for (const auto& classification : object.classification) {
+          if (std::find(vehicle_types.begin(), vehicle_types.end(), classification.label) != vehicle_types.end()) {
+              return true;
+          }
+      }
+
+      return false;
+  }
+ground_truth.cpp: |-
+  bool is_vehicle(const autoware_perception_msgs::msg::PredictedObject & object)
+  {
+    constexpr auto is_vehicle_class = [](const auto & c) {
+      return c.label == autoware_perception_msgs::msg::ObjectClassification::CAR ||
+             c.label == autoware_perception_msgs::msg::ObjectClassification::BUS ||
+             c.label == autoware_perception_msgs::msg::ObjectClassification::TRUCK ||
+             c.label == autoware_perception_msgs::msg::ObjectClassification::TRAILER ||
+             c.label == autoware_perception_msgs::msg::ObjectClassification::MOTORCYCLE ||
+             c.label == autoware_perception_msgs::msg::ObjectClassification::BICYCLE;
+    };
+    return std::find_if(
+             object.classification.begin(), object.classification.end(), is_vehicle_class) !=
+           object.classification.end();
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Message Related Issues - Improper Message Type Usage Issue  
+functionality-codes:
+  - Reference Error - Wrong Variable
+  - Incomplete Code - Missing one step (using wrong message type prevents correct implementation)
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements

@@ -1,0 +1,37 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_autonomous_emergency_braking
+ros_package: autoware_autonomous_emergency_braking
+file_path: src/node.cpp
+method_name: AEB::hasCollision
+requirement: |
+  /**
+  * Loads a PCD file and returns a PointCloudMapCellWithID message containing the point cloud and cell ID.
+  * @param[in] path The file path to the PCD file to load.
+  * @param[in] map_id The unique identifier to assign to the loaded map cell.
+  * @return PointCloudMapCellWithID message containing the loaded point cloud data and assigned cell ID.
+  * @throws None Logs an error message if PCD file loading fails but does not throw exceptions.
+  */
+category: ros_architecture
+type: has_timer,has_topic,has_message
+signature: |
+  bool AEB::hasCollision(const double current_v, const ObjectData & closest_object)
+additional_information: 
+  function_related_variable: |
+    rclcpp::Publisher<tier4_debug_msgs::msg::Float32Stamped>::SharedPtr debug_rss_distance_publisher_;
+    CollisionDataKeeper collision_data_keeper_;
+  function_related_class: |
+    class CollisionDataKeeper{
+      void setCollisionData(const ObjectData & data)
+    }
+    struct ObjectData
+    {
+      rclcpp::Time stamp;
+      geometry_msgs::msg::Point position;
+      double velocity{0.0};
+      double rss{0.0};
+      double distance_to_object{0.0};
+      bool is_target{true};
+    };
+test: test_aeb
+test_cases: []

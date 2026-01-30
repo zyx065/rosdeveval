@@ -1,0 +1,26 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/vehicle/autoware_external_cmd_converter
+ros_package: autoware_external_cmd_converter
+file_path: src/node.cpp
+method_name: ExternalCmdConverterNode::check_emergency_stop_topic_timeout
+requirement: |
+  /**
+  * @brief Checks if the emergency stop topic has timed out based on current gate mode and heartbeat.
+  * 
+  * @return bool True if emergency stop is not timed out or should wait for first topic, false otherwise.
+  */
+category: utilities
+type: has_message,has_parameter,has_timer
+signature: |
+  bool ExternalCmdConverterNode::check_emergency_stop_topic_timeout()
+additional_information: 
+  function_related_variable: |
+    using GateMode = tier4_control_msgs::msg::GateMode;
+    GateMode::ConstSharedPtr current_gate_mode_{nullptr};
+    std::shared_ptr<rclcpp::Time> latest_emergency_stop_heartbeat_received_time_;
+    bool wait_for_first_topic_;
+    double emergency_stop_timeout_;
+test: test_autoware_external_cmd_converter
+test_cases: 
+- testCheckEmergencyStopTimeout

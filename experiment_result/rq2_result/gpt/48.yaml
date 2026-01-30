@@ -1,0 +1,101 @@
+compilation.log: |
+  Starting >>> autoware_obstacle_stop_planner
+  --- stderr: autoware_obstacle_stop_planner
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp: In member function ‘void autoware::motion_planning::ObstacleStopPlannerNode::onPointCloud(sensor_msgs::msg::PointCloud2_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:272:36: error: ‘struct autoware::motion_planning::NodeParam’ has no member named ‘min_x’
+    272 |         if (point.x >= node_param_.min_x && point.x <= node_param_.max_x &&
+        |                                    ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:272:68: error: ‘struct autoware::motion_planning::NodeParam’ has no member named ‘max_x’
+    272 |         if (point.x >= node_param_.min_x && point.x <= node_param_.max_x &&
+        |                                                                    ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:273:36: error: ‘struct autoware::motion_planning::NodeParam’ has no member named ‘min_y’
+    273 |             point.y >= node_param_.min_y && point.y <= node_param_.max_y &&
+        |                                    ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:273:68: error: ‘struct autoware::motion_planning::NodeParam’ has no member named ‘max_y’
+    273 |             point.y >= node_param_.min_y && point.y <= node_param_.max_y &&
+        |                                                                    ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:274:36: error: ‘struct autoware::motion_planning::NodeParam’ has no member named ‘min_z’
+    274 |             point.z >= node_param_.min_z && point.z <= node_param_.max_z) {
+        |                                    ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:274:68: error: ‘struct autoware::motion_planning::NodeParam’ has no member named ‘max_z’
+    274 |             point.z >= node_param_.min_z && point.z <= node_param_.max_z) {
+        |                                                                    ^~~~~
+  gmake[2]: *** [CMakeFiles/autoware_obstacle_stop_planner.dir/build.make:104: CMakeFiles/autoware_obstacle_stop_planner.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_obstacle_stop_planner.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_obstacle_stop_planner [18.3s, exited with code 2]
+
+  Summary: 0 packages finished [19.8s]
+    1 package failed: autoware_obstacle_stop_planner
+    1 package had stderr output: autoware_obstacle_stop_planner
+generate_code.cpp: |-
+  void ObstacleStopPlannerNode::onPointCloud(const PointCloud2::ConstSharedPtr input_msg)
+  {
+      // Lock the mutex to ensure thread safety
+      std::lock_guard<std::mutex> lock(mutex_);
+
+      // Check if the input message is valid
+      if (!input_msg) {
+          RCLCPP_WARN(this->get_logger(), "Received null point cloud message.");
+          return;
+      }
+
+      // Convert the input PointCloud2 message to PCL PointCloud for processing
+      pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_cloud(new pcl::PointCloud<pcl::PointXYZ>());
+      pcl::fromROSMsg(*input_msg, *pcl_cloud);
+
+      // Filter the point cloud based on node parameters (e.g., distance threshold)
+      pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_cloud(new pcl::PointCloud<pcl::PointXYZ>());
+      for (const auto &point : pcl_cloud->points) {
+          // Example filtering: only keep points within a certain range
+          if (point.x >= node_param_.min_x && point.x <= node_param_.max_x &&
+              point.y >= node_param_.min_y && point.y <= node_param_.max_y &&
+              point.z >= node_param_.min_z && point.z <= node_param_.max_z) {
+              filtered_cloud->points.push_back(point);
+          }
+      }
+
+      // Convert the filtered PCL PointCloud back to ROS PointCloud2 message
+      sensor_msgs::msg::PointCloud2 filtered_msg;
+      pcl::toROSMsg(*filtered_cloud, filtered_msg);
+
+      // Set the header for the filtered message
+      filtered_msg.header = input_msg->header;
+
+      // Update the shared pointer to the obstacle point cloud
+      obstacle_ros_pointcloud_ptr_ = std::make_shared<sensor_msgs::msg::PointCloud2>(filtered_msg);
+
+      // Publish the filtered point cloud
+      if (pub_obstacle_pointcloud_) {
+          pub_obstacle_pointcloud_->publish(filtered_msg);
+      } else {
+          RCLCPP_WARN(this->get_logger(), "Obstacle point cloud publisher is not initialized.");
+      }
+  }
+ground_truth.cpp: |-
+  void ObstacleStopPlannerNode::onPointCloud(const PointCloud2::ConstSharedPtr input_msg)
+  {
+    // mutex for obstacle_ros_pointcloud_ptr_
+    // NOTE: *obstacle_ros_pointcloud_ptr_ is used
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    obstacle_ros_pointcloud_ptr_ = std::make_shared<PointCloud2>();
+    pcl::VoxelGrid<pcl::PointXYZ> filter;
+    PointCloud::Ptr pointcloud_ptr(new PointCloud);
+    PointCloud::Ptr no_height_filtered_pointcloud_ptr(new PointCloud);
+
+    pcl::fromROSMsg(*input_msg, *pointcloud_ptr);
+    if (!node_param_.enable_z_axis_obstacle_filtering) {
+      filter.setInputCloud(pointcloud_ptr);
+      filter.setLeafSize(
+        node_param_.voxel_grid_x, node_param_.voxel_grid_y, node_param_.voxel_grid_z);
+      filter.filter(*no_height_filtered_pointcloud_ptr);
+      pcl::toROSMsg(*no_height_filtered_pointcloud_ptr, *obstacle_ros_pointcloud_ptr_);
+    } else {
+      pcl::toROSMsg(*pointcloud_ptr, *obstacle_ros_pointcloud_ptr_);
+    }
+
+    obstacle_ros_pointcloud_ptr_->header = input_msg->header;
+    pub_obstacle_pointcloud_->publish(*obstacle_ros_pointcloud_ptr_);
+  }

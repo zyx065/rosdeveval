@@ -1,0 +1,63 @@
+compilation.log: |
+  Starting >>> pilz_industrial_motion_planner
+  Finished <<< pilz_industrial_motion_planner [0.79s]
+
+  Summary: 1 package finished [1.25s]
+generate_code.cpp: |
+  bool pilz_industrial_motion_planner::isStateColliding(const planning_scene::PlanningSceneConstPtr& scene,
+                                                        moveit::core::RobotState* rstate,
+                                                        const moveit::core::JointModelGroup* const group,
+                                                        const double* const ik_solution)
+  {
+    // Set the joint positions for the robot state using the provided IK solution
+    rstate->setJointGroupPositions(group, ik_solution);
+    
+    // Create a collision request
+    collision_detection::CollisionRequest collision_request;
+    collision_request.group_name = group->getName();
+    collision_request.contacts = false;  // We only need to know if there's a collision, not the details
+    collision_request.verbose = false;
+    
+    // Create a collision result to store the outcome
+    collision_detection::CollisionResult collision_result;
+    
+    // Check for self-collision
+    scene->checkSelfCollision(collision_request, collision_result, *rstate);
+    
+    // If self-collision check found a collision, return true
+    if (collision_result.collision)
+    {
+      return true;
+    }
+    
+    // Check for collision with the environment
+    scene->checkCollision(collision_request, collision_result, *rstate);
+    
+    // Return whether a collision was detected
+    return collision_result.collision;
+  }
+ground_truth.cpp: |-
+  bool pilz_industrial_motion_planner::isStateColliding(const planning_scene::PlanningSceneConstPtr& scene,
+                                                        moveit::core::RobotState* rstate,
+                                                        const moveit::core::JointModelGroup* const group,
+                                                        const double* const ik_solution)
+  {
+    rstate->setJointGroupPositions(group, ik_solution);
+    rstate->update();
+    collision_detection::CollisionRequest collision_req;
+    collision_req.group_name = group->getName();
+    collision_req.verbose = true;
+    collision_detection::CollisionResult collision_res;
+    scene->checkSelfCollision(collision_req, collision_res, *rstate);
+    return !collision_res.collision;
+  }
+architecture-codes: 
+  - ROS Message Related Issues - Message Operation Issues
+functionality-codes:
+  - Incomplete Code - Missing one step
+  - Operation/Calculation Error - Incorrect comparison operation
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

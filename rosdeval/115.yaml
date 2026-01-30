@@ -1,0 +1,32 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module
+ros_package: autoware_velocity_smoother
+file_path: src/object_filtering.cpp
+method_name: is_unavoidable
+requirement: |
+  /**
+  * Determines if a predicted object represents an unavoidable collision scenario.
+  * 
+  * @param object The predicted object to check for potential collision.
+  * @param ego_pose Current pose of the ego vehicle.
+  * @param ego_earliest_stop_pose The earliest possible stopping position of the ego vehicle.
+  * @param params Planner parameters containing collision thresholds and hysteresis values.
+  * @return True if the object is determined to be unavoidable, false otherwise.
+  */
+category: utilities
+type: has_message,has_domain_library
+signature: |
+  bool is_unavoidable(
+    const autoware_perception_msgs::msg::PredictedObject & object,
+    const geometry_msgs::msg::Pose & ego_pose,
+    const std::optional<geometry_msgs::msg::Pose> & ego_earliest_stop_pose,
+    const PlannerParam & params)
+additional_information: 
+  function_related_class: |
+    namespace autoware::motion_utils{
+      double calcSignedArcLength(const T & points, const size_t src_idx, const size_t dst_idx)
+    }
+test: test_autoware_motion_velocity_dynamic_obstacle_stop_module
+test_cases: 
+- isUnavoidable

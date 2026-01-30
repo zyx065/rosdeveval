@@ -1,0 +1,105 @@
+compilation.log: |
+  Starting >>> nav2_waypoint_follower
+  --- stderr: nav2_waypoint_follower
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /root/repos/nav_ws/install/nav2_util/include/nav2_util/node_thread.hpp:20,
+                   from /root/repos/nav_ws/install/nav2_util/include/nav2_util/lifecycle_node.hpp:22,
+                   from /root/repos/nav_ws/src/nav2_waypoint_follower/include/nav2_waypoint_follower/waypoint_follower.hpp:23,
+                   from /root/repos/nav_ws/src/nav2_waypoint_follower/src/waypoint_follower.cpp:15:
+  /root/repos/nav_ws/src/nav2_waypoint_follower/src/waypoint_follower.cpp: In member function ‘void nav2_waypoint_follower::WaypointFollower::resultCallback(const rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose>::WrappedResult&)’:
+  /root/repos/nav_ws/src/nav2_waypoint_follower/src/waypoint_follower.cpp:310:74: error: ‘using element_type = struct nav2_msgs::action::NavigateToPose_Result_<std::allocator<void> >’ {aka ‘struct nav2_msgs::action::NavigateToPose_Result_<std::allocator<void> >’} has no member named ‘message’
+    310 |     RCLCPP_INFO(this->get_logger(), "Result message: %s", result.result->message.c_str());
+        |                                                                          ^~~~~~~
+  /root/repos/nav_ws/src/nav2_waypoint_follower/src/waypoint_follower.cpp:316:23: error: ‘class std::shared_future<std::shared_ptr<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose> > >’ has no member named ‘reset’; did you mean ‘struct std::__basic_future<std::shared_ptr<rclcpp_action::ClientGoalHandle<nav2_msgs::action::NavigateToPose> > >::_Reset’? (not accessible from this context)
+    316 |   future_goal_handle_.reset();  // Reset the future goal handle to clear state
+        |                       ^~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /root/repos/nav_ws/install/nav2_util/include/nav2_util/node_thread.hpp:20,
+                   from /root/repos/nav_ws/install/nav2_util/include/nav2_util/lifecycle_node.hpp:22,
+                   from /root/repos/nav_ws/src/nav2_waypoint_follower/include/nav2_waypoint_follower/waypoint_follower.hpp:23,
+                   from /root/repos/nav_ws/src/nav2_waypoint_follower/src/waypoint_follower.cpp:15:
+  /usr/include/c++/11/future:752:14: note: declared protected here
+    752 |       struct _Reset
+        |              ^~~~~~
+  gmake[2]: *** [CMakeFiles/waypoint_follower_core.dir/build.make:76: CMakeFiles/waypoint_follower_core.dir/src/waypoint_follower.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:208: CMakeFiles/waypoint_follower_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_waypoint_follower [3.97s, exited with code 2]
+
+  Summary: 0 packages finished [4.28s]
+    1 package failed: nav2_waypoint_follower
+    1 package had stderr output: nav2_waypoint_follower
+generate_code.cpp: |-
+  void
+  WaypointFollower::resultCallback(
+    const rclcpp_action::ClientGoalHandle<ClientT>::WrappedResult & result)
+  {
+    // Check the status of the result
+    switch (result.code) {
+      case rclcpp_action::ResultCode::SUCCEEDED:
+        RCLCPP_INFO(this->get_logger(), "Waypoint following succeeded.");
+        break;
+
+      case rclcpp_action::ResultCode::ABORTED:
+        RCLCPP_ERROR(this->get_logger(), "Waypoint following was aborted.");
+        break;
+
+      case rclcpp_action::ResultCode::CANCELED:
+        RCLCPP_WARN(this->get_logger(), "Waypoint following was canceled.");
+        break;
+
+      default:
+        RCLCPP_ERROR(this->get_logger(), "Unknown result code.");
+        break;
+    }
+
+    // Log the result message if available
+    if (result.result) {
+      RCLCPP_INFO(this->get_logger(), "Result message: %s", result.result->message.c_str());
+    } else {
+      RCLCPP_WARN(this->get_logger(), "Result message is empty or unavailable.");
+    }
+
+    // Handle any additional cleanup or state updates if necessary
+    future_goal_handle_.reset();  // Reset the future goal handle to clear state
+  }
+ground_truth.cpp: |-
+  void
+  WaypointFollower::resultCallback(
+    const rclcpp_action::ClientGoalHandle<ClientT>::WrappedResult & result)
+  {
+    if (result.goal_id != future_goal_handle_.get()->get_goal_id()) {
+      RCLCPP_DEBUG(
+        get_logger(),
+        "Goal IDs do not match for the current goal handle and received result."
+        "Ignoring likely due to receiving result for an old goal.");
+      return;
+    }
+
+    switch (result.code) {
+      case rclcpp_action::ResultCode::SUCCEEDED:
+        current_goal_status_ = ActionStatus::SUCCEEDED;
+        return;
+      case rclcpp_action::ResultCode::ABORTED:
+        current_goal_status_ = ActionStatus::FAILED;
+        return;
+      case rclcpp_action::ResultCode::CANCELED:
+        current_goal_status_ = ActionStatus::FAILED;
+        return;
+      default:
+        current_goal_status_ = ActionStatus::UNKNOWN;
+        return;
+    }
+  }

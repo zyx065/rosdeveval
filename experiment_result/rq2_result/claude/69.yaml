@@ -1,0 +1,145 @@
+compilation.log: |
+  Starting >>> autoware_map_based_prediction
+  --- stderr: autoware_map_based_prediction
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_map_based_prediction/src/path_generator.cpp: In member function ‘autoware_perception_msgs::msg::PredictedPath autoware::map_based_prediction::PathGenerator::generatePathToTargetPoint(const TrackedObject&, const Vector2d&) const’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_map_based_prediction/src/path_generator.cpp:92:24: error: ‘createQuaternionFromYaw’ was not declared in this scope; did you mean ‘autoware::universe_utils::createQuaternionFromYaw’?
+     92 |     pose.orientation = createQuaternionFromYaw(yaw);
+        |                        ^~~~~~~~~~~~~~~~~~~~~~~
+        |                        autoware::universe_utils::createQuaternionFromYaw
+  In file included from /workspace/repos/autoware/install/autoware_interpolation/include/autoware/interpolation/spline_interpolation.hpp:19,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_map_based_prediction/src/path_generator.cpp:18:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:314:32: note: ‘autoware::universe_utils::createQuaternionFromYaw’ declared here
+    314 | geometry_msgs::msg::Quaternion createQuaternionFromYaw(const double yaw);
+        |                                ^~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_map_based_prediction/src/path_generator.cpp:97:34: error: ‘using _time_step_type = struct builtin_interfaces::msg::Duration_<std::allocator<void> >’ {aka ‘struct builtin_interfaces::msg::Duration_<std::allocator<void> >’} has no member named ‘size’
+     97 |     if (predicted_path.time_step.size() < predicted_path.path.size()) {
+        |                                  ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_map_based_prediction/src/path_generator.cpp:98:32: error: ‘using _time_step_type = struct builtin_interfaces::msg::Duration_<std::allocator<void> >’ {aka ‘struct builtin_interfaces::msg::Duration_<std::allocator<void> >’} has no member named ‘push_back’
+     98 |       predicted_path.time_step.push_back(t);
+        |                                ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_map_based_prediction/src/path_generator.cpp:104:19: error: ‘using element_type = class autoware::universe_utils::TimeKeeper’ {aka ‘class autoware::universe_utils::TimeKeeper’} has no member named ‘lap’
+    104 |     time_keeper_->lap("generatePathToTargetPoint");
+        |                   ^~~
+  gmake[2]: *** [CMakeFiles/map_based_prediction_node.dir/build.make:90: CMakeFiles/map_based_prediction_node.dir/src/path_generator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/map_based_prediction_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_map_based_prediction [6.98s, exited with code 2]
+
+  Summary: 0 packages finished [8.47s]
+    1 package failed: autoware_map_based_prediction
+    1 package had stderr output: autoware_map_based_prediction
+generate_code.cpp: |
+  PredictedPath PathGenerator::generatePathToTargetPoint(
+    const TrackedObject & object, const Eigen::Vector2d & point) const
+  {
+    PredictedPath predicted_path;
+    
+    // Calculate the direction vector from object's current position to target point
+    Eigen::Vector2d current_pos(object.kinematics.pose_with_covariance.pose.position.x,
+                                object.kinematics.pose_with_covariance.pose.position.y);
+    Eigen::Vector2d direction = point - current_pos;
+    
+    // Calculate the distance and yaw angle to the target point
+    double distance = direction.norm();
+    double yaw = std::atan2(direction.y(), direction.x());
+    
+    // Get current velocity magnitude
+    double velocity = std::hypot(object.kinematics.twist_with_covariance.twist.linear.x,
+                                  object.kinematics.twist_with_covariance.twist.linear.y);
+    
+    // Predict path points based on constant velocity model
+    const int num_path_points = 20;  // Configurable number of path points
+    const double time_step = 1.0;    // Time step between path points
+    
+    for (int i = 0; i < num_path_points; ++i) {
+      double t = i * time_step;
+      double path_distance = std::min(velocity * t, distance);
+      
+      // Interpolate position along the path
+      Eigen::Vector2d path_pos = current_pos + direction.normalized() * path_distance;
+      
+      // Create pose for this path point
+      geometry_msgs::msg::Pose pose;
+      pose.position.x = path_pos.x();
+      pose.position.y = path_pos.y();
+      pose.orientation = createQuaternionFromYaw(yaw);
+      
+      predicted_path.path.push_back(pose);
+      
+      // Optional: Add timestamp if PredictedPath supports it
+      if (predicted_path.time_step.size() < predicted_path.path.size()) {
+        predicted_path.time_step.push_back(t);
+      }
+    }
+    
+    // Optional: Log path generation using time_keeper
+    if (time_keeper_) {
+      time_keeper_->lap("generatePathToTargetPoint");
+    }
+    
+    return predicted_path;
+  }
+ground_truth.cpp: |-
+  PredictedPath PathGenerator::generatePathToTargetPoint(
+    const TrackedObject & object, const Eigen::Vector2d & point) const
+  {
+    std::unique_ptr<ScopedTimeTrack> st_ptr;
+    if (time_keeper_) st_ptr = std::make_unique<ScopedTimeTrack>(__func__, *time_keeper_);
+
+    PredictedPath predicted_path{};
+    const double ep = 0.001;
+
+    const auto & obj_pos = object.kinematics.pose_with_covariance.pose.position;
+    const auto & obj_vel = object.kinematics.twist_with_covariance.twist.linear;
+
+    const Eigen::Vector2d pedestrian_to_entry_point(point.x() - obj_pos.x, point.y() - obj_pos.y);
+    const auto velocity = std::max(std::hypot(obj_vel.x, obj_vel.y), min_crosswalk_user_velocity_);
+    const auto arrival_time = pedestrian_to_entry_point.norm() / velocity;
+
+    const auto pedestrian_to_entry_point_normalized = pedestrian_to_entry_point.normalized();
+    const auto pedestrian_to_entry_point_orientation =
+      autoware::universe_utils::createQuaternionFromYaw(std::atan2(
+        pedestrian_to_entry_point_normalized.y(), pedestrian_to_entry_point_normalized.x()));
+
+    for (double dt = 0.0; dt < arrival_time + ep; dt += sampling_time_interval_) {
+      geometry_msgs::msg::Pose world_frame_pose;
+      world_frame_pose.position.x =
+        obj_pos.x + velocity * pedestrian_to_entry_point_normalized.x() * dt;
+      world_frame_pose.position.y =
+        obj_pos.y + velocity * pedestrian_to_entry_point_normalized.y() * dt;
+      world_frame_pose.position.z = obj_pos.z;
+      world_frame_pose.orientation = pedestrian_to_entry_point_orientation;
+      predicted_path.path.push_back(world_frame_pose);
+      if (predicted_path.path.size() >= predicted_path.path.max_size()) {
+        break;
+      }
+    }
+
+    predicted_path.confidence = 1.0;
+    predicted_path.time_step = rclcpp::Duration::from_seconds(sampling_time_interval_);
+
+    return predicted_path;
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Message Related Issues - Message Initialization Issues
+  - ROS Parameter Related Issues - Use Non-exist Parameter
+  - ROS Parameter Related Issues - Insufficient Parameter Design
+  - ROS Diagnostic Issues - Error
+  - ROS Timer Issues - Timestamp Processing Errors
+
+functionality-codes:
+  - Reference Error - Wrong method
+  - Incomplete Code - Missing Multiple Steps
+  - Constant Value Error - Constant value error
+  - Conditional Checks Issues - Conditional Check Missing
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Operation/Calculation Error - Incorrect arithmetic operation
+
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

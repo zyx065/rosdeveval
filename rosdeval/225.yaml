@@ -1,0 +1,24 @@
+repository: laser_filters
+language: C++
+ros_package_file: src/laser_filters
+ros_package: laser_filters
+file_path: include/laser_filters/scan_mask_filter.h
+method_name: update
+requirement: |
+  /**
+  * Applies a predefined mask to a LaserScan message by invalidating specified range measurements.
+  * 
+  * @param[in] data_in The input LaserScan message to be processed.
+  * @param[out] data_out The output LaserScan message with masked ranges set to NaN.
+  * @return bool Always returns true, indicating the operation completed (though may warn for unregistered frames).
+  */
+category: utilities
+type: has_logger
+signature: |
+  bool update(const sensor_msgs::msg::LaserScan& data_in, sensor_msgs::msg::LaserScan& data_out)
+additional_information: 
+  function_related_variable: |
+    std::map<std::string, std::vector<size_t> > masks_;
+test: test_scan_filter_chain
+test_cases: 
+- MaskFilter

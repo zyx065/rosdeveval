@@ -1,0 +1,35 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator
+ros_package: autoware_kinematic_evaluator
+file_path: src/kinematic_evaluator_node.cpp
+method_name: KinematicEvaluatorNode::KinematicEvaluatorNode
+requirement: |
+  /**
+  * @brief Constructs a KinematicEvaluatorNode for evaluating kinematic metrics.
+  *
+  * Initializes the node with TF buffer/listener, subscribes to odometry data, and sets up
+  * metric calculation based on parameters. Results can be published as diagnostics and optionally
+  * saved to a file.
+  *
+  * @param node_options Configuration options for the ROS 2 node.
+  */
+category: ros_architecture
+type: has_domain_library,has_topic,has_parameter,has_message,has_timer,has_logger
+signature: |
+  KinematicEvaluatorNode::KinematicEvaluatorNode(const rclcpp::NodeOptions & node_options)
+  : Node("kinematic_evaluator", node_options)
+additional_information: 
+  function_related_variable: |
+    std::unique_ptr<tf2_ros::Buffer> tf_buffer_ptr_;
+    std::unique_ptr<tf2_ros::TransformListener> tf_listener_ptr_;
+    rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_sub_;
+    std::string output_file_str_;
+    rclcpp::Publisher<DiagnosticArray>::SharedPtr metrics_pub_;
+    std::unordered_map<Metric, Accumulator<double>> metrics_dict_;
+    std::vector<Metric> metrics_;
+  function_related_function: |
+    void KinematicEvaluatorNode::onOdom(const nav_msgs::msg::Odometry::SharedPtr msg)
+test: test_kinematic_evaluator
+test_cases: 
+- TestVelocityStats

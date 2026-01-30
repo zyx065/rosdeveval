@@ -1,0 +1,145 @@
+compilation.log: |
+  Starting >>> moveit_core
+  Finished <<< moveit_core [0.74s]
+
+  Summary: 1 package finished [1.33s]
+generate_code.cpp: |
+  bool IKConstraintSampler::callIK(const geometry_msgs::msg::Pose& ik_query,
+                                  const kinematics::KinematicsBase::IKCallbackFn& adapted_ik_validity_callback,
+                                  double timeout, moveit::core::RobotState& state, bool use_as_seed)
+  {
+      // Get the number of joints in the group
+      const std::vector<std::string>& joint_names = jmg_->getVariableNames();
+      std::vector<double> seed_state(joint_names.size());
+      std::vector<double> solution(joint_names.size());
+      
+      // Prepare seed state
+      if (use_as_seed)
+      {
+          // Use current state as seed
+          state.copyJointGroupPositions(jmg_, seed_state.data());
+      }
+      else
+      {
+          // Generate random seed state
+          state.setToRandomPositions(jmg_, random_number_generator_);
+          state.copyJointGroupPositions(jmg_, seed_state.data());
+      }
+      
+      // Apply kinematic solver joint bijection if needed
+      const std::vector<size_t>& bijection = jmg_->getKinematicsSolverJointBijection();
+      if (!bijection.empty())
+      {
+          std::vector<double> reordered_seed(seed_state.size());
+          for (size_t i = 0; i < bijection.size(); ++i)
+          {
+              reordered_seed[i] = seed_state[bijection[i]];
+          }
+          seed_state = reordered_seed;
+      }
+      
+      // Call the kinematics solver
+      moveit_msgs::msg::MoveItErrorCodes error_code;
+      bool ik_success = false;
+      
+      if (adapted_ik_validity_callback)
+      {
+          // Use callback version if provided
+          ik_success = kb_->searchPositionIK(ik_query, seed_state, timeout, 
+                                            std::vector<double>(), solution, 
+                                            adapted_ik_validity_callback, error_code);
+      }
+      else
+      {
+          // Use basic version without callback
+          ik_success = kb_->searchPositionIK(ik_query, seed_state, timeout, 
+                                            solution, error_code);
+      }
+      
+      if (!ik_success)
+      {
+          return false;
+      }
+      
+      // Apply reverse bijection if needed
+      if (!bijection.empty())
+      {
+          std::vector<double> reordered_solution(solution.size());
+          for (size_t i = 0; i < bijection.size(); ++i)
+          {
+              reordered_solution[bijection[i]] = solution[i];
+          }
+          solution = reordered_solution;
+      }
+      
+      // Set the solution in the robot state
+      state.setJointGroupPositions(jmg_->getName(), solution);
+      
+      // Validate the solution using the constraint sampler's validation
+      if (!validate(state))
+      {
+          return false;
+      }
+      
+      return true;
+  }
+ground_truth.cpp: |-
+  bool IKConstraintSampler::callIK(const geometry_msgs::msg::Pose& ik_query,
+                                   const kinematics::KinematicsBase::IKCallbackFn& adapted_ik_validity_callback,
+                                   double timeout, moveit::core::RobotState& state, bool use_as_seed)
+  {
+    const std::vector<size_t>& ik_joint_bijection = jmg_->getKinematicsSolverJointBijection();
+    std::vector<double> seed(ik_joint_bijection.size(), 0.0);
+    std::vector<double> vals;
+
+    if (use_as_seed)
+      state.copyJointGroupPositions(jmg_, vals);
+    else
+      // sample a seed value
+      jmg_->getVariableRandomPositions(random_number_generator_, vals);
+
+    assert(vals.size() == ik_joint_bijection.size());
+    for (std::size_t i = 0; i < ik_joint_bijection.size(); ++i)
+      seed[i] = vals[ik_joint_bijection[i]];
+
+    std::vector<double> ik_sol;
+    moveit_msgs::msg::MoveItErrorCodes error;
+
+    if (adapted_ik_validity_callback ?
+            kb_->searchPositionIK(ik_query, seed, timeout, ik_sol, adapted_ik_validity_callback, error) :
+            kb_->searchPositionIK(ik_query, seed, timeout, ik_sol, error))
+    {
+      assert(ik_sol.size() == ik_joint_bijection.size());
+      std::vector<double> solution(ik_joint_bijection.size());
+      for (std::size_t i = 0; i < ik_joint_bijection.size(); ++i)
+        solution[ik_joint_bijection[i]] = ik_sol[i];
+      state.setJointGroupPositions(jmg_, solution);
+
+      return validate(state);
+    }
+    else
+    {
+      if (error.val != moveit_msgs::msg::MoveItErrorCodes::NO_IK_SOLUTION &&
+          error.val != moveit_msgs::msg::MoveItErrorCodes::INVALID_ROBOT_STATE &&
+          error.val != moveit_msgs::msg::MoveItErrorCodes::TIMED_OUT)
+      {
+        RCLCPP_ERROR(LOGGER, "IK solver failed with error %d", error.val);
+      }
+      else if (verbose_)
+      {
+        RCLCPP_INFO(LOGGER, "IK failed");
+      }
+    }
+    return false;
+  }
+architecture-codes:
+  - ROS Logger Issues - ROS Logger Missing Issue
+functionality-codes:
+  - Reference Error - Wrong method
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Operation/Calculation Error - Incorrect logic
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

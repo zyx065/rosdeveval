@@ -1,0 +1,109 @@
+compilation.log: |
+  Starting >>> moveit_core
+  Finished <<< moveit_core [0.85s]
+
+  Summary: 1 package finished [1.29s]
+generate_code.cpp: |
+  void FloatingJointModel::interpolate(const double* from, const double* to, const double t, double* state) const
+  {
+      // Interpolate position (first 3 elements - x, y, z)
+      for (int i = 0; i < 3; ++i) {
+          state[i] = from[i] + t * (to[i] - from[i]);
+      }
+      
+      // Interpolate orientation using quaternion SLERP (elements 3-6: x, y, z, w)
+      // Normalize quaternions first
+      double from_quat[4] = {from[3], from[4], from[5], from[6]};
+      double to_quat[4] = {to[3], to[4], to[5], to[6]};
+      
+      // Normalize from quaternion
+      double from_norm = sqrt(from_quat[0]*from_quat[0] + from_quat[1]*from_quat[1] + 
+                            from_quat[2]*from_quat[2] + from_quat[3]*from_quat[3]);
+      for (int i = 0; i < 4; ++i) {
+          from_quat[i] /= from_norm;
+      }
+      
+      // Normalize to quaternion
+      double to_norm = sqrt(to_quat[0]*to_quat[0] + to_quat[1]*to_quat[1] + 
+                          to_quat[2]*to_quat[2] + to_quat[3]*to_quat[3]);
+      for (int i = 0; i < 4; ++i) {
+          to_quat[i] /= to_norm;
+      }
+      
+      // Compute dot product
+      double dot = from_quat[0]*to_quat[0] + from_quat[1]*to_quat[1] + 
+                  from_quat[2]*to_quat[2] + from_quat[3]*to_quat[3];
+      
+      // If dot product is negative, negate one quaternion to take shorter path
+      if (dot < 0.0) {
+          for (int i = 0; i < 4; ++i) {
+              to_quat[i] = -to_quat[i];
+          }
+          dot = -dot;
+      }
+      
+      // SLERP interpolation
+      if (dot > 0.9995) {
+          // Quaternions are very close, use linear interpolation
+          for (int i = 0; i < 4; ++i) {
+              state[i + 3] = from_quat[i] + t * (to_quat[i] - from_quat[i]);
+          }
+      } else {
+          // Use spherical linear interpolation
+          double theta = acos(fabs(dot));
+          double sin_theta = sin(theta);
+          double w1 = sin((1.0 - t) * theta) / sin_theta;
+          double w2 = sin(t * theta) / sin_theta;
+          
+          for (int i = 0; i < 4; ++i) {
+              state[i + 3] = w1 * from_quat[i] + w2 * to_quat[i];
+          }
+      }
+      
+      // Normalize the resulting quaternion
+      double result_norm = sqrt(state[3]*state[3] + state[4]*state[4] + 
+                              state[5]*state[5] + state[6]*state[6]);
+      for (int i = 3; i < 7; ++i) {
+          state[i] /= result_norm;
+      }
+  }
+ground_truth.cpp: |-
+  void FloatingJointModel::interpolate(const double* from, const double* to, const double t, double* state) const
+  {
+    // interpolate position
+    state[0] = from[0] + (to[0] - from[0]) * t;
+    state[1] = from[1] + (to[1] - from[1]) * t;
+    state[2] = from[2] + (to[2] - from[2]) * t;
+
+    // Check if the quaternions are significantly different
+    if (abs(from[3] - to[3]) + abs(from[4] - to[4]) + abs(from[5] - to[5]) + abs(from[6] - to[6]) >
+        std::numeric_limits<double>::epsilon())
+    {
+      // Note the ordering: Eigen takes w first!
+      Eigen::Quaterniond q1(from[6], from[3], from[4], from[5]);
+      Eigen::Quaterniond q2(to[6], to[3], to[4], to[5]);
+
+      Eigen::Quaterniond q = q1.slerp(t, q2);
+
+      state[3] = q.x();
+      state[4] = q.y();
+      state[5] = q.z();
+      state[6] = q.w();
+    }
+    else
+    {
+      state[3] = from[3];
+      state[4] = from[4];
+      state[5] = from[5];
+      state[6] = from[6];
+    }
+  }
+architecture-codes: []
+functionality-codes:
+  - Domain Library Issues - Lack of Domain Library Utilization
+  - Conditional Checks Issues - Conditional Check Missing
+  - Incomplete Code - Missing one step
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

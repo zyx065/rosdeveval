@@ -1,0 +1,84 @@
+compilation.log: |
+  Starting >>> autoware_radar_crossing_objects_noise_filter
+  --- stderr: autoware_radar_crossing_objects_noise_filter
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp: In constructor ‘autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::RadarCrossingObjectsNoiseFilterNode(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:63:15: error: ‘struct autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ has no member named ‘velocity_diff_threshold’; did you mean ‘velocity_threshold’?
+     63 |   node_param_.velocity_diff_threshold = declare_parameter<double>("velocity_diff_threshold", 1.0);
+        |               ^~~~~~~~~~~~~~~~~~~~~~~
+        |               velocity_threshold
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:64:15: error: ‘struct autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ has no member named ‘angle_diff_threshold’; did you mean ‘angle_threshold’?
+     64 |   node_param_.angle_diff_threshold = declare_parameter<double>("angle_diff_threshold", 0.1);
+        |               ^~~~~~~~~~~~~~~~~~~~
+        |               angle_threshold
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:65:15: error: ‘struct autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ has no member named ‘lateral_distance_threshold’
+     65 |   node_param_.lateral_distance_threshold = declare_parameter<double>("lateral_distance_threshold", 1.0);
+        |               ^~~~~~~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_radar_crossing_objects_noise_filter_node_component.dir/build.make:76: CMakeFiles/autoware_radar_crossing_objects_noise_filter_node_component.dir/src/radar_crossing_objects_noise_filter_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_radar_crossing_objects_noise_filter_node_component.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_radar_crossing_objects_noise_filter [5.40s, exited with code 2]
+
+  Summary: 0 packages finished [6.92s]
+    1 package failed: autoware_radar_crossing_objects_noise_filter
+    1 package had stderr output: autoware_radar_crossing_objects_noise_filter
+generate_code.cpp: |-
+  RadarCrossingObjectsNoiseFilterNode::RadarCrossingObjectsNoiseFilterNode(
+    const rclcpp::NodeOptions & node_options)
+  : Node("radar_crossing_objects_noise_filter", node_options)
+  {
+    // Initialize parameters
+    node_param_.velocity_diff_threshold = declare_parameter<double>("velocity_diff_threshold", 1.0);
+    node_param_.angle_diff_threshold = declare_parameter<double>("angle_diff_threshold", 0.1);
+    node_param_.lateral_distance_threshold = declare_parameter<double>("lateral_distance_threshold", 1.0);
+
+    // Set parameter callback
+    set_param_res_ = add_on_set_parameters_callback(
+      std::bind(&RadarCrossingObjectsNoiseFilterNode::onSetParam, this, std::placeholders::_1));
+
+    // Create subscribers and publishers
+    sub_objects_ = create_subscription<DetectedObjects>(
+      "input/objects", rclcpp::QoS{1},
+      std::bind(&RadarCrossingObjectsNoiseFilterNode::onObjects, this, std::placeholders::_1));
+
+    pub_filtered_objects_ = create_publisher<DetectedObjects>("output/filtered_objects", rclcpp::QoS{1});
+    pub_noise_objects_ = create_publisher<DetectedObjects>("output/noise_objects", rclcpp::QoS{1});
+  }
+ground_truth.cpp: |-
+  RadarCrossingObjectsNoiseFilterNode::RadarCrossingObjectsNoiseFilterNode(
+    const rclcpp::NodeOptions & node_options)
+  : Node("radar_crossing_objects_noise_filter", node_options)
+  {
+    // Parameter Server
+    set_param_res_ = this->add_on_set_parameters_callback(
+      std::bind(&RadarCrossingObjectsNoiseFilterNode::onSetParam, this, std::placeholders::_1));
+
+    // Node Parameter
+    node_param_.angle_threshold = declare_parameter<double>("angle_threshold");
+    node_param_.velocity_threshold = declare_parameter<double>("velocity_threshold");
+
+    // Subscriber
+    sub_objects_ = create_subscription<DetectedObjects>(
+      "~/input/objects", rclcpp::QoS{1},
+      std::bind(&RadarCrossingObjectsNoiseFilterNode::onObjects, this, std::placeholders::_1));
+
+    // Publisher
+    pub_filtered_objects_ = create_publisher<DetectedObjects>("~/output/filtered_objects", 1);
+    pub_noise_objects_ = create_publisher<DetectedObjects>("~/output/noise_objects", 1);
+  }
+architecture-codes:
+  - Topic/Service Issue - Topic/Service Name Mismatch Issue
+  - Topic/Service Issue - QoS Policy Incompatibility Issue
+  - ROS Parameter Issue - Use Non-existent Parameter Issue
+  - ROS Parameter Issue - Naming Convention Violations Issue
+  - ROS Parameter Issue - Parameter Type and Unit Mismatch Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing One Step Issue
+  - Constant Value Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

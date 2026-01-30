@@ -1,0 +1,54 @@
+compilation.log: |
+  Starting >>> autoware_obstacle_collision_checker
+  Finished <<< autoware_obstacle_collision_checker [27.3s]
+
+  Summary: 1 package finished [28.6s]
+generate_code.cpp: |
+  pcl::PointCloud<pcl::PointXYZ> get_transformed_point_cloud(
+    const sensor_msgs::msg::PointCloud2 & pointcloud_msg,
+    const geometry_msgs::msg::Transform & transform)
+  {
+    // Convert the sensor_msgs::PointCloud2 message to a PCL PointCloud
+    pcl::PointCloud<pcl::PointXYZ> input_cloud;
+    pcl::fromROSMsg(pointcloud_msg, input_cloud);
+
+    // Create an Eigen transformation matrix from the geometry_msgs::Transform
+    Eigen::Matrix4f transformation_matrix = Eigen::Matrix4f::Identity();
+
+    // Extract translation from the transform
+    transformation_matrix(0, 3) = transform.translation.x;
+    transformation_matrix(1, 3) = transform.translation.y;
+    transformation_matrix(2, 3) = transform.translation.z;
+
+    // Extract rotation from the transform (quaternion to rotation matrix)
+    Eigen::Quaternionf quaternion(
+      transform.rotation.w,
+      transform.rotation.x,
+      transform.rotation.y,
+      transform.rotation.z);
+    Eigen::Matrix3f rotation_matrix = quaternion.toRotationMatrix();
+
+    // Set the rotation part of the transformation matrix
+    transformation_matrix.block<3, 3>(0, 0) = rotation_matrix;
+
+    // Apply the transformation to the input point cloud
+    pcl::PointCloud<pcl::PointXYZ> transformed_cloud;
+    pcl::transformPointCloud(input_cloud, transformed_cloud, transformation_matrix);
+
+    return transformed_cloud;
+  }
+ground_truth.cpp: |-
+  pcl::PointCloud<pcl::PointXYZ> get_transformed_point_cloud(
+    const sensor_msgs::msg::PointCloud2 & pointcloud_msg,
+    const geometry_msgs::msg::Transform & transform)
+  {
+    const Eigen::Matrix4f transform_matrix = tf2::transformToEigen(transform).matrix().cast<float>();
+
+    sensor_msgs::msg::PointCloud2 transformed_msg;
+    pcl_ros::transformPointCloud(transform_matrix, pointcloud_msg, transformed_msg);
+
+    pcl::PointCloud<pcl::PointXYZ> transformed_pointcloud;
+    pcl::fromROSMsg(transformed_msg, transformed_pointcloud);
+
+    return transformed_pointcloud;
+  }

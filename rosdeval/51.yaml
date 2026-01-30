@@ -1,0 +1,107 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_path_smoother
+ros_package: autoware_path_smoother
+file_path: src/elastic_band_smoother.cpp
+method_name: ElasticBandSmoother::ElasticBandSmoother
+requirement: |
+  /**
+  * @brief Constructs an ElasticBandSmoother node for path smoothing.
+  * 
+  * Initializes the ROS 2 node with publishers, subscribers, parameters, and core path smoothing components.
+  * The node subscribes to input paths and publishes smoothed trajectories using elastic band optimization.
+  * 
+  * @param node_options Configuration options for the ROS 2 node initialization
+  */
+category: ros_architecture
+type: has_topic,has_timer,has_parameter,has_logger,has_message
+signature: |
+  ElasticBandSmoother::ElasticBandSmoother(const rclcpp::NodeOptions & node_options)
+  : Node("autoware_path_smoother", node_options), time_keeper_ptr_(std::make_shared<TimeKeeper>())
+additional_information: 
+  function_related_variable: |
+    rclcpp::Publisher<Trajectory>::SharedPtr traj_pub_;
+    rclcpp::Publisher<Path>::SharedPtr path_pub_;
+    rclcpp::Subscription<Path>::SharedPtr path_sub_;
+    autoware::universe_utils::InterProcessPollingSubscriber<Odometry> odom_sub_{this, "~/input/odometry"};
+    rclcpp::Publisher<Trajectory>::SharedPtr debug_extended_traj_pub_;
+    rclcpp::Publisher<StringStamped>::SharedPtr debug_calculation_time_str_pub_;
+    rclcpp::Publisher<Float64Stamped>::SharedPtr debug_calculation_time_float_pub_;
+    CommonParam common_param_{};
+    EgoNearestParam ego_nearest_param_{};
+    std::shared_ptr<EBPathSmoother> eb_path_smoother_ptr_{nullptr};
+    bool enable_debug_info_;
+    mutable std::shared_ptr<TimeKeeper> time_keeper_ptr_{nullptr};
+    OnSetParametersCallbackHandle::SharedPtr set_param_res_;
+    std::unique_ptr<autoware::universe_utils::LoggerLevelConfigure> logger_configure_;
+    std::unique_ptr<autoware::universe_utils::PublishedTimePublisher> published_time_publisher_;
+  function_related_function: |
+    void initializePlanning(); 
+    rcl_interfaces::msg::SetParametersResult ElasticBandSmoother::onParam(const std::vector<rclcpp::Parameter> & parameters)
+  function_related_class: |
+    struct CommonParam
+    {
+      CommonParam() = default;
+      explicit CommonParam(rclcpp::Node * node)
+      {
+        output_backward_traj_length =
+          node->declare_parameter<double>("common.output_backward_traj_length");
+        output_delta_arc_length = node->declare_parameter<double>("common.output_delta_arc_length");
+      }
+
+      void onParam(const std::vector<rclcpp::Parameter> & parameters)
+      {
+        using autoware::universe_utils::updateParam;
+
+        // common
+        updateParam<double>(
+          parameters, "common.output_backward_traj_length", output_backward_traj_length);
+        updateParam<double>(parameters, "common.output_delta_arc_length", output_delta_arc_length);
+      }
+
+      double output_delta_arc_length;
+      double output_backward_traj_length;
+    };
+
+    struct EgoNearestParam
+    {
+      EgoNearestParam() = default;
+      explicit EgoNearestParam(rclcpp::Node * node)
+      {
+        dist_threshold = node->declare_parameter<double>("ego_nearest_dist_threshold");
+        yaw_threshold = node->declare_parameter<double>("ego_nearest_yaw_threshold");
+      }
+
+      void onParam(const std::vector<rclcpp::Parameter> & parameters)
+      {
+        using autoware::universe_utils::updateParam;
+        updateParam<double>(parameters, "ego_nearest_dist_threshold", dist_threshold);
+        updateParam<double>(parameters, "ego_nearest_yaw_threshold", yaw_threshold);
+      }
+
+      double dist_threshold{0.0};
+      double yaw_threshold{0.0};
+    };
+
+    namespace autoware::universe_utils
+    {
+    class LoggerLevelConfigure
+    {
+    private:
+      using ConfigLogger = logging_demo::srv::ConfigLogger;
+
+    public:
+      explicit LoggerLevelConfigure(rclcpp::Node * node);
+
+    private:
+      rclcpp::Logger ros_logger_;
+      rclcpp::Service<ConfigLogger>::SharedPtr srv_config_logger_;
+
+      void onLoggerConfigService(
+        const ConfigLogger::Request::SharedPtr request,
+        const ConfigLogger::Response::SharedPtr response);
+    };
+
+    }  // namespace autoware::universe_utils
+test: test_autoware_path_smoother
+test_cases: []

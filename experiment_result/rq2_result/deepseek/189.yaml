@@ -1,0 +1,57 @@
+compilation.log: |
+  Starting >>> nav2_mppi_controller
+  [Processing: nav2_mppi_controller]
+  Finished <<< nav2_mppi_controller [53.0s]
+
+  Summary: 1 package finished [53.3s]
+generate_code.cpp: "inline bool withinPositionGoalTolerance(\n  nav2_core::GoalChecker\
+  \ * goal_checker,\n  const geometry_msgs::msg::Pose & robot,\n  const geometry_msgs::msg::Pose\
+  \ & goal)\n{\n  geometry_msgs::msg::Pose pose_tolerance;\n  geometry_msgs::msg::Twist\
+  \ vel_tolerance;\n  \n  if (!goal_checker->getTolerances(pose_tolerance, vel_tolerance))\
+  \ {\n    return false;\n  }\n\n  // Check position tolerance\n  if (fabs(robot.position.x\
+  \ - goal.position.x) > pose_tolerance.position.x) {\n    return false;\n  }\n  if\
+  \ (fabs(robot.position.y - goal.position.y) > pose_tolerance.position.y) {\n   \
+  \ return false;\n  }\n  if (fabs(robot.position.z - goal.position.z) > pose_tolerance.position.z)\
+  \ {\n    return false;\n  }\n\n  // Check orientation tolerance (using yaw difference)\n\
+  \  double robot_yaw = tf2::getYaw(robot.orientation);\n  double goal_yaw = tf2::getYaw(goal.orientation);\n\
+  \  double yaw_diff = fabs(angles::shortest_angular_distance(robot_yaw, goal_yaw));\n\
+  \  \n  if (yaw_diff > tf2::getYaw(pose_tolerance.orientation)) {\n    return false;\n\
+  \  }\n\n  return true;\n}"
+ground_truth.cpp: |-
+  inline bool withinPositionGoalTolerance(
+    nav2_core::GoalChecker * goal_checker,
+    const geometry_msgs::msg::Pose & robot,
+    const geometry_msgs::msg::Pose & goal)
+  {
+    if (goal_checker) {
+      geometry_msgs::msg::Pose pose_tolerance;
+      geometry_msgs::msg::Twist velocity_tolerance;
+      goal_checker->getTolerances(pose_tolerance, velocity_tolerance);
+
+      const auto pose_tolerance_sq = pose_tolerance.position.x * pose_tolerance.position.x;
+
+      auto dx = robot.position.x - goal.position.x;
+      auto dy = robot.position.y - goal.position.y;
+
+      auto dist_sq = dx * dx + dy * dy;
+
+      if (dist_sq < pose_tolerance_sq) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+architecture-codes:
+  - Topic/Service Issue - Callback Function Binding Issue
+  - ROS Message Issue - Improper Message Type Usage Issue
+  - ROS Message Issue - Message Initialization Issue
+functionality-codes:
+  - Incomplete Code Issue - Missing One Step Issue
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Unclear of ROS computation graph

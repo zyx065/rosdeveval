@@ -1,0 +1,80 @@
+compilation.log: |
+  Starting >>> autoware_trajectory_follower_node
+  Finished <<< autoware_trajectory_follower_node [29.7s]
+
+  Summary: 1 package finished [31.2s]
+generate_code.cpp: |-
+  void Controller::publishDebugMarker(
+    const trajectory_follower::InputData & input_data,
+    const trajectory_follower::LateralOutput & lat_out) const
+  {
+    visualization_msgs::msg::MarkerArray marker_array;
+    visualization_msgs::msg::Marker marker;
+
+    marker.header.frame_id = "base_link";
+    marker.header.stamp = input_data.current_odometry.header.stamp;
+    marker.ns = "steering_convergence";
+    marker.id = 0;
+    marker.type = visualization_msgs::msg::Marker::TEXT_VIEW_FACING;
+    marker.action = visualization_msgs::msg::Marker::ADD;
+    marker.pose.position.x = 0.0;
+    marker.pose.position.y = 0.0;
+    marker.pose.position.z = 2.0;
+    marker.scale.z = 0.2;
+    marker.color.a = 1.0;
+
+    if (lat_out.sync_data.is_steer_converged) {
+      marker.text = "STEERING CONVERGED";
+      marker.color.r = 0.0;
+      marker.color.g = 1.0;
+      marker.color.b = 0.0;
+    } else {
+      marker.text = "STEERING NOT CONVERGED";
+      marker.color.r = 1.0;
+      marker.color.g = 0.0;
+      marker.color.b = 0.0;
+    }
+
+    marker_array.markers.push_back(marker);
+    debug_marker_pub_->publish(marker_array);
+  }
+ground_truth.cpp: |-
+  void Controller::publishDebugMarker(
+    const trajectory_follower::InputData & input_data,
+    const trajectory_follower::LateralOutput & lat_out) const
+  {
+    visualization_msgs::msg::MarkerArray debug_marker_array{};
+
+    // steer converged marker
+    {
+      auto marker = autoware::universe_utils::createDefaultMarker(
+        "map", this->now(), "steer_converged", 0, visualization_msgs::msg::Marker::TEXT_VIEW_FACING,
+        autoware::universe_utils::createMarkerScale(0.0, 0.0, 1.0),
+        autoware::universe_utils::createMarkerColor(1.0, 1.0, 1.0, 0.99));
+      marker.pose = input_data.current_odometry.pose.pose;
+
+      std::stringstream ss;
+      const double current = input_data.current_steering.steering_tire_angle;
+      const double cmd = lat_out.control_cmd.steering_tire_angle;
+      const double diff = current - cmd;
+      ss << "current:" << current << " cmd:" << cmd << " diff:" << diff
+         << (lat_out.sync_data.is_steer_converged ? " (converged)" : " (not converged)");
+      marker.text = ss.str();
+
+      debug_marker_array.markers.push_back(marker);
+    }
+
+    debug_marker_pub_->publish(debug_marker_array);
+  }
+architecture-codes:
+  - ROS Message Issue - Message Initialization Issue
+  - ROS Timer Issue - Clock Source Instantiation and Synchronization Issue
+
+functionality-codes:
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cases-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

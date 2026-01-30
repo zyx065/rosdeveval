@@ -1,0 +1,83 @@
+compilation.log: |
+  Starting >>> autoware_planning_validator
+  --- stderr: autoware_planning_validator
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp: In member function ‘void autoware::planning_validator::PlanningValidator::publishDebugInfo()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:273:20: error: ‘Float64Stamped’ is not a member of ‘std_msgs::msg’
+    273 |     std_msgs::msg::Float64Stamped processing_time_msg;
+        |                    ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:273:20: note: suggested alternatives:
+  In file included from /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/float64_stamped.hpp:7,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/include/autoware/planning_validator/planning_validator.hpp:29,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:15:
+  /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/detail/float64_stamped__struct.hpp:139:7: note:   ‘autoware_internal_debug_msgs::msg::Float64Stamped’
+    139 | using Float64Stamped =
+        |       ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/detail/float64_stamped__struct.hpp:139:7: note:   ‘autoware_internal_debug_msgs::msg::Float64Stamped’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:274:5: error: ‘processing_time_msg’ was not declared in this scope; did you mean ‘pub_processing_time_ms_’?
+    274 |     processing_time_msg.data = validation_status_.processing_time_ms;
+        |     ^~~~~~~~~~~~~~~~~~~
+        |     pub_processing_time_ms_
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:274:51: error: ‘using PlanningValidatorStatus = struct autoware_planning_validator::msg::PlanningValidatorStatus_<std::allocator<void> >’ {aka ‘struct autoware_planning_validator::msg::PlanningValidatorStatus_<std::allocator<void> >’} has no member named ‘processing_time_ms’
+    274 |     processing_time_msg.data = validation_status_.processing_time_ms;
+        |                                                   ^~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_planning_validator_component.dir/build.make:76: CMakeFiles/autoware_planning_validator_component.dir/src/planning_validator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:239: CMakeFiles/autoware_planning_validator_component.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_planning_validator [8.35s, exited with code 2]
+
+  Summary: 0 packages finished [9.73s]
+    1 package failed: autoware_planning_validator
+    1 package had stderr output: autoware_planning_validator
+generate_code.cpp: |-
+  void PlanningValidator::publishDebugInfo()
+  {
+    // Publish processing time
+    if (pub_processing_time_ms_) {
+      std_msgs::msg::Float64Stamped processing_time_msg;
+      processing_time_msg.data = validation_status_.processing_time_ms;
+      pub_processing_time_ms_->publish(processing_time_msg);
+    }
+
+    // Publish validation status
+    if (pub_status_) {
+      pub_status_->publish(validation_status_);
+    }
+
+    // Clear previous markers
+    debug_pose_publisher_->clearMarkers();
+
+    // Check if the planning is valid
+    if (!isAllValid(validation_status_)) {
+      // If invalid, add debug markers for visualization
+
+      // Ensure current kinematics data is available
+      if (current_kinematics_) {
+        // Get the current pose of the vehicle
+        const geometry_msgs::msg::Pose & current_pose = current_kinematics_->pose.pose;
+
+        // Add a virtual wall marker at the vehicle's front position
+        debug_pose_publisher_->pushVirtualWall(current_pose);
+
+        // Add a warning message marker at the vehicle's front position
+        debug_pose_publisher_->pushWarningMsg(current_pose, "Planning Invalid");
+      }
+    }
+
+    // Publish all markers
+    debug_pose_publisher_->publish();
+  }
+ground_truth.cpp: |-
+  void PlanningValidator::publishDebugInfo()
+  {
+    validation_status_.stamp = get_clock()->now();
+    pub_status_->publish(validation_status_);
+
+    if (!isAllValid(validation_status_)) {
+      geometry_msgs::msg::Pose front_pose = current_kinematics_->pose.pose;
+      shiftPose(front_pose, vehicle_info_.front_overhang_m + vehicle_info_.wheel_base_m);
+      debug_pose_publisher_->pushVirtualWall(front_pose);
+      debug_pose_publisher_->pushWarningMsg(front_pose, "INVALID PLANNING");
+    }
+    debug_pose_publisher_->publish();
+  }

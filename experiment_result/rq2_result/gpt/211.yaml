@@ -1,0 +1,56 @@
+compilation.log: |
+  Starting >>> nav2_mppi_controller
+  Finished <<< nav2_mppi_controller [0.55s]
+
+  Summary: 1 package finished [0.85s]
+generate_code.cpp: |-
+  geometry_msgs::msg::TwistStamped Optimizer::evalControl(
+    const geometry_msgs::msg::PoseStamped & robot_pose,
+    const geometry_msgs::msg::Twist & robot_speed,
+    const nav_msgs::msg::Path & plan,
+    const geometry_msgs::msg::Pose & goal,
+    nav2_core::GoalChecker * goal_checker)
+  {
+    // Step 1: Prepare the optimizer with the current state and plan
+    prepare(robot_pose, robot_speed, plan, goal, goal_checker);
+
+    // Step 2: Perform optimization to compute the control sequence
+    optimize();
+
+    // Step 3: Check if fallback is needed (e.g., optimization failed)
+    if (fallback(false)) {
+      RCLCPP_WARN(logger_, "Fallback triggered during optimization.");
+    }
+
+    // Step 4: Shift the control sequence for the next iteration
+    shiftControlSequence();
+
+    // Step 5: Extract the optimal control command from the sequence
+    geometry_msgs::msg::TwistStamped control_command = getControlFromSequenceAsTwist(robot_pose.header.stamp);
+
+    // Step 6: Return the computed control command
+    return control_command;
+  }
+ground_truth.cpp: |-
+  geometry_msgs::msg::TwistStamped Optimizer::evalControl(
+    const geometry_msgs::msg::PoseStamped & robot_pose,
+    const geometry_msgs::msg::Twist & robot_speed,
+    const nav_msgs::msg::Path & plan,
+    const geometry_msgs::msg::Pose & goal,
+    nav2_core::GoalChecker * goal_checker)
+  {
+    prepare(robot_pose, robot_speed, plan, goal, goal_checker);
+
+    do {
+      optimize();
+    } while (fallback(critics_data_.fail_flag));
+
+    utils::savitskyGolayFilter(control_sequence_, control_history_, settings_);
+    auto control = getControlFromSequenceAsTwist(plan.header.stamp);
+
+    if (settings_.shift_control_sequence) {
+      shiftControlSequence();
+    }
+
+    return control;
+  }

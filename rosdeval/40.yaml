@@ -1,0 +1,35 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_traffic_light_arbiter
+ros_package: autoware_traffic_light_arbiter
+file_path: src/traffic_light_arbiter.cpp
+method_name: TrafficLightArbiter::TrafficLightArbiter
+requirement: |
+  /**
+  * @brief Constructs a TrafficLightArbiter node.
+  * 
+  * @param options Node configuration options.
+  */
+category: ros_architecture
+type: has_topic,has_parameter,has_message
+signature: |
+  TrafficLightArbiter::TrafficLightArbiter(const rclcpp::NodeOptions & options)
+  : Node("traffic_light_arbiter", options)
+additional_information: 
+  function_related_variable: |
+    double external_time_tolerance_;
+    double perception_time_tolerance_;
+    bool external_priority_;
+    bool enable_signal_matching_;
+    rclcpp::Subscription<LaneletMapBin>::SharedPtr map_sub_;
+    rclcpp::Subscription<TrafficSignalArray>::SharedPtr perception_tlr_sub_;
+    rclcpp::Subscription<TrafficSignalArray>::SharedPtr external_tlr_sub_;
+    rclcpp::Publisher<TrafficSignalArray>::SharedPtr pub_;
+  function_related_function: |
+    void onMap(const LaneletMapBin::ConstSharedPtr msg);
+    void onPerceptionMsg(const TrafficSignalArray::ConstSharedPtr msg);
+    void onExternalMsg(const TrafficSignalArray::ConstSharedPtr msg);
+    void arbitrateAndPublish(const builtin_interfaces::msg::Time & stamp);
+    void SignalMatchValidator::setExternalPriority(const bool external_priority);
+test: autoware_traffic_light_arbiter_test
+test_cases: []

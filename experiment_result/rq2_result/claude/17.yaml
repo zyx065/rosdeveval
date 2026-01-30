@@ -1,0 +1,155 @@
+compilation.log: |
+  Starting >>> autoware_perception_online_evaluator
+  --- stderr: autoware_perception_online_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp: In member function ‘void autoware::perception_diagnostics::PerceptionOnlineEvaluatorNode::publishMetrics()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:70:17: error: ‘using MetricArray = struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’ {aka ‘struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’} has no member named ‘header’
+     70 |     metrics_msg.header.stamp = this->now();
+        |                 ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:73:44: error: ‘using element_type = struct autoware::perception_diagnostics::Parameters’ {aka ‘struct autoware::perception_diagnostics::Parameters’} has no member named ‘metrics_to_evaluate’
+     73 |     for (const auto& metric : parameters_->metrics_to_evaluate)
+        |                                            ^~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:81:26: error: ‘TRAJECTORY_DEVIATION’ is not a member of ‘autoware::perception_diagnostics::Metric’
+     81 |             case Metric::TRAJECTORY_DEVIATION:
+        |                          ^~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:82:26: error: ‘LATERAL_DEVIATION’ is not a member of ‘autoware::perception_diagnostics::Metric’
+     82 |             case Metric::LATERAL_DEVIATION:
+        |                          ^~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:83:26: error: ‘LONGITUDINAL_DEVIATION’ is not a member of ‘autoware::perception_diagnostics::Metric’
+     83 |             case Metric::LONGITUDINAL_DEVIATION:
+        |                          ^~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:84:91: error: ‘class autoware::perception_diagnostics::MetricsCalculator’ has no member named ‘reference_trajectory_’
+     84 |                 metric_result = metrics_calculator_.calculate(metric, metrics_calculator_.reference_trajectory_);
+        |                                                                                           ^~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:87:26: error: ‘POSE_DISTANCE’ is not a member of ‘autoware::perception_diagnostics::Metric’
+     87 |             case Metric::POSE_DISTANCE:
+        |                          ^~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:90:41: error: ‘class autoware::perception_diagnostics::MetricsCalculator’ has no member named ‘getEgoPose’
+     90 |                     metrics_calculator_.getEgoPose(),
+        |                                         ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:91:41: error: ‘class autoware::perception_diagnostics::MetricsCalculator’ has no member named ‘reference_trajectory_’
+     91 |                     metrics_calculator_.reference_trajectory_.back()
+        |                                         ^~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:100:46: error: ‘class autoware::universe_utils::Accumulator<double>’ has no member named ‘empty’
+    100 |         if (metric_result && !metric_result->empty())
+        |                                              ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:102:25: error: ‘toString’ was not declared in this scope
+    102 |             toMetricMsg(toString(metric), *metric_result, metrics_msg);
+        |                         ^~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:107:22: error: ‘using MetricArray = struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’ {aka ‘struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’} has no member named ‘metrics’
+    107 |     if (!metrics_msg.metrics.empty())
+        |                      ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:109:9: error: ‘metrics_publisher_’ was not declared in this scope; did you mean ‘metrics_pub_’?
+    109 |         metrics_publisher_->publish(metrics_msg);
+        |         ^~~~~~~~~~~~~~~~~~
+        |         metrics_pub_
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator/src/perception_online_evaluator_node.cpp:113:5: error: ‘publishDebugMarkers’ was not declared in this scope; did you mean ‘publishDebugMarker’?
+    113 |     publishDebugMarkers();
+        |     ^~~~~~~~~~~~~~~~~~~
+        |     publishDebugMarker
+  gmake[2]: *** [CMakeFiles/autoware_perception_online_evaluator.dir/build.make:90: CMakeFiles/autoware_perception_online_evaluator.dir/src/perception_online_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_perception_online_evaluator.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_perception_online_evaluator [6.96s, exited with code 2]
+
+  Summary: 0 packages finished [8.35s]
+    1 package failed: autoware_perception_online_evaluator
+    1 package had stderr output: autoware_perception_online_evaluator
+generate_code.cpp: |
+  void PerceptionOnlineEvaluatorNode::publishMetrics()
+  {
+      // Create a metrics message array to store calculated metrics
+      tier4_metric_msgs::msg::MetricArray metrics_msg;
+      metrics_msg.header.stamp = this->now();
+
+      // Iterate through all configured metrics
+      for (const auto& metric : parameters_->metrics_to_evaluate)
+      {
+          // Calculate metric based on the current metric type
+          std::optional<Accumulator<double>> metric_result;
+
+          // Depending on the metric type, use appropriate calculation method
+          switch (metric)
+          {
+              case Metric::TRAJECTORY_DEVIATION:
+              case Metric::LATERAL_DEVIATION:
+              case Metric::LONGITUDINAL_DEVIATION:
+                  metric_result = metrics_calculator_.calculate(metric, metrics_calculator_.reference_trajectory_);
+                  break;
+
+              case Metric::POSE_DISTANCE:
+                  metric_result = metrics_calculator_.calculate(
+                      metric, 
+                      metrics_calculator_.getEgoPose(), 
+                      metrics_calculator_.reference_trajectory_.back()
+                  );
+                  break;
+
+              default:
+                  continue;  // Skip unsupported metrics
+          }
+
+          // If metric calculation is valid, convert and add to message
+          if (metric_result && !metric_result->empty())
+          {
+              toMetricMsg(toString(metric), *metric_result, metrics_msg);
+          }
+      }
+
+      // Publish metrics if any are available
+      if (!metrics_msg.metrics.empty())
+      {
+          metrics_publisher_->publish(metrics_msg);
+      }
+
+      // Optionally, publish debug markers (implementation depends on specific visualization requirements)
+      publishDebugMarkers();
+  }
+ground_truth.cpp: |-
+  void PerceptionOnlineEvaluatorNode::publishMetrics()
+  {
+    // DiagnosticArray metrics_msg;
+    tier4_metric_msgs::msg::MetricArray metrics_msg;
+
+    // calculate metrics
+    for (const Metric & metric : parameters_->metrics) {
+      const auto metric_result = metrics_calculator_.calculate(Metric(metric));
+      if (!metric_result.has_value()) {
+        continue;
+      }
+
+      std::visit(
+        [&metrics_msg, this](auto && arg) {
+          using T = std::decay_t<decltype(arg)>;
+          for (const auto & [metric, value] : arg) {
+            if constexpr (std::is_same_v<T, MetricStatMap>) {
+              if (value.count() > 0) {
+                toMetricMsg(metric, value, metrics_msg);
+              }
+            } else if constexpr (std::is_same_v<T, MetricValueMap>) {
+              toMetricMsg(metric, value, metrics_msg);
+            }
+          }
+        },
+        metric_result.value());
+    }
+
+    // publish metrics
+    if (!metrics_msg.metric_array.empty()) {
+      metrics_msg.stamp = now();
+      metrics_pub_->publish(metrics_msg);
+    }
+    publishDebugMarker();
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Parameter Related Issues - Use Non-exist Parameter
+functionality-codes:
+  - Meet Requirement - No
+  - Reference Error - Undefined Name
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+root-cause-codes:
+  Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  Deficiencies in Domain Knowledge - Lack of familiarity with the existing codebase
+  Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

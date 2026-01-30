@@ -1,0 +1,97 @@
+compilation.log: |
+  Starting >>> autoware_velocity_smoother
+  --- stderr: autoware_velocity_smoother
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp: In member function ‘void autoware::velocity_smoother::VelocitySmootherNode::publishStopWatchTime()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1134:31: error: ‘last_stopwatch_start_time_’ was not declared in this scope
+   1134 |     auto elapsed_time = now - last_stopwatch_start_time_;
+        |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1137:52: error: ‘Float64Stamped’ is not a member of ‘std_msgs::msg’
+   1137 |     auto message = std::make_unique<std_msgs::msg::Float64Stamped>();
+        |                                                    ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1137:52: note: suggested alternatives:
+  In file included from /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/float64_stamped.hpp:7,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/include/autoware/velocity_smoother/node.hpp:44,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:15:
+  /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/detail/float64_stamped__struct.hpp:139:7: note:   ‘autoware_internal_debug_msgs::msg::Float64Stamped’
+    139 | using Float64Stamped =
+        |       ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/detail/float64_stamped__struct.hpp:139:7: note:   ‘autoware_internal_debug_msgs::msg::Float64Stamped’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1137:67: error: no matching function for call to ‘make_unique<<expression error> >()’
+   1137 |     auto message = std::make_unique<std_msgs::msg::Float64Stamped>();
+        |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+  In file included from /usr/include/c++/11/memory:76,
+                   from /workspace/repos/autoware/install/autoware_planning_msgs/include/autoware_planning_msgs/autoware_planning_msgs/msg/detail/path__struct.hpp:10,
+                   from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/conversion.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/include/autoware/velocity_smoother/node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:15:
+  /usr/include/c++/11/bits/unique_ptr.h:961:5: note: candidate: ‘template<class _Tp, class ... _Args> typename std::_MakeUniq<_Tp>::__single_object std::make_unique(_Args&& ...)’
+    961 |     make_unique(_Args&&... __args)
+        |     ^~~~~~~~~~~
+  /usr/include/c++/11/bits/unique_ptr.h:961:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1137:67: error: template argument 1 is invalid
+   1137 |     auto message = std::make_unique<std_msgs::msg::Float64Stamped>();
+        |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+  In file included from /usr/include/c++/11/memory:76,
+                   from /workspace/repos/autoware/install/autoware_planning_msgs/include/autoware_planning_msgs/autoware_planning_msgs/msg/detail/path__struct.hpp:10,
+                   from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/conversion.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/include/autoware/velocity_smoother/node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:15:
+  /usr/include/c++/11/bits/unique_ptr.h:967:5: note: candidate: ‘template<class _Tp> typename std::_MakeUniq<_Tp>::__array std::make_unique(std::size_t)’
+    967 |     make_unique(size_t __num)
+        |     ^~~~~~~~~~~
+  /usr/include/c++/11/bits/unique_ptr.h:967:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1137:67: error: template argument 1 is invalid
+   1137 |     auto message = std::make_unique<std_msgs::msg::Float64Stamped>();
+        |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+  In file included from /usr/include/c++/11/memory:76,
+                   from /workspace/repos/autoware/install/autoware_planning_msgs/include/autoware_planning_msgs/autoware_planning_msgs/msg/detail/path__struct.hpp:10,
+                   from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/conversion.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/include/autoware/velocity_smoother/node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:15:
+  /usr/include/c++/11/bits/unique_ptr.h:973:5: note: candidate: ‘template<class _Tp, class ... _Args> typename std::_MakeUniq<_Tp>::__invalid_type std::make_unique(_Args&& ...)’ (deleted)
+    973 |     make_unique(_Args&&...) = delete;
+        |     ^~~~~~~~~~~
+  /usr/include/c++/11/bits/unique_ptr.h:973:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1137:67: error: template argument 1 is invalid
+   1137 |     auto message = std::make_unique<std_msgs::msg::Float64Stamped>();
+        |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+  gmake[2]: *** [CMakeFiles/autoware_velocity_smoother_node.dir/build.make:76: CMakeFiles/autoware_velocity_smoother_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:208: CMakeFiles/autoware_velocity_smoother_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_velocity_smoother [10.5s, exited with code 2]
+
+  Summary: 0 packages finished [11.8s]
+    1 package failed: autoware_velocity_smoother
+    1 package had stderr output: autoware_velocity_smoother
+generate_code.cpp: |-
+  void VelocitySmootherNode::publishStopWatchTime()
+  {
+      // Check if the publisher is valid
+      if (!debug_calculation_time_) {
+          RCLCPP_WARN(this->get_logger(), "debug_calculation_time_ publisher is not initialized.");
+          return;
+      }
+
+      // Get the current time
+      auto now = this->get_clock()->now();
+
+      // Calculate the elapsed time since the last stopwatch start
+      auto elapsed_time = now - last_stopwatch_start_time_;
+
+      // Create a Float64Stamped message
+      auto message = std::make_unique<std_msgs::msg::Float64Stamped>();
+      message->header.stamp = now;
+      message->data = elapsed_time.seconds();
+
+      // Publish the message
+      debug_calculation_time_->publish(std::move(message));
+  }
+ground_truth.cpp: |-
+  void VelocitySmootherNode::publishStopWatchTime()
+  {
+    Float64Stamped calculation_time_data{};
+    calculation_time_data.stamp = this->now();
+    calculation_time_data.data = stop_watch_.toc();
+    debug_calculation_time_->publish(calculation_time_data);
+  }

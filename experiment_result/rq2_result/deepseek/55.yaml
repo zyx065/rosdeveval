@@ -1,0 +1,58 @@
+compilation.log: |
+  Starting >>> autoware_planning_validator
+  [Processing: autoware_planning_validator]
+  Finished <<< autoware_planning_validator [57.8s]
+
+  Summary: 1 package finished [59.2s]
+generate_code.cpp: |-
+  void PlanningValidator::publishDebugInfo()
+  {
+    // Publish validation status
+    pub_status_->publish(validation_status_);
+
+    // If planning is invalid, publish debug markers
+    if (!isAllValid(validation_status_) && current_kinematics_) {
+      // Get current vehicle pose from odometry
+      geometry_msgs::msg::Pose current_pose = current_kinematics_->pose.pose;
+
+      // Clear previous markers
+      debug_pose_publisher_->clearMarkers();
+
+      // Add virtual wall at vehicle front position
+      debug_pose_publisher_->pushVirtualWall(current_pose);
+
+      // Add warning message at vehicle position
+      debug_pose_publisher_->pushWarningMsg(current_pose, "Planning Validation Failed!");
+
+      // Publish all markers
+      debug_pose_publisher_->publish();
+    }
+  }
+ground_truth.cpp: |-
+  void PlanningValidator::publishDebugInfo()
+  {
+    validation_status_.stamp = get_clock()->now();
+    pub_status_->publish(validation_status_);
+
+    if (!isAllValid(validation_status_)) {
+      geometry_msgs::msg::Pose front_pose = current_kinematics_->pose.pose;
+      shiftPose(front_pose, vehicle_info_.front_overhang_m + vehicle_info_.wheel_base_m);
+      debug_pose_publisher_->pushVirtualWall(front_pose);
+      debug_pose_publisher_->pushWarningMsg(front_pose, "INVALID PLANNING");
+    }
+    debug_pose_publisher_->publish();
+  }
+architecture-codes:
+  - ROS Message Issue - Message Initialization Issue
+  - Topic/Service Issue - Topic/Service Use Error Issue
+
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Operation/Calculation Issue - Violation of Physical & Kinematic Constraints Issue
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

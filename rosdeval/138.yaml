@@ -1,0 +1,51 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/kinematic_constraints
+ros_package: moveit_core
+file_path: src/kinematic_constraint.cpp
+method_name: JointConstraint::decide
+requirement: |
+  /**
+  * Evaluates whether the joint satisfies its positional constraint in the given robot state.
+  * 
+  * @param state The robot state to evaluate the constraint against.
+  * @param verbose If true, logs detailed constraint satisfaction information.
+  * @return ConstraintEvaluationResult indicating whether the constraint is satisfied and the constraint cost.
+  */
+category: utilities
+type: has_logger
+signature: |
+  ConstraintEvaluationResult JointConstraint::decide(const moveit::core::RobotState& state, bool verbose) const
+additional_information: 
+  function_related_variable: |
+    const moveit::core::JointModel* joint_model_;
+    int joint_variable_index_;
+    bool joint_is_continuous_;
+    std::string joint_variable_name_; 
+    double constraint_weight_; 
+    double joint_position_, joint_tolerance_above_, joint_tolerance_below_;   
+  function_related_function: |
+    moveit::core::RobotState::getVariablePosition(int index)
+    static double normalizeAngle(double angle)
+  function_related_class: |
+    struct ConstraintEvaluationResult
+    {
+      /**
+      * \brief Constructor
+      *
+      * @param [in] result_satisfied True if the constraint evaluated to true, otherwise false
+      * @param [in] dist The distance evaluated by the constraint
+      *
+      * @return
+      */
+      ConstraintEvaluationResult(bool result_satisfied = false, double dist = 0.0)
+        : satisfied(result_satisfied), distance(dist)
+      {
+      }
+
+      bool satisfied;  /**< \brief Whether or not the constraint or constraints were satisfied */
+      double distance; /**< \brief The distance evaluation from the constraint or constraints */
+    };
+test: test_constraint_samplers
+test_cases: 
+- JointConstraintSamplerSimple

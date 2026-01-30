@@ -1,0 +1,107 @@
+compilation.log: |
+  Starting >>> autoware_planning_evaluator
+  --- stderr: autoware_planning_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp: In member function ‘void planning_diagnostics::PlanningEvaluatorNode::onTimer()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp:288:23: error: ‘using MetricArrayMsg = using MetricArray = struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’ {aka ‘struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’} has no member named ‘metrics’
+    288 |     if (!metrics_msg_.metrics.empty()) {
+        |                       ^~~~~~~
+  gmake[2]: *** [CMakeFiles/planning_evaluator_node.dir/build.make:174: CMakeFiles/planning_evaluator_node.dir/src/planning_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:161: CMakeFiles/planning_evaluator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_planning_evaluator [14.0s, exited with code 2]
+
+  Summary: 0 packages finished [15.4s]
+    1 package failed: autoware_planning_evaluator
+    1 package had stderr output: autoware_planning_evaluator
+generate_code.cpp: |
+  void PlanningEvaluatorNode::onTimer()
+  {
+      // Measure processing start time
+      const auto start_time = std::chrono::system_clock::now();
+
+      // Poll and retrieve latest messages from subscribers
+      const auto odometry_msg = odometry_sub_.takeData();
+      const auto objects_msg = objects_sub_.takeData();
+      const auto ref_traj_msg = ref_sub_.takeData();
+      const auto traj_msg = traj_sub_.takeData();
+      const auto modified_goal_msg = modified_goal_sub_.takeData();
+
+      // Check if all required messages are available
+      if (!odometry_msg || !objects_msg || !ref_traj_msg || !traj_msg || !modified_goal_msg) {
+          return;
+      }
+
+      // Process and evaluate trajectories with available data
+      onOdometry(odometry_msg);
+      onObjects(objects_msg);
+      onReferenceTrajectory(ref_traj_msg);
+      onTrajectory(traj_msg, odometry_msg);
+      onModifiedGoal(modified_goal_msg, odometry_msg);
+
+      // Compute and publish processing time
+      const auto end_time = std::chrono::system_clock::now();
+      const auto processing_duration = std::chrono::duration<double>(end_time - start_time).count();
+      
+      auto processing_time_msg = std::make_unique<autoware_internal_debug_msgs::msg::Float64Stamped>();
+      processing_time_msg->data = processing_duration;
+      processing_time_msg->stamp = this->now();
+      processing_time_pub_->publish(std::move(processing_time_msg));
+
+      // Publish metrics if needed
+      if (!metrics_msg_.metrics.empty()) {
+          metrics_pub_->publish(metrics_msg_);
+      }
+  }
+ground_truth.cpp: |-
+  void PlanningEvaluatorNode::onTimer()
+  {
+    autoware::universe_utils::StopWatch<std::chrono::milliseconds> stop_watch;
+
+    const auto ego_state_ptr = odometry_sub_.takeData();
+    onOdometry(ego_state_ptr);
+    {
+      const auto objects_msg = objects_sub_.takeData();
+      onObjects(objects_msg);
+    }
+
+    {
+      const auto ref_traj_msg = ref_sub_.takeData();
+      onReferenceTrajectory(ref_traj_msg);
+    }
+
+    {
+      const auto traj_msg = traj_sub_.takeData();
+      onTrajectory(traj_msg, ego_state_ptr);
+    }
+    {
+      const auto modified_goal_msg = modified_goal_sub_.takeData();
+      onModifiedGoal(modified_goal_msg, ego_state_ptr);
+    }
+
+    // Publish metrics
+    metrics_msg_.stamp = now();
+    metrics_pub_->publish(metrics_msg_);
+    metrics_msg_ = MetricArrayMsg{};
+
+    // Publish ProcessingTime
+    autoware_internal_debug_msgs::msg::Float64Stamped processing_time_msg;
+    processing_time_msg.stamp = get_clock()->now();
+    processing_time_msg.data = stop_watch.toc();
+    processing_time_pub_->publish(processing_time_msg);
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Timer Issues - Timestamp Processing Errors
+
+functionality-codes:
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Domain Library Issues - Lack of Domain Library Utilization
+  - Incomplete Code - Missing one step
+  - Reference Error - Wrong method
+  - Operation/Calculation Error - Incorrect comparison operation
+
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

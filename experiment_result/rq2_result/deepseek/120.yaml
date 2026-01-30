@@ -1,0 +1,160 @@
+compilation.log: |
+  Starting >>> autoware_geography_utils
+  --- stderr: autoware_geography_utils
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp: In function ‘std::unique_ptr<lanelet::Projector> autoware::geography_utils::get_lanelet2_projector(const MapProjectorInfo&)’:
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:29:24: error: ‘const MapProjectorInfo’ {aka ‘const struct autoware_map_msgs::msg::MapProjectorInfo_<std::allocator<void> >’} has no member named ‘type’; did you mean ‘Type’?
+     29 |     if (projector_info.type == "MGRS") {
+        |                        ^~~~
+        |                        Type
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:31:31: error: ‘const MapProjectorInfo’ {aka ‘const struct autoware_map_msgs::msg::MapProjectorInfo_<std::allocator<void> >’} has no member named ‘type’; did you mean ‘Type’?
+     31 |     } else if (projector_info.type == "UTM") {
+        |                               ^~~~
+        |                               Type
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:32:28: error: ‘const MapProjectorInfo’ {aka ‘const struct autoware_map_msgs::msg::MapProjectorInfo_<std::allocator<void> >’} has no member named ‘parameters’
+     32 |         if (projector_info.parameters.empty()) {
+        |                            ^~~~~~~~~~
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:35:100: error: ‘const MapProjectorInfo’ {aka ‘const struct autoware_map_msgs::msg::MapProjectorInfo_<std::allocator<void> >’} has no member named ‘parameters’
+     35 |         return std::make_unique<lanelet::projection::UtmProjector>(lanelet::Origin({projector_info.parameters.at(0)}));
+        |                                                                                                    ^~~~~~~~~~
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:35:117: error: no matching function for call to ‘lanelet::Origin::Origin(<brace-enclosed initializer list>)’
+     35 |         return std::make_unique<lanelet::projection::UtmProjector>(lanelet::Origin({projector_info.parameters.at(0)}));
+        |                                                                                                                     ^
+  In file included from /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/include/autoware/geography_utils/lanelet2_projector.hpp:20,
+                   from /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:16:
+  /opt/ros/humble/include/lanelet2_io/Projection.h:13:3: note: candidate: ‘constexpr lanelet::Origin::Origin()’
+     13 |   Origin() = default;
+        |   ^~~~~~
+  /opt/ros/humble/include/lanelet2_io/Projection.h:13:3: note:   candidate expects 0 arguments, 1 provided
+  /opt/ros/humble/include/lanelet2_io/Projection.h:12:12: note: candidate: ‘lanelet::Origin::Origin(const lanelet::GPSPoint&)’
+     12 |   explicit Origin(const GPSPoint& position) : position{position}, isDefault{false} {}
+        |            ^~~~~~
+  /opt/ros/humble/include/lanelet2_io/Projection.h:12:35: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘const lanelet::GPSPoint&’
+     12 |   explicit Origin(const GPSPoint& position) : position{position}, isDefault{false} {}
+        |                   ~~~~~~~~~~~~~~~~^~~~~~~~
+  /opt/ros/humble/include/lanelet2_io/Projection.h:11:8: note: candidate: ‘constexpr lanelet::Origin::Origin(const lanelet::Origin&)’
+     11 | struct Origin {
+        |        ^~~~~~
+  /opt/ros/humble/include/lanelet2_io/Projection.h:11:8: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘const lanelet::Origin&’
+  /opt/ros/humble/include/lanelet2_io/Projection.h:11:8: note: candidate: ‘constexpr lanelet::Origin::Origin(lanelet::Origin&&)’
+  /opt/ros/humble/include/lanelet2_io/Projection.h:11:8: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘lanelet::Origin&&’
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:36:31: error: ‘const MapProjectorInfo’ {aka ‘const struct autoware_map_msgs::msg::MapProjectorInfo_<std::allocator<void> >’} has no member named ‘type’; did you mean ‘Type’?
+     36 |     } else if (projector_info.type == "Local") {
+        |                               ^~~~
+        |                               Type
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:37:28: error: ‘const MapProjectorInfo’ {aka ‘const struct autoware_map_msgs::msg::MapProjectorInfo_<std::allocator<void> >’} has no member named ‘parameters’
+     37 |         if (projector_info.parameters.size() < 2) {
+        |                            ^~~~~~~~~~
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:40:54: error: ‘LocalCartesianProjector’ is not a member of ‘lanelet::projection’
+     40 |         return std::make_unique<lanelet::projection::LocalCartesianProjector>(
+        |                                                      ^~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:41:45: error: ‘const MapProjectorInfo’ {aka ‘const struct autoware_map_msgs::msg::MapProjectorInfo_<std::allocator<void> >’} has no member named ‘parameters’
+     41 |             lanelet::Origin({projector_info.parameters.at(0), projector_info.parameters.at(1)}));
+        |                                             ^~~~~~~~~~
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:41:78: error: ‘const MapProjectorInfo’ {aka ‘const struct autoware_map_msgs::msg::MapProjectorInfo_<std::allocator<void> >’} has no member named ‘parameters’
+     41 |             lanelet::Origin({projector_info.parameters.at(0), projector_info.parameters.at(1)}));
+        |                                                                              ^~~~~~~~~~
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:41:95: error: no matching function for call to ‘lanelet::Origin::Origin(<brace-enclosed initializer list>)’
+     41 |             lanelet::Origin({projector_info.parameters.at(0), projector_info.parameters.at(1)}));
+        |                                                                                               ^
+  In file included from /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/include/autoware/geography_utils/lanelet2_projector.hpp:20,
+                   from /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:16:
+  /opt/ros/humble/include/lanelet2_io/Projection.h:13:3: note: candidate: ‘constexpr lanelet::Origin::Origin()’
+     13 |   Origin() = default;
+        |   ^~~~~~
+  /opt/ros/humble/include/lanelet2_io/Projection.h:13:3: note:   candidate expects 0 arguments, 1 provided
+  /opt/ros/humble/include/lanelet2_io/Projection.h:12:12: note: candidate: ‘lanelet::Origin::Origin(const lanelet::GPSPoint&)’
+     12 |   explicit Origin(const GPSPoint& position) : position{position}, isDefault{false} {}
+        |            ^~~~~~
+  /opt/ros/humble/include/lanelet2_io/Projection.h:12:35: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘const lanelet::GPSPoint&’
+     12 |   explicit Origin(const GPSPoint& position) : position{position}, isDefault{false} {}
+        |                   ~~~~~~~~~~~~~~~~^~~~~~~~
+  /opt/ros/humble/include/lanelet2_io/Projection.h:11:8: note: candidate: ‘constexpr lanelet::Origin::Origin(const lanelet::Origin&)’
+     11 | struct Origin {
+        |        ^~~~~~
+  /opt/ros/humble/include/lanelet2_io/Projection.h:11:8: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘const lanelet::Origin&’
+  /opt/ros/humble/include/lanelet2_io/Projection.h:11:8: note: candidate: ‘constexpr lanelet::Origin::Origin(lanelet::Origin&&)’
+  /opt/ros/humble/include/lanelet2_io/Projection.h:11:8: note:   no known conversion for argument 1 from ‘<brace-enclosed initializer list>’ to ‘lanelet::Origin&&’
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:42:31: error: ‘const MapProjectorInfo’ {aka ‘const struct autoware_map_msgs::msg::MapProjectorInfo_<std::allocator<void> >’} has no member named ‘type’; did you mean ‘Type’?
+     42 |     } else if (projector_info.type == "SphericalMercator") {
+        |                               ^~~~
+        |                               Type
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/lanelet2_projector.cpp:45:85: error: ‘const MapProjectorInfo’ {aka ‘const struct autoware_map_msgs::msg::MapProjectorInfo_<std::allocator<void> >’} has no member named ‘type’; did you mean ‘Type’?
+     45 |         throw std::invalid_argument("Unsupported projector type: " + projector_info.type);
+        |                                                                                     ^~~~
+        |                                                                                     Type
+  gmake[2]: *** [CMakeFiles/autoware_geography_utils.dir/build.make:104: CMakeFiles/autoware_geography_utils.dir/src/lanelet2_projector.cpp.o] Error 1
+  gmake[2]: *** Waiting for unfinished jobs....
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_geography_utils.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_geography_utils [2.33s, exited with code 2]
+
+  Summary: 0 packages finished [3.66s]
+    1 package failed: autoware_geography_utils
+    1 package had stderr output: autoware_geography_utils
+generate_code.cpp: |-
+  std::unique_ptr<lanelet::Projector> get_lanelet2_projector(const MapProjectorInfo& projector_info) {
+      if (projector_info.type == "MGRS") {
+          return std::make_unique<lanelet::projection::MGRSProjector>();
+      } else if (projector_info.type == "UTM") {
+          if (projector_info.parameters.empty()) {
+              throw std::invalid_argument("UTM projector requires zone parameter");
+          }
+          return std::make_unique<lanelet::projection::UtmProjector>(lanelet::Origin({projector_info.parameters.at(0)}));
+      } else if (projector_info.type == "Local") {
+          if (projector_info.parameters.size() < 2) {
+              throw std::invalid_argument("Local projector requires at least lat and lon parameters");
+          }
+          return std::make_unique<lanelet::projection::LocalCartesianProjector>(
+              lanelet::Origin({projector_info.parameters.at(0), projector_info.parameters.at(1)}));
+      } else if (projector_info.type == "SphericalMercator") {
+          return std::make_unique<lanelet::projection::SphericalMercatorProjector>();
+      } else {
+          throw std::invalid_argument("Unsupported projector type: " + projector_info.type);
+      }
+  }
+ground_truth.cpp: |-
+  std::unique_ptr<lanelet::Projector> get_lanelet2_projector(const MapProjectorInfo & projector_info)
+  {
+    if (projector_info.projector_type == MapProjectorInfo::LOCAL_CARTESIAN_UTM) {
+      const lanelet::GPSPoint position{
+        projector_info.map_origin.latitude, projector_info.map_origin.longitude,
+        projector_info.map_origin.altitude};
+      const lanelet::Origin origin{position};
+      const lanelet::projection::UtmProjector projector{origin};
+      return std::make_unique<lanelet::projection::UtmProjector>(projector);
+    }
+
+    if (projector_info.projector_type == MapProjectorInfo::MGRS) {
+      lanelet::projection::MGRSProjector projector{};
+      projector.setMGRSCode(projector_info.mgrs_grid);
+      return std::make_unique<lanelet::projection::MGRSProjector>(projector);
+    }
+
+    if (projector_info.projector_type == MapProjectorInfo::TRANSVERSE_MERCATOR) {
+      const lanelet::GPSPoint position{
+        projector_info.map_origin.latitude, projector_info.map_origin.longitude,
+        projector_info.map_origin.altitude};
+      const lanelet::Origin origin{position};
+      const lanelet::projection::TransverseMercatorProjector projector{origin};
+      return std::make_unique<lanelet::projection::TransverseMercatorProjector>(projector);
+    }
+
+    throw std::invalid_argument(
+      "Invalid map projector type: " + projector_info.projector_type +
+      ". Currently supported types: MGRS, LocalCartesianUTM, and TransverseMercator");
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Message Issue - Message Initialization Issue
+
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

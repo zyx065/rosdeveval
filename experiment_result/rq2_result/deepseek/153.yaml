@@ -1,0 +1,60 @@
+compilation.log: |
+  Starting >>> moveit_servo
+  Finished <<< moveit_servo [0.82s]
+
+  Summary: 1 package finished [1.27s]
+generate_code.cpp: "void enforceVelocityLimits(const moveit::core::JointModelGroup*\
+  \ joint_model_group, const double publish_period,\n                           sensor_msgs::msg::JointState&\
+  \ joint_state, const double override_velocity_scaling_factor)\n{\n  if (joint_model_group\
+  \ == nullptr || joint_state.velocity.empty() || joint_state.position.empty())\n\
+  \    return;\n\n  const size_t num_joints = joint_model_group->getActiveJointModels().size();\n\
+  \  if (joint_state.velocity.size() != num_joints || joint_state.position.size()\
+  \ != num_joints)\n    return;\n\n  Eigen::VectorXd velocities(num_joints);\n  for\
+  \ (size_t i = 0; i < num_joints; ++i)\n    velocities[i] = joint_state.velocity[i];\n\
+  \n  double scaling_factor = override_velocity_scaling_factor > 0.0 ? \n        \
+  \                  override_velocity_scaling_factor : \n                       \
+  \   getVelocityScalingFactor(joint_model_group, velocities);\n\n  // Apply scaling\
+  \ to velocities\n  for (size_t i = 0; i < num_joints; ++i)\n    joint_state.velocity[i]\
+  \ *= scaling_factor;\n\n  // Update positions based on scaled velocities\n  for\
+  \ (size_t i = 0; i < num_joints; ++i)\n    joint_state.position[i] += joint_state.velocity[i]\
+  \ * publish_period;\n}"
+ground_truth.cpp: |-
+  void enforceVelocityLimits(const moveit::core::JointModelGroup* joint_model_group, const double publish_period,
+                             sensor_msgs::msg::JointState& joint_state, const double override_velocity_scaling_factor)
+  {
+    // Get the velocity scaling factor
+    Eigen::VectorXd velocity =
+        Eigen::Map<Eigen::VectorXd, Eigen::Unaligned>(joint_state.velocity.data(), joint_state.velocity.size());
+    double velocity_scaling_factor = override_velocity_scaling_factor;
+    // if the override velocity scaling factor is approximately zero then the user is not overriding the value.
+    if (override_velocity_scaling_factor < 0.01)
+      velocity_scaling_factor = getVelocityScalingFactor(joint_model_group, velocity);
+
+    // Take a smaller step if the velocity scaling factor is less than 1
+    if (velocity_scaling_factor < 1)
+    {
+      Eigen::VectorXd velocity_residuals = (1 - velocity_scaling_factor) * velocity;
+      Eigen::VectorXd positions =
+          Eigen::Map<Eigen::VectorXd, Eigen::Unaligned>(joint_state.position.data(), joint_state.position.size());
+      positions -= velocity_residuals * publish_period;
+
+      velocity *= velocity_scaling_factor;
+      // Back to sensor_msgs type
+      joint_state.velocity = std::vector<double>(velocity.data(), velocity.data() + velocity.size());
+      joint_state.position = std::vector<double>(positions.data(), positions.data() + positions.size());
+    }
+  }
+architecture-codes:
+  - ROS Message Issue - Message Operation Issue
+
+functionality-codes:
+  - Condition Issue - Conditional Check Missing Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+  - Constant Value Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

@@ -1,0 +1,54 @@
+compilation.log: |
+  Starting >>> autoware_mission_planner_universe
+  --- stderr: autoware_mission_planner_universe
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_mission_planner_universe/src/lanelet2_plugins/utility_functions.cpp: In function ‘std::vector<geometry_msgs::msg::Point_<std::allocator<void> >, std::allocator<geometry_msgs::msg::Point_<std::allocator<void> > > > autoware::mission_planner_universe::lanelet2::convertCenterlineToPoints(const lanelet::Lanelet&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_mission_planner_universe/src/lanelet2_plugins/utility_functions.cpp:60:86: error: ‘const class lanelet::Lanelet’ has no member named ‘regularCenterline’; did you mean ‘setCenterline’?
+     60 |     auto centerline = lanelet.hasCustomCenterline() ? lanelet.centerline() : lanelet.regularCenterline();
+        |                                                                                      ^~~~~~~~~~~~~~~~~
+        |                                                                                      setCenterline
+  gmake[2]: *** [CMakeFiles/autoware_mission_planner_universe_lanelet2_plugins.dir/build.make:90: CMakeFiles/autoware_mission_planner_universe_lanelet2_plugins.dir/src/lanelet2_plugins/utility_functions.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:298: CMakeFiles/autoware_mission_planner_universe_lanelet2_plugins.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_mission_planner_universe [9.50s, exited with code 2]
+
+  Summary: 0 packages finished [10.9s]
+    1 package failed: autoware_mission_planner_universe
+    1 package had stderr output: autoware_mission_planner_universe
+generate_code.cpp: |-
+  std::vector<geometry_msgs::msg::Point> convertCenterlineToPoints(const lanelet::Lanelet & lanelet)
+  {
+      std::vector<geometry_msgs::msg::Point> points;
+
+      // Check if the lanelet has a centerline
+      if (!lanelet.hasCustomCenterline() && lanelet.centerline().empty()) {
+          return points; // Return an empty vector if no centerline exists
+      }
+
+      // Retrieve the centerline
+      auto centerline = lanelet.hasCustomCenterline() ? lanelet.centerline() : lanelet.regularCenterline();
+
+      // Iterate through the centerline points and convert them to geometry_msgs::msg::Point
+      for (const auto & point : centerline) {
+          geometry_msgs::msg::Point geometry_point;
+          geometry_point.x = point.x();
+          geometry_point.y = point.y();
+          geometry_point.z = point.z();
+          points.push_back(geometry_point);
+      }
+
+      return points;
+  }
+ground_truth.cpp: |-
+  std::vector<geometry_msgs::msg::Point> convertCenterlineToPoints(const lanelet::Lanelet & lanelet)
+  {
+    std::vector<geometry_msgs::msg::Point> centerline_points;
+    for (const auto & point : lanelet.centerline()) {
+      geometry_msgs::msg::Point center_point;
+      center_point.x = point.basicPoint().x();
+      center_point.y = point.basicPoint().y();
+      center_point.z = point.basicPoint().z();
+      centerline_points.push_back(center_point);
+    }
+    return centerline_points;
+  }

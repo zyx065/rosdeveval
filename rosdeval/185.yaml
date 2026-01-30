@@ -1,0 +1,25 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_route
+ros_package: nav2_route
+file_path: include/nav2_route/utils.hpp
+method_name: toMsg
+requirement: |
+  /**
+  * @brief Converts a nav2_route::Route object into a nav2_msgs::msg::Route message.
+  * 
+  * @param[in] route The internal route representation to convert.
+  * @param[in] frame The frame ID to set in the message header.
+  * @param[in] now The timestamp to set in the message header.
+  * @return nav2_msgs::msg::Route The populated ROS 2 message containing route data.
+  */
+category: utilities
+type: has_message
+signature: |
+  inline nav2_msgs::msg::Route toMsg(
+    const nav2_route::Route & route, const std::string & frame, const rclcpp::Time & now)
+additional_information: []
+test: test_utils_and_types
+test_cases: 
+- test_to_msg_conversions
+- test_to_visualization_msg_conversion

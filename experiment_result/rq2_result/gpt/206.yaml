@@ -1,0 +1,36 @@
+compilation.log: |
+  Starting >>> nav2_smac_planner
+  Finished <<< nav2_smac_planner [0.84s]
+
+  Summary: 1 package finished [1.08s]
+generate_code.cpp: |-
+  float NodeLattice::getHeuristicCost(
+    const Coordinates & node_coords,
+    const Coordinates & goal_coords,
+    const nav2_costmap_2d::Costmap2D * costmap)
+  {
+    // Define a cost penalty for obstacles
+    const double cost_penalty = 10.0;
+
+    // Calculate the obstacle heuristic cost
+    float obstacle_heuristic = NodeHybrid::getObstacleHeuristic(node_coords, goal_coords, cost_penalty);
+
+    // Calculate the distance heuristic cost
+    float distance_heuristic = getDistanceHeuristic(node_coords, goal_coords, obstacle_heuristic);
+
+    // Return the maximum of obstacle heuristic and distance heuristic costs
+    return std::max(obstacle_heuristic, distance_heuristic);
+  }
+ground_truth.cpp: |-
+  float NodeLattice::getHeuristicCost(
+    const Coordinates & node_coords,
+    const Coordinates & goal_coords,
+    const nav2_costmap_2d::Costmap2D * costmap)
+  {
+    // get obstacle heuristic value
+    const float obstacle_heuristic = getObstacleHeuristic(
+      node_coords, goal_coords, motion_table.cost_penalty);
+    const float distance_heuristic =
+      getDistanceHeuristic(node_coords, goal_coords, obstacle_heuristic);
+    return std::max(obstacle_heuristic, distance_heuristic);
+  }

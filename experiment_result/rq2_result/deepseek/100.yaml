@@ -1,0 +1,162 @@
+compilation.log: |
+  Starting >>> autoware_motion_utils
+  --- stderr: autoware_motion_utils
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp: In function ‘tier4_planning_msgs::msg::PathPointWithLaneId autoware::motion_utils::calcInterpolatedPoint(const PathWithLaneId&, const Pose&, bool, double, double)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:112:80: error: no matching function for call to ‘calcInterpolatedPose(const std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >&, const double&)’
+    112 |   const auto interpolated_pose = autoware::universe_utils::calcInterpolatedPose(points, target_length);
+        |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/include/autoware/motion_utils/trajectory/interpolation.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:15:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:512:26: note: candidate: ‘template<class Pose1, class Pose2> geometry_msgs::msg::Pose autoware::universe_utils::calcInterpolatedPose(const Pose1&, const Pose2&, double, bool)’
+    512 | geometry_msgs::msg::Pose calcInterpolatedPose(
+        |                          ^~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:512:26: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:112:80: note:   candidate expects 4 arguments, 2 provided
+    112 |   const auto interpolated_pose = autoware::universe_utils::calcInterpolatedPose(points, target_length);
+        |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/include/autoware/motion_utils/trajectory/interpolation.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:15:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp: In instantiation of ‘geometry_msgs::msg::Pose autoware::universe_utils::calcInterpolatedPose(const Pose1&, const Pose2&, double, bool) [with Pose1 = std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >; Pose2 = long unsigned int; geometry_msgs::msg::Pose = geometry_msgs::msg::Pose_<std::allocator<void> >]’:
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:109:91:   required from here
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:532:51: error: operands to ‘?:’ have different types ‘const long unsigned int’ and ‘const std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >’
+    532 |       const auto & base_pose = is_driving_forward ? dst_pose : src_pose;
+        |                                ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp: In instantiation of ‘geometry_msgs::msg::Point autoware::universe_utils::getPoint(const T&) [with T = std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >; geometry_msgs::msg::Point = geometry_msgs::msg::Point_<std::allocator<void> >]’:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:520:35:   required from ‘geometry_msgs::msg::Pose autoware::universe_utils::calcInterpolatedPose(const Pose1&, const Pose2&, double, bool) [with Pose1 = std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >; Pose2 = long unsigned int; geometry_msgs::msg::Pose = geometry_msgs::msg::Pose_<std::allocator<void> >]’
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:109:91:   required from here
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:104:64: error: ‘const class std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >’ has no member named ‘x’
+    104 |   return geometry_msgs::build<geometry_msgs::msg::Point>().x(p.x).y(p.y).z(p.z);
+        |                                                              ~~^
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:104:71: error: ‘const class std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >’ has no member named ‘y’
+    104 |   return geometry_msgs::build<geometry_msgs::msg::Point>().x(p.x).y(p.y).z(p.z);
+        |                                                                     ~~^
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:104:78: error: ‘const class std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >’ has no member named ‘z’
+    104 |   return geometry_msgs::build<geometry_msgs::msg::Point>().x(p.x).y(p.y).z(p.z);
+        |                                                                            ~~^
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp: In instantiation of ‘geometry_msgs::msg::Point autoware::universe_utils::getPoint(const T&) [with T = long unsigned int; geometry_msgs::msg::Point = geometry_msgs::msg::Point_<std::allocator<void> >]’:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:520:55:   required from ‘geometry_msgs::msg::Pose autoware::universe_utils::calcInterpolatedPose(const Pose1&, const Pose2&, double, bool) [with Pose1 = std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >; Pose2 = long unsigned int; geometry_msgs::msg::Pose = geometry_msgs::msg::Pose_<std::allocator<void> >]’
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:109:91:   required from here
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:104:64: error: request for member ‘x’ in ‘p’, which is of non-class type ‘const long unsigned int’
+    104 |   return geometry_msgs::build<geometry_msgs::msg::Point>().x(p.x).y(p.y).z(p.z);
+        |                                                              ~~^
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:104:71: error: request for member ‘y’ in ‘p’, which is of non-class type ‘const long unsigned int’
+    104 |   return geometry_msgs::build<geometry_msgs::msg::Point>().x(p.x).y(p.y).z(p.z);
+        |                                                                     ~~^
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:104:78: error: request for member ‘z’ in ‘p’, which is of non-class type ‘const long unsigned int’
+    104 |   return geometry_msgs::build<geometry_msgs::msg::Point>().x(p.x).y(p.y).z(p.z);
+        |                                                                            ~~^
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp: In instantiation of ‘geometry_msgs::msg::Pose autoware::universe_utils::getPose(const T&) [with T = long unsigned int; geometry_msgs::msg::Pose = geometry_msgs::msg::Pose_<std::allocator<void> >]’:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:528:40:   required from ‘geometry_msgs::msg::Pose autoware::universe_utils::calcInterpolatedPose(const Pose1&, const Pose2&, double, bool) [with Pose1 = std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >; Pose2 = long unsigned int; geometry_msgs::msg::Pose = geometry_msgs::msg::Pose_<std::allocator<void> >]’
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:109:91:   required from here
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:152:27: error: static assertion failed: Only specializations of getPose can be used.
+    152 |   static_assert(sizeof(T) == 0, "Only specializations of getPose can be used.");
+        |                 ~~~~~~~~~~^~~~
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:152:27: note: ‘(sizeof (long unsigned int) == 0)’ evaluates to false
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp: In instantiation of ‘geometry_msgs::msg::Pose autoware::universe_utils::getPose(const T&) [with T = std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >; geometry_msgs::msg::Pose = geometry_msgs::msg::Pose_<std::allocator<void> >]’:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:530:40:   required from ‘geometry_msgs::msg::Pose autoware::universe_utils::calcInterpolatedPose(const Pose1&, const Pose2&, double, bool) [with Pose1 = std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >; Pose2 = long unsigned int; geometry_msgs::msg::Pose = geometry_msgs::msg::Pose_<std::allocator<void> >]’
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_motion_utils/src/trajectory/interpolation.cpp:109:91:   required from here
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:152:27: error: static assertion failed: Only specializations of getPose can be used.
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:152:27: note: ‘(sizeof (std::vector<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >, std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > > >) == 0)’ evaluates to false
+  gmake[2]: *** [CMakeFiles/autoware_motion_utils.dir/build.make:146: CMakeFiles/autoware_motion_utils.dir/src/trajectory/interpolation.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_motion_utils.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_motion_utils [4.54s, exited with code 2]
+
+  Summary: 0 packages finished [5.80s]
+    1 package failed: autoware_motion_utils
+    1 package had stderr output: autoware_motion_utils
+generate_code.cpp: "PathPointWithLaneId calcInterpolatedPoint(\n  const PathWithLaneId\
+  \ & path, const geometry_msgs::msg::Pose & target_pose,\n  const bool use_zero_order_hold_for_twist,\
+  \ const double dist_threshold, const double yaw_threshold)\n{\n  // Find the nearest\
+  \ segment index\n  const size_t seg_idx = autoware::motion_utils::findFirstNearestSegmentIndexWithSoftConstraints(\n\
+  \    path.points, target_pose, dist_threshold, yaw_threshold);\n\n  // Calculate\
+  \ the target length (distance along the path)\n  const auto & points = path.points;\n\
+  \  const auto & pt1 = points.at(seg_idx).point.pose.position;\n  const auto & pt2\
+  \ = points.at(seg_idx + 1).point.pose.position;\n  const double seg_length = autoware::universe_utils::point2tfVector(pt1,\
+  \ pt2).length();\n  const double target_length = seg_length * autoware::universe_utils::calcInterpolatedPose(points,\
+  \ seg_idx, 0.0).position.x;\n\n  // Interpolate pose\n  const auto interpolated_pose\
+  \ = autoware::universe_utils::calcInterpolatedPose(points, target_length);\n\n \
+  \ // Create result point\n  PathPointWithLaneId result;\n  result.point.pose = interpolated_pose;\n\
+  \n  // Interpolate twist if needed\n  if (use_zero_order_hold_for_twist) {\n   \
+  \ result.point.longitudinal_velocity_mps = points.at(seg_idx).point.longitudinal_velocity_mps;\n\
+  \    result.point.lateral_velocity_mps = points.at(seg_idx).point.lateral_velocity_mps;\n\
+  \    result.point.heading_rate_rps = points.at(seg_idx).point.heading_rate_rps;\n\
+  \  } else {\n    const double ratio = (target_length - points.at(seg_idx).point.pose.position.x)\
+  \ / \n                         (points.at(seg_idx + 1).point.pose.position.x - points.at(seg_idx).point.pose.position.x);\n\
+  \    result.point.longitudinal_velocity_mps = autoware::interpolation::lerp(\n \
+  \     points.at(seg_idx).point.longitudinal_velocity_mps, \n      points.at(seg_idx\
+  \ + 1).point.longitudinal_velocity_mps, ratio);\n    result.point.lateral_velocity_mps\
+  \ = autoware::interpolation::lerp(\n      points.at(seg_idx).point.lateral_velocity_mps,\
+  \ \n      points.at(seg_idx + 1).point.lateral_velocity_mps, ratio);\n    result.point.heading_rate_rps\
+  \ = autoware::interpolation::lerp(\n      points.at(seg_idx).point.heading_rate_rps,\
+  \ \n      points.at(seg_idx + 1).point.heading_rate_rps, ratio);\n  }\n\n  // Copy\
+  \ lane_ids from the nearest point\n  result.lane_ids = points.at(seg_idx).lane_ids;\n\
+  \n  return result;\n}"
+ground_truth.cpp: |-
+  PathPointWithLaneId calcInterpolatedPoint(
+    const PathWithLaneId & path, const geometry_msgs::msg::Pose & target_pose,
+    const bool use_zero_order_hold_for_twist, const double dist_threshold, const double yaw_threshold)
+  {
+    if (path.points.empty()) {
+      PathPointWithLaneId interpolated_point{};
+      interpolated_point.point.pose = target_pose;
+      return interpolated_point;
+    }
+    if (path.points.size() == 1) {
+      return path.points.front();
+    }
+
+    const size_t segment_idx =
+      autoware::motion_utils::findFirstNearestSegmentIndexWithSoftConstraints(
+        path.points, target_pose, dist_threshold, yaw_threshold);
+
+    // Calculate interpolation ratio
+    const auto & curr_pt = path.points.at(segment_idx);
+    const auto & next_pt = path.points.at(segment_idx + 1);
+    const auto v1 = autoware::universe_utils::point2tfVector(curr_pt.point, next_pt.point);
+    const auto v2 = autoware::universe_utils::point2tfVector(curr_pt.point, target_pose);
+    if (v1.length2() < 1e-3) {
+      return curr_pt;
+    }
+
+    const double ratio = v1.dot(v2) / v1.length2();
+    const double clamped_ratio = std::clamp(ratio, 0.0, 1.0);
+
+    // Interpolate
+    PathPointWithLaneId interpolated_point{};
+
+    // pose interpolation
+    interpolated_point.point.pose =
+      autoware::universe_utils::calcInterpolatedPose(curr_pt.point, next_pt.point, clamped_ratio);
+
+    // twist interpolation
+    if (use_zero_order_hold_for_twist) {
+      interpolated_point.point.longitudinal_velocity_mps = curr_pt.point.longitudinal_velocity_mps;
+      interpolated_point.point.lateral_velocity_mps = curr_pt.point.lateral_velocity_mps;
+    } else {
+      interpolated_point.point.longitudinal_velocity_mps = autoware::interpolation::lerp(
+        curr_pt.point.longitudinal_velocity_mps, next_pt.point.longitudinal_velocity_mps,
+        clamped_ratio);
+      interpolated_point.point.lateral_velocity_mps = autoware::interpolation::lerp(
+        curr_pt.point.lateral_velocity_mps, next_pt.point.lateral_velocity_mps, clamped_ratio);
+    }
+
+    // heading rate interpolation
+    interpolated_point.point.heading_rate_rps = autoware::interpolation::lerp(
+      curr_pt.point.heading_rate_rps, next_pt.point.heading_rate_rps, clamped_ratio);
+
+    return interpolated_point;
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Condition Issue - Conditional Check Missing Issue
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Domain Library Issue - Domain Specific Library Utilization Error
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries

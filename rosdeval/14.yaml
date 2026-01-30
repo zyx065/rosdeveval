@@ -1,0 +1,49 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_detected_object_validation
+ros_package: autoware_detected_object_validation
+file_path: src/lanelet_filter/lanelet_filter.cpp
+method_name: ObjectLaneletFilterNode::ObjectLaneletFilterNode
+requirement: |
+  /**
+  * @brief Filters a detected object based on lanelet map criteria.
+  * @param transformed_object The object transformed into the map frame.
+  * @param input_object The original input object in its original frame.
+  * @param local_rtree R-tree containing lanelet bounding boxes for spatial queries.
+  * @param output_object_msg Output message where filtered objects are accumulated.
+  * @return True if the object passed all filters and was added to output, false otherwise.
+  */
+category: ros_architecture
+type: has_topic,has_parameter,has_message
+signature: |
+  ObjectLaneletFilterNode::ObjectLaneletFilterNode(const rclcpp::NodeOptions & node_options)
+  : Node("object_lanelet_filter_node", node_options),
+    tf_buffer_(this->get_clock()),
+    tf_listener_(tf_buffer_)
+additional_information: 
+  function_related_variable: |
+    utils::FilterTargetLabel filter_target_;
+    struct FilterSettings
+    {
+      bool polygon_overlap_filter;
+      bool lanelet_direction_filter;
+      double lanelet_direction_filter_velocity_yaw_threshold;
+      double lanelet_direction_filter_object_speed_threshold;
+      bool debug;
+      double lanelet_extra_margin;
+      bool use_height_threshold;
+      double max_height_threshold = std::numeric_limits<double>::infinity();
+      double min_height_threshold = -std::numeric_limits<double>::infinity();
+    } filter_settings_;
+    rclcpp::Subscription<autoware_map_msgs::msg::LaneletMapBin>::SharedPtr map_sub_;
+    rclcpp::Subscription<autoware_perception_msgs::msg::DetectedObjects>::SharedPtr object_sub_;
+    rclcpp::Publisher<autoware_perception_msgs::msg::DetectedObjects>::SharedPtr object_pub_;
+    std::unique_ptr<autoware::universe_utils::DebugPublisher> debug_publisher_{nullptr};
+    std::unique_ptr<autoware::universe_utils::PublishedTimePublisher> published_time_publisher_;
+    std::unique_ptr<autoware::universe_utils::StopWatch<std::chrono::milliseconds>> stop_watch_ptr_;
+    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr viz_pub_;
+  function_related_function: |
+    void mapCallback(const autoware_map_msgs::msg::LaneletMapBin::ConstSharedPtr);
+    void objectCallback(const autoware_perception_msgs::msg::DetectedObjects::ConstSharedPtr);
+test: object_lanelet_filter_tests
+test_cases: []

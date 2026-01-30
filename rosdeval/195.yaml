@@ -1,0 +1,57 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_costmap_2d
+ros_package: nav2_costmap_2d
+file_path: plugins/costmap_filters/binary_filter.cpp
+method_name: BinaryFilter::process
+requirement: |
+  /**
+  * @brief Processes the binary filter state based on the robot's position in the filter mask.
+  * 
+  * Transforms the robot's pose to the mask frame and checks the corresponding filter mask cell.
+  * Updates the binary state if the mask value exceeds the flip threshold.
+  * 
+  * @param[in] pose The current robot pose in the global frame to check against the filter mask.
+  */
+category: utilities
+type: has_logger,has_message
+signature: |
+  void BinaryFilter::process(
+    nav2_costmap_2d::Costmap2D & /*master_grid*/,
+    int /*min_i*/, int /*min_j*/, int /*max_i*/, int /*max_j*/,
+    const geometry_msgs::msg::Pose2D & pose)
+additional_information: 
+  function_related_variable: |
+    // Working with filter info and mask
+    rclcpp::Subscription<nav2_msgs::msg::CostmapFilterInfo>::SharedPtr filter_info_sub_;
+    rclcpp::Subscription<nav_msgs::msg::OccupancyGrid>::SharedPtr mask_sub_;
+
+    rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Bool>::SharedPtr binary_state_pub_;
+
+    nav_msgs::msg::OccupancyGrid::SharedPtr filter_mask_;
+
+    std::string mask_frame_;  // Frame where mask located in
+    std::string global_frame_;  // Frame of currnet layer (master_grid)
+
+    double base_, multiplier_;
+    // Filter values higher than this threshold,
+    // will set binary state to non-default
+    double flip_threshold_;
+
+    bool default_state_;  // Default Binary Filter state
+    bool binary_state_;  // Current Binary Filter state
+  function_related_function: |
+    inline int8_t getMaskData(
+      nav_msgs::msg::OccupancyGrid::ConstSharedPtr filter_mask,
+      const unsigned int mx, const unsigned int my) const
+    transformPose(
+      costmap_ros_->getTfBuffer(), costmap_ros_->getGlobalFrameID(),
+      end_pose_, transformed_end_pose, tolerance);
+    void BinaryFilter::changeState(const bool state)
+test: binary_filter_test
+test_cases: 
+- testIncorrectFrame
+- testResetState
+- testDifferentFrame
+- testIncorrectFilterType
+- testMaskRePublish

@@ -1,0 +1,121 @@
+compilation.log: |
+  Starting >>> autoware_obstacle_collision_checker
+  --- stderr: autoware_obstacle_collision_checker
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker_node.cpp: In member function ‘void autoware::obstacle_collision_checker::ObstacleCollisionCheckerNode::on_timer()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker_node.cpp:188:35: error: too few arguments to function ‘autoware::obstacle_collision_checker::Output autoware::obstacle_collision_checker::check_for_collisions(const autoware::obstacle_collision_checker::Input&)’
+    188 |     output_ = check_for_collisions();
+        |               ~~~~~~~~~~~~~~~~~~~~^~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/include/autoware/obstacle_collision_checker/obstacle_collision_checker_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker_node.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/include/autoware/obstacle_collision_checker/obstacle_collision_checker.hpp:67:8: note: declared here
+     67 | Output check_for_collisions(const Input & input);
+        |        ^~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker_node.cpp:193:41: error: ‘create_debug_markers’ was not declared in this scope
+    193 |             "debug/obstacle_collision", create_debug_markers());
+        |                                         ^~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker_node.cpp:200:34: error: cannot convert ‘std::chrono::duration<long int, std::ratio<1, 1000> >’ to ‘const std::map<std::__cxx11::basic_string<char>, double>&’
+    200 |         time_publisher_->publish(processing_time);
+        |                                  ^~~~~~~~~~~~~~~
+        |                                  |
+        |                                  std::chrono::duration<long int, std::ratio<1, 1000> >
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/include/autoware/obstacle_collision_checker/obstacle_collision_checker_node.hpp:22,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker_node.cpp:15:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/processing_time_publisher.hpp:39:54: note:   initializing argument 1 of ‘void autoware::universe_utils::ProcessingTimePublisher::publish(const std::map<std::__cxx11::basic_string<char>, double>&)’
+     39 |   void publish(const std::map<std::string, double> & processing_time_map)
+        |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/obstacle_collision_checker.dir/build.make:104: CMakeFiles/obstacle_collision_checker.dir/src/obstacle_collision_checker_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/obstacle_collision_checker.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_obstacle_collision_checker [8.69s, exited with code 2]
+
+  Summary: 0 packages finished [10.1s]
+    1 package failed: autoware_obstacle_collision_checker
+    1 package had stderr output: autoware_obstacle_collision_checker
+generate_code.cpp: |-
+  void ObstacleCollisionCheckerNode::on_timer()
+  {
+      // Start processing time measurement
+      auto processing_time_start = std::chrono::system_clock::now();
+
+      // Check if input data is ready and not timed out
+      if (!is_data_ready() || is_data_timeout()) {
+          // If data is not ready or has timed out, reset output and return
+          output_ = Output();
+          return;
+      }
+
+      // Perform collision checks and update output
+      output_ = check_for_collisions();
+
+      // Publish debug information if debug publisher is available
+      if (debug_publisher_) {
+          debug_publisher_->publish<visualization_msgs::msg::MarkerArray>(
+              "debug/obstacle_collision", create_debug_markers());
+      }
+
+      // Measure and publish processing time
+      if (time_publisher_) {
+          auto processing_time = std::chrono::duration_cast<std::chrono::milliseconds>(
+              std::chrono::system_clock::now() - processing_time_start);
+          time_publisher_->publish(processing_time);
+      }
+
+      // Update diagnostic status
+      updater_.force_update();
+  }
+ground_truth.cpp: |-
+  void ObstacleCollisionCheckerNode::on_timer()
+  {
+    current_pose_ = self_pose_listener_->getCurrentPose();
+    if (obstacle_pointcloud_) {
+      const auto & header = obstacle_pointcloud_->header;
+      try {
+        obstacle_transform_ = transform_listener_->getTransform(
+          "map", header.frame_id, header.stamp, rclcpp::Duration::from_seconds(0.01));
+      } catch (tf2::TransformException & ex) {
+        RCLCPP_INFO(
+          this->get_logger(), "Could not transform map to %s: %s", header.frame_id.c_str(),
+          ex.what());
+        return;
+      }
+    }
+
+    if (!is_data_ready()) {
+      return;
+    }
+
+    if (is_data_timeout()) {
+      return;
+    }
+
+    input_.current_pose = current_pose_;
+    input_.obstacle_pointcloud = obstacle_pointcloud_;
+    input_.obstacle_transform = obstacle_transform_;
+    input_.reference_trajectory = reference_trajectory_;
+    input_.predicted_trajectory = predicted_trajectory_;
+    input_.current_twist = current_twist_;
+    input_.vehicle_info = vehicle_info_;
+
+    output_ = check_for_collisions(input_);
+
+    updater_.force_update();
+
+    debug_publisher_->publish(
+      "marker_array", create_marker_array(output_, current_pose_->pose.position.z, this->now()));
+
+    time_publisher_->publish(output_.processing_time_map);
+  }
+architecture-codes:
+  - ROS Message Related Issues - Improper Message Type Usage Issue
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - Topic/Service Related Issues - Callback Function Binding Signature Mismatch
+functionality-codes:
+  - Incomplete Code - Missing Multiple Steps
+  - Reference Error - Undefined Name
+  - Reference Error - Wrong Method
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient Understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of Familiarity with the Existing Codebase

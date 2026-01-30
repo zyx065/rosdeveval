@@ -1,0 +1,26 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter
+ros_package: autoware_radar_crossing_objects_noise_filter
+file_path: src/radar_crossing_objects_noise_filter_node.cpp
+method_name: RadarCrossingObjectsNoiseFilterNode::isNoise
+requirement: |
+  /**
+  * Determines if a detected radar object should be classified as noise.
+  * 
+  * @param object The detected object to evaluate for noise classification.
+  * @return True if the object is considered noise, false otherwise.
+  */
+category: utilities
+type: has_domain_library,has_message,has_parameter
+signature: |
+  bool RadarCrossingObjectsNoiseFilterNode::isNoise(const DetectedObject & object)
+additional_information: 
+  function_related_class: |
+    namespace autoware::universe_utils{
+      inline double calcNorm(const geometry_msgs::msg::Vector3 & v)
+      inline double normalizeRadian(const double rad, const double min_rad = -pi)
+    }
+test: test_radar_crossing_objects_filter_is_noise
+test_cases: 
+- IsNoise

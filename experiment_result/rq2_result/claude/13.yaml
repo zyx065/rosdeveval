@@ -1,0 +1,64 @@
+compilation.log: |
+  Starting >>> autoware_compare_map_segmentation
+  --- stderr: autoware_compare_map_segmentation
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/node.cpp: In member function ‘virtual void autoware::compare_map_segmentation::DistanceBasedStaticMapLoader::onMapCallback(sensor_msgs::msg::PointCloud2_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/node.cpp:45:5: error: ‘map_frame_id_’ was not declared in this scope
+     45 |     map_frame_id_ = map->header.frame_id;
+        |     ^~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_compare_map_segmentation.dir/build.make:76: CMakeFiles/autoware_compare_map_segmentation.dir/src/distance_based_compare_map_filter/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:173: CMakeFiles/autoware_compare_map_segmentation.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_compare_map_segmentation [9.78s, exited with code 2]
+
+  Summary: 0 packages finished [11.2s]
+    1 package failed: autoware_compare_map_segmentation
+    1 package had stderr output: autoware_compare_map_segmentation
+generate_code.cpp: |-
+  void DistanceBasedStaticMapLoader::onMapCallback(
+    const sensor_msgs::msg::PointCloud2::ConstSharedPtr map)
+  {
+      // Convert ROS PointCloud2 message to PCL PointCloud
+      pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_cloud(new pcl::PointCloud<pcl::PointXYZ>());
+      pcl::fromROSMsg(*map, *pcl_cloud);
+
+      // Store the map point cloud
+      map_ptr_ = pcl_cloud;
+
+      // Create KD-tree for efficient nearest neighbor searches
+      tree_ = pcl::search::Search<pcl::PointXYZ>::Ptr(new pcl::search::KdTree<pcl::PointXYZ>());
+      tree_->setInputCloud(map_ptr_);
+
+      // Store the map frame ID for potential transform lookups
+      map_frame_id_ = map->header.frame_id;
+  }
+ground_truth.cpp: |-
+  void DistanceBasedStaticMapLoader::onMapCallback(
+    const sensor_msgs::msg::PointCloud2::ConstSharedPtr map)
+  {
+    pcl::PointCloud<pcl::PointXYZ> map_pcl;
+    pcl::fromROSMsg<pcl::PointXYZ>(*map, map_pcl);
+    const auto map_pcl_ptr = pcl::make_shared<pcl::PointCloud<pcl::PointXYZ>>(map_pcl);
+    map_ptr_ = map_pcl_ptr;
+    *tf_map_input_frame_ = map_ptr_->header.frame_id;
+    if (!tree_) {
+      if (map_ptr_->isOrganized()) {
+        tree_.reset(new pcl::search::OrganizedNeighbor<pcl::PointXYZ>());
+      } else {
+        tree_.reset(new pcl::search::KdTree<pcl::PointXYZ>(false));
+      }
+    }
+    tree_->setInputCloud(map_ptr_);
+    is_initialized_.store(true, std::memory_order_release);
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+functionality-codes:
+  - Meet Requirement - No
+  - Reference Error - Undefined Name
+  - Conditional Checks Issues - Conditional Check Missing
+  - Incomplete Code - Missing Multiple Steps
+root-cause-codes:
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements

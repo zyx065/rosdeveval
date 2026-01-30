@@ -1,0 +1,31 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_scenario_selector
+ros_package: autoware_scenario_selector
+file_path: src/node.cpp
+method_name: ScenarioSelectorNode::onTimer
+requirement: |
+  /**
+  * @brief Timer callback that selects and publishes the current driving scenario.
+  * 
+  * Updates internal data, selects appropriate scenario based on vehicle position if none is active,
+  * and publishes the current scenario state along with processing time metrics.
+  * 
+  * @param None
+  */
+category: ros_architecture
+type: has_topic,has_timer,has_parameter,has_message
+signature: |
+  void ScenarioSelectorNode::onTimer()
+additional_information: 
+  function_related_function: |
+    void updateData();
+    bool isDataReady();
+    std::string selectScenarioByPosition();
+    void updateCurrentScenario();
+  function_related_variable: |
+    std::string current_scenario_;  
+    rclcpp::Publisher<tier4_planning_msgs::msg::Scenario>::SharedPtr pub_scenario_;
+    rclcpp::Publisher<tier4_debug_msgs::msg::Float64Stamped>::SharedPtr pub_processing_time_;
+test: autoware_scenario_selector
+test_cases: []

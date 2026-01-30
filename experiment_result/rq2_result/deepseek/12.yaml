@@ -1,0 +1,61 @@
+compilation.log: |
+  Starting >>> autoware_map_loader
+  --- stderr: autoware_map_loader
+  /workspace/repos/autoware/src/universe/autoware.universe/map/autoware_map_loader/src/pointcloud_map_loader/differential_map_loader_module.cpp: In lambda function:
+  /workspace/repos/autoware/src/universe/autoware.universe/map/autoware_map_loader/src/pointcloud_map_loader/differential_map_loader_module.cpp:33:44: error: ‘using element_type = struct autoware_map_msgs::srv::GetDifferentialPointCloudMap_Request_<std::allocator<void> >’ {aka ‘struct autoware_map_msgs::srv::GetDifferentialPointCloudMap_Request_<std::allocator<void> >’} has no member named ‘cell_ids’
+     33 |       for (const auto & cell_id : request->cell_ids) {
+        |                                            ^~~~~~~~
+  gmake[2]: *** [CMakeFiles/pointcloud_map_loader_node.dir/build.make:118: CMakeFiles/pointcloud_map_loader_node.dir/src/pointcloud_map_loader/differential_map_loader_module.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:192: CMakeFiles/pointcloud_map_loader_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_map_loader [5.70s, exited with code 2]
+
+  Summary: 0 packages finished [7.08s]
+    1 package failed: autoware_map_loader
+    1 package had stderr output: autoware_map_loader
+generate_code.cpp: |-
+  DifferentialMapLoaderModule::DifferentialMapLoaderModule(
+    rclcpp::Node * node, std::map<std::string, PCDFileMetadata> pcd_file_metadata_dict)
+  : logger_(node->get_logger()), all_pcd_file_metadata_dict_(std::move(pcd_file_metadata_dict))
+  {
+    get_differential_pcd_maps_service_ = node->create_service<GetDifferentialPointCloudMap>(
+      "get_differential_point_cloud_map",
+      [this](
+        const std::shared_ptr<GetDifferentialPointCloudMap::Request> request,
+        std::shared_ptr<GetDifferentialPointCloudMap::Response> response) {
+        for (const auto & cell_id : request->cell_ids) {
+          const auto it = all_pcd_file_metadata_dict_.find(cell_id);
+          if (it != all_pcd_file_metadata_dict_.end()) {
+            const auto & metadata = it->second;
+            auto cell_with_id = on_service_get_differential_point_cloud_map(metadata.path, cell_id);
+            response->new_pointcloud_with_ids.push_back(cell_with_id);
+          }
+        }
+      });
+  }
+ground_truth.cpp: |-
+  DifferentialMapLoaderModule::DifferentialMapLoaderModule(
+    rclcpp::Node * node, std::map<std::string, PCDFileMetadata> pcd_file_metadata_dict)
+  : logger_(node->get_logger()), all_pcd_file_metadata_dict_(std::move(pcd_file_metadata_dict))
+  {
+    get_differential_pcd_maps_service_ = node->create_service<GetDifferentialPointCloudMap>(
+      "service/get_differential_pcd_map",
+      std::bind(
+        &DifferentialMapLoaderModule::on_service_get_differential_point_cloud_map, this,
+        std::placeholders::_1, std::placeholders::_2));
+  }
+architecture-codes:
+  - Topic/Service Issue - Topic/Service Name Mismatch Issue
+  - Topic/Service Issue - Callback Function Binding Issue
+  - ROS Message Issue - Incorrect Message Member Access Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

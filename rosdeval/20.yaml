@@ -1,0 +1,47 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_autonomous_emergency_braking
+ros_package: autoware_autonomous_emergency_braking
+file_path: src/node.cpp
+method_name: AEB::onPointCloud
+requirement: |
+  /**
+  * @brief Processes incoming point cloud data for Automatic Emergency Braking (AEB) obstacle detection.
+  * 
+  * Transforms the point cloud to the base_link frame if necessary, applies height filtering to remove
+  * false positives, and downsamples the point cloud using voxel grid filtering for efficient processing.
+  * 
+  * @param input_msg The input point cloud message to be processed.
+  */
+category: ros_architecture
+type: has_domain_library,has_logger,has_message,has_timer
+signature: |
+  void AEB::onPointCloud(const PointCloud2::ConstSharedPtr input_msg)
+prompt:
+  domain_specifications: []
+  dependencies_apis:
+    required_class: []
+    required_apis: []
+  ros_element:
+    log: []
+    message: []
+    publisher: []
+    subscriber: []
+    service: []
+    client: []
+    parameter: []
+    timer: []
+  additional_information: 
+    function_related_variable: |
+      mutable std::shared_ptr<autoware::universe_utils::TimeKeeper> time_keeper_{nullptr};
+      double detection_range_min_height_;
+      VehicleInfo vehicle_info_;
+      double detection_range_max_height_margin_;
+      double voxel_grid_x_;
+      double voxel_grid_y_;
+      double voxel_grid_z_;
+      PointCloud2::SharedPtr obstacle_ros_pointcloud_ptr_{nullptr};
+    function_related_function: |
+      std::optional<geometry_msgs::msg::TransformStamped> getTransform(const std::string & target_frame, const std::string & source_frame,const tf2_ros::Buffer & tf_buffer, const rclcpp::Logger & logger)
+test: test_aeb
+test_cases: []

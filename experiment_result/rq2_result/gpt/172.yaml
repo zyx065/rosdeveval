@@ -1,0 +1,52 @@
+compilation.log: |
+  Starting >>> nav2_waypoint_follower
+  --- stderr: nav2_waypoint_follower
+  /root/repos/nav_ws/src/nav2_waypoint_follower/src/waypoint_follower.cpp: In member function ‘virtual nav2_util::CallbackReturn nav2_waypoint_follower::WaypointFollower::on_activate(const rclcpp_lifecycle::State&)’:
+  /root/repos/nav_ws/src/nav2_waypoint_follower/src/waypoint_follower.cpp:107:25: error: ‘node_’ was not declared in this scope; did you mean ‘mode_t’?
+    107 |   dyn_params_handler_ = node_->add_on_set_parameters_callback(
+        |                         ^~~~~
+        |                         mode_t
+  gmake[2]: *** [CMakeFiles/waypoint_follower_core.dir/build.make:76: CMakeFiles/waypoint_follower_core.dir/src/waypoint_follower.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:208: CMakeFiles/waypoint_follower_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_waypoint_follower [3.94s, exited with code 2]
+
+  Summary: 0 packages finished [4.25s]
+    1 package failed: nav2_waypoint_follower
+    1 package had stderr output: nav2_waypoint_follower
+generate_code.cpp: |-
+  nav2_util::CallbackReturn
+  WaypointFollower::on_activate(const rclcpp_lifecycle::State & /*state*/)
+  {
+    // Activate the action server
+    action_server_->activate();
+
+    // Set up dynamic parameters callback
+    dyn_params_handler_ = node_->add_on_set_parameters_callback(
+        std::bind(&WaypointFollower::dynamicParametersCallback, this, std::placeholders::_1));
+
+    // Establish bond connection for lifecycle management
+    createBond();
+
+    // Return SUCCESS to indicate activation completed successfully
+    return nav2_util::CallbackReturn::SUCCESS;
+  }
+ground_truth.cpp: |-
+  nav2_util::CallbackReturn
+  WaypointFollower::on_activate(const rclcpp_lifecycle::State & /*state*/)
+  {
+    RCLCPP_INFO(get_logger(), "Activating");
+
+    action_server_->activate();
+
+    auto node = shared_from_this();
+    // Add callback for dynamic parameters
+    dyn_params_handler_ = node->add_on_set_parameters_callback(
+      std::bind(&WaypointFollower::dynamicParametersCallback, this, _1));
+
+    // create bond connection
+    createBond();
+
+    return nav2_util::CallbackReturn::SUCCESS;
+  }

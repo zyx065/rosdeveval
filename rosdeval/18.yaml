@@ -1,0 +1,24 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/evaluator/autoware_planning_evaluator
+ros_package: autoware_planning_evaluator
+file_path: src/motion_evaluator_node.cpp
+method_name: MotionEvaluatorNode::onOdom
+requirement: |
+  /**
+  * @brief Callback for odometry messages to update the accumulated trajectory.
+  * 
+  * @param msg Shared pointer to the received odometry message.
+  */
+category: ros_architecture
+type: has_message,has_timer
+signature: |
+  void MotionEvaluatorNode::onOdom(const nav_msgs::msg::Odometry::SharedPtr msg)
+additional_information: 
+  function_related_function: |
+    geometry_msgs::msg::Pose MotionEvaluatorNode::getCurrentEgoPose() const
+  function_related_variable: |
+    Trajectory accumulated_trajectory_;
+    std::deque<rclcpp::Time> stamps_;
+test: test_planning_evaluator
+test_cases: []

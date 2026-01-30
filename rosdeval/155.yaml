@@ -1,0 +1,51 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_behaviors
+ros_package: nav2_behaviors
+file_path: include/nav2_behaviors/timed_behavior.hpp
+method_name: configure
+requirement: |
+  /**
+  * Configures the behavior server on lifecycle node setup. This Node implements a task server for executing behaviors.
+  * 
+  * @param parent Parent lifecycle node to configure the behavior with.
+  * @param name Name of the behavior for identification and namespacing.
+  * @param tf TF buffer for coordinate transformations.
+  * @param collision_checker Collision checker for navigation safety checks.
+  */
+category: ros_architecture
+type: has_logger,has_timer,has_parameter,has_topic
+signature: |
+  void configure(
+      const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
+      const std::string & name, std::shared_ptr<tf2_ros::Buffer> tf,
+      std::shared_ptr<nav2_costmap_2d::CostmapTopicCollisionChecker> collision_checker) override
+additional_information: 
+  function_related_variable: |
+    rclcpp_lifecycle::LifecycleNode::WeakPtr node_;
+
+    std::string behavior_name_;
+    rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
+    std::shared_ptr<ActionServer> action_server_;
+    std::shared_ptr<nav2_costmap_2d::CostmapTopicCollisionChecker> collision_checker_;
+    std::shared_ptr<tf2_ros::Buffer> tf_;
+
+    double cycle_frequency_;
+    double enabled_;
+    std::string global_frame_;
+    std::string robot_base_frame_;
+    double transform_tolerance_;
+    rclcpp::Duration elasped_time_{0, 0};
+
+    // Clock
+    rclcpp::Clock::SharedPtr clock_;
+
+    // Logger
+    rclcpp::Logger logger_{rclcpp::get_logger("nav2_behaviors")};
+  function_related_function: 
+    // Main execution callbacks for the action server implementation calling the Behavior's
+    // onRun and cycle functions to execute a specific behavior
+    void execute()
+    void onConfigure()
+test: test_behaviors
+test_cases: []

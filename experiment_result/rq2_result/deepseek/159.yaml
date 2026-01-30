@@ -1,0 +1,140 @@
+compilation.log: |
+  Starting >>> nav2_collision_monitor
+  --- stderr: nav2_collision_monitor
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp: In member function ‘void nav2_collision_monitor::CollisionMonitor::publishVelocity(const nav2_collision_monitor::Action&)’:
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:162:31: error: ‘STOP’ is not a member of ‘nav2_collision_monitor::Action’
+    162 |   if (robot_action == Action::STOP)
+        |                               ^~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:175:42: error: ‘STOP’ is not a member of ‘nav2_collision_monitor::Action’
+    175 |   else if (robot_action_prev_ == Action::STOP)
+        |                                          ^~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:182:36: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘twist’
+    182 |       msg->linear.x = robot_action.twist.linear.x;
+        |                                    ^~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:183:36: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘twist’
+    183 |       msg->linear.y = robot_action.twist.linear.y;
+        |                                    ^~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:184:36: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘twist’
+    184 |       msg->linear.z = robot_action.twist.linear.z;
+        |                                    ^~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:185:37: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘twist’
+    185 |       msg->angular.x = robot_action.twist.angular.x;
+        |                                     ^~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:186:37: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘twist’
+    186 |       msg->angular.y = robot_action.twist.angular.y;
+        |                                     ^~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:187:37: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘twist’
+    187 |       msg->angular.z = robot_action.twist.angular.z;
+        |                                     ^~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:195:34: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘twist’
+    195 |     msg->linear.x = robot_action.twist.linear.x;
+        |                                  ^~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:196:34: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘twist’
+    196 |     msg->linear.y = robot_action.twist.linear.y;
+        |                                  ^~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:197:34: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘twist’
+    197 |     msg->linear.z = robot_action.twist.linear.z;
+        |                                  ^~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:198:35: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘twist’
+    198 |     msg->angular.x = robot_action.twist.angular.x;
+        |                                   ^~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:199:35: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘twist’
+    199 |     msg->angular.y = robot_action.twist.angular.y;
+        |                                   ^~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:200:35: error: ‘const struct nav2_collision_monitor::Action’ has no member named ‘twist’
+    200 |     msg->angular.z = robot_action.twist.angular.z;
+        |                                   ^~~~~
+  gmake[2]: *** [CMakeFiles/collision_monitor_core.dir/build.make:76: CMakeFiles/collision_monitor_core.dir/src/collision_monitor_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:180: CMakeFiles/collision_monitor_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_collision_monitor [4.51s, exited with code 2]
+
+  Summary: 0 packages finished [4.82s]
+    1 package failed: nav2_collision_monitor
+    1 package had stderr output: nav2_collision_monitor
+generate_code.cpp: |-
+  void CollisionMonitor::publishVelocity(const Action & robot_action)
+  {
+    if (robot_action == Action::STOP)
+    {
+      // If stopping, record the timestamp and publish zero velocity
+      stop_stamp_ = this->now();
+      auto msg = std::make_unique<geometry_msgs::msg::Twist>();
+      msg->linear.x = 0.0;
+      msg->linear.y = 0.0;
+      msg->linear.z = 0.0;
+      msg->angular.x = 0.0;
+      msg->angular.y = 0.0;
+      msg->angular.z = 0.0;
+      cmd_vel_out_pub_->publish(std::move(msg));
+    }
+    else if (robot_action_prev_ == Action::STOP)
+    {
+      // If previous action was STOP and current is not, check timeout
+      if ((this->now() - stop_stamp_) >= stop_pub_timeout_)
+      {
+        // Timeout expired, publish the new velocity
+        auto msg = std::make_unique<geometry_msgs::msg::Twist>();
+        msg->linear.x = robot_action.twist.linear.x;
+        msg->linear.y = robot_action.twist.linear.y;
+        msg->linear.z = robot_action.twist.linear.z;
+        msg->angular.x = robot_action.twist.angular.x;
+        msg->angular.y = robot_action.twist.angular.y;
+        msg->angular.z = robot_action.twist.angular.z;
+        cmd_vel_out_pub_->publish(std::move(msg));
+      }
+    }
+    else
+    {
+      // Normal case - just publish the requested velocity
+      auto msg = std::make_unique<geometry_msgs::msg::Twist>();
+      msg->linear.x = robot_action.twist.linear.x;
+      msg->linear.y = robot_action.twist.linear.y;
+      msg->linear.z = robot_action.twist.linear.z;
+      msg->angular.x = robot_action.twist.angular.x;
+      msg->angular.y = robot_action.twist.angular.y;
+      msg->angular.z = robot_action.twist.angular.z;
+      cmd_vel_out_pub_->publish(std::move(msg));
+    }
+
+    // Store current action for next iteration
+    robot_action_prev_ = robot_action;
+  }
+ground_truth.cpp: |-
+  void CollisionMonitor::publishVelocity(const Action & robot_action)
+  {
+    if (robot_action.req_vel.isZero()) {
+      if (!robot_action_prev_.req_vel.isZero()) {
+        // Robot just stopped: saving stop timestamp and continue
+        stop_stamp_ = this->now();
+      } else if (this->now() - stop_stamp_ > stop_pub_timeout_) {
+        // More than stop_pub_timeout_ passed after robot has been stopped.
+        // Cease publishing output cmd_vel.
+        return;
+      }
+    }
+
+    std::unique_ptr<geometry_msgs::msg::Twist> cmd_vel_out_msg =
+      std::make_unique<geometry_msgs::msg::Twist>();
+    cmd_vel_out_msg->linear.x = robot_action.req_vel.x;
+    cmd_vel_out_msg->linear.y = robot_action.req_vel.y;
+    cmd_vel_out_msg->angular.z = robot_action.req_vel.tw;
+    // linear.z, angular.x and angular.y will remain 0.0
+
+    cmd_vel_out_pub_->publish(std::move(cmd_vel_out_msg));
+  }
+architecture-codes:
+    - ROS Message Issue - Incorrect Message Member Access Issue
+    - ROS Message Issue - Message Operation Issue
+
+functionality-codes:
+    - Condition Issue - Condition Check Logic Misapplication Issue
+    - Domain Library Issue - Domain Specific Library Utilization Error
+    - Incomplete Code Issue - Missing Multiple Steps Issue
+    - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+
+root-cause-codes:
+    - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+    - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+    - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

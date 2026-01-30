@@ -1,0 +1,114 @@
+compilation.log: |
+  Starting >>> autoware_localization_evaluator
+  --- stderr: autoware_localization_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_localization_evaluator/src/localization_evaluator_node.cpp: In member function ‘void autoware::localization_diagnostics::LocalizationEvaluatorNode::syncCallback(const ConstSharedPtr&, const ConstSharedPtr&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_localization_evaluator/src/localization_evaluator_node.cpp:138:25: error: ‘POSITION_ERROR’ is not a member of ‘autoware::localization_diagnostics::Metric’
+    138 |   metrics_dict_[Metric::POSITION_ERROR].add(position_error);
+        |                         ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_localization_evaluator/src/localization_evaluator_node.cpp:139:45: error: ‘POSITION_ERROR’ is not a member of ‘autoware::localization_diagnostics::Metric’
+    139 |   metric_stats_[static_cast<size_t>(Metric::POSITION_ERROR)].push_back(metrics_dict_[Metric::POSITION_ERROR]);
+        |                                             ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_localization_evaluator/src/localization_evaluator_node.cpp:139:94: error: ‘POSITION_ERROR’ is not a member of ‘autoware::localization_diagnostics::Metric’
+    139 |   metric_stats_[static_cast<size_t>(Metric::POSITION_ERROR)].push_back(metrics_dict_[Metric::POSITION_ERROR]);
+        |                                                                                              ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_localization_evaluator/src/localization_evaluator_node.cpp:150:5: error: ‘diagnostic_publisher_’ was not declared in this scope
+    150 |     diagnostic_publisher_->publish(diagnostic_status);
+        |     ^~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_localization_evaluator.dir/build.make:90: CMakeFiles/autoware_localization_evaluator.dir/src/localization_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_localization_evaluator.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_localization_evaluator [6.69s, exited with code 2]
+
+  Summary: 0 packages finished [8.11s]
+    1 package failed: autoware_localization_evaluator
+    1 package had stderr output: autoware_localization_evaluator
+generate_code.cpp: |-
+  void LocalizationEvaluatorNode::syncCallback(
+    const Odometry::ConstSharedPtr & msg, const PoseWithCovarianceStamped::ConstSharedPtr & msg_ref)
+  {
+    // Check for valid input data
+    if (!msg || !msg_ref) {
+      RCLCPP_WARN(this->get_logger(), "Received null messages in syncCallback.");
+      return;
+    }
+
+    // Extract positions from odometry and ground truth messages
+    const auto & estimated_position = msg->pose.pose.position;
+    const auto & reference_position = msg_ref->pose.pose.position;
+
+    // Skip evaluation if either position is zero
+    if (estimated_position.x == 0.0 && estimated_position.y == 0.0 && estimated_position.z == 0.0) {
+      RCLCPP_WARN(this->get_logger(), "Skipping evaluation due to zero-position in estimated pose.");
+      return;
+    }
+
+    if (reference_position.x == 0.0 && reference_position.y == 0.0 && reference_position.z == 0.0) {
+      RCLCPP_WARN(this->get_logger(), "Skipping evaluation due to zero-position in reference pose.");
+      return;
+    }
+
+    // Compute localization error metrics
+    double position_error = std::sqrt(
+      std::pow(estimated_position.x - reference_position.x, 2) +
+      std::pow(estimated_position.y - reference_position.y, 2) +
+      std::pow(estimated_position.z - reference_position.z, 2));
+
+    // Update metrics dictionary and statistics
+    metrics_dict_[Metric::POSITION_ERROR].add(position_error);
+    metric_stats_[static_cast<size_t>(Metric::POSITION_ERROR)].push_back(metrics_dict_[Metric::POSITION_ERROR]);
+
+    // Maintain timestamp history
+    stamps_.push_back(msg->header.stamp);
+
+    // Publish diagnostic metrics for each tracked metric
+    for (const auto & metric : metrics_) {
+      const auto & metric_stat = metrics_dict_[metric];
+      DiagnosticStatus diagnostic_status = generateDiagnosticStatus(metric, metric_stat);
+
+      // Publish diagnostic status (assuming a publisher exists)
+      diagnostic_publisher_->publish(diagnostic_status);
+    }
+
+    // Remove old data from deque if it exceeds size limit
+    const size_t max_history_size = 100; // Example size limit
+    if (stamps_.size() > max_history_size) {
+      stamps_.pop_front();
+      for (auto & stats : metric_stats_) {
+        if (!stats.empty()) {
+          stats.pop_front();
+        }
+      }
+    }
+  }
+ground_truth.cpp: |-
+  void LocalizationEvaluatorNode::syncCallback(
+    const Odometry::ConstSharedPtr & msg, const PoseWithCovarianceStamped::ConstSharedPtr & msg_ref)
+  {
+    RCLCPP_DEBUG(
+      get_logger(), "Received two messages at time stamps: %d.%d and %d.%d", msg->header.stamp.sec,
+      msg->header.stamp.nanosec, msg_ref->header.stamp.sec, msg_ref->header.stamp.nanosec);
+
+    DiagnosticArray metrics_msg;
+    metrics_msg.header.stamp = now();
+
+    geometry_msgs::msg::Point p_lc, p_gt;
+    p_lc = msg->pose.pose.position;
+    p_gt = msg_ref->pose.pose.position;
+    if ((p_lc.x == 0 && p_lc.y == 0 && p_lc.z == 0) || (p_gt.x == 0 && p_gt.y == 0 && p_gt.z == 0)) {
+      RCLCPP_INFO(get_logger(), "Received position equals zero, waiting for valid data.");
+      return;
+    }
+    for (Metric metric : metrics_) {
+      metrics_dict_[metric] = metrics_calculator_.updateStat(
+        metrics_dict_[metric], metric, msg->pose.pose.position, msg_ref->pose.pose.position);
+      metric_stats_[static_cast<size_t>(metric)].push_back(metrics_dict_[metric]);
+      stamps_.push_back(metrics_msg.header.stamp);
+      if (metrics_dict_[metric].count() > 0) {
+        metrics_msg.status.push_back(generateDiagnosticStatus(metric, metrics_dict_[metric]));
+      }
+    }
+    if (!metrics_msg.status.empty()) {
+      metrics_pub_->publish(metrics_msg);
+    }
+  }

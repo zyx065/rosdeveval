@@ -1,0 +1,35 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_ros/moveit_servo
+ros_package: moveit_servo
+file_path: src/pose_tracking.cpp
+method_name: PoseTracking::calculateTwistCommand
+requirement: |
+  /**
+  * @brief Calculates a TwistStamped command to track a target pose.
+  * 
+  * Computes linear and angular velocity commands using PID controllers to minimize the error between
+  * the current command frame and the desired target pose. The linear components are derived from
+  * position errors, and the angular components from orientation errors expressed as axis-angle.
+  * 
+  * @return geometry_msgs::msg::TwistStamped::ConstSharedPtr A shared pointer to the twist command message
+  *         with header frame_id set to the target pose frame and timestamp set to current time.
+  */
+category: ros_architecture
+type: has_domain_library,has_message,has_timer
+signature: |
+  geometry_msgs::msg::TwistStamped::ConstSharedPtr PoseTracking::calculateTwistCommand()
+additional_information: 
+  function_related_variable: |
+    mutable std::mutex target_pose_mtx_;
+    geometry_msgs::msg::PoseStamped target_pose_;
+    std::vector<control_toolbox::Pid> cartesian_position_pids_;
+    Eigen::Isometry3d command_frame_transform_;
+    rclcpp::WallRate loop_rate_;
+    rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr twist_stamped_pub_;
+    rclcpp::Node::SharedPtr node_;
+    static const rclcpp::Logger LOGGER = rclcpp::get_logger("moveit_servo.pose_tracking");
+  function_related_function: |
+    moveit::util::make_shared_from_pool<geometry_msgs::msg::TwistStamped>()
+test: current_state_monitor_tests
+test_cases: []

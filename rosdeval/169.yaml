@@ -1,0 +1,26 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_rotation_shim_controller
+ros_package: nav2_rotation_shim_controller
+file_path: src/nav2_rotation_shim_controller.cpp
+method_name: RotationShimController::deactivate
+requirement: |
+  /**
+  * Deactivates the rotation shim controller and its primary controller.
+  * 
+  * @param[in] primary_controller_ Pointer to the primary controller to deactivate
+  * @param[in] dyn_params_handler_ Dynamic parameters handler to reset
+  * @param[in] logger_ Logger for informational message output
+  * @param[in] plugin_name_ Name of the plugin for logging purposes
+  */
+category: ros_architecture
+type: has_logger
+signature: |
+  void RotationShimController::deactivate()
+additional_information: 
+  function_related_variable: |
+    std::string plugin_name_;
+    nav2_core::Controller::Ptr primary_controller_;
+    rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr dyn_params_handler_;
+test: test_shim_controller
+test_cases: []

@@ -1,0 +1,24 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_mppi_controller
+ros_package: nav2_mppi_controller
+file_path: include/nav2_mppi_controller/tools/utils.hpp
+method_name: posePointAngle
+requirement: |
+  /**
+  * @brief evaluate angle from pose (have angle) to point (no angle)
+  * @param pose pose
+  * @param point_x Point to find angle relative to X axis
+  * @param point_y Point to find angle relative to Y axis
+  * @param forward_preference If reversing direction is valid
+  * @return Angle between two points
+  */
+category: utilities
+type: []
+signature: |
+  inline float posePointAngle(
+    const geometry_msgs::msg::Pose & pose, double point_x, double point_y, bool forward_preference)                                                          
+additional_information: []
+test: utils_test
+test_cases: 
+- AnglesTests

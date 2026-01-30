@@ -1,0 +1,32 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_planners/ompl/ompl_interface
+ros_package: moveit_planners_ompl
+file_path: src/parameterization/joint_space/constrained_planning_state_space.cpp
+method_name: ConstrainedPlanningStateSpace::copyJointToOMPLState
+requirement: |
+  /**
+  * Copies joint values from a MoveIt RobotState to an OMPL state.
+  * 
+  * @param[out] ompl_state The OMPL state to which joint values are copied.
+  * @param[in] robot_state The MoveIt RobotState containing the source joint values.
+  * @param[in] joint_model The joint model specifying which joints to copy.
+  * @param[in] ompl_state_joint_index The starting index in the OMPL state where 
+  *             joint values should be written.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  void ConstrainedPlanningStateSpace::copyJointToOMPLState(ompl::base::State* ompl_state,
+                                                           const moveit::core::RobotState& robot_state,
+                                                           const moveit::core::JointModel* joint_model,
+                                                           int ompl_state_joint_index) const
+additional_information: 
+  function_related_function: |
+    double* ConstrainedPlanningStateSpace::getValueAddressAtIndex(ompl::base::State* ompl_state, const unsigned int index) const
+    moveit::core::RobotState::getVariablePositions()
+    moveit::core::JointModel::getFirstVariableIndex()
+    moveit::core::JointModel::getVariableCount()
+test: test_constrained_planning_state_space
+test_cases: 
+- testCopyJointToOMPLState

@@ -1,0 +1,73 @@
+compilation.log: |
+  Starting >>> nav2_smac_planner
+  --- stderr: nav2_smac_planner
+  /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_hybrid.cpp: In member function ‘virtual void nav2_smac_planner::SmacPlannerHybrid::activate()’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_hybrid.cpp:240:31: error: ‘class nav2_smac_planner::CostmapDownsampler’ has no member named ‘activate’; did you mean ‘on_activate’?
+    240 |         _costmap_downsampler->activate();
+        |                               ^~~~~~~~
+        |                               on_activate
+  /root/repos/nav_ws/src/nav2_smac_planner/src/smac_planner_hybrid.cpp:244:33: error: ‘class nav2_smac_planner::SmacPlannerHybrid’ has no member named ‘add_on_set_parameters_callback’
+    244 |     _dyn_params_handler = this->add_on_set_parameters_callback(
+        |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner.dir/build.make:76: CMakeFiles/nav2_smac_planner.dir/src/smac_planner_hybrid.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:196: CMakeFiles/nav2_smac_planner.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_smac_planner [6.17s, exited with code 2]
+
+  Summary: 0 packages finished [6.47s]
+    1 package failed: nav2_smac_planner
+    1 package had stderr output: nav2_smac_planner
+generate_code.cpp: |-
+  void SmacPlannerHybrid::activate()
+  {
+      // Log activation of the planner
+      RCLCPP_INFO(_logger, "Activating SmacPlannerHybrid");
+
+      // Activate the raw plan publisher if it exists
+      if (_raw_plan_publisher) {
+          _raw_plan_publisher->on_activate();
+      }
+
+      // Activate the costmap downsampler if it exists
+      if (_costmap_downsampler) {
+          _costmap_downsampler->activate();
+      }
+
+      // Set up dynamic parameter handling
+      _dyn_params_handler = this->add_on_set_parameters_callback(
+          std::bind(&SmacPlannerHybrid::dynamicParametersCallback, this, std::placeholders::_1)
+      );
+
+      // Log successful activation
+      RCLCPP_INFO(_logger, "SmacPlannerHybrid activated successfully");
+  }
+ground_truth.cpp: |-
+  void SmacPlannerHybrid::activate()
+  {
+    RCLCPP_INFO(
+      _logger, "Activating plugin %s of type SmacPlannerHybrid",
+      _name.c_str());
+    _raw_plan_publisher->on_activate();
+    if (_costmap_downsampler) {
+      _costmap_downsampler->on_activate();
+    }
+    auto node = _node.lock();
+    // Add callback for dynamic parameters
+    _dyn_params_handler = node->add_on_set_parameters_callback(
+      std::bind(&SmacPlannerHybrid::dynamicParametersCallback, this, _1));
+  }
+architecture-codes:
+  - Parameter Related Issues - Dynamic Parameter callback binding error
+
+functionality-codes:
+  - Reference Error - Wrong Method
+  - Reference Error - Wrong Variable
+  - Incomplete Code - Missing One Step
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Insufficient Understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS Development Best Practices
+  - Weakness in System-Level Integration - Lack of Familiarity with the Existing Codebase
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements

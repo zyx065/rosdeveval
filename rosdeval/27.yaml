@@ -1,0 +1,26 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_detected_object_validation
+ros_package: autoware_detected_object_validation
+file_path: src/lanelet_filter/debug.cpp
+method_name: ObjectLaneletFilterNode::publishDebugMarkers
+requirement: |
+  /**
+  * @brief Publishes debug visualization markers for lanelet filtering results.
+  * 
+  * @param stamp Timestamp for the published markers.
+  * @param hull Convex hull polygon representing the filtered region.
+  * @param lanelets Vector of lanelet bounding boxes and their associated lanelet data.
+  */
+category: ros_architecture
+type: has_message,has_topic
+signature: |
+  void ObjectLaneletFilterNode::publishDebugMarkers(
+    rclcpp::Time stamp, const LinearRing2d & hull, const std::vector<BoxAndLanelet> & lanelets)
+additional_information: 
+  function_related_variable: |  
+    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr viz_pub_;
+  function_related_function: |
+    std::optional<visualization_msgs::msg::Marker> createPolygonMarker(T polygon, rclcpp::Time stamp, std::string_view ns, size_t marker_id,std_msgs::msg::ColorRGBA color)
+test: object_lanelet_filter_tests
+test_cases: []

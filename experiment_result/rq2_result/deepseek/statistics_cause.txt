@@ -1,0 +1,13 @@
+=== Analysis Results ===
+Total yaml files found: 240
+Successfully processed: 240
+
+--- Architecture Codes Statistics ---
+Total unique codes: 7
+  Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming: 172
+  Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic: 153
+  Weakness in System-Level Integration - Lack of familiarity with the existing codebase: 144
+  Deficiencies in Domain Knowledge - Lack of ROS development best practices: 125
+  Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries: 78
+  Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements: 63
+  Weakness in System-Level Integration - Unclear of ROS computation graph: 16

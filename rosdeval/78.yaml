@@ -1,0 +1,25 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/common/autoware_motion_utils
+ros_package: autoware_motion_utils
+file_path: src/vehicle/vehicle_state_checker.cpp
+method_name: VehicleStopCheckerBase::isVehicleStopped
+requirement: |
+  /**
+  * @brief Checks if the vehicle has been stopped for at least the specified duration.
+  * 
+  * @param stop_duration Minimum continuous stop duration in seconds to consider the vehicle stopped.
+  * @return true If vehicle has maintained stop velocity for at least stop_duration.
+  * @return false If vehicle has moved or stop duration is insufficient.
+  */
+category: utilities
+type: has_message,has_timer
+signature: |
+  bool VehicleStopCheckerBase::isVehicleStopped(const double stop_duration) const
+additional_information: 
+  function_related_variable: |
+    std::deque<TwistStamped> twist_buffer_;
+    rclcpp::Clock::SharedPtr clock_;
+test: test_autoware_motion_utils
+test_cases: 
+- isVehicleStopped

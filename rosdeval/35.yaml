@@ -1,0 +1,31 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_detected_object_validation
+ros_package: autoware_trajectory_follower_node
+file_path: src/position_filter/position_filter.cpp
+method_name: ObjectPositionFilterNode::ObjectPositionFilterNode
+requirement: |
+  /**
+  * @brief Constructs an ObjectPositionFilterNode for filtering detected objects based on position bounds and target labels.
+  * 
+  * @param node_options Configuration options for the ROS2 node.
+  */
+category: ros_architecture
+type: has_topic,has_parameter,has_message
+signature: |
+  ObjectPositionFilterNode::ObjectPositionFilterNode(const rclcpp::NodeOptions & node_options)
+  : Node("object_position_filter_node", node_options),
+    tf_buffer_(this->get_clock()),
+    tf_listener_(tf_buffer_)
+additional_information: 
+  function_related_variable: |
+    float upper_bound_x_;
+    float upper_bound_y_;
+    float lower_bound_x_;
+    float lower_bound_y_;
+    utils::FilterTargetLabel filter_target_;
+    rclcpp::Publisher<autoware_perception_msgs::msg::DetectedObjects>::SharedPtr object_pub_;
+    rclcpp::Subscription<autoware_perception_msgs::msg::DetectedObjects>::SharedPtr object_sub_;
+    std::unique_ptr<autoware::universe_utils::PublishedTimePublisher> published_time_publisher_;
+test: detection_object_validation_tests
+test_cases: []

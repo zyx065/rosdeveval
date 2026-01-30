@@ -1,0 +1,81 @@
+compilation.log: |
+  Starting >>> nav2_regulated_pure_pursuit_controller
+  --- stderr: nav2_regulated_pure_pursuit_controller
+  /root/repos/nav_ws/src/nav2_regulated_pure_pursuit_controller/test/path_utils/path_utils.cpp: In function ‘nav_msgs::msg::Path path_utils::generate_path(geometry_msgs::msg::PoseStamped, double, std::initializer_list<std::unique_ptr<path_utils::PathSegment> >)’:
+  /root/repos/nav_ws/src/nav2_regulated_pure_pursuit_controller/test/path_utils/path_utils.cpp:88:35: error: ‘class path_utils::PathSegment’ has no member named ‘generate’
+     88 |     auto segment_poses = segment->generate(current_pose.pose, spacing);
+        |                                   ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_regulated_pure_pursuit_controller/test/path_utils/path_utils.cpp: In function ‘nav_msgs::msg::Path path_utils::generate_path(geometry_msgs::msg::PoseStamped, double, std::initializer_list<std::unique_ptr<path_utils::PathSegment> >)’:
+  /root/repos/nav_ws/src/nav2_regulated_pure_pursuit_controller/test/path_utils/path_utils.cpp:88:35: error: ‘class path_utils::PathSegment’ has no member named ‘generate’
+     88 |     auto segment_poses = segment->generate(current_pose.pose, spacing);
+        |                                   ^~~~~~~~
+  gmake[2]: *** [test/CMakeFiles/test_path_utils.dir/build.make:90: test/CMakeFiles/test_path_utils.dir/path_utils/path_utils.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:229: test/CMakeFiles/test_path_utils.dir/all] Error 2
+  gmake[1]: *** Waiting for unfinished jobs....
+  gmake[2]: *** [test/CMakeFiles/test_regulated_pp.dir/build.make:90: test/CMakeFiles/test_regulated_pp.dir/path_utils/path_utils.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:202: test/CMakeFiles/test_regulated_pp.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_regulated_pure_pursuit_controller [2.47s, exited with code 2]
+
+  Summary: 0 packages finished [2.73s]
+    1 package failed: nav2_regulated_pure_pursuit_controller
+    1 package had stderr output: nav2_regulated_pure_pursuit_controller
+generate_code.cpp: |-
+  nav_msgs::msg::Path generate_path(
+    geometry_msgs::msg::PoseStamped start,
+    double spacing,
+    std::initializer_list<std::unique_ptr<PathSegment>> segments)
+  {
+    nav_msgs::msg::Path path;
+    path.header = start.header;
+    path.poses.push_back(start);
+
+    geometry_msgs::msg::PoseStamped current_pose = start;
+
+    for (const auto& segment : segments) {
+      if (!segment) continue;
+
+      auto segment_poses = segment->generate(current_pose.pose, spacing);
+      if (segment_poses.empty()) continue;
+
+      // Skip the first pose to avoid duplication with previous segment's end
+      for (size_t i = 1; i < segment_poses.size(); ++i) {
+        geometry_msgs::msg::PoseStamped stamped_pose;
+        stamped_pose.header = start.header;
+        stamped_pose.pose = segment_poses[i];
+        path.poses.push_back(stamped_pose);
+      }
+
+      // Update current pose to the last pose of this segment
+      current_pose.pose = segment_poses.back();
+    }
+
+    return path;
+  }
+ground_truth.cpp: |-
+  nav_msgs::msg::Path generate_path(
+    geometry_msgs::msg::PoseStamped start,
+    double spacing,
+    std::initializer_list<std::unique_ptr<PathSegment>> segments)
+  {
+    nav_msgs::msg::Path path;
+    path.header = start.header;
+    path.poses.push_back(start);
+    for (const auto & segment : segments) {
+      segment->append(path, spacing);
+    }
+    return path;
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+
+functionality-codes:
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Incomplete Code Issue - Missing One Step Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

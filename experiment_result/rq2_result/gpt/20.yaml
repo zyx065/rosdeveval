@@ -1,0 +1,133 @@
+compilation.log: |
+  Starting >>> autoware_autonomous_emergency_braking
+  --- stderr: autoware_autonomous_emergency_braking
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp: In member function ‘void autoware::motion::control::autonomous_emergency_braking::AEB::onPointCloud(sensor_msgs::msg::PointCloud2_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:304:19: error: ‘using element_type = class autoware::universe_utils::TimeKeeper’ {aka ‘class autoware::universe_utils::TimeKeeper’} has no member named ‘tic’
+    304 |     time_keeper_->tic("onPointCloud");
+        |                   ^~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:312:24: error: ‘getTransform’ was not declared in this scope; did you mean ‘autoware::motion::control::autonomous_emergency_braking::utils::getTransform’?
+    312 |   auto transform_opt = getTransform(target_frame, source_frame, tf_buffer_, this->get_logger());
+        |                        ^~~~~~~~~~~~
+        |                        autoware::motion::control::autonomous_emergency_braking::utils::getTransform
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:16:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/include/autoware/autonomous_emergency_braking/utils.hpp:121:53: note: ‘autoware::motion::control::autonomous_emergency_braking::utils::getTransform’ declared here
+    121 | std::optional<geometry_msgs::msg::TransformStamped> getTransform(
+        |                                                     ^~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:332:34: error: ‘struct autoware::vehicle_info_utils::VehicleInfo’ has no member named ‘height’
+    332 |         point.z <= vehicle_info_.height + detection_range_max_height_margin_) {
+        |                                  ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:354:19: error: ‘using element_type = class autoware::universe_utils::TimeKeeper’ {aka ‘class autoware::universe_utils::TimeKeeper’} has no member named ‘toc’
+    354 |     time_keeper_->toc("onPointCloud");
+        |                   ^~~
+  gmake[2]: *** [CMakeFiles/autoware_autonomous_emergency_braking_node.dir/build.make:76: CMakeFiles/autoware_autonomous_emergency_braking_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:187: CMakeFiles/autoware_autonomous_emergency_braking_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_autonomous_emergency_braking [17.7s, exited with code 2]
+
+  Summary: 0 packages finished [19.0s]
+    1 package failed: autoware_autonomous_emergency_braking
+    1 package had stderr output: autoware_autonomous_emergency_braking
+generate_code.cpp: |-
+  void AEB::onPointCloud(const PointCloud2::ConstSharedPtr input_msg) {
+    // Start time measurement
+    if (time_keeper_) {
+      time_keeper_->tic("onPointCloud");
+    }
+
+    // Transform the point cloud to the base_link frame
+    sensor_msgs::msg::PointCloud2 transformed_cloud;
+    const std::string target_frame = "base_link";
+    const std::string source_frame = input_msg->header.frame_id;
+
+    auto transform_opt = getTransform(target_frame, source_frame, tf_buffer_, this->get_logger());
+    if (!transform_opt.has_value()) {
+      RCLCPP_WARN(this->get_logger(), "Failed to get transform from %s to %s", source_frame.c_str(), target_frame.c_str());
+      return;
+    }
+
+    try {
+      tf2::doTransform(*input_msg, transformed_cloud, transform_opt.value());
+    } catch (const tf2::TransformException & ex) {
+      RCLCPP_WARN(this->get_logger(), "Transform failed: %s", ex.what());
+      return;
+    }
+
+    // Filter points based on height
+    pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::fromROSMsg(transformed_cloud, *pcl_cloud);
+
+    pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    for (const auto & point : pcl_cloud->points) {
+      if (point.z >= detection_range_min_height_ &&
+          point.z <= vehicle_info_.height + detection_range_max_height_margin_) {
+        filtered_cloud->points.push_back(point);
+      }
+    }
+
+    // Downsample the point cloud using voxel grid filtering
+    pcl::PointCloud<pcl::PointXYZ>::Ptr downsampled_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::VoxelGrid<pcl::PointXYZ> voxel_filter;
+    voxel_filter.setInputCloud(filtered_cloud);
+    voxel_filter.setLeafSize(voxel_grid_x_, voxel_grid_y_, voxel_grid_z_);
+    voxel_filter.filter(*downsampled_cloud);
+
+    // Convert the downsampled cloud back to ROS message format
+    sensor_msgs::msg::PointCloud2 output_cloud;
+    pcl::toROSMsg(*downsampled_cloud, output_cloud);
+    output_cloud.header = transformed_cloud.header;
+
+    // Store the processed point cloud
+    obstacle_ros_pointcloud_ptr_ = std::make_shared<sensor_msgs::msg::PointCloud2>(output_cloud);
+
+    // End time measurement
+    if (time_keeper_) {
+      time_keeper_->toc("onPointCloud");
+    }
+  }
+ground_truth.cpp: |-
+  void AEB::onPointCloud(const PointCloud2::ConstSharedPtr input_msg)
+  {
+    autoware::universe_utils::ScopedTimeTrack st(__func__, *time_keeper_);
+    PointCloud::Ptr pointcloud_ptr(new PointCloud);
+    pcl::fromROSMsg(*input_msg, *pointcloud_ptr);
+
+    if (input_msg->header.frame_id != "base_link") {
+      RCLCPP_ERROR_STREAM(
+        get_logger(),
+        "[AEB]: Input point cloud frame is not base_link and it is " << input_msg->header.frame_id);
+      // transform pointcloud
+      const auto logger = get_logger();
+      const auto transform_stamped =
+        utils::getTransform("base_link", input_msg->header.frame_id, tf_buffer_, logger);
+      if (!transform_stamped.has_value()) return;
+
+      // transform by using eigen matrix
+      PointCloud2 transformed_points{};
+      const Eigen::Matrix4f affine_matrix =
+        tf2::transformToEigen(transform_stamped.value().transform).matrix().cast<float>();
+      pcl_ros::transformPointCloud(affine_matrix, *input_msg, transformed_points);
+      pcl::fromROSMsg(transformed_points, *pointcloud_ptr);
+    }
+
+    // apply z-axis filter for removing False Positive points
+    PointCloud::Ptr height_filtered_pointcloud_ptr(new PointCloud);
+    pcl::PassThrough<pcl::PointXYZ> height_filter;
+    height_filter.setInputCloud(pointcloud_ptr);
+    height_filter.setFilterFieldName("z");
+    height_filter.setFilterLimits(
+      detection_range_min_height_,
+      vehicle_info_.vehicle_height_m + detection_range_max_height_margin_);
+    height_filter.filter(*height_filtered_pointcloud_ptr);
+
+    pcl::VoxelGrid<pcl::PointXYZ> filter;
+    PointCloud::Ptr no_height_filtered_pointcloud_ptr(new PointCloud);
+    filter.setInputCloud(height_filtered_pointcloud_ptr);
+    filter.setLeafSize(voxel_grid_x_, voxel_grid_y_, voxel_grid_z_);
+    filter.filter(*no_height_filtered_pointcloud_ptr);
+
+    obstacle_ros_pointcloud_ptr_ = std::make_shared<PointCloud2>();
+
+    pcl::toROSMsg(*no_height_filtered_pointcloud_ptr, *obstacle_ros_pointcloud_ptr_);
+    obstacle_ros_pointcloud_ptr_->header = input_msg->header;
+  }

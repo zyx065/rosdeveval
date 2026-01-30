@@ -1,0 +1,37 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_trajectory_follower_node
+ros_package: autoware_trajectory_follower_node
+file_path: src/controller_node.cpp
+method_name: Controller::Controller
+requirement: |
+  /**
+  * @brief Constructs the Controller node for autonomous vehicle motion control.
+  * 
+  * Initializes lateral and longitudinal controllers based on parameter configurations,
+  * sets up ROS publishers for control commands and debug information, and creates
+  * the main control timer.
+  * 
+  * @param node_options Additional options for node configuration.
+  */
+category: ros_architecture
+type: has_topic,has_parameter,has_timer
+signature: |
+  Controller::Controller(const rclcpp::NodeOptions & node_options) : Node("controller", node_options)
+additional_information: 
+  function_related_function: |
+    Controller::LateralControllerMode Controller::getLateralControllerMode(const std::string & controller_mode)
+    Controller::LongitudinalControllerMode Controller::getLongitudinalControllerMode
+  function_related_class: |
+    enum class LateralControllerMode {
+      INVALID = 0,
+      MPC = 1,
+      PURE_PURSUIT = 2,
+    };
+    mpc_lateral_controller::MpcLateralController
+    autoware::pure_pursuit::PurePursuitLateralController
+  function_related_variable: |
+    autoware::universe_utils::PublishedTimePublisher published_time_publisher_
+    autoware::universe_utils::LoggerLevelConfigure logger_configure_
+test: test_trajectory_follower_node
+test_cases: []

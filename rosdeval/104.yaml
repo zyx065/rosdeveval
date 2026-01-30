@@ -1,0 +1,45 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/common/autoware_universe_utils
+ros_package: autoware_universe_utils
+file_path: src/geometry/boost_polygon_utils.cpp
+method_name: rotatePolygon
+requirement: |
+  /**
+  * Rotates a polygon around the origin by the specified angle.
+  * 
+  * @param polygon The input polygon to be rotated.
+  * @param angle The rotation angle in radians (counter-clockwise positive).
+  * @return A new polygon containing the rotated points.
+  */
+category: utilities
+type: has_message
+signature: |
+  geometry_msgs::msg::Polygon rotatePolygon(
+    const geometry_msgs::msg::Polygon & polygon, const double & angle)
+additional_information: 
+  function_related_variable: |
+    std::string vehicle_name_;
+    std::vector<double> vel_index_;
+    std::vector<double> throttle_index_;
+    std::vector<std::vector<double>> accel_map_;
+  function_related_class: |
+    class CSVLoader
+    {
+    public:
+      explicit CSVLoader(const std::string & csv_path);
+
+      bool readCSV(Table & result, const char delim = ',');
+      static bool validateData(const Table & table, const std::string & csv_path);
+      static bool validateMap(const Map & map, const bool is_col_decent);
+      static Map getMap(const Table & table);
+      static std::vector<double> getRowIndex(const Table & table);
+      static std::vector<double> getColumnIndex(const Table & table);
+      static double clampValue(const double val, const std::vector<double> & ranges);
+
+    private:
+      std::string csv_path_;
+    };
+test: test_autoware_universe_utils
+test_cases: 
+- boost_rotatePolygon

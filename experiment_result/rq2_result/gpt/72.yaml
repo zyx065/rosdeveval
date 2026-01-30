@@ -1,0 +1,90 @@
+compilation.log: |
+  Starting >>> autoware_costmap_generator
+  --- stderr: autoware_costmap_generator
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp: In static member function ‘static void autoware::costmap_generator::CostmapGenerator::loadParkingAreasFromLaneletMap(lanelet::LaneletMapPtr, std::vector<geometry_msgs::msg::Polygon_<std::allocator<void> > >&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:231:26: error: ‘const class lanelet::ConstLineString3d’ has no member named ‘x’
+    231 |         vertex.x = point.x();
+        |                          ^
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:232:26: error: ‘const class lanelet::ConstLineString3d’ has no member named ‘y’
+    232 |         vertex.y = point.y();
+        |                          ^
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:233:26: error: ‘const class lanelet::ConstLineString3d’ has no member named ‘z’
+    233 |         vertex.z = point.z();
+        |                          ^
+  In file included from /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:23,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:50,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp: In function ‘void __static_initialization_and_destruction_0(int, int)’:
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp:51:13: warning: ‘parameter_traits::OK’ is deprecated: When returning tl::expected<void, std::string> default construct for OK with `{}`. [-Wdeprecated-declarations]
+     51 | auto static OK
+        |             ^~
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp:51:13: note: declared here
+  gmake[2]: *** [CMakeFiles/costmap_generator_node.dir/build.make:76: CMakeFiles/costmap_generator_node.dir/src/costmap_generator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:218: CMakeFiles/costmap_generator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_costmap_generator [18.0s, exited with code 2]
+
+  Summary: 0 packages finished [19.4s]
+    1 package failed: autoware_costmap_generator
+    1 package had stderr output: autoware_costmap_generator
+generate_code.cpp: |-
+  void CostmapGenerator::loadParkingAreasFromLaneletMap(
+    const lanelet::LaneletMapPtr lanelet_map,
+    std::vector<geometry_msgs::msg::Polygon> & area_polygons)
+  {
+    // Ensure the lanelet map is valid
+    if (!lanelet_map) {
+      RCLCPP_ERROR(rclcpp::get_logger("CostmapGenerator"), "Lanelet map is null.");
+      return;
+    }
+
+    // Iterate through all areas in the lanelet map
+    for (const auto & area : lanelet_map->areaLayer) {
+      // Check if the area has the "parking" subtype
+      if (area.hasAttribute("subtype") && area.attribute("subtype").value() == "parking") {
+        geometry_msgs::msg::Polygon polygon;
+
+        // Extract the outer boundary of the parking area
+        const auto & outer_bound = area.outerBound();
+        for (const auto & point : outer_bound) {
+          geometry_msgs::msg::Point32 vertex;
+          vertex.x = point.x();
+          vertex.y = point.y();
+          vertex.z = point.z();
+          polygon.points.push_back(vertex);
+        }
+
+        // Add the polygon to the output vector
+        area_polygons.push_back(polygon);
+      }
+    }
+
+    RCLCPP_INFO(
+      rclcpp::get_logger("CostmapGenerator"),
+      "Loaded %zu parking areas from the Lanelet map.", area_polygons.size());
+  }
+ground_truth.cpp: |-
+  void CostmapGenerator::loadParkingAreasFromLaneletMap(
+    const lanelet::LaneletMapPtr lanelet_map,
+    std::vector<geometry_msgs::msg::Polygon> & area_polygons)
+  {
+    // Parking lots
+    lanelet::ConstPolygons3d all_parking_lots = lanelet::utils::query::getAllParkingLots(lanelet_map);
+    for (const auto & ll_poly : all_parking_lots) {
+      geometry_msgs::msg::Polygon poly;
+      lanelet::utils::conversion::toGeomMsgPoly(ll_poly, &poly);
+      area_polygons.push_back(poly);
+    }
+
+    // Parking spaces
+    lanelet::ConstLineStrings3d all_parking_spaces =
+      lanelet::utils::query::getAllParkingSpaces(lanelet_map);
+    for (const auto & parking_space : all_parking_spaces) {
+      lanelet::ConstPolygon3d ll_poly;
+      lanelet::utils::lineStringWithWidthToPolygon(parking_space, &ll_poly);
+      geometry_msgs::msg::Polygon poly;
+      lanelet::utils::conversion::toGeomMsgPoly(ll_poly, &poly);
+      area_polygons.push_back(poly);
+    }
+  }

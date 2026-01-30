@@ -1,0 +1,38 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_rtc_interface
+ros_package: autoware_planning_evaluator
+file_path: src/rtc_interface.cpp
+method_name: RTCInterface::RTCInterface
+requirement: |
+  /**
+  * @brief Calculates the minimum distance to obstacles for each trajectory point.
+  * 
+  * @param obstacles Predicted objects to compute distances from.
+  * @param traj Trajectory points to compute distances for.
+  * @return Accumulator<double> Statistical accumulator containing minimum distances.
+  */
+category: ros_architecture
+type: has_topic,has_service,has_timer
+signature: |
+  RTCInterface::RTCInterface(rclcpp::Node * node, const std::string & name, const bool enable_rtc)
+  : clock_{node->get_clock()},
+    logger_{node->get_logger().get_child("RTCInterface[" + name + "]")},
+    is_auto_mode_enabled_{!enable_rtc},
+    is_locked_{false}
+additional_information:
+  function_related_variable: |
+    rclcpp::TimerBase::SharedPtr timer_;
+    rclcpp::Publisher<CooperateStatusArray>::SharedPtr pub_statuses_;
+    rclcpp::Publisher<AutoModeStatus>::SharedPtr pub_auto_mode_status_;
+    rclcpp::Service<CooperateCommands>::SharedPtr srv_commands_;
+    rclcpp::Service<AutoMode>::SharedPtr srv_auto_mode_;
+    rclcpp::CallbackGroup::SharedPtr callback_group_;
+    rclcpp::TimerBase::SharedPtr timer_;
+    rclcpp::Clock::SharedPtr clock_;
+    rclcpp::Logger logger_;
+    Module module_;
+  function_related_function: |
+    void onTimer();
+test: test_autoware_rtc_interface
+test_cases: []

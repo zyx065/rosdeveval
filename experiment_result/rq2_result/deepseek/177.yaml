@@ -1,0 +1,169 @@
+compilation.log: |
+  Starting >>> nav2_velocity_smoother
+  --- stderr: nav2_velocity_smoother
+  /root/repos/nav_ws/src/nav2_velocity_smoother/src/velocity_smoother.cpp: In member function ‘virtual nav2_util::CallbackReturn nav2_velocity_smoother::VelocitySmoother::on_configure(const rclcpp_lifecycle::State&)’:
+  /root/repos/nav_ws/src/nav2_velocity_smoother/src/velocity_smoother.cpp:97:34: error: ‘smooth’ is not a member of ‘nav2_velocity_smoother::VelocitySmoother’
+     97 |     std::bind(&VelocitySmoother::smooth, this));
+        |                                  ^~~~~~
+  In file included from /usr/include/c++/11/memory:76,
+                   from /root/repos/nav_ws/src/nav2_velocity_smoother/src/velocity_smoother.cpp:17:
+  /usr/include/c++/11/bits/unique_ptr.h: In instantiation of ‘typename std::_MakeUniq<_Tp>::__single_object std::make_unique(_Args&& ...) [with _Tp = nav2_util::OdomSmoother; _Args = {std::shared_ptr<nav2_util::LifecycleNode>&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&, double&}; typename std::_MakeUniq<_Tp>::__single_object = std::unique_ptr<nav2_util::OdomSmoother>]’:
+  /root/repos/nav_ws/src/nav2_velocity_smoother/src/velocity_smoother.cpp:83:63:   required from here
+  /usr/include/c++/11/bits/unique_ptr.h:962:30: error: no matching function for call to ‘nav2_util::OdomSmoother::OdomSmoother(std::shared_ptr<nav2_util::LifecycleNode>&, std::__cxx11::basic_string<char>&, double&)’
+    962 |     { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+        |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_velocity_smoother/include/nav2_velocity_smoother/velocity_smoother.hpp:27,
+                   from /root/repos/nav_ws/src/nav2_velocity_smoother/src/velocity_smoother.cpp:22:
+  /root/repos/nav_ws/install/nav2_util/include/nav2_util/odometry_utils.hpp:62:12: note: candidate: ‘nav2_util::OdomSmoother::OdomSmoother(const WeakPtr&, double, const string&)’
+     62 |   explicit OdomSmoother(
+        |            ^~~~~~~~~~~~
+  /root/repos/nav_ws/install/nav2_util/include/nav2_util/odometry_utils.hpp:64:12: note:   no known conversion for argument 2 from ‘std::__cxx11::basic_string<char>’ to ‘double’
+     64 |     double filter_duration = 0.3,
+        |     ~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/install/nav2_util/include/nav2_util/odometry_utils.hpp:50:12: note: candidate: ‘nav2_util::OdomSmoother::OdomSmoother(const WeakPtr&, double, const string&)’
+     50 |   explicit OdomSmoother(
+        |            ^~~~~~~~~~~~
+  /root/repos/nav_ws/install/nav2_util/include/nav2_util/odometry_utils.hpp:51:35: note:   no known conversion for argument 1 from ‘std::shared_ptr<nav2_util::LifecycleNode>’ to ‘const WeakPtr&’ {aka ‘const std::weak_ptr<rclcpp::Node>&’}
+     51 |     const rclcpp::Node::WeakPtr & parent,
+        |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+  gmake[2]: *** [CMakeFiles/velocity_smoother_core.dir/build.make:76: CMakeFiles/velocity_smoother_core.dir/src/velocity_smoother.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:174: CMakeFiles/velocity_smoother_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_velocity_smoother [4.05s, exited with code 2]
+
+  Summary: 0 packages finished [4.38s]
+    1 package failed: nav2_velocity_smoother
+    1 package had stderr output: nav2_velocity_smoother
+generate_code.cpp: "nav2_util::CallbackReturn\nVelocitySmoother::on_configure(const\
+  \ rclcpp_lifecycle::State &)\n{\n  auto node = shared_from_this();\n\n  // Declare\
+  \ parameters\n  declare_parameter(\"smoothing_frequency\", 20.0);\n  declare_parameter(\"\
+  odom_duration\", 0.5);\n  declare_parameter(\"odom_topic\", \"odom\");\n  declare_parameter(\"\
+  open_loop\", false);\n  declare_parameter(\"scale_velocities\", true);\n  declare_parameter(\"\
+  velocity_timeout\", 0.5);\n  \n  declare_parameter(\"max_velocities\", std::vector<double>{0.5,\
+  \ 0.0, 2.5});\n  declare_parameter(\"min_velocities\", std::vector<double>{-0.5,\
+  \ -0.0, -2.5});\n  declare_parameter(\"max_accels\", std::vector<double>{2.5, 0.0,\
+  \ 3.2});\n  declare_parameter(\"max_decels\", std::vector<double>{-2.5, -0.0, -3.2});\n\
+  \  declare_parameter(\"deadband_velocities\", std::vector<double>{0.01, 0.01, 0.01});\n\
+  \n  // Get parameters\n  smoothing_frequency_ = get_parameter(\"smoothing_frequency\"\
+  ).as_double();\n  odom_duration_ = get_parameter(\"odom_duration\").as_double();\n\
+  \  odom_topic_ = get_parameter(\"odom_topic\").as_string();\n  open_loop_ = get_parameter(\"\
+  open_loop\").as_bool();\n  scale_velocities_ = get_parameter(\"scale_velocities\"\
+  ).as_bool();\n  \n  max_velocities_ = get_parameter(\"max_velocities\").as_double_array();\n\
+  \  min_velocities_ = get_parameter(\"min_velocities\").as_double_array();\n  max_accels_\
+  \ = get_parameter(\"max_accels\").as_double_array();\n  max_decels_ = get_parameter(\"\
+  max_decels\").as_double_array();\n  deadband_velocities_ = get_parameter(\"deadband_velocities\"\
+  ).as_double_array();\n\n  double velocity_timeout = get_parameter(\"velocity_timeout\"\
+  ).as_double();\n  velocity_timeout_ = rclcpp::Duration::from_seconds(velocity_timeout);\n\
+  \n  // Initialize odom smoother if not in open loop\n  if (!open_loop_) {\n    odom_smoother_\
+  \ = std::make_unique<nav2_util::OdomSmoother>(\n      node, odom_topic_, odom_duration_);\n\
+  \  }\n\n  // Initialize publishers and subscribers\n  smoothed_cmd_pub_ = create_publisher<geometry_msgs::msg::Twist>(\n\
+  \    \"cmd_vel_smoothed\", rclcpp::SystemDefaultsQoS());\n  cmd_sub_ = create_subscription<geometry_msgs::msg::Twist>(\n\
+  \    \"cmd_vel\", rclcpp::SystemDefaultsQoS(),\n    std::bind(&VelocitySmoother::inputCommandCallback,\
+  \ this, std::placeholders::_1));\n\n  // Initialize timer for smoothing\n  timer_\
+  \ = create_wall_timer(\n    std::chrono::duration<double>(1.0 / smoothing_frequency_),\n\
+  \    std::bind(&VelocitySmoother::smooth, this));\n\n  // Initialize state variables\n\
+  \  stopped_ = true;\n  last_command_time_ = clock_->now();\n  command_ = std::make_shared<geometry_msgs::msg::Twist>();\n\
+  \n  return nav2_util::CallbackReturn::SUCCESS;\n}"
+ground_truth.cpp: |-
+  nav2_util::CallbackReturn
+  VelocitySmoother::on_configure(const rclcpp_lifecycle::State &)
+  {
+    RCLCPP_INFO(get_logger(), "Configuring velocity smoother");
+    auto node = shared_from_this();
+    std::string feedback_type;
+    double velocity_timeout_dbl;
+
+    // Smoothing metadata
+    declare_parameter_if_not_declared(node, "smoothing_frequency", rclcpp::ParameterValue(20.0));
+    declare_parameter_if_not_declared(
+      node, "feedback", rclcpp::ParameterValue(std::string("OPEN_LOOP")));
+    declare_parameter_if_not_declared(node, "scale_velocities", rclcpp::ParameterValue(false));
+    node->get_parameter("smoothing_frequency", smoothing_frequency_);
+    node->get_parameter("feedback", feedback_type);
+    node->get_parameter("scale_velocities", scale_velocities_);
+
+    // Kinematics
+    declare_parameter_if_not_declared(
+      node, "max_velocity", rclcpp::ParameterValue(std::vector<double>{0.50, 0.0, 2.5}));
+    declare_parameter_if_not_declared(
+      node, "min_velocity", rclcpp::ParameterValue(std::vector<double>{-0.50, 0.0, -2.5}));
+    declare_parameter_if_not_declared(
+      node, "max_accel", rclcpp::ParameterValue(std::vector<double>{2.5, 0.0, 3.2}));
+    declare_parameter_if_not_declared(
+      node, "max_decel", rclcpp::ParameterValue(std::vector<double>{-2.5, 0.0, -3.2}));
+    node->get_parameter("max_velocity", max_velocities_);
+    node->get_parameter("min_velocity", min_velocities_);
+    node->get_parameter("max_accel", max_accels_);
+    node->get_parameter("max_decel", max_decels_);
+
+    for (unsigned int i = 0; i != 3; i++) {
+      if (max_decels_[i] > 0.0) {
+        throw std::runtime_error(
+                "Positive values set of deceleration! These should be negative to slow down!");
+      }
+      if (max_accels_[i] < 0.0) {
+        throw std::runtime_error(
+                "Negative values set of acceleration! These should be positive to speed up!");
+      }
+      if (min_velocities_[i] > max_velocities_[i]) {
+        throw std::runtime_error(
+                "Min velocities are higher than max velocities!");
+      }
+    }
+
+    // Get feature parameters
+    declare_parameter_if_not_declared(node, "odom_topic", rclcpp::ParameterValue("odom"));
+    declare_parameter_if_not_declared(node, "odom_duration", rclcpp::ParameterValue(0.1));
+    declare_parameter_if_not_declared(
+      node, "deadband_velocity", rclcpp::ParameterValue(std::vector<double>{0.0, 0.0, 0.0}));
+    declare_parameter_if_not_declared(node, "velocity_timeout", rclcpp::ParameterValue(1.0));
+    node->get_parameter("odom_topic", odom_topic_);
+    node->get_parameter("odom_duration", odom_duration_);
+    node->get_parameter("deadband_velocity", deadband_velocities_);
+    node->get_parameter("velocity_timeout", velocity_timeout_dbl);
+    velocity_timeout_ = rclcpp::Duration::from_seconds(velocity_timeout_dbl);
+
+    if (max_velocities_.size() != 3 || min_velocities_.size() != 3 ||
+      max_accels_.size() != 3 || max_decels_.size() != 3 || deadband_velocities_.size() != 3)
+    {
+      throw std::runtime_error(
+              "Invalid setting of kinematic and/or deadband limits!"
+              " All limits must be size of 3 representing (x, y, theta).");
+    }
+
+    // Get control type
+    if (feedback_type == "OPEN_LOOP") {
+      open_loop_ = true;
+    } else if (feedback_type == "CLOSED_LOOP") {
+      open_loop_ = false;
+      odom_smoother_ = std::make_unique<nav2_util::OdomSmoother>(node, odom_duration_, odom_topic_);
+    } else {
+      throw std::runtime_error("Invalid feedback_type, options are OPEN_LOOP and CLOSED_LOOP.");
+    }
+
+    // Setup inputs / outputs
+    smoothed_cmd_pub_ = create_publisher<geometry_msgs::msg::Twist>("cmd_vel_smoothed", 1);
+    cmd_sub_ = create_subscription<geometry_msgs::msg::Twist>(
+      "cmd_vel", rclcpp::QoS(1),
+      std::bind(&VelocitySmoother::inputCommandCallback, this, std::placeholders::_1));
+
+    return nav2_util::CallbackReturn::SUCCESS;
+  }
+architecture-codes:
+  - ROS Parameter Issue - Naming Convention Violations Issue 
+  - ROS Parameter Issue - Insufficient Parameter Design Issue
+  - ROS Parameter Issue - Use Non-existent Parameter Issue 
+  - Topic/Service Issue - QoS Policy Incompatibility Issue 
+  - ROS Logger Issue - ROS Logger Missing Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue 
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming 
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices 
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

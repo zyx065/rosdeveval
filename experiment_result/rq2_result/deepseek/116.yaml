@@ -1,0 +1,77 @@
+compilation.log: |
+  Starting >>> autoware_motion_velocity_dynamic_obstacle_stop_module
+  [Processing: autoware_motion_velocity_dynamic_obstacle_stop_module]
+  Finished <<< autoware_motion_velocity_dynamic_obstacle_stop_module [32.8s]
+
+  Summary: 1 package finished [34.2s]
+generate_code.cpp: |-
+  std::vector<autoware_perception_msgs::msg::PredictedObject> filter_predicted_objects(
+    const std::vector<PlannerData::Object> & objects, const EgoData & ego_data,
+    const PlannerParam & params, const double hysteresis)
+  {
+    std::vector<autoware_perception_msgs::msg::PredictedObject> filtered_objects;
+
+    for (const auto & object : objects) {
+      const auto & predicted_object = object.predicted_object;
+
+      // Skip non-vehicle objects
+      if (!is_vehicle(predicted_object)) {
+        continue;
+      }
+
+      // Check if object is in range
+      if (!is_in_range(predicted_object, ego_data.trajectory, params, hysteresis)) {
+        continue;
+      }
+
+      // Check if object is not too close to ego
+      if (!is_not_too_close(predicted_object, ego_data, params.ego_longitudinal_offset)) {
+        continue;
+      }
+
+      // Check if object is unavoidable
+      if (is_unavoidable(predicted_object, ego_data.pose, ego_data.earliest_stop_pose, params)) {
+        continue;
+      }
+
+      // If all checks passed, add to filtered objects
+      filtered_objects.push_back(predicted_object);
+    }
+
+    return filtered_objects;
+  }
+ground_truth.cpp: |-
+  std::vector<autoware_perception_msgs::msg::PredictedObject> filter_predicted_objects(
+    const std::vector<PlannerData::Object> & objects, const EgoData & ego_data,
+    const PlannerParam & params, const double hysteresis)
+  {
+    std::vector<autoware_perception_msgs::msg::PredictedObject> filtered_objects;
+    for (const auto & object : objects) {
+      const auto & predicted_object = object.predicted_object;
+      const auto is_not_too_slow =
+        predicted_object.kinematics.initial_twist_with_covariance.twist.linear.x >=
+        params.minimum_object_velocity;
+      if (
+        is_vehicle(predicted_object) && is_not_too_slow &&
+        is_in_range(predicted_object, ego_data.trajectory, params, hysteresis) &&
+        is_not_too_close(predicted_object, ego_data, params.ego_longitudinal_offset) &&
+        (!params.ignore_unavoidable_collisions ||
+         !is_unavoidable(predicted_object, ego_data.pose, ego_data.earliest_stop_pose, params)))
+        filtered_objects.push_back(predicted_object);
+    }
+    return filtered_objects;
+  }
+architecture-codes:
+  - ROS Parameter Issue - Use Non-existent Parameter Issue
+  - ROS Parameter Issue - Insufficient Parameter Design Issue
+  - ROS Message Issue - Incorrect Message Member Access Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing One Step Issue
+  - Condition Issue - Conditional Check Missing Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming

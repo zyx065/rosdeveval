@@ -1,0 +1,71 @@
+compilation.log: |
+  Starting >>> moveit_core
+  --- stderr: moveit_core
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp: In member function ‘Eigen::VectorXd trajectory_processing::Trajectory::getAcceleration(double) const’:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:861:26: error: ‘const class trajectory_processing::Path’ has no member named ‘end’
+    861 |     if (segment == path_.end())
+        |                          ^~~
+  /root/repos/moveit_ws/src/moveit2/moveit_core/trajectory_processing/src/time_optimal_trajectory_generation.cpp:877:37: error: ‘const class trajectory_processing::Path’ has no member named ‘end’
+    877 |     if (std::next(segment) != path_.end())
+        |                                     ^~~
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:135: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/time_optimal_trajectory_generation.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1920: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/all] Error 2
+  gmake: *** [Makefile:149: all] Error 2
+  ---
+  Failed   <<< moveit_core [5.00s, exited with code 2]
+
+  Summary: 0 packages finished [5.50s]
+    1 package failed: moveit_core
+    1 package had stderr output: moveit_core
+generate_code.cpp: |-
+  Eigen::VectorXd Trajectory::getAcceleration(double time) const
+  {
+      // Get the trajectory segment corresponding to the given time
+      auto segment = getTrajectorySegment(time);
+      if (segment == path_.end())
+      {
+          throw std::runtime_error("Time exceeds trajectory duration.");
+      }
+
+      // Extract path position and velocity from the segment
+      double path_pos = segment->path_pos_;
+      double path_vel = segment->path_vel_;
+
+      // Compute the tangent and curvature at the given path position
+      Eigen::VectorXd tangent = path_.getTangent(path_pos);
+      Eigen::VectorXd curvature = path_.getCurvature(path_pos);
+
+      // Compute the acceleration using the formula:
+      // acceleration = (path_vel^2 * curvature) + (path_acc * tangent)
+      double path_acc = 0.0;
+      if (std::next(segment) != path_.end())
+      {
+          double next_path_vel = std::next(segment)->path_vel_;
+          double next_time = std::next(segment)->time_;
+          path_acc = (next_path_vel - path_vel) / (next_time - segment->time_);
+      }
+
+      Eigen::VectorXd acceleration = (path_vel * path_vel) * curvature + path_acc * tangent;
+      return acceleration;
+  }
+ground_truth.cpp: |-
+  Eigen::VectorXd Trajectory::getAcceleration(double time) const
+  {
+    std::list<TrajectoryStep>::const_iterator it = getTrajectorySegment(time);
+    std::list<TrajectoryStep>::const_iterator previous = it;
+    previous--;
+
+    double time_step = it->time_ - previous->time_;
+    const double acceleration =
+        2.0 * (it->path_pos_ - previous->path_pos_ - time_step * previous->path_vel_) / (time_step * time_step);
+
+    time_step = time - previous->time_;
+    const double path_pos =
+        previous->path_pos_ + time_step * previous->path_vel_ + 0.5 * time_step * time_step * acceleration;
+    const double path_vel = previous->path_vel_ + time_step * acceleration;
+    Eigen::VectorXd path_acc =
+        (path_.getTangent(path_pos) * path_vel - path_.getTangent(previous->path_pos_) * previous->path_vel_);
+    if (time_step > 0.0)
+      path_acc /= time_step;
+    return path_acc;
+  }

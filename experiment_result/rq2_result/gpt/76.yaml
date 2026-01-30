@@ -1,0 +1,51 @@
+compilation.log: |
+  Starting >>> autoware_mission_planner_universe
+  --- stderr: autoware_mission_planner_universe
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_mission_planner_universe/src/lanelet2_plugins/utility_functions.cpp: In function ‘autoware::universe_utils::Polygon2d autoware::mission_planner_universe::lanelet2::convert_linear_ring_to_polygon(autoware::universe_utils::LinearRing2d)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_mission_planner_universe/src/lanelet2_plugins/utility_functions.cpp:40:59: error: ‘create’ is not a member of ‘autoware::universe_utils::Polygon2d’ {aka ‘boost::geometry::model::polygon<autoware::universe_utils::Point2d>’}
+     40 |   auto polygon_opt = autoware::universe_utils::Polygon2d::create(footprint, {});
+        |                                                           ^~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_mission_planner_universe_lanelet2_plugins.dir/build.make:90: CMakeFiles/autoware_mission_planner_universe_lanelet2_plugins.dir/src/lanelet2_plugins/utility_functions.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:298: CMakeFiles/autoware_mission_planner_universe_lanelet2_plugins.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_mission_planner_universe [10.4s, exited with code 2]
+
+  Summary: 0 packages finished [11.8s]
+    1 package failed: autoware_mission_planner_universe
+    1 package had stderr output: autoware_mission_planner_universe
+generate_code.cpp: |-
+  autoware::universe_utils::Polygon2d convert_linear_ring_to_polygon(
+    autoware::universe_utils::LinearRing2d footprint)
+  {
+    // Ensure the input LinearRing2d is valid (closed polygon with 6 points)
+    if (footprint.size() != 6) {
+      throw std::invalid_argument("Input LinearRing2d must have exactly 6 points.");
+    }
+
+    // Create a Polygon2d from the LinearRing2d
+    // Since there are no inner rings, pass an empty vector for inners
+    auto polygon_opt = autoware::universe_utils::Polygon2d::create(footprint, {});
+
+    // Check if the Polygon2d creation was successful
+    if (!polygon_opt.has_value()) {
+      throw std::runtime_error("Failed to create Polygon2d from LinearRing2d.");
+    }
+
+    // Return the successfully created Polygon2d
+    return polygon_opt.value();
+  }
+ground_truth.cpp: |-
+  autoware::universe_utils::Polygon2d convert_linear_ring_to_polygon(
+    autoware::universe_utils::LinearRing2d footprint)
+  {
+    autoware::universe_utils::Polygon2d footprint_polygon;
+    boost::geometry::append(footprint_polygon.outer(), footprint[0]);
+    boost::geometry::append(footprint_polygon.outer(), footprint[1]);
+    boost::geometry::append(footprint_polygon.outer(), footprint[2]);
+    boost::geometry::append(footprint_polygon.outer(), footprint[3]);
+    boost::geometry::append(footprint_polygon.outer(), footprint[4]);
+    boost::geometry::append(footprint_polygon.outer(), footprint[5]);
+    boost::geometry::correct(footprint_polygon);
+    return footprint_polygon;
+  }

@@ -1,0 +1,46 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_vehicle_cmd_gate
+ros_package: autoware_vehicle_cmd_gate
+file_path: src/vehicle_cmd_gate.cpp
+method_name: VehicleCmdGate::publishStatus
+requirement: |
+  /**
+  * Publishes the current vehicle status including engagement state, emergency status, and operation mode.
+  * @param gate_mode_pub_ Publisher for the current gate mode.
+  * @param engage_pub_ Publisher for the Autoware engagement status.
+  * @param pub_external_emergency_ Publisher for external emergency stop status.
+  * @param operation_mode_pub_ Publisher for the current operation mode.
+  * @param adapi_pause_ Publisher for ADAPI pause commands.
+  * @param moderate_stop_interface_ Publisher for moderate stop commands.
+  */
+category: ros_architecture
+type: has_message,has_topic
+signature: |
+  void VehicleCmdGate::publishStatus()
+additional_information: 
+  function_related_variable: |
+    rclcpp::Publisher<GateMode>::SharedPtr gate_mode_pub_;
+    rclcpp::Publisher<EngageMsg>::SharedPtr engage_pub_;
+    rclcpp::Publisher<Emergency>::SharedPtr pub_external_emergency_;
+    rclcpp::Publisher<OperationModeState>::SharedPtr operation_mode_pub_;
+    std::unique_ptr<AdapiPauseInterface> adapi_pause_;
+    std::unique_ptr<ModerateStopInterface> moderate_stop_interface_;
+  function_related_class: |
+    class AdapiPauseInterface
+    {
+    public:
+      explicit AdapiPauseInterface(rclcpp::Node * node);
+      bool is_paused() const;
+      void publish();
+      void update(const Control & control);
+    }
+    class ModerateStopInterface
+    {
+    public:
+      explicit ModerateStopInterface(rclcpp::Node * node);
+      bool is_stop_requested() const;
+      void publish();
+    }
+test: test_vehicle_cmd_gate
+test_cases: []

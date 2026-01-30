@@ -1,0 +1,53 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_rotation_shim_controller
+ros_package: nav2_rotation_shim_controller
+file_path: src/nav2_rotation_shim_controller.cpp
+method_name: RotationShimController::configure
+requirement: |
+  /**
+  * @brief Configures the rotation shim controller with necessary components and parameters.
+  * 
+  * @param[in] parent Parent lifecycle node for parameter declaration and logging
+  * @param[in] name Plugin name for namespace and parameter scoping
+  * @param[in] tf TF buffer for coordinate transformations
+  * @param[in] costmap_ros Costmap ROS wrapper for collision checking and navigation
+  */
+category: ros_architecture
+type: has_parameter,has_message,has_logger
+signature: |
+  void RotationShimController::configure(
+    const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
+    std::string name, std::shared_ptr<tf2_ros::Buffer> tf,
+    std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros)
+additional_information: 
+  function_related_variable: |
+
+    rclcpp_lifecycle::LifecycleNode::WeakPtr node_;
+    std::shared_ptr<tf2_ros::Buffer> tf_;
+    std::string plugin_name_;
+    rclcpp::Logger logger_ {rclcpp::get_logger("RotationShimController")};
+    rclcpp::Clock::SharedPtr clock_;
+    std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros_;
+    std::unique_ptr<nav2_costmap_2d::FootprintCollisionChecker<nav2_costmap_2d::Costmap2D *>>
+    collision_checker_;
+
+    pluginlib::ClassLoader<nav2_core::Controller> lp_loader_;
+    nav2_core::Controller::Ptr primary_controller_;
+    bool path_updated_;
+    nav_msgs::msg::Path current_path_;
+    double forward_sampling_distance_, angular_dist_threshold_, angular_disengage_threshold_;
+    double rotate_to_heading_angular_vel_, max_angular_accel_;
+    double control_duration_, simulate_ahead_time_;
+    bool rotate_to_goal_heading_, in_rotation_;
+    bool closed_loop_;
+    double last_angular_vel_ = std::numeric_limits<double>::max();
+
+    // Dynamic parameters handler
+    std::mutex mutex_;
+    rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr dyn_params_handler_;
+    std::unique_ptr<nav2_controller::PositionGoalChecker> position_goal_checker_;
+  function_related_function: |
+    rcl_interfaces::msg::SetParametersResult dynamicParametersCallback(std::vector<rclcpp::Parameter> parameters);
+test: test_shim_controller
+test_cases: []

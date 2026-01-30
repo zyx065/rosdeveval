@@ -1,0 +1,26 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_vehicle_cmd_gate
+ros_package: autoware_vehicle_cmd_gate
+file_path: src/vehicle_cmd_gate.cpp
+method_name: VehicleCmdGate::onExternalEmergencyStopService
+requirement: |
+  /**
+  * @brief Handles external emergency stop service requests by routing to appropriate set or clear handlers.
+  * 
+  * @param[in] request_header The RMW service request header.
+  * @param[in] request The emergency stop request containing the emergency flag.
+  * @param[out] response The service response indicating success or failure status.
+  */
+category: ros_architecture
+type: has_service,has_message
+signature: |
+  void VehicleCmdGate::onExternalEmergencyStopService(
+    const std::shared_ptr<rmw_request_id_t> request_header,
+    const SetEmergency::Request::SharedPtr request, const SetEmergency::Response::SharedPtr response)
+additional_information: 
+  function_related_function: |
+    bool onSetExternalEmergencyStopService(const std::shared_ptr<rmw_request_id_t> req_header, const Trigger::Request::SharedPtr req,const Trigger::Response::SharedPtr res);
+    bool onClearExternalEmergencyStopService(const std::shared_ptr<rmw_request_id_t> req_header, const Trigger::Request::SharedPtr req,const Trigger::Response::SharedPtr res);
+test: test_vehicle_cmd_gate
+test_cases: []

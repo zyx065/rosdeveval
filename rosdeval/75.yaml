@@ -1,0 +1,45 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner
+ros_package: autoware_map_projection_loader
+file_path: src/utils.cpp
+method_name: getClosestStopObstacles
+requirement: |
+  /**
+  * @brief Returns the closest stop obstacles for each unique classification label.
+  * 
+  * @param stop_obstacles Vector of stop obstacles to filter.
+  * @return std::vector<StopObstacle> Vector containing the closest stop obstacle for each label.
+  */
+category: utilities
+type: has_message
+signature: |
+  std::vector<StopObstacle> getClosestStopObstacles(const std::vector<StopObstacle> & stop_obstacles)
+additional_information: 
+  function_related_class: |
+    struct StopObstacle : public TargetObstacleInterface
+    {
+      StopObstacle(
+        const std::string & arg_uuid, const rclcpp::Time & arg_stamp,
+        const ObjectClassification & object_classification, const geometry_msgs::msg::Pose & arg_pose,
+        const Shape & arg_shape, const double arg_lon_velocity, const double arg_lat_velocity,
+        const geometry_msgs::msg::Point arg_collision_point,
+        const double arg_dist_to_collide_on_decimated_traj)
+      : TargetObstacleInterface(arg_uuid, arg_stamp, arg_pose, arg_lon_velocity, arg_lat_velocity),
+        shape(arg_shape),
+        collision_point(arg_collision_point),
+        dist_to_collide_on_decimated_traj(arg_dist_to_collide_on_decimated_traj),
+        classification(object_classification)
+      {
+      }
+      Shape shape;
+      geometry_msgs::msg::Point
+        collision_point;  // TODO(yuki_takagi): this member variable still used in
+                          // calculateMarginFromObstacleOnCurve() and  should be removed as it can be
+                          // replaced by ”dist_to_collide_on_decimated_traj”
+      double dist_to_collide_on_decimated_traj;
+      ObjectClassification classification;
+    };
+test: test_autoware_obstacle_cruise_planner
+test_cases: 
+- getClosestStopObstacles

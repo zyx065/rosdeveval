@@ -1,0 +1,56 @@
+compilation.log: |
+  Starting >>> nav2_costmap_2d
+  Finished <<< nav2_costmap_2d [0.61s]
+
+  Summary: 1 package finished [0.90s]
+generate_code.cpp: |
+  void CostmapFilter::enableCallback(
+    const std::shared_ptr<rmw_request_id_t>/*request_header*/,
+    const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
+    std::shared_ptr<std_srvs::srv::SetBool::Response> response)
+  {
+    std::lock_guard<mutex_t> lock(*access_);
+    
+    try {
+      if (request->data) {
+        // Enable the costmap filter
+        enabled_ = true;
+        response->success = true;
+        response->message = "Costmap filter enabled successfully";
+        RCLCPP_INFO(logger_, "Costmap filter enabled");
+      } else {
+        // Disable the costmap filter
+        enabled_ = false;
+        response->success = true;
+        response->message = "Costmap filter disabled successfully";
+        RCLCPP_INFO(logger_, "Costmap filter disabled");
+      }
+    } catch (const std::exception& e) {
+      response->success = false;
+      response->message = "Failed to enable/disable costmap filter: " + std::string(e.what());
+      RCLCPP_ERROR(logger_, "Error in enableCallback: %s", e.what());
+    }
+  }
+ground_truth.cpp: |-
+  void CostmapFilter::enableCallback(
+    const std::shared_ptr<rmw_request_id_t>/*request_header*/,
+    const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
+    std::shared_ptr<std_srvs::srv::SetBool::Response> response)
+  {
+    enabled_ = request->data;
+    response->success = true;
+    if (enabled_) {
+      response->message = "Enabled";
+    } else {
+      response->message = "Disabled";
+    }
+  }
+architecture-codes:
+  - ROS Logger Issues - Inappropriate Log Level Usage
+Functionality-codes:
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

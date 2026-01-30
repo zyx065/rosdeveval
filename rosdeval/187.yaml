@@ -1,0 +1,36 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_route
+ros_package: nav2_route
+file_path: src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp
+method_name: GeoJsonGraphFileSaver::loadEdgesFromGraph
+requirement: |
+  /**
+   * @brief Loads a graph object with file information from a filepath
+   * @param graph Graph to populate
+   * @param idx_map A map translating nodeid's to graph idxs for use in graph modification
+   * services and idx-based route planning requests. This is much faster than using a
+   * map the full graph data structure.
+   * @param filepath The filepath to the graph data
+   * @param graph_file_loader_id The id of the GraphFileLoader
+   * @return bool If successful
+   */
+category: utilities
+type: []
+signature: |
+  bool GeoJsonGraphFileLoader::loadGraphFromFile(
+    Graph & graph, GraphToIDMap & graph_to_id_map, std::string filepath)
+additional_information: 
+  function_related_function: |
+    bool GeoJsonGraphFileLoader::doesFileExist(const std::string & filepath)
+    void GeoJsonGraphFileLoader::getGraphElements(const Json & features, std::vector<Json> & nodes, std::vector<Json> & edges)
+    void GeoJsonGraphFileLoader::addNodesToGraph(Graph & graph, GraphToIDMap & graph_to_id_map, std::vector<Json> & nodes)
+test: test_geojson_graph_file_loader
+test_cases: 
+- test_file_does_not_exist
+- test_no_nodes_in_graph
+- test_no_edges_in_graph
+- test_missing_node_id
+- test_invalid_start_id_for_edge
+- test_invalid_goal_id_for_edge
+- operations

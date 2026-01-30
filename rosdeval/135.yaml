@@ -1,0 +1,19 @@
+repository: autoware
+language: C++
+ros_package_file: src/core/autoware_lanelet2_extension/autoware_lanelet2_extension
+ros_package: autoware_lanelet2_extension
+file_path: lib/message_conversion.cpp
+method_name: toBinMsg
+requirement: |
+  # Converts a lanelet map object to a binary message format and stores it in a LaneletMapBin message.
+ 
+  # @param map A pointer to the lanelet map object to be converted.
+  # @param msg A pointer to the LaneletMapBin message where the binary data will be stored.
+category: utilities
+type: 1,has_message,has_log
+signature: |
+  void toBinMsg(const lanelet::LaneletMapPtr & map, autoware_map_msgs::msg::LaneletMapBin * msg)
+additional_information: []
+test: message_conversion-test
+test_cases: 
+- BinMsgConversion

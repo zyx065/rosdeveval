@@ -1,0 +1,112 @@
+compilation.log: |
+  Starting >>> autoware_costmap_generator
+  --- stderr: autoware_costmap_generator
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp: In static member function ‘static void autoware::costmap_generator::CostmapGenerator::loadParkingAreasFromLaneletMap(lanelet::LaneletMapPtr, std::vector<geometry_msgs::msg::Polygon_<std::allocator<void> > >&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:219:40: error: ‘using element_type = class lanelet::LaneletMap’ {aka ‘class lanelet::LaneletMap’} has no member named ‘parkingAreas’
+    219 |   for (const auto& area : lanelet_map->parkingAreas())
+        |                                        ^~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:23,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:50,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp: In function ‘void __static_initialization_and_destruction_0(int, int)’:
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp:51:13: warning: ‘parameter_traits::OK’ is deprecated: When returning tl::expected<void, std::string> default construct for OK with `{}`. [-Wdeprecated-declarations]
+     51 | auto static OK
+        |             ^~
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp:51:13: note: declared here
+  gmake[2]: *** [CMakeFiles/costmap_generator_node.dir/build.make:76: CMakeFiles/costmap_generator_node.dir/src/costmap_generator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:218: CMakeFiles/costmap_generator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_costmap_generator [17.6s, exited with code 2]
+
+  Summary: 0 packages finished [19.0s]
+    1 package failed: autoware_costmap_generator
+    1 package had stderr output: autoware_costmap_generator
+generate_code.cpp: |-
+  void CostmapGenerator::loadParkingAreasFromLaneletMap(
+    const lanelet::LaneletMapPtr lanelet_map,
+    std::vector<geometry_msgs::msg::Polygon> & area_polygons)
+  {
+    // Clear existing polygons
+    area_polygons.clear();
+
+    // Iterate through all parking areas in the lanelet map
+    for (const auto& area : lanelet_map->parkingAreas())
+    {
+      // Create a polygon for the current parking area
+      geometry_msgs::msg::Polygon parking_polygon;
+
+      // Extract the boundary points of the parking area
+      for (const auto& point : area.outerBoundary())
+      {
+        geometry_msgs::msg::Point32 polygon_point;
+        polygon_point.x = point.x();
+        polygon_point.y = point.y();
+        polygon_point.z = 0.0; // Assuming 2D parking areas
+
+        parking_polygon.points.push_back(polygon_point);
+      }
+
+      // Add the polygon to the output vector if it's not empty
+      if (!parking_polygon.points.empty())
+      {
+        area_polygons.push_back(parking_polygon);
+      }
+
+      // Optionally, handle individual parking spaces within the area
+      for (const auto& parking_space : area.parkingSpaces())
+      {
+        geometry_msgs::msg::Polygon space_polygon;
+
+        for (const auto& point : parking_space.outerBoundary())
+        {
+          geometry_msgs::msg::Point32 polygon_point;
+          polygon_point.x = point.x();
+          polygon_point.y = point.y();
+          polygon_point.z = 0.0;
+
+          space_polygon.points.push_back(polygon_point);
+        }
+
+        if (!space_polygon.points.empty())
+        {
+          area_polygons.push_back(space_polygon);
+        }
+      }
+    }
+  }
+ground_truth.cpp: |-
+  void CostmapGenerator::loadParkingAreasFromLaneletMap(
+    const lanelet::LaneletMapPtr lanelet_map,
+    std::vector<geometry_msgs::msg::Polygon> & area_polygons)
+  {
+    // Parking lots
+    lanelet::ConstPolygons3d all_parking_lots = lanelet::utils::query::getAllParkingLots(lanelet_map);
+    for (const auto & ll_poly : all_parking_lots) {
+      geometry_msgs::msg::Polygon poly;
+      lanelet::utils::conversion::toGeomMsgPoly(ll_poly, &poly);
+      area_polygons.push_back(poly);
+    }
+
+    // Parking spaces
+    lanelet::ConstLineStrings3d all_parking_spaces =
+      lanelet::utils::query::getAllParkingSpaces(lanelet_map);
+    for (const auto & parking_space : all_parking_spaces) {
+      lanelet::ConstPolygon3d ll_poly;
+      lanelet::utils::lineStringWithWidthToPolygon(parking_space, &ll_poly);
+      geometry_msgs::msg::Polygon poly;
+      lanelet::utils::conversion::toGeomMsgPoly(ll_poly, &poly);
+      area_polygons.push_back(poly);
+    }
+  }
+architecture-codes:
+  - Domain Library Issues - Lack of Domain Library Utilization
+
+functionality-codes:
+  - Reference Error - Wrong method
+  - Domain Library Issues - Lack of Domain Library Utilization
+  - Incomplete Code - Missing Multiple Steps
+
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

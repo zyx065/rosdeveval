@@ -1,0 +1,89 @@
+compilation.log: |
+  Starting >>> autoware_control_evaluator
+  --- stderr: autoware_control_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp: In constructor ‘control_diagnostics::ControlEvaluatorNode::ControlEvaluatorNode(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:39:43: error: ‘tier4_debug_msgs’ was not declared in this scope; did you mean ‘tier4_metric_msgs’?
+     39 |   processing_time_pub_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>("~/processing_time", 1);
+        |                                           ^~~~~~~~~~~~~~~~
+        |                                           tier4_metric_msgs
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:39:26: error: parse error in template argument list
+     39 |   processing_time_pub_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>("~/processing_time", 1);
+        |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:39:81: error: no matching function for call to ‘control_diagnostics::ControlEvaluatorNode::create_publisher<<expression error> >(const char [18], int)’
+     39 |   processing_time_pub_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>("~/processing_time", 1);
+        |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:22,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/polling_subscriber.hpp:17,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/include/autoware/control_evaluator/control_evaluator_node.hpp:23,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:15:
+  /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:195:3: note: candidate: ‘template<class MessageT, class AllocatorT, class PublisherT> std::shared_ptr<PublisherT> rclcpp::Node::create_publisher(const string&, const rclcpp::QoS&, const rclcpp::PublisherOptionsWithAllocator<AllocatorT>&)’
+    195 |   create_publisher(
+        |   ^~~~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:195:3: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:39:81: error: template argument 1 is invalid
+     39 |   processing_time_pub_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>("~/processing_time", 1);
+        |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/control_evaluator_node.dir/build.make:76: CMakeFiles/control_evaluator_node.dir/src/control_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/control_evaluator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_control_evaluator [13.7s, exited with code 2]
+
+  Summary: 0 packages finished [15.0s]
+    1 package failed: autoware_control_evaluator
+    1 package had stderr output: autoware_control_evaluator
+generate_code.cpp: |-
+  ControlEvaluatorNode::ControlEvaluatorNode(const rclcpp::NodeOptions & node_options)
+  : Node("control_evaluator", node_options),
+    vehicle_info_(autoware::vehicle_info_utils::VehicleInfoUtils(*this).getVehicleInfo())
+  {
+    // Initialize publishers
+    processing_time_pub_ = create_publisher<tier4_debug_msgs::msg::Float64Stamped>("~/processing_time", 1);
+    metrics_pub_ = create_publisher<MetricArrayMsg>("~/metrics", 1);
+
+    // Get parameter for metrics output
+    output_metrics_ = declare_parameter<bool>("output_metrics", true);
+
+    // Setup timer for periodic diagnostics
+    const auto period_ns = rclcpp::Rate(10).period();
+    timer_ = rclcpp::create_timer(
+      this,
+      get_clock(),
+      period_ns,
+      std::bind(&ControlEvaluatorNode::onTimer, this));
+  }
+ground_truth.cpp: |-
+  ControlEvaluatorNode::ControlEvaluatorNode(const rclcpp::NodeOptions & node_options)
+  : Node("control_evaluator", node_options),
+    vehicle_info_(autoware::vehicle_info_utils::VehicleInfoUtils(*this).getVehicleInfo())
+  {
+    using std::placeholders::_1;
+
+    // Publisher
+    processing_time_pub_ = this->create_publisher<autoware_internal_debug_msgs::msg::Float64Stamped>(
+      "~/debug/processing_time_ms", 1);
+    metrics_pub_ = create_publisher<MetricArrayMsg>("~/metrics", 1);
+
+    // Parameters
+    output_metrics_ = declare_parameter<bool>("output_metrics");
+
+    // Timer callback to publish evaluator diagnostics
+    using namespace std::literals::chrono_literals;
+    timer_ =
+      rclcpp::create_timer(this, get_clock(), 100ms, std::bind(&ControlEvaluatorNode::onTimer, this));
+  }
+architecture-codes:
+  - Topic/Service Issue - Topic/Service Name Mismatch Issue
+  - ROS Message Issue - Improper Message Type Usage Issue 
+  - ROS Parameter Issue - Insufficient Parameter Design Issue 
+  - ROS Timer Issue - Clock Source Usage Issue
+
+functionality-codes: []
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic 
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming 
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices 
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase 

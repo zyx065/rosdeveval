@@ -1,0 +1,30 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter
+ros_package: autoware_radar_crossing_objects_noise_filter
+file_path: src/radar_crossing_objects_noise_filter_node.cpp
+method_name: RadarCrossingObjectsNoiseFilterNode::RadarCrossingObjectsNoiseFilterNode
+requirement: |
+  /**
+  * @brief Constructs a ROS2 node for filtering radar crossing objects noise.
+  * 
+  * @param node_options Configuration options for initializing the ROS2 node.
+  */
+category: ros_architecture
+type: has_topic,has_parameter,has_message
+signature: |
+  RadarCrossingObjectsNoiseFilterNode::RadarCrossingObjectsNoiseFilterNode(
+    const rclcpp::NodeOptions & node_options)
+  : Node("radar_crossing_objects_noise_filter", node_options)
+additional_information: 
+  function_related_variable: |
+    OnSetParametersCallbackHandle::SharedPtr set_param_res_;
+    NodeParam node_param_{};
+    rclcpp::Subscription<DetectedObjects>::SharedPtr sub_objects_{};
+    rclcpp::Publisher<DetectedObjects>::SharedPtr pub_filtered_objects_{};
+    rclcpp::Publisher<DetectedObjects>::SharedPtr pub_noise_objects_{};
+  function_related_function: |
+    rcl_interfaces::msg::SetParametersResult onSetParam(const std::vector<rclcpp::Parameter> & params);
+    void onObjects(const DetectedObjects::ConstSharedPtr objects_data_);
+test: autoware_radar_crossing_objects_noise_filter
+test_cases: []

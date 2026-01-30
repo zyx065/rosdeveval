@@ -1,0 +1,76 @@
+compilation.log: |
+  Starting >>> autoware_planning_validator
+  Finished <<< autoware_planning_validator [29.7s]
+
+  Summary: 1 package finished [31.1s]
+generate_code.cpp: |-
+  void PlanningValidator::onTrajectory(const Trajectory::ConstSharedPtr msg)
+  {
+      // Start the stopwatch to measure processing time
+      stop_watch_.tic();
+
+      // Store the received trajectory message
+      current_trajectory_ = msg;
+
+      // Check if all required data is ready for processing
+      if (!isDataReady())
+      {
+          RCLCPP_WARN(get_logger(), "Data is not ready. Skipping trajectory validation.");
+          return;
+      }
+
+      // Validate the trajectory
+      validate(*msg);
+
+      // Publish the trajectory
+      publishTrajectory();
+
+      // Publish debug information if enabled
+      if (debug_pose_publisher_)
+      {
+          publishDebugInfo();
+      }
+
+      // Display the current status
+      displayStatus();
+
+      // Calculate and publish the processing time
+      double processing_time_ms = stop_watch_.toc();
+      publishProcessingTime(processing_time_ms);
+
+      // Update diagnostics if enabled
+      if (publish_diag_ && diag_updater_)
+      {
+          setupDiag();
+          diag_updater_->force_update();
+      }
+  }
+ground_truth.cpp: |-
+  void PlanningValidator::onTrajectory(const Trajectory::ConstSharedPtr msg)
+  {
+    stop_watch_.tic(__func__);
+
+    current_trajectory_ = msg;
+
+    // receive data
+    current_kinematics_ = sub_kinematics_.takeData();
+
+    if (!isDataReady()) return;
+
+    if (publish_diag_ && !diag_updater_) {
+      setupDiag();  // run setup after all data is ready.
+    }
+
+    debug_pose_publisher_->clearMarkers();
+
+    validate(*current_trajectory_);
+
+    diag_updater_->force_update();
+
+    publishTrajectory();
+
+    // for debug
+    publishProcessingTime(stop_watch_.toc(__func__));
+    publishDebugInfo();
+    displayStatus();
+  }

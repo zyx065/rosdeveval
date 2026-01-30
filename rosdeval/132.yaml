@@ -1,0 +1,28 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_planners/pilz_industrial_motion_planner
+ros_package: pilz_industrial_motion_planner
+file_path: src/trajectory_functions.cpp
+method_name: pilz_industrial_motion_planner::isRobotStateStationary
+requirement: |
+  /**
+  * Checks if the robot state is stationary for a given joint group.
+  * 
+  * A robot state is considered stationary if both the joint velocities and accelerations
+  * for the specified group are below the epsilon threshold.
+  * 
+  * @param state The robot state to check for stationarity.
+  * @param group The joint group name to evaluate.
+  * @param EPSILON The tolerance threshold for considering velocities/accelerations as zero.
+  * @return True if all joint velocities and accelerations are below EPSILON, false otherwise.
+  */
+category: utilities
+type: has_logger,has_domain_library
+signature: |
+  bool pilz_industrial_motion_planner::isRobotStateStationary(const moveit::core::RobotState& state,
+                                                              const std::string& group, double EPSILON)
+additional_information: []
+test: unittest_trajectory_functions
+test_cases: 
+- testIsRobotStateStationaryVelocityUnequal
+- testIsRobotStateStationaryAccelerationUnequal

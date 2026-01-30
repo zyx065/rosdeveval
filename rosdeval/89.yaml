@@ -1,0 +1,34 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_radar_object_tracker
+ros_package: autoware_radar_object_tracker
+file_path: src/utils/radar_object_tracker_utils.cpp
+method_name: checkCloseLaneletCondition
+requirement: |
+  /**
+  * Checks if an object meets proximity and orientation conditions relative to a lanelet.
+  * 
+  * @param lanelet Pair containing distance and lanelet to check against.
+  * @param object Tracked object to evaluate for lanelet proximity.
+  * @param max_distance_from_lane Maximum allowed lateral distance from lanelet centerline.
+  * @param max_angle_diff_from_lane Maximum allowed yaw angle difference from lanelet direction.
+  * @return True if object is within distance and angle thresholds, false otherwise.
+  */
+category: utilities
+type: has_domain_library,has_message
+signature: |
+  bool checkCloseLaneletCondition(
+    const std::pair<double, lanelet::Lanelet> & lanelet,
+    const autoware_perception_msgs::msg::TrackedObject & object, const double max_distance_from_lane,
+    const double max_angle_diff_from_lane)
+additional_information: 
+  function_related_class: |
+    namespace autoware::universe_utils{
+      inline double normalizeRadian(const double rad, const double min_rad = -pi)
+    }
+test: test_autoware_radar_object_tracker_utils
+test_cases: 
+- InsideLanelet
+- OutsideLaneletButClose
+- OutsideLaneletAndFar
+- AngleDifferenceTooLarge

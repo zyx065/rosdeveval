@@ -1,0 +1,26 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_velocity_smoother
+ros_package: nav2_velocity_smoother
+file_path: src/velocity_smoother.cpp
+method_name: VelocitySmoother::inputCommandCallback
+requirement: |
+  /**
+  * Receives and validates incoming velocity commands for smoothing.
+  * 
+  * @param[in] msg Shared pointer to the incoming twist velocity command message.
+  */
+category: ros_architecture
+type: has_message,has_timer
+signature: |
+  void VelocitySmoother::inputCommandCallback(const geometry_msgs::msg::Twist::SharedPtr msg)
+additional_information: 
+  function_related_variable: |
+    geometry_msgs::msg::Twist::SharedPtr command_;
+    rclcpp::Time last_command_time_;
+  function_related_class: |
+    namespace nav2_util{
+      bool validateTwist(const geometry_msgs::msg::Twist & msg);
+    }
+test: velocity_smoother_tests
+test_cases: []

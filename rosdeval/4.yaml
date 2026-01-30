@@ -1,0 +1,39 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator
+ros_package: autoware_perception_online_evaluator
+file_path: src/perception_online_evaluator_node.cpp
+method_name: PerceptionOnlineEvaluatorNode::PerceptionOnlineEvaluatorNode
+requirement: |
+  /**
+  * @brief Constructs a PerceptionOnlineEvaluatorNode for online evaluation of perception metrics.
+  *
+  * @param node_options ROS 2 node configuration options.
+  *
+  * Initializes subscriptions for predicted objects, publishers for metrics and markers, 
+  * and sets up TF buffer and parameter handling. Also ensures Google logging is initialized.
+  */
+category: ros_architecture
+type: has_domain_library,has_topic,has_parameter
+signature: |
+  PerceptionOnlineEvaluatorNode::PerceptionOnlineEvaluatorNode(
+    const rclcpp::NodeOptions & node_options)
+  : Node("perception_online_evaluator", node_options),
+    parameters_(std::make_shared<Parameters>()),
+    metrics_calculator_(parameters_)
+additional_information: 
+  function_related_variable: |
+    rclcpp::Subscription<PredictedObjects>::SharedPtr objects_sub_;
+    rclcpp::Publisher<tier4_metric_msgs::msg::MetricArray>::SharedPtr metrics_pub_;
+    rclcpp::Publisher<MarkerArray>::SharedPtr pub_marker_;
+    std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+    std::shared_ptr<tf2_ros::TransformListener> transform_listener_{nullptr};
+    OnSetParametersCallbackHandle::SharedPtr set_param_res_;
+  function_related_function: |
+    void initParameter();
+    rcl_interfaces::msg::SetParametersResult onParameter(const std::vector<rclcpp::Parameter> & parameters);
+test: test_perception_online_evaluator_node
+test_cases: 
+- testLateralDeviation_deviation0
+- testLateralDeviation_deviation1
+- testLateralDeviation_oscillation

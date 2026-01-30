@@ -1,0 +1,151 @@
+compilation.log: "Starting >>> autoware_obstacle_stop_planner\n--- stderr: autoware_obstacle_stop_planner\n\
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.cpp:\
+  \ In constructor ‘autoware::motion_planning::AdaptiveCruiseController::AdaptiveCruiseController(rclcpp::Node*,\
+  \ double, double, double)’:\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.cpp:159:40:\
+  \ error: ‘tier4_debug_msgs’ was not declared in this scope; did you mean ‘tier4_planning_msgs’?\n\
+  \  159 |   pub_debug_ = node_->create_publisher<tier4_debug_msgs::msg::Float32MultiArrayStamped>(\n\
+  \      |                                        ^~~~~~~~~~~~~~~~\n      |      \
+  \                                  tier4_planning_msgs\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.cpp:159:23:\
+  \ error: parse error in template argument list\n  159 |   pub_debug_ = node_->create_publisher<tier4_debug_msgs::msg::Float32MultiArrayStamped>(\n\
+  \      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.cpp:159:88:\
+  \ error: no matching function for call to ‘rclcpp::Node::create_publisher<<expression\
+  \ error> >(const char [33], rclcpp::QoS)’\n  159 |   pub_debug_ = node_->create_publisher<tier4_debug_msgs::msg::Float32MultiArrayStamped>(\n\
+  \      |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n\
+  \  160 |     \"adaptive_cruise_controller/debug\", rclcpp::QoS(1));\n      |   \
+  \  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                         \
+  \        \nIn file included from /opt/ros/humble/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:22,\n\
+  \                 from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,\n \
+  \                from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.hpp:18,\n\
+  \                 from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.cpp:15:\n\
+  /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:195:3: note: candidate: ‘template<class\
+  \ MessageT, class AllocatorT, class PublisherT> std::shared_ptr<PublisherT> rclcpp::Node::create_publisher(const\
+  \ string&, const rclcpp::QoS&, const rclcpp::PublisherOptionsWithAllocator<AllocatorT>&)’\n\
+  \  195 |   create_publisher(\n      |   ^~~~~~~~~~~~~~~~\n/opt/ros/humble/include/rclcpp/rclcpp/node.hpp:195:3:\
+  \ note:   template argument deduction/substitution failed:\n/workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/adaptive_cruise_control.cpp:159:88:\
+  \ error: template argument 1 is invalid\n  159 |   pub_debug_ = node_->create_publisher<tier4_debug_msgs::msg::Float32MultiArrayStamped>(\n\
+  \      |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n\
+  \  160 |     \"adaptive_cruise_controller/debug\", rclcpp::QoS(1));\n      |   \
+  \  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                         \
+  \        \ngmake[2]: *** [CMakeFiles/autoware_obstacle_stop_planner.dir/build.make:76:\
+  \ CMakeFiles/autoware_obstacle_stop_planner.dir/src/adaptive_cruise_control.cpp.o]\
+  \ Error 1\ngmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_obstacle_stop_planner.dir/all]\
+  \ Error 2\ngmake: *** [Makefile:146: all] Error 2\n---\nFailed   <<< autoware_obstacle_stop_planner\
+  \ [9.23s, exited with code 2]\n\nSummary: 0 packages finished [10.7s]\n  1 package\
+  \ failed: autoware_obstacle_stop_planner\n  1 package had stderr output: autoware_obstacle_stop_planner\n"
+generate_code.cpp: |-
+  AdaptiveCruiseController::AdaptiveCruiseController(
+    rclcpp::Node * node, const double vehicle_width, const double vehicle_length,
+    const double baselink2front)
+  : node_(node),
+    vehicle_width_(vehicle_width),
+    vehicle_length_(vehicle_length),
+    baselink2front_(baselink2front)
+  {
+    // Declare parameters
+    param_.use_object_to_est_vel = node_->declare_parameter("use_object_to_est_vel", true);
+    param_.use_pcl_to_est_vel = node_->declare_parameter("use_pcl_to_est_vel", false);
+    param_.consider_obj_velocity = node_->declare_parameter("consider_obj_velocity", true);
+    param_.object_polygon_length_margin = node_->declare_parameter("object_polygon_length_margin", 1.0);
+    param_.object_polygon_width_margin = node_->declare_parameter("object_polygon_width_margin", 0.5);
+    param_.valid_est_vel_diff_time = node_->declare_parameter("valid_est_vel_diff_time", 0.5);
+    param_.valid_vel_que_time = node_->declare_parameter("valid_vel_que_time", 1.0);
+    param_.valid_est_vel_max = node_->declare_parameter("valid_est_vel_max", 30.0);
+    param_.valid_est_vel_min = node_->declare_parameter("valid_est_vel_min", -10.0);
+    param_.thresh_vel_to_stop = node_->declare_parameter("thresh_vel_to_stop", 2.0);
+    param_.obstacle_velocity_thresh_to_start_acc = node_->declare_parameter("obstacle_velocity_thresh_to_start_acc", 5.0);
+    param_.obstacle_velocity_thresh_to_stop_acc = node_->declare_parameter("obstacle_velocity_thresh_to_stop_acc", 3.0);
+    param_.emergency_stop_acceleration = node_->declare_parameter("emergency_stop_acceleration", -5.0);
+    param_.obstacle_emergency_stop_acceleration = node_->declare_parameter("obstacle_emergency_stop_acceleration", -3.0);
+    param_.emergency_stop_idling_time = node_->declare_parameter("emergency_stop_idling_time", 0.5);
+    param_.min_dist_stop = node_->declare_parameter("min_dist_stop", 2.0);
+    param_.max_standard_acceleration = node_->declare_parameter("max_standard_acceleration", 2.0);
+    param_.min_standard_acceleration = node_->declare_parameter("min_standard_acceleration", -2.0);
+    param_.standard_idling_time = node_->declare_parameter("standard_idling_time", 0.5);
+    param_.min_dist_standard = node_->declare_parameter("min_dist_standard", 5.0);
+    param_.obstacle_min_standard_acceleration = node_->declare_parameter("obstacle_min_standard_acceleration", -1.0);
+    param_.margin_rate_to_change_vel = node_->declare_parameter("margin_rate_to_change_vel", 0.1);
+    param_.use_time_compensation_to_dist = node_->declare_parameter("use_time_compensation_to_dist", true);
+    param_.lowpass_gain_ = node_->declare_parameter("lowpass_gain", 0.5);
+    param_.use_rough_est_vel = node_->declare_parameter("use_rough_est_vel", false);
+    param_.rough_velocity_rate = node_->declare_parameter("rough_velocity_rate", 0.8);
+    param_.p_coeff_pos = node_->declare_parameter("p_coeff_pos", 1.0);
+    param_.p_coeff_neg = node_->declare_parameter("p_coeff_neg", 1.0);
+    param_.d_coeff_pos = node_->declare_parameter("d_coeff_pos", 0.5);
+    param_.d_coeff_neg = node_->declare_parameter("d_coeff_neg", 0.5);
+
+    // Create debug publisher
+    pub_debug_ = node_->create_publisher<tier4_debug_msgs::msg::Float32MultiArrayStamped>(
+      "adaptive_cruise_controller/debug", rclcpp::QoS(1));
+  }
+ground_truth.cpp: |-
+  AdaptiveCruiseController::AdaptiveCruiseController(
+    rclcpp::Node * node, const double vehicle_width, const double vehicle_length,
+    const double baselink2front)
+  : node_(node),
+    vehicle_width_(vehicle_width),
+    vehicle_length_(vehicle_length),
+    baselink2front_(baselink2front)
+  {
+    // get parameter
+    std::string acc_ns = "adaptive_cruise_control.";
+
+    /* config */
+    param_.use_object_to_est_vel =
+      node_->declare_parameter<bool>(acc_ns + "use_object_to_estimate_vel");
+    param_.use_pcl_to_est_vel = node_->declare_parameter<bool>(acc_ns + "use_pcl_to_estimate_vel");
+    param_.consider_obj_velocity = node_->declare_parameter<bool>(acc_ns + "consider_obj_velocity");
+
+    /* parameter for acc */
+    param_.obstacle_velocity_thresh_to_start_acc =
+      node_->declare_parameter<double>(acc_ns + "obstacle_velocity_thresh_to_start_acc");
+    param_.obstacle_velocity_thresh_to_stop_acc =
+      node_->declare_parameter<double>(acc_ns + "obstacle_velocity_thresh_to_stop_acc");
+    param_.emergency_stop_acceleration =
+      node_->declare_parameter<double>(acc_ns + "emergency_stop_acceleration");
+    param_.obstacle_emergency_stop_acceleration =
+      node_->declare_parameter<double>(acc_ns + "obstacle_emergency_stop_acceleration");
+    param_.emergency_stop_idling_time =
+      node_->declare_parameter<double>(acc_ns + "emergency_stop_idling_time");
+    param_.min_dist_stop = node_->declare_parameter<double>(acc_ns + "min_dist_stop");
+    param_.max_standard_acceleration =
+      node_->declare_parameter<double>(acc_ns + "max_standard_acceleration");
+    param_.min_standard_acceleration =
+      node_->declare_parameter<double>(acc_ns + "min_standard_acceleration");
+    param_.standard_idling_time = node_->declare_parameter<double>(acc_ns + "standard_idling_time");
+    param_.min_dist_standard = node_->declare_parameter<double>(acc_ns + "min_dist_standard");
+    param_.obstacle_min_standard_acceleration =
+      node_->declare_parameter<double>(acc_ns + "obstacle_min_standard_acceleration");
+    param_.margin_rate_to_change_vel =
+      node_->declare_parameter<double>(acc_ns + "margin_rate_to_change_vel");
+    param_.use_time_compensation_to_dist =
+      node_->declare_parameter<bool>(acc_ns + "use_time_compensation_to_calc_distance");
+    param_.lowpass_gain_ =
+      node_->declare_parameter<double>(acc_ns + "lowpass_gain_of_upper_velocity");
+
+    /* parameter for pid in acc */
+    param_.p_coeff_pos = node_->declare_parameter<double>(acc_ns + "p_coefficient_positive");
+    param_.p_coeff_neg = node_->declare_parameter<double>(acc_ns + "p_coefficient_negative");
+    param_.d_coeff_pos = node_->declare_parameter<double>(acc_ns + "d_coefficient_positive");
+    param_.d_coeff_neg = node_->declare_parameter<double>(acc_ns + "d_coefficient_negative");
+
+    /* parameter for speed estimation of obstacle */
+    param_.object_polygon_length_margin =
+      node_->declare_parameter<double>(acc_ns + "object_polygon_length_margin");
+    param_.object_polygon_width_margin =
+      node_->declare_parameter<double>(acc_ns + "object_polygon_width_margin");
+    param_.valid_est_vel_diff_time =
+      node_->declare_parameter<double>(acc_ns + "valid_estimated_vel_diff_time");
+    param_.valid_vel_que_time = node_->declare_parameter<double>(acc_ns + "valid_vel_que_time");
+    param_.valid_est_vel_max = node_->declare_parameter<double>(acc_ns + "valid_estimated_vel_max");
+    param_.valid_est_vel_min = node_->declare_parameter<double>(acc_ns + "valid_estimated_vel_min");
+    param_.thresh_vel_to_stop = node_->declare_parameter<double>(acc_ns + "thresh_vel_to_stop");
+    param_.use_rough_est_vel =
+      node_->declare_parameter<bool>(acc_ns + "use_rough_velocity_estimation");
+    param_.rough_velocity_rate = node_->declare_parameter<double>(acc_ns + "rough_velocity_rate");
+
+    /* publisher */
+    pub_debug_ = node_->create_publisher<autoware_internal_debug_msgs::msg::Float32MultiArrayStamped>(
+      "~/adaptive_cruise_control/debug_values", 1);
+  }

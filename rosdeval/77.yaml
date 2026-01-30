@@ -1,0 +1,25 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/behavior_path_planner/autoware_behavior_path_side_shift_module
+ros_package: autoware_compare_map_segmentation
+file_path: src/utils.cpp
+method_name: setOrientation
+requirement: |
+  /**
+  * Sets the orientation of all points in the path based on their neighboring points.
+  * 
+  * @param[in,out] path Pointer to the PathWithLaneId object whose point orientations will be updated.
+  *                      The orientation of each point is calculated using the vector to the next point,
+  *                      or for the last point, the vector from the previous point.
+  */
+category: utilities
+type: has_message,has_domain_library
+signature: |
+  void setOrientation(PathWithLaneId * path)
+additional_information: 
+  function_related_variable: |
+    using tier4_planning_msgs::msg::PathWithLaneId;
+test: test_autoware_behavior_path_side_shift_module_utils
+test_cases: 
+- SetOrientationStraightPath
+- SetOrientationCurvedPath

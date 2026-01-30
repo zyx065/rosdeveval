@@ -1,0 +1,60 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/sampling_based_planner/autoware_sampler_common
+ros_package: autoware_perception_online_evaluator
+file_path: src/sampler_common/transform/spline_transform.cpp
+method_name: Spline2D::frenet
+requirement: |
+  /**
+  * Converts a Cartesian point to Frenet coordinates relative to the spline.
+  * 
+  * @param p The Cartesian point to convert to Frenet coordinates.
+  * @param precision The desired precision for the longitudinal coordinate calculation.
+  * @return FrenetPoint containing (s, d) coordinates where s is the longitudinal
+  *         position along the spline and d is the lateral offset from the spline.
+  */
+category: utilities
+type: []
+signature: |
+  FrenetPoint Spline2D::frenet(const Point2d & p, const double precision) const
+additional_information: 
+  function_related_variable: |
+    Spline x_spline_{};
+    Spline y_spline_{};
+    std::vector<Point2d> original_points_{};
+  function_related_class: |
+    class Spline
+    {
+      std::vector<double> a_{};
+      std::vector<double> b_{};
+      std::vector<double> c_{};
+      std::vector<double> d_{};
+      std::vector<double> h_{};
+
+    public:
+      Spline() = default;
+      Spline(const std::vector<double> & base_index, const std::vector<double> & base_value);
+      explicit Spline(const std::vector<Point2d> & points);
+      bool interpolate(
+        const std::vector<double> & base_index, const std::vector<double> & base_value,
+        const std::vector<double> & return_index, std::vector<double> & return_value);
+      [[nodiscard]] double value(const double query, const std::vector<double> & base_index) const;
+      [[nodiscard]] double velocity(const double query, const std::vector<double> & base_index) const;
+      [[nodiscard]] double acceleration(
+        const double query, const std::vector<double> & base_index) const;
+
+    private:
+      void generateSpline(
+        const std::vector<double> & base_index, const std::vector<double> & base_value);
+      [[nodiscard]] static bool isIncrease(const std::vector<double> & x);
+      [[nodiscard]] static bool isValidInput(
+        const std::vector<double> & base_index, const std::vector<double> & base_value,
+        const std::vector<double> & return_index);
+      [[nodiscard]] std::vector<double> solveLinearSystem(
+        const double omega, const size_t max_iter) const;
+      [[nodiscard]] static bool isConvergeL1(
+        const std::vector<double> & r1, const std::vector<double> & r2, const double converge_range);
+    };
+test: test_sampler_common
+test_cases: 
+- toFrenet

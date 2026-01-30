@@ -1,0 +1,34 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_planning_validator
+ros_package: autoware_planning_evaluator
+file_path: src/planning_validator.cpp
+method_name: PlanningValidator::onTrajectory
+requirement: |
+  /**
+  * @brief Processes an incoming trajectory message for validation and publishing.
+  * 
+  * @param msg Shared pointer to the received trajectory message to process.
+  */
+category: ros_architecture
+type: has_topic,has_timer,has_parameter
+signature: |
+  void PlanningValidator::onTrajectory(const Trajectory::ConstSharedPtr msg)
+additional_information: 
+  function_related_variable: |
+    StopWatch<std::chrono::milliseconds> stop_watch_;
+    Trajectory::ConstSharedPtr current_trajectory_;
+    Odometry::ConstSharedPtr current_kinematics_;
+    bool publish_diag_ = true;
+    std::shared_ptr<Updater> diag_updater_ = nullptr;
+    std::shared_ptr<PlanningValidatorDebugMarkerPublisher> debug_pose_publisher_;
+  function_related_function: |
+    bool isDataReady();
+    void setupDiag();
+    void validate(const Trajectory & trajectory);
+    void publishProcessingTime(const double processing_time_ms);
+    void publishTrajectory();
+    void publishDebugInfo();
+    void displayStatus();
+test: test_autoware_planning_validator
+test_cases: []

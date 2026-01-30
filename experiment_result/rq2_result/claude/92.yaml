@@ -1,0 +1,127 @@
+compilation.log: |
+  Starting >>> autoware_geography_utils
+  --- stderr: autoware_geography_utils
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/projection.cpp: In function ‘autoware::geography_utils::LocalPoint autoware::geography_utils::project_forward(const GeoPoint&, const MapProjectorInfo&)’:
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/projection.cpp:36:5: error: ‘GPSPoint’ was not declared in this scope; did you mean ‘lanelet::GPSPoint’?
+     36 |     GPSPoint gps_point{geo_point.latitude, geo_point.longitude, geo_point.altitude};
+        |     ^~~~~~~~
+        |     lanelet::GPSPoint
+  In file included from /opt/ros/humble/include/lanelet2_io/Projection.h:2,
+                   from /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/include/autoware/geography_utils/lanelet2_projector.hpp:20,
+                   from /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/projection.cpp:16:
+  /opt/ros/humble/include/lanelet2_core/primitives/GPSPoint.h:7:7: note: ‘lanelet::GPSPoint’ declared here
+      7 | class GPSPoint {
+        |       ^~~~~~~~
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/projection.cpp:39:5: error: ‘BasicPoint3d’ was not declared in this scope; did you mean ‘lanelet::BasicPoint3d’?
+     39 |     BasicPoint3d projected_point = projector->forward(gps_point);
+        |     ^~~~~~~~~~~~
+        |     lanelet::BasicPoint3d
+  In file included from /opt/ros/humble/include/lanelet2_io/Projection.h:3,
+                   from /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/include/autoware/geography_utils/lanelet2_projector.hpp:20,
+                   from /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/projection.cpp:16:
+  /opt/ros/humble/include/lanelet2_core/primitives/Point.h:19:7: note: ‘lanelet::BasicPoint3d’ declared here
+     19 | using BasicPoint3d = Eigen::Vector3d;                                //!< a simple 3d-point
+        |       ^~~~~~~~~~~~
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/projection.cpp:43:9: error: ‘projected_point’ was not declared in this scope
+     43 |         projected_point.x(),
+        |         ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/projection.cpp:46:5: error: no matching function for call to ‘geometry_msgs::msg::Point_<std::allocator<void> >::Point_(<brace-enclosed initializer list>)’
+     46 |     };
+        |     ^
+  In file included from /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/point.hpp:7,
+                   from /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/include/autoware/geography_utils/projection.hpp:20,
+                   from /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/projection.cpp:17:
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__struct.hpp:47:12: note: candidate: ‘geometry_msgs::msg::Point_<ContainerAllocator>::Point_(const ContainerAllocator&, rosidl_runtime_cpp::MessageInitialization) [with ContainerAllocator = std::allocator<void>]’
+     47 |   explicit Point_(const ContainerAllocator & _alloc, rosidl_runtime_cpp::MessageInitialization _init = rosidl_runtime_cpp::MessageInitialization::ALL)
+        |            ^~~~~~
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__struct.hpp:47:12: note:   candidate expects 2 arguments, 3 provided
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__struct.hpp:36:12: note: candidate: ‘geometry_msgs::msg::Point_<ContainerAllocator>::Point_(rosidl_runtime_cpp::MessageInitialization) [with ContainerAllocator = std::allocator<void>]’
+     36 |   explicit Point_(rosidl_runtime_cpp::MessageInitialization _init = rosidl_runtime_cpp::MessageInitialization::ALL)
+        |            ^~~~~~
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__struct.hpp:36:12: note:   candidate expects 1 argument, 3 provided
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__struct.hpp:32:8: note: candidate: ‘constexpr geometry_msgs::msg::Point_<std::allocator<void> >::Point_(const geometry_msgs::msg::Point_<std::allocator<void> >&)’
+     32 | struct Point_
+        |        ^~~~~~
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__struct.hpp:32:8: note:   candidate expects 1 argument, 3 provided
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__struct.hpp:32:8: note: candidate: ‘constexpr geometry_msgs::msg::Point_<std::allocator<void> >::Point_(geometry_msgs::msg::Point_<std::allocator<void> >&&)’
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/point__struct.hpp:32:8: note:   candidate expects 1 argument, 3 provided
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/projection.cpp:30:45: error: unused parameter ‘geo_point’ [-Werror=unused-parameter]
+     30 | LocalPoint project_forward(const GeoPoint & geo_point, const MapProjectorInfo & projector_info)
+        |                            ~~~~~~~~~~~~~~~~~^~~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/autoware_geography_utils.dir/build.make:90: CMakeFiles/autoware_geography_utils.dir/src/projection.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_geography_utils.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_geography_utils [1.57s, exited with code 2]
+
+  Summary: 0 packages finished [3.00s]
+    1 package failed: autoware_geography_utils
+    1 package had stderr output: autoware_geography_utils
+generate_code.cpp: |-
+  LocalPoint project_forward(const GeoPoint & geo_point, const MapProjectorInfo & projector_info)
+  {
+      // Create a lanelet2 projector based on the projector info
+      std::unique_ptr<lanelet::Projector> projector = get_lanelet2_projector(projector_info);
+
+      // Convert GeoPoint to GPSPoint if needed
+      GPSPoint gps_point{geo_point.latitude, geo_point.longitude, geo_point.altitude};
+
+      // Project the point using the created projector
+      BasicPoint3d projected_point = projector->forward(gps_point);
+
+      // Create and return LocalPoint from the projected coordinates
+      return LocalPoint{
+          projected_point.x(),
+          projected_point.y(),
+          projected_point.z()
+      };
+  }
+ground_truth.cpp: |-
+  LocalPoint project_forward(const GeoPoint & geo_point, const MapProjectorInfo & projector_info)
+  {
+    std::unique_ptr<lanelet::Projector> projector = get_lanelet2_projector(projector_info);
+    const lanelet::GPSPoint position{geo_point.latitude, geo_point.longitude, geo_point.altitude};
+
+    lanelet::BasicPoint3d projected_local_point;
+    if (projector_info.projector_type == MapProjectorInfo::MGRS) {
+      constexpr int mgrs_precision = 9;  // set precision as 100 micro meter
+      const auto mgrs_projector = dynamic_cast<lanelet::projection::MGRSProjector *>(projector.get());
+
+      // project x and y using projector
+      // note that the altitude is ignored in MGRS projection conventionally
+      projected_local_point = mgrs_projector->forward(position, mgrs_precision);
+    } else {
+      // project x and y using projector
+      // note that the original projector such as UTM projector does not compensate for the altitude
+      // offset
+      projected_local_point = projector->forward(position);
+
+      // correct z based on the map origin
+      // note that the converted altitude in local point is in the same vertical datum as the geo
+      // point
+      projected_local_point.z() = geo_point.altitude - projector_info.map_origin.altitude;
+    }
+
+    LocalPoint local_point;
+    local_point.x = projected_local_point.x();
+    local_point.y = projected_local_point.y();
+    local_point.z = projected_local_point.z();
+
+    return local_point;
+  }
+
+architecture-codes:
+  - ROS Message Related Issues - Message Initialization Issues
+
+functionality-codes:
+  - Domain Library Issues - Domain Specific Library Utilization Error
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Missing
+  - Reference Error - Wrong method
+
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

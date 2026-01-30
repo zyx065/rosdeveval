@@ -1,0 +1,45 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_waypoint_follower
+ros_package: nav2_waypoint_follower
+file_path: plugins/photo_at_waypoint.cpp
+method_name: PhotoAtWaypoint::processAtWaypoint
+requirement: |
+  /**
+  * @brief Processes a photo capture operation at a navigation waypoint.
+  * 
+  * Saves an image from the current camera frame when the robot reaches a waypoint.
+  * The image is saved to a configured directory with a filename containing the waypoint index and timestamp.
+  * 
+  * @param curr_pose The current pose of the robot as a PoseStamped message.
+  * @param curr_waypoint_index The index of the current waypoint being processed.
+  * @return true if photo was successfully taken and saved, false if an error occurred.
+  */
+category: utilities
+type: has_logger,has_domain_library
+signature: |
+  bool PhotoAtWaypoint::processAtWaypoint(
+    const geometry_msgs::msg::PoseStamped & curr_pose, const int & curr_waypoint_index)
+additional_information: 
+  function_related_variable: |
+    // to ensure safety when accessing global var curr_frame_
+    std::mutex global_mutex_;
+    // the taken photos will be saved under this directory
+    std::filesystem::path save_dir_;
+    // .png ? .jpg ? or some other well known format
+    std::string image_format_;
+    // the topic to subscribe in order capture a frame
+    std::string image_topic_;
+    // whether plugin is enabled
+    bool is_enabled_;
+    // current frame;
+    sensor_msgs::msg::Image::SharedPtr curr_frame_msg_;
+    // global logger
+    rclcpp::Logger logger_{rclcpp::get_logger("nav2_waypoint_follower")};
+    // ros subscriber to get camera image
+    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr camera_image_subscriber_;
+  function_related_function: |
+    void PhotoAtWaypoint::deepCopyMsg2Mat(const sensor_msgs::msg::Image::SharedPtr & msg,cv::Mat & mat)
+test: test_task_executors
+test_cases: 
+- PhotoAtWaypoint

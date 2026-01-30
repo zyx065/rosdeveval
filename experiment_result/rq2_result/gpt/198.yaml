@@ -1,0 +1,61 @@
+compilation.log: |
+  Starting >>> nav2_mppi_controller
+  Finished <<< nav2_mppi_controller [0.56s]
+
+  Summary: 1 package finished [0.80s]
+generate_code.cpp: |-
+  bool PathHandler::isWithinInversionTolerances(const geometry_msgs::msg::PoseStamped & robot_pose)
+  {
+      // Check if the global plan up to inversion is empty
+      if (global_plan_up_to_inversion_.poses.empty()) {
+          RCLCPP_WARN(logger_, "Global plan up to inversion is empty. Cannot check inversion tolerances.");
+          return false;
+      }
+
+      // Get the last pose in the global plan up to inversion
+      const auto & last_pose = global_plan_up_to_inversion_.poses.back();
+
+      // Calculate the Euclidean distance between the robot's position and the last pose's position
+      double dx = robot_pose.pose.position.x - last_pose.pose.position.x;
+      double dy = robot_pose.pose.position.y - last_pose.pose.position.y;
+      double distance = std::sqrt(dx * dx + dy * dy);
+
+      // Check if the distance is within the inversion XY tolerance
+      if (distance > inversion_xy_tolerance_) {
+          RCLCPP_DEBUG(logger_, "Robot is outside the inversion XY tolerance. Distance: %.3f, Tolerance: %.3f", distance, inversion_xy_tolerance_);
+          return false;
+      }
+
+      // Calculate the yaw (orientation) difference between the robot's pose and the last pose
+      tf2::Quaternion robot_quat, last_quat;
+      tf2::fromMsg(robot_pose.pose.orientation, robot_quat);
+      tf2::fromMsg(last_pose.pose.orientation, last_quat);
+
+      double yaw_diff = tf2::getYaw(robot_quat) - tf2::getYaw(last_quat);
+      yaw_diff = std::atan2(std::sin(yaw_diff), std::cos(yaw_diff)); // Normalize yaw difference to [-pi, pi]
+
+      // Check if the yaw difference is within the inversion yaw tolerance
+      if (std::abs(yaw_diff) > inversion_yaw_tolerance) {
+          RCLCPP_DEBUG(logger_, "Robot is outside the inversion yaw tolerance. Yaw difference: %.3f, Tolerance: %.3f", yaw_diff, inversion_yaw_tolerance);
+          return false;
+      }
+
+      // If both position and orientation are within tolerances, return true
+      RCLCPP_DEBUG(logger_, "Robot is within inversion tolerances.");
+      return true;
+  }
+ground_truth.cpp: |-
+  bool PathHandler::isWithinInversionTolerances(const geometry_msgs::msg::PoseStamped & robot_pose)
+  {
+    // Keep full path if we are within tolerance of the inversion pose
+    const auto last_pose = global_plan_up_to_inversion_.poses.back();
+    float distance = hypotf(
+      robot_pose.pose.position.x - last_pose.pose.position.x,
+      robot_pose.pose.position.y - last_pose.pose.position.y);
+
+    float angle_distance = angles::shortest_angular_distance(
+      tf2::getYaw(robot_pose.pose.orientation),
+      tf2::getYaw(last_pose.pose.orientation));
+
+    return distance <= inversion_xy_tolerance_ && fabs(angle_distance) <= inversion_yaw_tolerance;
+  }

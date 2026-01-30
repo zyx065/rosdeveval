@@ -1,0 +1,50 @@
+compilation.log: |
+  Starting >>> dwb_critics
+  Finished <<< dwb_critics [0.62s]
+
+  Summary: 1 package finished [0.91s]
+generate_code.cpp: |-
+  double ObstacleFootprintCritic::lineCost(int x0, int x1, int y0, int y1)
+  {
+    double max_cost = 0.0; // Initialize the maximum cost to 0.0
+
+    // Create a LineIterator to iterate over the points along the line
+    LineIterator line_iterator(x0, y0, x1, y1);
+
+    // Iterate through all points on the line
+    while (line_iterator.isValid())
+    {
+      int x = line_iterator.getX();
+      int y = line_iterator.getY();
+
+      // Get the cost of the current point
+      double cost = pointCost(x, y);
+
+      // Update the maximum cost if the current cost is higher
+      if (cost > max_cost)
+      {
+        max_cost = cost;
+      }
+
+      // Advance to the next point on the line
+      line_iterator.advance();
+    }
+
+    return max_cost; // Return the maximum cost found along the line
+  }
+ground_truth.cpp: |-
+  double ObstacleFootprintCritic::lineCost(int x0, int x1, int y0, int y1)
+  {
+    double line_cost = 0.0;
+    double point_cost = -1.0;
+
+    for (LineIterator line(x0, y0, x1, y1); line.isValid(); line.advance()) {
+      point_cost = pointCost(line.getX(), line.getY());   // Score the current point
+
+      if (line_cost < point_cost) {
+        line_cost = point_cost;
+      }
+    }
+
+    return line_cost;
+  }

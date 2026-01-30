@@ -1,0 +1,56 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter
+ros_package: autoware_raw_vehicle_cmd_converter
+file_path: src/brake_map.cpp
+method_name: BrakeMap::getBrake
+requirement: |
+  /**
+  * Calculates the brake command value based on desired acceleration and current velocity.
+  * 
+  * Uses a precomputed brake map to interpolate the appropriate brake command for the given 
+  * acceleration and velocity inputs, with safety bounds for out-of-range conditions.
+  *
+  * @param acc Desired acceleration value (m/s^2).
+  * @param vel Current velocity value (m/s).
+  * @param[out] brake Output parameter for the calculated brake command value.
+  * @return bool Always returns true to indicate successful calculation.
+  */
+category: utilities
+type: has_logger
+signature: |
+  bool BrakeMap::getBrake(const double acc, const double vel, double & brake)
+additional_information: 
+  function_related_class: |
+    class CSVLoader
+    {
+    public:
+      explicit CSVLoader(const std::string & csv_path);
+
+      bool readCSV(Table & result, const char delim = ',');
+      static bool validateData(const Table & table, const std::string & csv_path);
+      static bool validateMap(const Map & map, const bool is_col_decent);
+      static Map getMap(const Table & table);
+      static std::vector<double> getRowIndex(const Table & table);
+      static std::vector<double> getColumnIndex(const Table & table);
+      static double clampValue(const double val, const std::vector<double> & ranges);
+
+    private:
+      std::string csv_path_;
+    };
+
+    namespace autoware::interpolation
+    {
+    double lerp(const double src_val, const double dst_val, const double ratio);
+
+    std::vector<double> lerp(
+      const std::vector<double> & base_keys, const std::vector<double> & base_values,
+      const std::vector<double> & query_keys);
+
+    double lerp(
+      const std::vector<double> & base_keys, const std::vector<double> & base_values,
+      const double query_key);
+    }  // namespace autoware::interpolation
+test: test_autoware_raw_vehicle_cmd_converter
+test_cases: 
+- BrakeMapCalculation

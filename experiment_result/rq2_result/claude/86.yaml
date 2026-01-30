@@ -1,0 +1,132 @@
+compilation.log: |
+  Starting >>> autoware_obstacle_collision_checker
+  --- stderr: autoware_obstacle_collision_checker
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp: In function ‘autoware::obstacle_collision_checker::Output autoware::obstacle_collision_checker::check_for_collisions(const autoware::obstacle_collision_checker::Input&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:86:61: error: ‘const struct autoware::obstacle_collision_checker::Input’ has no member named ‘trajectory’
+     86 |     output.resampled_trajectory = resample_trajectory(input.trajectory, interval);
+        |                                                             ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:100:43: error: ‘const struct autoware::obstacle_collision_checker::Input’ has no member named ‘pointcloud’
+    100 |         get_transformed_point_cloud(input.pointcloud, input.transform);
+        |                                           ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:100:61: error: ‘const struct autoware::obstacle_collision_checker::Input’ has no member named ‘transform’
+    100 |         get_transformed_point_cloud(input.pointcloud, input.transform);
+        |                                                             ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:104:15: error: ‘const struct autoware::obstacle_collision_checker::Input’ has no member named ‘current_velocity’
+    104 |         input.current_velocity,
+        |               ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:105:15: error: ‘const struct autoware::obstacle_collision_checker::Input’ has no member named ‘max_deceleration’
+    105 |         input.max_deceleration,
+        |               ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:106:15: error: ‘const struct autoware::obstacle_collision_checker::Input’ has no member named ‘delay_time’
+    106 |         input.delay_time
+        |               ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp: At global scope:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:67:8: error: ‘double {anonymous}::calc_braking_distance(double, double, double)’ defined but not used [-Werror=unused-function]
+     67 | double calc_braking_distance(
+        |        ^~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:34:32: error: ‘pcl::PointCloud<pcl::PointXYZ> {anonymous}::get_transformed_point_cloud(const PointCloud2&, const Transform&)’ defined but not used [-Werror=unused-function]
+     34 | pcl::PointCloud<pcl::PointXYZ> get_transformed_point_cloud(
+        |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/obstacle_collision_checker.dir/build.make:90: CMakeFiles/obstacle_collision_checker.dir/src/obstacle_collision_checker.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/obstacle_collision_checker.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_obstacle_collision_checker [8.69s, exited with code 2]
+
+  Summary: 0 packages finished [10.1s]
+    1 package failed: autoware_obstacle_collision_checker
+    1 package had stderr output: autoware_obstacle_collision_checker
+generate_code.cpp: |
+  Output check_for_collisions(const Input & input)
+  {
+      Output output;
+      auto start_time = std::chrono::high_resolution_clock::now();
+
+      // Resample trajectory to ensure consistent waypoint spacing
+      double interval = 1.0; // Example interval, adjust as needed
+      output.resampled_trajectory = resample_trajectory(input.trajectory, interval);
+
+      // Calculate vehicle footprints along the trajectory
+      output.vehicle_footprints = create_vehicle_footprints(
+          output.resampled_trajectory, 
+          input.param, 
+          input.vehicle_info
+      );
+
+      // Create vehicle passing areas
+      output.vehicle_passing_areas = create_vehicle_passing_areas(output.vehicle_footprints);
+
+      // Transform point cloud to match trajectory coordinate frame
+      pcl::PointCloud<pcl::PointXYZ> transformed_pointcloud = 
+          get_transformed_point_cloud(input.pointcloud, input.transform);
+
+      // Filter point cloud based on trajectory
+      double radius = calc_braking_distance(
+          input.current_velocity, 
+          input.max_deceleration, 
+          input.delay_time
+      );
+      pcl::PointCloud<pcl::PointXYZ> filtered_pointcloud = 
+          filter_point_cloud_by_trajectory(transformed_pointcloud, output.resampled_trajectory, radius);
+
+      // Check for potential collisions
+      output.will_collide = will_collide(filtered_pointcloud, output.vehicle_footprints);
+
+      // Calculate processing time
+      auto end_time = std::chrono::high_resolution_clock::now();
+      auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
+      output.processing_time_map["check_for_collisions"] = duration.count() / 1000.0;
+
+      return output;
+  }
+ground_truth.cpp: |-
+  Output check_for_collisions(const Input & input)
+  {
+    Output output;
+    autoware::universe_utils::StopWatch<std::chrono::milliseconds> stop_watch;
+
+    // resample trajectory by braking distance
+    constexpr double min_velocity = 0.01;
+    const auto & raw_abs_velocity = std::abs(input.current_twist->linear.x);
+    const auto abs_velocity = raw_abs_velocity < min_velocity ? 0.0 : raw_abs_velocity;
+    const auto braking_distance =
+      calc_braking_distance(abs_velocity, input.param.max_deceleration, input.param.delay_time);
+    output.resampled_trajectory = cut_trajectory(
+      resample_trajectory(*input.predicted_trajectory, input.param.resample_interval),
+      braking_distance);
+    output.processing_time_map["resampleTrajectory"] = stop_watch.toc(true);
+
+    // resample pointcloud
+    const auto obstacle_pointcloud =
+      get_transformed_point_cloud(*input.obstacle_pointcloud, input.obstacle_transform->transform);
+    const auto filtered_obstacle_pointcloud = filter_point_cloud_by_trajectory(
+      obstacle_pointcloud, output.resampled_trajectory, input.param.search_radius);
+
+    output.vehicle_footprints =
+      create_vehicle_footprints(output.resampled_trajectory, input.param, input.vehicle_info);
+    output.processing_time_map["createVehicleFootprints"] = stop_watch.toc(true);
+
+    output.vehicle_passing_areas = create_vehicle_passing_areas(output.vehicle_footprints);
+    output.processing_time_map["createVehiclePassingAreas"] = stop_watch.toc(true);
+
+    output.will_collide = will_collide(filtered_obstacle_pointcloud, output.vehicle_passing_areas);
+    output.processing_time_map["willCollide"] = stop_watch.toc(true);
+
+    return output;
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Timer Issues - Timestamp Processing Errors
+  - ROS Parameter Related Issues - Use Non-exist Parameter
+functionality-codes:
+  - Incomplete Code - Missing Multiple Steps
+  - Reference Error - Wrong Variable
+  - Conditional Checks Issues - Conditional Check Missing
+  - Constant Value Error
+  - Operation/Calculation Error - Incorrect calculation flow
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient Understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS Development Best Practices
+  - Weakness in System-Level Integration - Lack of Familiarity with the Existing Codebase

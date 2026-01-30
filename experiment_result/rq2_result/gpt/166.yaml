@@ -1,0 +1,50 @@
+compilation.log: |
+  Starting >>> nav2_collision_monitor
+  Finished <<< nav2_collision_monitor [0.41s]
+
+  Summary: 1 package finished [0.71s]
+generate_code.cpp: |-
+  nav2_util::CallbackReturn
+  CollisionMonitor::on_activate(const rclcpp_lifecycle::State & /*state*/)
+  {
+    // Activate the cmd_vel_out publisher
+    cmd_vel_out_pub_->on_activate();
+
+    // Set the process_active_ flag to true to indicate the node is active
+    process_active_ = true;
+
+    // Publish the polygons to ensure they are available after activation
+    publishPolygons();
+
+    // Create a bond to ensure lifecycle management and node health monitoring
+    createBond();
+
+    // Return SUCCESS to indicate successful activation
+    return nav2_util::CallbackReturn::SUCCESS;
+  }
+ground_truth.cpp: |-
+  nav2_util::CallbackReturn
+  CollisionMonitor::on_activate(const rclcpp_lifecycle::State & /*state*/)
+  {
+    RCLCPP_INFO(get_logger(), "Activating");
+
+    // Activating lifecycle publisher
+    cmd_vel_out_pub_->on_activate();
+
+    // Activating polygons
+    for (std::shared_ptr<Polygon> polygon : polygons_) {
+      polygon->activate();
+    }
+
+    // Since polygons are being published when cmd_vel_in appears,
+    // we need to publish polygons first time to display them at startup
+    publishPolygons();
+
+    // Activating main worker
+    process_active_ = true;
+
+    // Creating bond connection
+    createBond();
+
+    return nav2_util::CallbackReturn::SUCCESS;
+  }

@@ -1,0 +1,33 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_trajectory_follower_node
+ros_package: autoware_trajectory_follower_node
+file_path: src/simple_trajectory_follower.cpp
+method_name: SimpleTrajectoryFollower::onTimer
+requirement: |
+  /**
+  * @brief Executes the main control loop to compute and publish vehicle control commands.
+  * 
+  * @details This timer callback processes trajectory data, calculates steering and acceleration commands,
+  * and publishes the resulting control message. The method handles both internal and external target velocity
+  * sources and ensures data readiness before proceeding with control computations.
+  * 
+  * @note The control command includes both lateral (steering) and longitudinal (velocity/acceleration) components
+  * with synchronized timestamps. If trajectory data is not ready, the method will log a message and return early.
+  */
+category: ros_architecture
+type: has_message,has_topic,has_timer,has_logger
+signature: |
+  void SimpleTrajectoryFollower::onTimer()
+additional_information:
+  function_related_variable: |
+    rclcpp::Publisher<Control>::SharedPtr pub_cmd_;
+    bool use_external_target_vel_;
+    TrajectoryPoint closest_traj_point_;
+  function_related_function: |
+    double SimpleTrajectoryFollower::calcAccCmd()
+    bool SimpleTrajectoryFollower::processData()
+    void SimpleTrajectoryFollower::updateClosest()
+    double SimpleTrajectoryFollower::calcSteerCmd()
+test: test_trajectory_follower_node
+test_cases: []

@@ -1,0 +1,28 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_collision_monitor
+ros_package: nav2_collision_monitor
+file_path: src/collision_monitor_node.cpp
+method_name: CollisionMonitor::on_configure
+requirement: |
+  /**
+  * Configures the CollisionMonitor node and allocates resources.
+  * 
+  * @param /*state Unused parameter from lifecycle state transition.
+  * @return nav2_util::CallbackReturn SUCCESS if configuration succeeds, FAILURE otherwise.
+  */
+category: ros_architecture
+type: has_timer,has_logger,has_message
+signature: |
+  nav2_util::CallbackReturn
+  CollisionMonitor::on_configure(const rclcpp_lifecycle::State & /*state*/)
+additional_information: 
+  function_related_variable: |
+    std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
+    std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
+    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_in_sub_;
+    rclcpp_lifecycle::LifecyclePublisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_out_pub_;
+  function_related_function: |
+    void cmdVelInCallback(geometry_msgs::msg::Twist::ConstSharedPtr msg);
+test: collision_monitor_node_test
+test_cases: []

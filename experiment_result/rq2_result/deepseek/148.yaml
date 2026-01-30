@@ -1,0 +1,117 @@
+compilation.log: |
+  Starting >>> moveit_core
+  --- stderr: moveit_core
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [dynamics_solver/CMakeFiles/moveit_dynamics_solver.dir/build.make:79: dynamics_solver/CMakeFiles/moveit_dynamics_solver.dir/src/dynamics_solver.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1041: dynamics_solver/CMakeFiles/moveit_dynamics_solver.dir/all] Error 2
+  gmake[1]: *** Waiting for unfinished jobs....
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:107: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/ruckig_traj_smoothing.cpp.o] Error 1
+  gmake[2]: *** Waiting for unfinished jobs....
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:135: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/time_optimal_trajectory_generation.cpp.o] Error 1
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [robot_trajectory/CMakeFiles/test_robot_trajectory.dir/build.make:79: robot_trajectory/CMakeFiles/test_robot_trajectory.dir/test/test_robot_trajectory.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1889: robot_trajectory/CMakeFiles/test_robot_trajectory.dir/all] Error 2
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [robot_state/CMakeFiles/test_robot_state_benchmark.dir/build.make:79: robot_state/CMakeFiles/test_robot_state_benchmark.dir/test/robot_state_benchmark.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1724: robot_state/CMakeFiles/test_robot_state_benchmark.dir/all] Error 2
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [kinematics_metrics/CMakeFiles/moveit_kinematics_metrics.dir/build.make:79: kinematics_metrics/CMakeFiles/moveit_kinematics_metrics.dir/src/kinematics_metrics.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1230: kinematics_metrics/CMakeFiles/moveit_kinematics_metrics.dir/all] Error 2
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:93: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/iterative_spline_parameterization.cpp.o] Error 1
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:79: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/iterative_time_parameterization.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1920: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/all] Error 2
+  gmake: *** [Makefile:149: all] Error 2
+  ---
+  Failed   <<< moveit_core [4min 27s, exited with code 2]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+
+  Summary: 0 packages finished [4min 28s]
+    1 package failed: moveit_core
+    1 package had stderr output: moveit_core
+generate_code.cpp: "std::optional<double> smoothness(RobotTrajectory const& trajectory)\n\
+  {\n    if (trajectory.getWayPointCount() < 3)\n    {\n        return std::nullopt;\n\
+  \    }\n\n    double total_deviation = 0.0;\n    size_t num_segments = trajectory.getWayPointCount()\
+  \ - 2;\n\n    for (size_t i = 0; i < num_segments; ++i)\n    {\n        const auto&\
+  \ state_prev = trajectory.getWayPoint(i);\n        const auto& state_curr = trajectory.getWayPoint(i\
+  \ + 1);\n        const auto& state_next = trajectory.getWayPoint(i + 2);\n\n   \
+  \     Eigen::Vector3d vec1 = state_curr.getGlobalLinkTransform(\"\").translation()\
+  \ - \n                               state_prev.getGlobalLinkTransform(\"\").translation();\n\
+  \        Eigen::Vector3d vec2 = state_next.getGlobalLinkTransform(\"\").translation()\
+  \ - \n                               state_curr.getGlobalLinkTransform(\"\").translation();\n\
+  \n        if (vec1.norm() < 1e-6 || vec2.norm() < 1e-6)\n        {\n           \
+  \ continue;  // skip zero-length segments\n        }\n\n        double angle = std::acos(vec1.normalized().dot(vec2.normalized()));\n\
+  \        total_deviation += angle;\n    }\n\n    if (num_segments == 0)\n    {\n\
+  \        return std::nullopt;\n    }\n\n    return total_deviation / num_segments;\n\
+  }"
+ground_truth.cpp: |-
+  std::optional<double> smoothness(RobotTrajectory const& trajectory)
+  {
+    if (trajectory.getWayPointCount() > 2)
+    {
+      auto smoothness = 0.0;
+      double a = trajectory.getWayPoint(0).distance(trajectory.getWayPoint(1));
+      for (std::size_t k = 2; k < trajectory.getWayPointCount(); ++k)
+      {
+        // view the path as a sequence of segments, and look at the triangles it forms:
+        //          s1
+        //          /\          s4
+        //      a  /  \ b       |
+        //        /    \        |
+        //       /......\_______|
+        //     s0    c   s2     s3
+
+        // use Pythagoras generalized theorem to find the cos of the angle between segments a and b
+        double b = trajectory.getWayPoint(k - 1).distance(trajectory.getWayPoint(k));
+        double cdist = trajectory.getWayPoint(k - 2).distance(trajectory.getWayPoint(k));
+        double acos_value = (a * a + b * b - cdist * cdist) / (2.0 * a * b);
+        if (acos_value > -1.0 && acos_value < 1.0)
+        {
+          // the smoothness is actually the outside angle of the one we compute
+          double angle = (M_PI - acos(acos_value));
+
+          // and we normalize by the length of the segments
+          double u = 2.0 * angle;  /// (a + b);
+          smoothness += u * u;
+        }
+        a = b;
+      }
+      smoothness /= (double)trajectory.getWayPointCount();
+      return smoothness;
+    }
+    // In case the path is to short, no value is returned
+    return std::nullopt;
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Message Issue - Message Operation Issue
+
+functionality-codes:
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

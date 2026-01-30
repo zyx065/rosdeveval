@@ -1,0 +1,98 @@
+compilation.log: |
+  Starting >>> autoware_control_validator
+  --- stderr: autoware_control_validator
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/src/control_validator.cpp: In member function ‘void autoware::control_validator::ControlValidator::publish_debug_info()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/src/control_validator.cpp:233:35: error: no matching function for call to ‘ControlValidatorDebugMarkerPublisher::publish(std::vector<geometry_msgs::msg::Pose_<std::allocator<void> > >&)’
+    233 |     debug_pose_publisher_->publish(wall_poses);
+        |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/include/autoware/control_validator/control_validator.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/src/control_validator.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/include/autoware/control_validator/debug_marker.hpp:54:8: note: candidate: ‘void ControlValidatorDebugMarkerPublisher::publish()’
+     54 |   void publish();
+        |        ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/include/autoware/control_validator/debug_marker.hpp:54:8: note:   candidate expects 0 arguments, 1 provided
+  gmake[2]: *** [CMakeFiles/autoware_control_validator_component.dir/build.make:76: CMakeFiles/autoware_control_validator_component.dir/src/control_validator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:235: CMakeFiles/autoware_control_validator_component.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_control_validator [7.45s, exited with code 2]
+
+  Summary: 0 packages finished [8.90s]
+    1 package failed: autoware_control_validator
+    1 package had stderr output: autoware_control_validator
+generate_code.cpp: "void ControlValidator::publish_debug_info()\n{\n  // Publish processing\
+  \ time\n  autoware_internal_debug_msgs::msg::Float64Stamped processing_time_msg;\n\
+  \  processing_time_msg.stamp = this->now();\n  processing_time_msg.data = stop_watch.toc();\n\
+  \  pub_processing_time_->publish(processing_time_msg);\n\n  // Publish debug markers\
+  \ if validation failed\n  if (!is_all_valid(validation_status_)) {\n    // Calculate\
+  \ vehicle footprint\n    const auto footprint = vehicle_info_.createFootprint();\n\
+  \n    // Create virtual walls at vehicle corners\n    std::vector<geometry_msgs::msg::Pose>\
+  \ wall_poses;\n    wall_poses.reserve(4);\n\n    // Front-left corner\n    geometry_msgs::msg::Pose\
+  \ front_left;\n    front_left.position.x = current_kinematics_->pose.pose.position.x\
+  \ + \n                           vehicle_info_.max_longitudinal_offset_m * std::cos(current_kinematics_->pose.pose.orientation.z)\
+  \ - \n                           vehicle_info_.max_lateral_offset_m * std::sin(current_kinematics_->pose.pose.orientation.z);\n\
+  \    front_left.position.y = current_kinematics_->pose.pose.position.y + \n    \
+  \                       vehicle_info_.max_longitudinal_offset_m * std::sin(current_kinematics_->pose.pose.orientation.z)\
+  \ + \n                           vehicle_info_.max_lateral_offset_m * std::cos(current_kinematics_->pose.pose.orientation.z);\n\
+  \    front_left.orientation = current_kinematics_->pose.pose.orientation;\n    wall_poses.push_back(front_left);\n\
+  \n    // Front-right corner\n    geometry_msgs::msg::Pose front_right;\n    front_right.position.x\
+  \ = current_kinematics_->pose.pose.position.x + \n                            vehicle_info_.max_longitudinal_offset_m\
+  \ * std::cos(current_kinematics_->pose.pose.orientation.z) + \n                \
+  \            vehicle_info_.max_lateral_offset_m * std::sin(current_kinematics_->pose.pose.orientation.z);\n\
+  \    front_right.position.y = current_kinematics_->pose.pose.position.y + \n   \
+  \                         vehicle_info_.max_longitudinal_offset_m * std::sin(current_kinematics_->pose.pose.orientation.z)\
+  \ - \n                            vehicle_info_.max_lateral_offset_m * std::cos(current_kinematics_->pose.pose.orientation.z);\n\
+  \    front_right.orientation = current_kinematics_->pose.pose.orientation;\n   \
+  \ wall_poses.push_back(front_right);\n\n    // Rear-right corner\n    geometry_msgs::msg::Pose\
+  \ rear_right;\n    rear_right.position.x = current_kinematics_->pose.pose.position.x\
+  \ - \n                           vehicle_info_.min_longitudinal_offset_m * std::cos(current_kinematics_->pose.pose.orientation.z)\
+  \ + \n                           vehicle_info_.max_lateral_offset_m * std::sin(current_kinematics_->pose.pose.orientation.z);\n\
+  \    rear_right.position.y = current_kinematics_->pose.pose.position.y - \n    \
+  \                       vehicle_info_.min_longitudinal_offset_m * std::sin(current_kinematics_->pose.pose.orientation.z)\
+  \ - \n                           vehicle_info_.max_lateral_offset_m * std::cos(current_kinematics_->pose.pose.orientation.z);\n\
+  \    rear_right.orientation = current_kinematics_->pose.pose.orientation;\n    wall_poses.push_back(rear_right);\n\
+  \n    // Rear-left corner\n    geometry_msgs::msg::Pose rear_left;\n    rear_left.position.x\
+  \ = current_kinematics_->pose.pose.position.x - \n                          vehicle_info_.min_longitudinal_offset_m\
+  \ * std::cos(current_kinematics_->pose.pose.orientation.z) - \n                \
+  \          vehicle_info_.max_lateral_offset_m * std::sin(current_kinematics_->pose.pose.orientation.z);\n\
+  \    rear_left.position.y = current_kinematics_->pose.pose.position.y - \n     \
+  \                     vehicle_info_.min_longitudinal_offset_m * std::sin(current_kinematics_->pose.pose.orientation.z)\
+  \ + \n                          vehicle_info_.max_lateral_offset_m * std::cos(current_kinematics_->pose.pose.orientation.z);\n\
+  \    rear_left.orientation = current_kinematics_->pose.pose.orientation;\n    wall_poses.push_back(rear_left);\n\
+  \n    // Publish debug markers\n    debug_pose_publisher_->publish(wall_poses);\n\
+  \  }\n}"
+ground_truth.cpp: |-
+  void ControlValidator::publish_debug_info()
+  {
+    pub_status_->publish(validation_status_);
+
+    if (!is_all_valid(validation_status_)) {
+      geometry_msgs::msg::Pose front_pose = current_kinematics_->pose.pose;
+      shift_pose(front_pose, vehicle_info_.front_overhang_m + vehicle_info_.wheel_base_m);
+      debug_pose_publisher_->push_virtual_wall(front_pose);
+      debug_pose_publisher_->push_warning_msg(front_pose, "INVALID CONTROL");
+    }
+    debug_pose_publisher_->publish();
+
+    // Publish ProcessingTime
+    autoware_internal_debug_msgs::msg::Float64Stamped processing_time_msg;
+    processing_time_msg.stamp = get_clock()->now();
+    processing_time_msg.data = stop_watch.toc();
+    pub_processing_time_->publish(processing_time_msg);
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Diagnostic Issue - ROS Diagnostic API Misuse Issue
+  - ROS Logger Issue - ROS Logger Missing Issue
+
+functionality-codes:
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

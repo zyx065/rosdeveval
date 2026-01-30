@@ -1,0 +1,23 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_map_server
+ros_package: nav2_map_server
+file_path: src/costmap_filter_info/costmap_filter_info_server.cpp
+method_name: CostmapFilterInfoServer::on_configure
+requirement: |
+  /**
+  * @brief Configures the costmap filter info server and initializes its publisher.
+  * 
+  * @return nav2_util::CallbackReturn SUCCESS if configuration completed successfully.
+  */
+category: ros_architecture
+type: has_logger,has_message,has_topic
+signature: |
+  nav2_util::CallbackReturn
+  CostmapFilterInfoServer::on_configure(const rclcpp_lifecycle::State & /*state*/)
+additional_information: 
+  function_related_variable: |
+    rclcpp_lifecycle::LifecyclePublisher<nav2_msgs::msg::CostmapFilterInfo>::SharedPtr publisher_;
+    nav2_msgs::msg::CostmapFilterInfo msg_;
+test: test_costmap_filter_info_server
+test_cases: []

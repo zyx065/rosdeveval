@@ -1,0 +1,25 @@
+repository: laser_filters
+language: C++
+ros_package_file: src/laser_filters
+ros_package: laser_filters
+file_path: include/laser_filters/scan_shadow_detector.h
+method_name: isShadow
+requirement: |
+  /**
+  * Determines if one object is in the shadow of another based on their geometric relationship.
+  * 
+  * @param r1 The radial distance from the reference point to the first object.
+  * @param r2 The radial distance from the reference point to the second object.
+  * @param included_angle The angle between the two objects in radians.
+  * @return True if the first object casts a shadow on the second object, false otherwise.
+  */
+category: utilities
+type: []
+signature: |
+  bool isShadow(const float r1, const float r2, const float included_angle)
+additional_information: 
+  function_related_variable: |
+    float min_angle_tan_, max_angle_tan_;  // Filter angle thresholds
+test: test_scan_filter_chain
+test_cases: 
+- MaskFilter

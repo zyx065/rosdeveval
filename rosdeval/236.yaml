@@ -1,0 +1,42 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_trajectory_follower_node
+ros_package: autoware_trajectory_follower_node
+file_path: src/controller_node.cpp
+method_name: Controller::publishDebugMarker
+requirement: |
+  /**
+  * Publishes debug visualization markers for steering convergence status.
+  * @param input_data The input data containing current vehicle state information.
+  * @param lat_out The lateral control output containing steering command and convergence data.
+  */
+category: ros_architecture
+type: has_message,has_topic
+signature: |
+  void Controller::publishDebugMarker(
+    const trajectory_follower::InputData & input_data,
+    const trajectory_follower::LateralOutput & lat_out) const
+additional_information: 
+  function_related_class: |
+    struct InputData
+    {
+      autoware_planning_msgs::msg::Trajectory current_trajectory;
+      nav_msgs::msg::Odometry current_odometry;
+      autoware_vehicle_msgs::msg::SteeringReport current_steering;
+      geometry_msgs::msg::AccelWithCovarianceStamped current_accel;
+      autoware_adapi_v1_msgs::msg::OperationModeState current_operation_mode;
+    };
+    struct LateralOutput
+    {
+      Lateral control_cmd;
+      LateralHorizon control_cmd_horizon;
+      LateralSyncData sync_data;
+    };
+    struct LateralSyncData
+    {
+      bool is_steer_converged{false};
+    };
+  function_related_variable:
+    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr debug_marker_pub_;
+test: test_trajectory_follower_node
+test_cases: []

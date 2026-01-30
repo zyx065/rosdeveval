@@ -1,0 +1,46 @@
+compilation.log: |
+  Starting >>> autoware_pose2twist
+  Finished <<< autoware_pose2twist [7.83s]
+
+  Summary: 1 package finished [9.21s]
+generate_code.cpp: |-
+  geometry_msgs::msg::Vector3 compute_relative_rotation_vector(
+    const tf2::Quaternion & q1, const tf2::Quaternion & q2)
+  {
+    // Compute the relative quaternion: q_relative = q2 * q1.inverse()
+    tf2::Quaternion q_relative = q2 * q1.inverse();
+
+    // Normalize the relative quaternion to ensure it represents a valid rotation
+    q_relative.normalize();
+
+    // Convert the quaternion to axis-angle representation
+    tf2::Vector3 axis(q_relative.x(), q_relative.y(), q_relative.z());
+    double angle = 2.0 * std::atan2(axis.length(), q_relative.w());
+
+    // Normalize the axis to ensure it is a unit vector
+    if (axis.length() > 1e-6) { // Avoid division by zero
+      axis.normalize();
+    } else {
+      // If the axis length is too small, return a zero vector
+      return geometry_msgs::msg::Vector3();
+    }
+
+    // Scale the axis by the angle to get the rotation vector
+    geometry_msgs::msg::Vector3 rotation_vector;
+    rotation_vector.x = axis.x() * angle;
+    rotation_vector.y = axis.y() * angle;
+    rotation_vector.z = axis.z() * angle;
+
+    return rotation_vector;
+  }
+ground_truth.cpp: |-
+  geometry_msgs::msg::Vector3 compute_relative_rotation_vector(
+    const tf2::Quaternion & q1, const tf2::Quaternion & q2)
+  {
+    // If we define q2 as the rotation obtained by applying dq after applying q1,
+    // then q2 = q1 * dq .
+    // Therefore, dq = q1.inverse() * q2 .
+    const tf2::Quaternion diff_quaternion = q1.inverse() * q2;
+    const tf2::Vector3 axis = diff_quaternion.getAxis() * diff_quaternion.getAngle();
+    return geometry_msgs::msg::Vector3{}.set__x(axis.x()).set__y(axis.y()).set__z(axis.z());
+  }

@@ -1,0 +1,38 @@
+compilation.log: |
+  Starting >>> autoware_pid_longitudinal_controller
+  Finished <<< autoware_pid_longitudinal_controller [13.2s]
+
+  Summary: 1 package finished [14.5s]
+generate_code.cpp: |-
+  double getPitchByPose(const Quaternion & quaternion_msg)
+  {
+      // Convert quaternion to pitch (rotation around Y-axis)
+      double x = quaternion_msg.x;
+      double y = quaternion_msg.y;
+      double z = quaternion_msg.z;
+      double w = quaternion_msg.w;
+
+      // Calculate pitch using arcsin of the rotation matrix element
+      double pitch = std::asin(2.0 * (w * y - z * x));
+
+      return pitch;
+  }
+ground_truth.cpp: |-
+  double getPitchByPose(const Quaternion & quaternion_msg)
+  {
+    double roll, pitch, yaw;
+    tf2::Quaternion quaternion;
+    tf2::fromMsg(quaternion_msg, quaternion);
+    tf2::Matrix3x3{quaternion}.getRPY(roll, pitch, yaw);
+
+    return pitch;
+  }
+architecture-codes: []
+functionality-codes:
+  - Domain Library Issues - Lack of Domain Library Utilization
+  - Operation/Calculation Error - Incorrect arithmetic operation
+  - Conditional Checks Issues - Conditional Check Missing
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements

@@ -1,0 +1,124 @@
+compilation.log: |
+  Starting >>> autoware_obstacle_cruise_planner
+  --- stderr: autoware_obstacle_cruise_planner
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.h:48,
+                   from /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp:60,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:40,
+                   from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/trajectory.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/include/autoware/obstacle_cruise_planner/planner_interface.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp: In member function ‘void PlannerInterface::publishMetrics(const rclcpp::Time&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:844:27: error: ‘class PlannerInterface’ has no member named ‘get_logger’
+    844 |         RCLCPP_WARN(this->get_logger(), "Metrics publisher or debug data pointer is not initialized.");
+        |                           ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:844:27: error: ‘class PlannerInterface’ has no member named ‘get_logger’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:844:9: error: template argument 1 is invalid
+    844 |         RCLCPP_WARN(this->get_logger(), "Metrics publisher or debug data pointer is not initialized.");
+        |         ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:844:9: error: template argument 1 is invalid
+    844 |         RCLCPP_WARN(this->get_logger(), "Metrics publisher or debug data pointer is not initialized.");
+        |         ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:844:9: error: template argument 1 is invalid
+    844 |         RCLCPP_WARN(this->get_logger(), "Metrics publisher or debug data pointer is not initialized.");
+        |         ^~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/logging.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/client.hpp:40,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/callback_group.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/any_executable.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategy.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/memory_strategies.hpp:18,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor_options.hpp:20,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:37,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /opt/ros/humble/include/tf2_ros/tf2_ros/buffer_interface.h:48,
+                   from /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp:60,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:40,
+                   from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/trajectory.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/include/autoware/obstacle_cruise_planner/planner_interface.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:844:27: error: ‘class PlannerInterface’ has no member named ‘get_logger’
+    844 |         RCLCPP_WARN(this->get_logger(), "Metrics publisher or debug data pointer is not initialized.");
+        |                           ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:844:27: error: ‘class PlannerInterface’ has no member named ‘get_logger’
+    844 |         RCLCPP_WARN(this->get_logger(), "Metrics publisher or debug data pointer is not initialized.");
+        |                           ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:850:17: error: ‘using MetricArray = using MetricArray = struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’ {aka ‘struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’} has no member named ‘header’
+    850 |     metrics_msg.header.stamp = current_time;
+        |                 ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:851:17: error: ‘using MetricArray = using MetricArray = struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’ {aka ‘struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’} has no member named ‘header’
+    851 |     metrics_msg.header.frame_id = "map"; // Adjust the frame_id as per your application
+        |                 ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:854:49: error: ‘using element_type = struct DebugData’ {aka ‘struct DebugData’} has no member named ‘metrics’
+    854 |     for (const auto & metric : debug_data_ptr_->metrics) {
+        |                                                 ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner/src/planner_interface.cpp:859:21: error: ‘using MetricArray = using MetricArray = struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’ {aka ‘struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’} has no member named ‘metrics’
+    859 |         metrics_msg.metrics.push_back(metric_msg);
+        |                     ^~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_obstacle_cruise_planner_core.dir/build.make:160: CMakeFiles/autoware_obstacle_cruise_planner_core.dir/src/planner_interface.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_obstacle_cruise_planner_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_obstacle_cruise_planner [9.71s, exited with code 2]
+
+  Summary: 0 packages finished [11.2s]
+    1 package failed: autoware_obstacle_cruise_planner
+    1 package had stderr output: autoware_obstacle_cruise_planner
+generate_code.cpp: |-
+  void PlannerInterface::publishMetrics(const rclcpp::Time & current_time)
+  {
+      if (!metrics_pub_ || !debug_data_ptr_) {
+          RCLCPP_WARN(this->get_logger(), "Metrics publisher or debug data pointer is not initialized.");
+          return;
+      }
+
+      // Create a MetricArray message
+      MetricArray metrics_msg;
+      metrics_msg.header.stamp = current_time;
+      metrics_msg.header.frame_id = "map"; // Adjust the frame_id as per your application
+
+      // Populate the metrics message with data from debug_data_ptr_
+      for (const auto & metric : debug_data_ptr_->metrics) {
+          Metric metric_msg;
+          metric_msg.name = metric.name;
+          metric_msg.value = metric.value;
+          metric_msg.unit = metric.unit;
+          metrics_msg.metrics.push_back(metric_msg);
+      }
+
+      // Publish the metrics message
+      metrics_pub_->publish(metrics_msg);
+
+      // Clear the internal metric data
+      clearMetrics();
+  }
+ground_truth.cpp: |-
+  void PlannerInterface::publishMetrics(const rclcpp::Time & current_time)
+  {
+    // create array
+    MetricArray metrics_msg;
+    metrics_msg.stamp = current_time;
+
+    auto addMetrics = [&metrics_msg](std::optional<std::vector<Metric>> & opt_metrics) {
+      if (opt_metrics) {
+        metrics_msg.metric_array.insert(
+          metrics_msg.metric_array.end(), opt_metrics->begin(), opt_metrics->end());
+      }
+    };
+    addMetrics(debug_data_ptr_->stop_metrics);
+    addMetrics(debug_data_ptr_->slow_down_metrics);
+    addMetrics(debug_data_ptr_->cruise_metrics);
+    metrics_pub_->publish(metrics_msg);
+    clearMetrics();
+  }

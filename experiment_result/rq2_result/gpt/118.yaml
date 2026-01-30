@@ -1,0 +1,92 @@
+compilation.log: |
+  Starting >>> autoware_motion_velocity_out_of_lane_module
+  --- stderr: autoware_motion_velocity_out_of_lane_module
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_out_of_lane_module/src/filter_predicted_objects.cpp: In function ‘void autoware::motion_velocity_planner::out_of_lane::cut_predicted_path_beyond_line(autoware_perception_msgs::msg::PredictedPath&, const LineString2d&, double)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_out_of_lane_module/src/filter_predicted_objects.cpp:42:46: error: ‘const struct geometry_msgs::msg::Pose_<std::allocator<void> >’ has no member named ‘pose’
+     42 |     universe_utils::Point2d path_point(point.pose.position.x, point.pose.position.y);
+        |                                              ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_out_of_lane_module/src/filter_predicted_objects.cpp:42:69: error: ‘const struct geometry_msgs::msg::Pose_<std::allocator<void> >’ has no member named ‘pose’
+     42 |     universe_utils::Point2d path_point(point.pose.position.x, point.pose.position.y);
+        |                                                                     ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_out_of_lane_module/src/filter_predicted_objects.cpp:45:25: error: ‘isPointBeyondLine’ is not a member of ‘autoware::universe_utils’
+     45 |     if (universe_utils::isPointBeyondLine(path_point, stop_line)) {
+        |                         ^~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_out_of_lane_module/src/filter_predicted_objects.cpp:48:27: error: ‘calculateIntersectionWithOverhang’ is not a member of ‘autoware::universe_utils’
+     48 |       if (universe_utils::calculateIntersectionWithOverhang(
+        |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_out_of_lane_module/src/filter_predicted_objects.cpp:51:32: error: ‘__gnu_cxx::__alloc_traits<std::allocator<geometry_msgs::msg::Pose_<std::allocator<void> > >, geometry_msgs::msg::Pose_<std::allocator<void> > >::value_type’ {aka ‘struct geometry_msgs::msg::Pose_<std::allocator<void> >’} has no member named ‘pose’
+     51 |         predicted_path.path[i].pose.position.x = intersection_point.x();
+        |                                ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_out_of_lane_module/src/filter_predicted_objects.cpp:52:32: error: ‘__gnu_cxx::__alloc_traits<std::allocator<geometry_msgs::msg::Pose_<std::allocator<void> > >, geometry_msgs::msg::Pose_<std::allocator<void> > >::value_type’ {aka ‘struct geometry_msgs::msg::Pose_<std::allocator<void> >’} has no member named ‘pose’
+     52 |         predicted_path.path[i].pose.position.y = intersection_point.y();
+        |                                ^~~~
+  gmake[2]: *** [CMakeFiles/autoware_motion_velocity_out_of_lane_module.dir/build.make:104: CMakeFiles/autoware_motion_velocity_out_of_lane_module.dir/src/filter_predicted_objects.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_motion_velocity_out_of_lane_module.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_motion_velocity_out_of_lane_module [12.0s, exited with code 2]
+
+  Summary: 0 packages finished [13.4s]
+    1 package failed: autoware_motion_velocity_out_of_lane_module
+    1 package had stderr output: autoware_motion_velocity_out_of_lane_module
+generate_code.cpp: |-
+  void cut_predicted_path_beyond_line(
+    autoware_perception_msgs::msg::PredictedPath & predicted_path,
+    const universe_utils::LineString2d & stop_line, const double object_front_overhang)
+  {
+    // Iterate through the predicted path points
+    for (size_t i = 0; i < predicted_path.path.size(); ++i) {
+      const auto & point = predicted_path.path[i];
+
+      // Create a 2D point for the current predicted path point
+      universe_utils::Point2d path_point(point.pose.position.x, point.pose.position.y);
+
+      // Check if the current point is beyond the stop line
+      if (universe_utils::isPointBeyondLine(path_point, stop_line)) {
+        // Calculate the intersection point between the predicted path and the stop line
+        universe_utils::Point2d intersection_point;
+        if (universe_utils::calculateIntersectionWithOverhang(
+              predicted_path.path, stop_line, i, object_front_overhang, intersection_point)) {
+          // Update the current point to the intersection point
+          predicted_path.path[i].pose.position.x = intersection_point.x();
+          predicted_path.path[i].pose.position.y = intersection_point.y();
+
+          // Truncate the path beyond the intersection point
+          predicted_path.path.resize(i + 1);
+        }
+        return;
+      }
+    }
+  }
+ground_truth.cpp: |-
+  void cut_predicted_path_beyond_line(
+    autoware_perception_msgs::msg::PredictedPath & predicted_path,
+    const universe_utils::LineString2d & stop_line, const double object_front_overhang)
+  {
+    if (predicted_path.path.empty() || stop_line.size() < 2) return;
+
+    auto stop_line_idx = 0UL;
+    bool found = false;
+    lanelet::BasicSegment2d path_segment;
+    path_segment.first.x() = predicted_path.path.front().position.x;
+    path_segment.first.y() = predicted_path.path.front().position.y;
+    for (stop_line_idx = 1; stop_line_idx < predicted_path.path.size(); ++stop_line_idx) {
+      path_segment.second.x() = predicted_path.path[stop_line_idx].position.x;
+      path_segment.second.y() = predicted_path.path[stop_line_idx].position.y;
+      if (boost::geometry::intersects(stop_line, path_segment)) {
+        found = true;
+        break;
+      }
+      path_segment.first = path_segment.second;
+    }
+    if (found) {
+      auto cut_idx = stop_line_idx;
+      double arc_length = 0;
+      while (cut_idx > 0 && arc_length < object_front_overhang) {
+        arc_length += universe_utils::calcDistance2d(
+          predicted_path.path[cut_idx], predicted_path.path[cut_idx - 1]);
+        --cut_idx;
+      }
+      predicted_path.path.resize(cut_idx);
+    }
+  }

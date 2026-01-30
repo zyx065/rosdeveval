@@ -1,0 +1,66 @@
+compilation.log: |
+  Starting >>> autoware_planning_validator
+  Finished <<< autoware_planning_validator [29.7s]
+
+  Summary: 1 package finished [31.2s]
+generate_code.cpp: |-
+  bool PlanningValidator::checkValidInterval(const Trajectory & trajectory)
+  {
+      // If trajectory has less than 2 points, it cannot be validated
+      if (trajectory.points.size() < 2) {
+          return false;
+      }
+
+      // Calculate the maximum interval distance and its corresponding index
+      auto [max_interval_distance, max_interval_index] = calcMaxIntervalDistance(trajectory);
+
+      // Check if the maximum interval distance exceeds the configured threshold
+      if (max_interval_distance > validation_params_.interval_threshold) {
+          // Optionally publish debug markers for visualization
+          if (debug_pose_publisher_) {
+              // Mark the points around the maximum interval
+              debug_pose_publisher_->pushPoseMarker(
+                  trajectory.points[max_interval_index], "interval_violation", 0);
+              debug_pose_publisher_->pushPoseMarker(
+                  trajectory.points[max_interval_index + 1], "interval_violation", 1);
+              debug_pose_publisher_->publish();
+          }
+
+          // Update validation status
+          validation_status_.is_valid_interval = false;
+          return false;
+      }
+
+      // Trajectory interval is valid
+      validation_status_.is_valid_interval = true;
+      return true;
+  }
+ground_truth.cpp: |-
+  bool PlanningValidator::checkValidInterval(const Trajectory & trajectory)
+  {
+    const auto [max_interval_distance, i] = calcMaxIntervalDistance(trajectory);
+    validation_status_.max_interval_distance = max_interval_distance;
+
+    if (max_interval_distance > validation_params_.interval_threshold) {
+      if (i > 0) {
+        const auto & p = trajectory.points;
+        debug_pose_publisher_->pushPoseMarker(p.at(i - 1), "trajectory_interval");
+        debug_pose_publisher_->pushPoseMarker(p.at(i), "trajectory_interval");
+      }
+      return false;
+    }
+
+    return true;
+  }
+architecture-codes:
+  - ROS Message Related Issues - Message Member Access
+  - Topic/Service Related Issues - Topic Use Error
+functionality-codes:
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Incomplete Code - Missing one step
+  - Reference Error - Wrong method
+  - Garbage Code - Meaningless code snippet
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

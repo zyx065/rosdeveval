@@ -1,0 +1,116 @@
+compilation.log: |
+  Starting >>> autoware_radar_crossing_objects_noise_filter
+  --- stderr: autoware_radar_crossing_objects_noise_filter
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp: In member function ‘bool autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::isNoise(const DetectedObject&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:132:44: error: ‘const DetectedObject’ {aka ‘const struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’} has no member named ‘dimensions’
+    132 |     double object_length = std::abs(object.dimensions.x);
+        |                                            ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:133:43: error: ‘const DetectedObject’ {aka ‘const struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’} has no member named ‘dimensions’
+    133 |     double object_width = std::abs(object.dimensions.y);
+        |                                           ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:134:44: error: ‘const DetectedObject’ {aka ‘const struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’} has no member named ‘dimensions’
+    134 |     double object_height = std::abs(object.dimensions.z);
+        |                                            ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:145:70: error: ‘const DetectedObject’ {aka ‘const struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’} has no member named ‘velocity’
+    145 |     double velocity_norm = autoware::universe_utils::calcNorm(object.velocity);
+        |                                                                      ^~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:153:16: error: ‘const DetectedObject’ {aka ‘const struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’} has no member named ‘confidence’
+    153 |     if (object.confidence < min_confidence_threshold) {
+        |                ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:159:16: error: ‘const DetectedObject’ {aka ‘const struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’} has no member named ‘position_covariance’
+    159 |     if (object.position_covariance[0] > max_position_variance ||
+        |                ^~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:160:16: error: ‘const DetectedObject’ {aka ‘const struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’} has no member named ‘position_covariance’
+    160 |         object.position_covariance[4] > max_position_variance ||
+        |                ^~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:161:16: error: ‘const DetectedObject’ {aka ‘const struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’} has no member named ‘position_covariance’
+    161 |         object.position_covariance[8] > max_position_variance) {
+        |                ^~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_radar_crossing_objects_noise_filter_node_component.dir/build.make:76: CMakeFiles/autoware_radar_crossing_objects_noise_filter_node_component.dir/src/radar_crossing_objects_noise_filter_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_radar_crossing_objects_noise_filter_node_component.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_radar_crossing_objects_noise_filter [5.15s, exited with code 2]
+
+  Summary: 0 packages finished [6.53s]
+    1 package failed: autoware_radar_crossing_objects_noise_filter
+    1 package had stderr output: autoware_radar_crossing_objects_noise_filter
+generate_code.cpp: |-
+  bool RadarCrossingObjectsNoiseFilterNode::isNoise(const DetectedObject& object)
+  {
+      // Check object size constraints
+      const double min_object_size = 0.1;  // Minimum valid object size in meters
+      const double max_object_size = 5.0;  // Maximum valid object size in meters
+
+      // Check object dimensions
+      double object_length = std::abs(object.dimensions.x);
+      double object_width = std::abs(object.dimensions.y);
+      double object_height = std::abs(object.dimensions.z);
+
+      // Check if object dimensions are within reasonable range
+      if (object_length < min_object_size || object_length > max_object_size ||
+          object_width < min_object_size || object_width > max_object_size ||
+          object_height < min_object_size || object_height > max_object_size) {
+          return true;
+      }
+
+      // Check object velocity
+      const double max_velocity_threshold = 50.0;  // Maximum reasonable velocity in m/s
+      double velocity_norm = autoware::universe_utils::calcNorm(object.velocity);
+
+      if (velocity_norm > max_velocity_threshold) {
+          return true;
+      }
+
+      // Check object confidence
+      const double min_confidence_threshold = 0.3;  // Minimum confidence level
+      if (object.confidence < min_confidence_threshold) {
+          return true;
+      }
+
+      // Check object position stability
+      const double max_position_variance = 2.0;  // Maximum acceptable position variance
+      if (object.position_covariance[0] > max_position_variance ||
+          object.position_covariance[4] > max_position_variance ||
+          object.position_covariance[8] > max_position_variance) {
+          return true;
+      }
+
+      // If all checks pass, the object is not considered noise
+      return false;
+  }
+ground_truth.cpp: |-
+  bool RadarCrossingObjectsNoiseFilterNode::isNoise(const DetectedObject & object)
+  {
+    const double velocity = std::abs(
+      autoware::universe_utils::calcNorm(object.kinematics.twist_with_covariance.twist.linear));
+    const double object_angle = tf2::getYaw(object.kinematics.pose_with_covariance.pose.orientation);
+    const double object_position_angle = std::atan2(
+      object.kinematics.pose_with_covariance.pose.position.y,
+      object.kinematics.pose_with_covariance.pose.position.x);
+    const double crossing_yaw =
+      autoware::universe_utils::normalizeRadian(object_angle - object_position_angle);
+
+    if (
+      velocity > node_param_.velocity_threshold &&
+      abs(std::cos(crossing_yaw)) < abs(std::cos(node_param_.angle_threshold))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Parameter Related Issues - Use Non-exist Parameter
+  - ROS Parameter Related Issues - Insufficient Parameter Design
+
+functionality-codes:
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Domain Library Issues - Lack of Domain Library Utilization
+
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

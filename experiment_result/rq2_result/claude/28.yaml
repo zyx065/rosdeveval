@@ -1,0 +1,86 @@
+compilation.log: |
+  Starting >>> autoware_control_validator
+  --- stderr: autoware_control_validator
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/src/control_validator.cpp: In member function ‘void autoware::control_validator::ControlValidator::publish_debug_info()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/src/control_validator.cpp:177:37: error: ‘stop_watch_’ was not declared in this scope; did you mean ‘stop_watch’?
+    177 |         processing_time_msg->data = stop_watch_.toc();
+        |                                     ^~~~~~~~~~~
+        |                                     stop_watch
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/src/control_validator.cpp:184:39: error: no matching function for call to ‘ControlValidatorDebugMarkerPublisher::publish(const _pose_type&, autoware::vehicle_info_utils::VehicleInfo&, autoware_control_validator::msg::ControlValidatorStatus&)’
+    184 |         debug_pose_publisher_->publish(
+        |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+    185 |             current_kinematics_->pose.pose,
+        |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    186 |             vehicle_info_,
+        |             ~~~~~~~~~~~~~~             
+    187 |             validation_status_
+        |             ~~~~~~~~~~~~~~~~~~         
+    188 |         );
+        |         ~                              
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/include/autoware/control_validator/control_validator.hpp:18,
+                  from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/src/control_validator.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/include/autoware/control_validator/debug_marker.hpp:54:8: note: candidate: ‘void ControlValidatorDebugMarkerPublisher::publish()’
+    54 |   void publish();
+        |        ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_control_validator/include/autoware/control_validator/debug_marker.hpp:54:8: note:   candidate expects 0 arguments, 3 provided
+  gmake[2]: *** [CMakeFiles/autoware_control_validator_component.dir/build.make:76: CMakeFiles/autoware_control_validator_component.dir/src/control_validator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:235: CMakeFiles/autoware_control_validator_component.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_control_validator [7.39s, exited with code 2]
+
+  Summary: 0 packages finished [8.77s]
+    1 package failed: autoware_control_validator
+    1 package had stderr output: autoware_control_validator
+generate_code.cpp: |
+  void ControlValidator::publish_debug_info()
+  {
+      // Publish processing time
+      if (pub_processing_time_) {
+          auto processing_time_msg = std::make_unique<autoware_internal_debug_msgs::msg::Float64Stamped>();
+          processing_time_msg->stamp = rclcpp::Clock().now();
+          processing_time_msg->data = stop_watch_.toc();
+          pub_processing_time_->publish(std::move(processing_time_msg));
+      }
+
+      // Publish debug markers for virtual walls if not all controls are valid
+      if (debug_pose_publisher_ && !is_all_valid(validation_status_)) {
+          // Publish virtual wall markers for invalid controls
+          debug_pose_publisher_->publish(
+              current_kinematics_->pose.pose, 
+              vehicle_info_, 
+              validation_status_
+          );
+      }
+  }
+ground_truth.cpp: |-
+  void ControlValidator::publish_debug_info()
+  {
+    pub_status_->publish(validation_status_);
+
+    if (!is_all_valid(validation_status_)) {
+      geometry_msgs::msg::Pose front_pose = current_kinematics_->pose.pose;
+      shift_pose(front_pose, vehicle_info_.front_overhang_m + vehicle_info_.wheel_base_m);
+      debug_pose_publisher_->push_virtual_wall(front_pose);
+      debug_pose_publisher_->push_warning_msg(front_pose, "INVALID CONTROL");
+    }
+    debug_pose_publisher_->publish();
+
+    // Publish ProcessingTime
+    autoware_internal_debug_msgs::msg::Float64Stamped processing_time_msg;
+    processing_time_msg.stamp = get_clock()->now();
+    processing_time_msg.data = stop_watch.toc();
+    pub_processing_time_->publish(processing_time_msg);
+  }
+
+architecture-codes:
+  - ROS Message Related Issues - Message Operation Issues
+  - Topic/Service Related Issues - Topic Not Use
+  - ROS Timer Issues - Timestamp Processing Errors
+functionality-codes:
+  - Meet Requirement - No
+  - Reference Error - Wrong Variable
+  - Incomplete Code - Missing Multiple Steps
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

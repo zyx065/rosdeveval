@@ -1,0 +1,30 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_vehicle_cmd_gate
+ros_package: autoware_vehicle_cmd_gate
+file_path: src/vehicle_cmd_gate.cpp
+method_name: VehicleCmdGate::publishMarkers
+requirement: |
+  /**
+  * Publishes visualization markers and a boolean flag based on filter activation status and vehicle conditions.
+  * 
+  * @param[in] filter_activated Contains the activation status of the filter to evaluate.
+  * 
+  * @note The markers are only published when the vehicle meets specific conditions (autonomous mode, 
+  *       sufficient velocity, and sustained filter activation). A boolean flag indicating filter 
+  *       activation status is always published.
+  */
+category: ros_architecture
+type: has_message,has_topic,has_timer
+signature: |
+  void VehicleCmdGate::publishMarkers(const IsFilterActivated & filter_activated)
+additional_information: 
+  function_related_variable: |
+    int filter_activated_count_ = 0;
+    Odometry current_kinematics_;
+    OperationModeState current_operation_mode_;
+    rclcpp::Publisher<MarkerArray>::SharedPtr filter_activated_marker_pub_;
+    rclcpp::Publisher<BoolStamped>::SharedPtr filter_activated_flag_pub_;
+    rclcpp::Publisher<MarkerArray>::SharedPtr filter_activated_marker_raw_pub_;
+test: test_vehicle_cmd_gate
+test_cases: []

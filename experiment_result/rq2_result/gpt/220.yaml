@@ -1,0 +1,87 @@
+compilation.log: |
+  Starting >>> nav2_smac_planner
+  Finished <<< nav2_smac_planner [0.68s]
+
+  Summary: 1 package finished [0.99s]
+generate_code.cpp: |-
+  nav2_costmap_2d::Costmap2D * CostmapDownsampler::downsample(
+    const unsigned int & downsampling_factor)
+  {
+    // Validate the downsampling factor
+    if (downsampling_factor <= 0) {
+      throw std::invalid_argument("Downsampling factor must be greater than 0");
+    }
+
+    // Update the downsampling factor
+    _downsampling_factor = downsampling_factor;
+
+    // Get the original costmap size and resolution
+    _size_x = _costmap->getSizeInCellsX();
+    _size_y = _costmap->getSizeInCellsY();
+    double original_resolution = _costmap->getResolution();
+
+    // Calculate the downsampled size and resolution
+    _downsampled_size_x = _size_x / _downsampling_factor;
+    _downsampled_size_y = _size_y / _downsampling_factor;
+    _downsampled_resolution = original_resolution * _downsampling_factor;
+
+    // Resize the downsampled costmap
+    _downsampled_costmap = std::make_unique<nav2_costmap_2d::Costmap2D>(
+      _downsampled_size_x, _downsampled_size_y, _downsampled_resolution,
+      _costmap->getOriginX(), _costmap->getOriginY(), _costmap->getDefaultValue());
+
+    // Iterate through the downsampled costmap cells
+    for (unsigned int downsampled_x = 0; downsampled_x < _downsampled_size_x; ++downsampled_x) {
+      for (unsigned int downsampled_y = 0; downsampled_y < _downsampled_size_y; ++downsampled_y) {
+        // Calculate the corresponding region in the original costmap
+        unsigned int start_x = downsampled_x * _downsampling_factor;
+        unsigned int start_y = downsampled_y * _downsampling_factor;
+
+        // Aggregate the cost values within the region
+        unsigned char aggregated_cost = _use_min_cost_neighbor ? UCHAR_MAX : 0;
+        for (unsigned int x = start_x; x < start_x + _downsampling_factor && x < _size_x; ++x) {
+          for (unsigned int y = start_y; y < start_y + _downsampling_factor && y < _size_y; ++y) {
+            unsigned char cost = _costmap->getCost(x, y);
+            if (_use_min_cost_neighbor) {
+              aggregated_cost = std::min(aggregated_cost, cost);
+            } else {
+              aggregated_cost = std::max(aggregated_cost, cost);
+            }
+          }
+        }
+
+        // Set the aggregated cost in the downsampled costmap
+        _downsampled_costmap->setCost(downsampled_x, downsampled_y, aggregated_cost);
+      }
+    }
+
+    // Return the downsampled costmap
+    return _downsampled_costmap.get();
+  }
+ground_truth.cpp: |-
+  nav2_costmap_2d::Costmap2D * CostmapDownsampler::downsample(
+    const unsigned int & downsampling_factor)
+  {
+    _downsampling_factor = downsampling_factor;
+    updateCostmapSize();
+
+    // Adjust costmap size if needed
+    if (_downsampled_costmap->getSizeInCellsX() != _downsampled_size_x ||
+      _downsampled_costmap->getSizeInCellsY() != _downsampled_size_y ||
+      _downsampled_costmap->getResolution() != _downsampled_resolution)
+    {
+      resizeCostmap();
+    }
+
+    // Assign costs
+    for (unsigned int i = 0; i < _downsampled_size_x; ++i) {
+      for (unsigned int j = 0; j < _downsampled_size_y; ++j) {
+        setCostOfCell(i, j);
+      }
+    }
+
+    if (_downsampled_costmap_pub) {
+      _downsampled_costmap_pub->publishCostmap();
+    }
+    return _downsampled_costmap.get();
+  }

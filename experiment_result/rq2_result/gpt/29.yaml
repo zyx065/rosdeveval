@@ -1,0 +1,109 @@
+compilation.log: |
+  Starting >>> autoware_obstacle_collision_checker
+  --- stderr: autoware_obstacle_collision_checker
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker_node.cpp: In member function ‘void autoware::obstacle_collision_checker::ObstacleCollisionCheckerNode::on_timer()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker_node.cpp:178:20: error: ‘using element_type = class autoware::universe_utils::ProcessingTimePublisher’ {aka ‘class autoware::universe_utils::ProcessingTimePublisher’} has no member named ‘start’
+    178 |   time_publisher_->start();
+        |                    ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker_node.cpp:194:35: error: too few arguments to function ‘autoware::obstacle_collision_checker::Output autoware::obstacle_collision_checker::check_for_collisions(const autoware::obstacle_collision_checker::Input&)’
+    194 |     output_ = check_for_collisions();
+        |               ~~~~~~~~~~~~~~~~~~~~^~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/include/autoware/obstacle_collision_checker/obstacle_collision_checker_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker_node.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/include/autoware/obstacle_collision_checker/obstacle_collision_checker.hpp:67:8: note: declared here
+     67 | Output check_for_collisions(const Input & input);
+        |        ^~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker_node.cpp:202:23: error: ‘using element_type = class autoware::universe_utils::DebugPublisher’ {aka ‘class autoware::universe_utils::DebugPublisher’} has no member named ‘publish_debug_info’
+    202 |     debug_publisher_->publish_debug_info(output_);
+        |                       ^~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker_node.cpp:206:20: error: ‘using element_type = class autoware::universe_utils::ProcessingTimePublisher’ {aka ‘class autoware::universe_utils::ProcessingTimePublisher’} has no member named ‘stop’
+    206 |   time_publisher_->stop();
+        |                    ^~~~
+  gmake[2]: *** [CMakeFiles/obstacle_collision_checker.dir/build.make:104: CMakeFiles/obstacle_collision_checker.dir/src/obstacle_collision_checker_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/obstacle_collision_checker.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_obstacle_collision_checker [8.63s, exited with code 2]
+
+  Summary: 0 packages finished [10.0s]
+    1 package failed: autoware_obstacle_collision_checker
+    1 package had stderr output: autoware_obstacle_collision_checker
+generate_code.cpp: |-
+  void ObstacleCollisionCheckerNode::on_timer()
+  {
+    // Start measuring processing time
+    time_publisher_->start();
+
+    // Check if required data is ready
+    if (!is_data_ready()) {
+      RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 1000, "Data is not ready for collision checking.");
+      return;
+    }
+
+    // Check for data timeout
+    if (is_data_timeout()) {
+      RCLCPP_WARN_THROTTLE(this->get_logger(), *this->get_clock(), 1000, "Data timeout detected.");
+      return;
+    }
+
+    // Perform collision checking
+    try {
+      output_ = check_for_collisions();
+    } catch (const std::exception &e) {
+      RCLCPP_ERROR(this->get_logger(), "Collision checking failed: %s", e.what());
+      return;
+    }
+
+    // Publish debug information if enabled
+    if (debug_publisher_) {
+      debug_publisher_->publish_debug_info(output_);
+    }
+
+    // Publish processing time
+    time_publisher_->stop();
+
+    // Update diagnostics
+    updater_.force_update();
+  }
+ground_truth.cpp: |-
+  void ObstacleCollisionCheckerNode::on_timer()
+  {
+    current_pose_ = self_pose_listener_->getCurrentPose();
+    if (obstacle_pointcloud_) {
+      const auto & header = obstacle_pointcloud_->header;
+      try {
+        obstacle_transform_ = transform_listener_->getTransform(
+          "map", header.frame_id, header.stamp, rclcpp::Duration::from_seconds(0.01));
+      } catch (tf2::TransformException & ex) {
+        RCLCPP_INFO(
+          this->get_logger(), "Could not transform map to %s: %s", header.frame_id.c_str(),
+          ex.what());
+        return;
+      }
+    }
+
+    if (!is_data_ready()) {
+      return;
+    }
+
+    if (is_data_timeout()) {
+      return;
+    }
+
+    input_.current_pose = current_pose_;
+    input_.obstacle_pointcloud = obstacle_pointcloud_;
+    input_.obstacle_transform = obstacle_transform_;
+    input_.reference_trajectory = reference_trajectory_;
+    input_.predicted_trajectory = predicted_trajectory_;
+    input_.current_twist = current_twist_;
+    input_.vehicle_info = vehicle_info_;
+
+    output_ = check_for_collisions(input_);
+
+    updater_.force_update();
+
+    debug_publisher_->publish(
+      "marker_array", create_marker_array(output_, current_pose_->pose.position.z, this->now()));
+
+    time_publisher_->publish(output_.processing_time_map);
+  }

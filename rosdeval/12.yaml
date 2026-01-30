@@ -1,0 +1,26 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/map/autoware_map_loader
+ros_package: autoware_map_loader
+file_path: src/pointcloud_map_loader/differential_map_loader_module.cpp
+method_name: DifferentialMapLoaderModule::DifferentialMapLoaderModule
+requirement: |
+  /**
+  * @brief Constructs a differential map loader module for serving differential point cloud map updates.
+  * 
+  * @param[in] node The ROS node to create the service on.
+  * @param[in] pcd_file_metadata_dict A map of PCD file metadata used for differential map loading.
+  */
+category: ros_architecture
+type: has_service
+signature: |
+  DifferentialMapLoaderModule::DifferentialMapLoaderModule(
+    rclcpp::Node * node, std::map<std::string, PCDFileMetadata> pcd_file_metadata_dict)
+  : logger_(node->get_logger()), all_pcd_file_metadata_dict_(std::move(pcd_file_metadata_dict))
+additional_information: 
+  function_related_variable: |
+    rclcpp::Service<GetDifferentialPointCloudMap>::SharedPtr get_differential_pcd_maps_service_;
+  function_related_function: |
+    autoware_map_msgs::msg::PointCloudMapCellWithID on_service_get_differential_point_cloud_map(const std::string & path, const std::string & map_id) const;
+test: test_differential_map_loader_module
+test_cases: []

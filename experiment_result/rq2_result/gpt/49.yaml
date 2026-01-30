@@ -1,0 +1,240 @@
+compilation.log: |
+  Starting >>> autoware_path_optimizer
+  --- stderr: autoware_path_optimizer
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/src/node.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/node.hpp: In constructor ‘autoware::path_optimizer::PathOptimizer::PathOptimizer(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/node.hpp:87:19: error: ‘autoware::path_optimizer::PathOptimizer::ego_nearest_param_’ will be initialized after [-Werror=reorder]
+     87 |   EgoNearestParam ego_nearest_param_{};
+        |                   ^~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/node.hpp:73:8: error:   ‘bool autoware::path_optimizer::PathOptimizer::enable_pub_debug_marker_’ [-Werror=reorder]
+     73 |   bool enable_pub_debug_marker_;
+        |        ^~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/src/node.cpp:90:1: error:   when initialized here [-Werror=reorder]
+     90 | PathOptimizer::PathOptimizer(const rclcpp::NodeOptions & node_options)
+        | ^~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/src/node.cpp:120:17: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void> > >’ has no member named ‘initialize’
+    120 |   ego_odom_sub_.initialize();
+        |                 ^~~~~~~~~~
+  In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/c++allocator.h:33,
+                   from /usr/include/c++/11/bits/allocator.h:46,
+                   from /usr/include/c++/11/string:41,
+                   from /usr/include/c++/11/bits/locale_classes.h:40,
+                   from /usr/include/c++/11/bits/ios_base.h:41,
+                   from /usr/include/c++/11/streambuf:41,
+                   from /usr/include/c++/11/bits/streambuf_iterator.h:35,
+                   from /usr/include/c++/11/iterator:66,
+                   from /usr/include/boost/iterator/iterator_traits.hpp:10,
+                   from /usr/include/boost/range/mutable_iterator.hpp:23,
+                   from /usr/include/boost/range/iterator.hpp:20,
+                   from /usr/include/boost/range/value_type.hpp:19,
+                   from /usr/include/boost/geometry/core/point_type.hpp:19,
+                   from /usr/include/boost/geometry/core/coordinate_system.hpp:20,
+                   from /usr/include/boost/geometry/core/cs.hpp:27,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/boost_geometry.hpp:18,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:18,
+                   from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/trajectory.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/src/node.cpp:15:
+  /usr/include/c++/11/ext/new_allocator.h: In instantiation of ‘void __gnu_cxx::new_allocator<_Tp>::construct(_Up*, _Args&& ...) [with _Up = autoware::path_optimizer::ReplanChecker; _Args = {}; _Tp = autoware::path_optimizer::ReplanChecker]’:
+  /usr/include/c++/11/bits/alloc_traits.h:516:17:   required from ‘static void std::allocator_traits<std::allocator<_CharT> >::construct(std::allocator_traits<std::allocator<_CharT> >::allocator_type&, _Up*, _Args&& ...) [with _Up = autoware::path_optimizer::ReplanChecker; _Args = {}; _Tp = autoware::path_optimizer::ReplanChecker; std::allocator_traits<std::allocator<_CharT> >::allocator_type = std::allocator<autoware::path_optimizer::ReplanChecker>]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:519:39:   required from ‘std::_Sp_counted_ptr_inplace<_Tp, _Alloc, _Lp>::_Sp_counted_ptr_inplace(_Alloc, _Args&& ...) [with _Args = {}; _Tp = autoware::path_optimizer::ReplanChecker; _Alloc = std::allocator<autoware::path_optimizer::ReplanChecker>; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:650:16:   required from ‘std::__shared_count<_Lp>::__shared_count(_Tp*&, std::_Sp_alloc_shared_tag<_Alloc>, _Args&& ...) [with _Tp = autoware::path_optimizer::ReplanChecker; _Alloc = std::allocator<autoware::path_optimizer::ReplanChecker>; _Args = {}; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:1342:14:   required from ‘std::__shared_ptr<_Tp, _Lp>::__shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<autoware::path_optimizer::ReplanChecker>; _Args = {}; _Tp = autoware::path_optimizer::ReplanChecker; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr.h:409:59:   required from ‘std::shared_ptr<_Tp>::shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<autoware::path_optimizer::ReplanChecker>; _Args = {}; _Tp = autoware::path_optimizer::ReplanChecker]’
+  /usr/include/c++/11/bits/shared_ptr.h:862:14:   required from ‘std::shared_ptr<_Tp> std::allocate_shared(const _Alloc&, _Args&& ...) [with _Tp = autoware::path_optimizer::ReplanChecker; _Alloc = std::allocator<autoware::path_optimizer::ReplanChecker>; _Args = {}]’
+  /usr/include/c++/11/bits/shared_ptr.h:878:39:   required from ‘std::shared_ptr<_Tp> std::make_shared(_Args&& ...) [with _Tp = autoware::path_optimizer::ReplanChecker; _Args = {}]’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/src/node.cpp:124:56:   required from here
+  /usr/include/c++/11/ext/new_allocator.h:162:11: error: no matching function for call to ‘autoware::path_optimizer::ReplanChecker::ReplanChecker()’
+    162 |         { ::new((void *)__p) _Up(std::forward<_Args>(__args)...); }
+        |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/node.hpp:21,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/src/node.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/replan_checker.hpp:32:12: note: candidate: ‘autoware::path_optimizer::ReplanChecker::ReplanChecker(rclcpp::Node*, const autoware::path_optimizer::EgoNearestParam&)’
+     32 |   explicit ReplanChecker(rclcpp::Node * node, const EgoNearestParam & ego_nearest_param);
+        |            ^~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/replan_checker.hpp:32:12: note:   candidate expects 2 arguments, 0 provided
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/replan_checker.hpp:29:7: note: candidate: ‘autoware::path_optimizer::ReplanChecker::ReplanChecker(const autoware::path_optimizer::ReplanChecker&)’
+     29 | class ReplanChecker
+        |       ^~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/replan_checker.hpp:29:7: note:   candidate expects 1 argument, 0 provided
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/replan_checker.hpp:29:7: note: candidate: ‘autoware::path_optimizer::ReplanChecker::ReplanChecker(autoware::path_optimizer::ReplanChecker&&)’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/replan_checker.hpp:29:7: note:   candidate expects 1 argument, 0 provided
+  In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/c++allocator.h:33,
+                   from /usr/include/c++/11/bits/allocator.h:46,
+                   from /usr/include/c++/11/string:41,
+                   from /usr/include/c++/11/bits/locale_classes.h:40,
+                   from /usr/include/c++/11/bits/ios_base.h:41,
+                   from /usr/include/c++/11/streambuf:41,
+                   from /usr/include/c++/11/bits/streambuf_iterator.h:35,
+                   from /usr/include/c++/11/iterator:66,
+                   from /usr/include/boost/iterator/iterator_traits.hpp:10,
+                   from /usr/include/boost/range/mutable_iterator.hpp:23,
+                   from /usr/include/boost/range/iterator.hpp:20,
+                   from /usr/include/boost/range/value_type.hpp:19,
+                   from /usr/include/boost/geometry/core/point_type.hpp:19,
+                   from /usr/include/boost/geometry/core/coordinate_system.hpp:20,
+                   from /usr/include/boost/geometry/core/cs.hpp:27,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/boost_geometry.hpp:18,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:18,
+                   from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/trajectory.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/src/node.cpp:15:
+  /usr/include/c++/11/ext/new_allocator.h: In instantiation of ‘void __gnu_cxx::new_allocator<_Tp>::construct(_Up*, _Args&& ...) [with _Up = autoware::path_optimizer::MPTOptimizer; _Args = {}; _Tp = autoware::path_optimizer::MPTOptimizer]’:
+  /usr/include/c++/11/bits/alloc_traits.h:516:17:   required from ‘static void std::allocator_traits<std::allocator<_CharT> >::construct(std::allocator_traits<std::allocator<_CharT> >::allocator_type&, _Up*, _Args&& ...) [with _Up = autoware::path_optimizer::MPTOptimizer; _Args = {}; _Tp = autoware::path_optimizer::MPTOptimizer; std::allocator_traits<std::allocator<_CharT> >::allocator_type = std::allocator<autoware::path_optimizer::MPTOptimizer>]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:519:39:   required from ‘std::_Sp_counted_ptr_inplace<_Tp, _Alloc, _Lp>::_Sp_counted_ptr_inplace(_Alloc, _Args&& ...) [with _Args = {}; _Tp = autoware::path_optimizer::MPTOptimizer; _Alloc = std::allocator<autoware::path_optimizer::MPTOptimizer>; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:650:16:   required from ‘std::__shared_count<_Lp>::__shared_count(_Tp*&, std::_Sp_alloc_shared_tag<_Alloc>, _Args&& ...) [with _Tp = autoware::path_optimizer::MPTOptimizer; _Alloc = std::allocator<autoware::path_optimizer::MPTOptimizer>; _Args = {}; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:1342:14:   required from ‘std::__shared_ptr<_Tp, _Lp>::__shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<autoware::path_optimizer::MPTOptimizer>; _Args = {}; _Tp = autoware::path_optimizer::MPTOptimizer; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr.h:409:59:   required from ‘std::shared_ptr<_Tp>::shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<autoware::path_optimizer::MPTOptimizer>; _Args = {}; _Tp = autoware::path_optimizer::MPTOptimizer]’
+  /usr/include/c++/11/bits/shared_ptr.h:862:14:   required from ‘std::shared_ptr<_Tp> std::allocate_shared(const _Alloc&, _Args&& ...) [with _Tp = autoware::path_optimizer::MPTOptimizer; _Alloc = std::allocator<autoware::path_optimizer::MPTOptimizer>; _Args = {}]’
+  /usr/include/c++/11/bits/shared_ptr.h:878:39:   required from ‘std::shared_ptr<_Tp> std::make_shared(_Args&& ...) [with _Tp = autoware::path_optimizer::MPTOptimizer; _Args = {}]’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/src/node.cpp:125:54:   required from here
+  /usr/include/c++/11/ext/new_allocator.h:162:11: error: no matching function for call to ‘autoware::path_optimizer::MPTOptimizer::MPTOptimizer()’
+    162 |         { ::new((void *)__p) _Up(std::forward<_Args>(__args)...); }
+        |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/node.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/src/node.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/mpt_optimizer.hpp:107:3: note: candidate: ‘autoware::path_optimizer::MPTOptimizer::MPTOptimizer(rclcpp::Node*, bool, autoware::path_optimizer::EgoNearestParam, const autoware::vehicle_info_utils::VehicleInfo&, const autoware::path_optimizer::TrajectoryParam&, std::shared_ptr<autoware::path_optimizer::DebugData>, std::shared_ptr<autoware::universe_utils::TimeKeeper>)’
+    107 |   MPTOptimizer(
+        |   ^~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/mpt_optimizer.hpp:107:3: note:   candidate expects 7 arguments, 0 provided
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/mpt_optimizer.hpp:104:7: note: candidate: ‘autoware::path_optimizer::MPTOptimizer::MPTOptimizer(autoware::path_optimizer::MPTOptimizer&&)’
+    104 | class MPTOptimizer
+        |       ^~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_path_optimizer/include/autoware/path_optimizer/mpt_optimizer.hpp:104:7: note:   candidate expects 1 argument, 0 provided
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/autoware_path_optimizer.dir/build.make:76: CMakeFiles/autoware_path_optimizer.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_path_optimizer.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_path_optimizer [8.77s, exited with code 2]
+
+  Summary: 0 packages finished [10.2s]
+    1 package failed: autoware_path_optimizer
+    1 package had stderr output: autoware_path_optimizer
+generate_code.cpp: |-
+  PathOptimizer::PathOptimizer(const rclcpp::NodeOptions & node_options)
+  : Node("path_optimizer", node_options),
+    vehicle_info_(autoware::vehicle_info_utils::VehicleInfoUtils(*this).getVehicleInfo()),
+    debug_data_ptr_(std::make_shared<DebugData>()),
+    traj_param_(this),
+    ego_nearest_param_(this),
+    enable_pub_debug_marker_(declare_parameter<bool>("enable_pub_debug_marker", false)),
+    enable_pub_extra_debug_marker_(declare_parameter<bool>("enable_pub_extra_debug_marker", false)),
+    enable_debug_info_(declare_parameter<bool>("enable_debug_info", false)),
+    enable_outside_drivable_area_stop_(declare_parameter<bool>("enable_outside_drivable_area_stop", false)),
+    enable_skip_optimization_(declare_parameter<bool>("enable_skip_optimization", false)),
+    enable_reset_prev_optimization_(declare_parameter<bool>("enable_reset_prev_optimization", false)),
+    use_footprint_polygon_for_outside_drivable_area_check_(
+      declare_parameter<bool>("use_footprint_polygon_for_outside_drivable_area_check", false))
+  {
+    // Initialize publishers
+    traj_pub_ = this->create_publisher<Trajectory>("~/output/trajectory", 1);
+    virtual_wall_pub_ = this->create_publisher<MarkerArray>("~/output/virtual_wall", 1);
+    debug_extended_traj_pub_ = this->create_publisher<Trajectory>("~/debug/extended_trajectory", 1);
+    debug_markers_pub_ = this->create_publisher<MarkerArray>("~/debug/markers", 1);
+    debug_calculation_time_str_pub_ = this->create_publisher<StringStamped>("~/debug/calculation_time_str", 1);
+    debug_calculation_time_float_pub_ = this->create_publisher<Float64Stamped>("~/debug/calculation_time_float", 1);
+    debug_processing_time_detail_pub_ = this->create_publisher<autoware::universe_utils::ProcessingTimeDetail>(
+      "~/debug/processing_time_detail", 1);
+
+    // Initialize subscriptions
+    path_sub_ = this->create_subscription<Path>(
+      "~/input/path", 1, std::bind(&PathOptimizer::onPath, this, std::placeholders::_1));
+
+    // Initialize ego odometry subscription
+    ego_odom_sub_.initialize();
+
+    // Initialize other components
+    time_keeper_ = std::make_shared<autoware::universe_utils::TimeKeeper>();
+    replan_checker_ptr_ = std::make_shared<ReplanChecker>();
+    mpt_optimizer_ptr_ = std::make_shared<MPTOptimizer>();
+
+    // Initialize logger configuration
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+
+    // Initialize published time publisher
+    published_time_publisher_ = std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);
+
+    // Set parameter callback
+    set_param_res_ = this->add_on_set_parameters_callback(
+      std::bind(&PathOptimizer::onParam, this, std::placeholders::_1));
+
+    // Initialize planning
+    initializePlanning();
+  }
+ground_truth.cpp: |-
+  PathOptimizer::PathOptimizer(const rclcpp::NodeOptions & node_options)
+  : Node("path_optimizer", node_options),
+    vehicle_info_(autoware::vehicle_info_utils::VehicleInfoUtils(*this).getVehicleInfo()),
+    debug_data_ptr_(std::make_shared<DebugData>())
+  {
+    // interface publisher
+    traj_pub_ = create_publisher<Trajectory>("~/output/path", 1);
+    virtual_wall_pub_ = create_publisher<MarkerArray>("~/virtual_wall", 1);
+
+    // interface subscriber
+    path_sub_ = create_subscription<Path>(
+      "~/input/path", 1, std::bind(&PathOptimizer::onPath, this, std::placeholders::_1));
+
+    // debug publisher
+    debug_extended_traj_pub_ = create_publisher<Trajectory>("~/debug/extended_traj", 1);
+    debug_markers_pub_ = create_publisher<MarkerArray>("~/debug/marker", 1);
+    debug_calculation_time_str_pub_ = create_publisher<StringStamped>("~/debug/calculation_time", 1);
+    debug_calculation_time_float_pub_ =
+      create_publisher<Float64Stamped>("~/debug/processing_time_ms", 1);
+    debug_processing_time_detail_pub_ =
+      create_publisher<autoware::universe_utils::ProcessingTimeDetail>(
+        "~/debug/processing_time_detail_ms", 1);
+
+    {  // parameters
+      // parameter for option
+      enable_outside_drivable_area_stop_ =
+        declare_parameter<bool>("option.enable_outside_drivable_area_stop");
+      enable_skip_optimization_ = declare_parameter<bool>("option.enable_skip_optimization");
+      enable_reset_prev_optimization_ =
+        declare_parameter<bool>("option.enable_reset_prev_optimization");
+      use_footprint_polygon_for_outside_drivable_area_check_ =
+        declare_parameter<bool>("option.use_footprint_polygon_for_outside_drivable_area_check");
+
+      // parameter for debug marker
+      enable_pub_debug_marker_ = declare_parameter<bool>("option.debug.enable_pub_debug_marker");
+      enable_pub_extra_debug_marker_ =
+        declare_parameter<bool>("option.debug.enable_pub_extra_debug_marker");
+
+      // parameter for debug info
+      enable_debug_info_ = declare_parameter<bool>("option.debug.enable_debug_info");
+
+      vehicle_stop_margin_outside_drivable_area_ =
+        declare_parameter<double>("common.vehicle_stop_margin_outside_drivable_area");
+
+      // parameters for ego nearest search
+      ego_nearest_param_ = EgoNearestParam(this);
+
+      // parameters for trajectory
+      traj_param_ = TrajectoryParam(this);
+    }
+
+    time_keeper_ =
+      std::make_shared<autoware::universe_utils::TimeKeeper>(debug_processing_time_detail_pub_);
+
+    // create core algorithm pointers with parameter declaration
+    replan_checker_ptr_ = std::make_shared<ReplanChecker>(this, ego_nearest_param_);
+    mpt_optimizer_ptr_ = std::make_shared<MPTOptimizer>(
+      this, enable_debug_info_, ego_nearest_param_, vehicle_info_, traj_param_, debug_data_ptr_,
+      time_keeper_);
+
+    // reset planners
+    // NOTE: This function must be called after core algorithms (e.g. mpt_optimizer_) have been
+    // initialized.
+    initializePlanning();
+
+    // set parameter callback
+    // NOTE: This function must be called after core algorithms (e.g. mpt_optimizer_) have been
+    // initialized.
+    set_param_res_ = this->add_on_set_parameters_callback(
+      std::bind(&PathOptimizer::onParam, this, std::placeholders::_1));
+
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+    published_time_publisher_ =
+      std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);
+  }

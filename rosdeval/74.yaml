@@ -1,0 +1,37 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/evaluator/autoware_perception_online_evaluator
+ros_package: autoware_perception_online_evaluator
+file_path: src/metrics_calculator.cpp
+method_name: MetricsCalculator::calcYawRateMetrics
+requirement: |
+  /**
+  * Calculates predicted path deviation metrics for objects in the given class-objects map.
+  * 
+  * Computes the mean and variance of predicted path deviations for each object class and time horizon
+  * specified in the parameters. Only processes object classes marked for deviation checking.
+  *
+  * @param class_objects_map Map of object classes to their corresponding objects.
+  * @return MetricStatMap containing mean and variance metrics for each valid class-time combination,
+  *         with keys formatted as "predicted_path_deviation_{label}_{time}" and 
+  *         "predicted_path_deviation_variance_{label}_{time}".
+  */
+category: utilities
+type: has_domain_library,has_timer,has_message
+signature: |
+  MetricStatMap MetricsCalculator::calcYawRateMetrics(const ClassObjectsMap & class_objects_map) const
+additional_information: 
+  function_related_variable: |
+    using MetricStatMap = std::unordered_map<std::string, Accumulator<double>>;
+  function_related_class: |
+    namespace autoware::universe_utils{
+      inline std::string toHexString(const unique_identifier_msgs::msg::UUID & id)
+    }
+    namespace autoware::object_recognition_utils{
+      inline std::string convertLabelToString(const uint8_t label)
+    }
+  function_related_function: |
+    std::optional<std::pair<rclcpp::Time, PredictedObject>> getPreviousObjectByStamp(const std::string uuid, const rclcpp::Time stamp) const;
+test: test_perception_online_evaluator_node
+test_cases: 
+- calcPoseAfterTimeDelay

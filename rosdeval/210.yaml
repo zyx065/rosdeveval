@@ -1,0 +1,41 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_mppi_controller
+ros_package: nav2_mppi_controller
+file_path: src/path_handler.cpp
+method_name: PathHandler::transformPose
+requirement: |
+  /**
+  * Transforms a pose from its original frame to a specified target frame.
+  * 
+  * @param frame The target frame ID to transform the pose into.
+  * @param in_pose The input pose to be transformed.
+  * @param[out] out_pose The transformed pose in the target frame.
+  * @return True if the transform was successful, false otherwise.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  bool PathHandler::transformPose(
+    const std::string & frame, const geometry_msgs::msg::PoseStamped & in_pose,
+    geometry_msgs::msg::PoseStamped & out_pose) const
+additional_information: 
+  function_related_variable: | 
+    std::string name_;
+    std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_;
+    std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
+    ParametersHandler * parameters_handler_;
+
+    nav_msgs::msg::Path global_plan_;
+    nav_msgs::msg::Path global_plan_up_to_inversion_;
+    rclcpp::Logger logger_{rclcpp::get_logger("MPPIController")};
+
+    double max_robot_pose_search_dist_{0};
+    double prune_distance_{0};
+    double transform_tolerance_{0};
+    float inversion_xy_tolerance_{0.2};
+    float inversion_yaw_tolerance{0.4};
+    bool enforce_path_inversion_{false};
+test: path_handler_test
+test_cases: 
+- TestTransforms

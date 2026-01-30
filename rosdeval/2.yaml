@@ -1,0 +1,29 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/evaluator/autoware_kinematic_evaluator
+ros_package: autoware_kinematic_evaluator
+file_path: src/kinematic_evaluator_node.cpp
+method_name: KinematicEvaluatorNode::onOdom
+requirement: |
+  /**
+  * Generates a DiagnosticStatus message for a given metric and its statistics.
+  * 
+  * @param[in] metric The metric type to generate diagnostics for.
+  * @param[in] metric_stat The accumulated statistics (min, max, mean) for the metric.
+  * @return DiagnosticStatus A populated diagnostic message with the metric's statistics.
+  */
+category: ros_architecture
+type: has_topic,has_message,has_timer
+signature: |
+  void KinematicEvaluatorNode::onOdom(const nav_msgs::msg::Odometry::SharedPtr msg)
+additional_information: 
+  function_related_variable: |
+    std::unordered_map<Metric, Accumulator<double>> metrics_dict_;
+    std::array<std::deque<Accumulator<double>>, static_cast<size_t>(Metric::SIZE)> metric_stats_;
+    std::deque<rclcpp::Time> stamps_;
+    rclcpp::Publisher<DiagnosticArray>::SharedPtr metrics_pub_;
+  function_related_function: |
+    DiagnosticStatus KinematicEvaluatorNode::generateDiagnosticStatus(const Metric & metric, const Accumulator<double> & metric_stat) const
+test: test_kinematic_evaluator
+test_cases: 
+- TestVelocityStats

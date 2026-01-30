@@ -1,0 +1,42 @@
+compilation.log: |
+  Starting >>> nav2_costmap_2d
+  Finished <<< nav2_costmap_2d [0.45s]
+
+  Summary: 1 package finished [0.76s]
+generate_code.cpp: |-
+  void BinaryFilter::maskCallback(
+    const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
+  {
+    filter_mask_ = msg;
+    mask_frame_ = msg->header.frame_id;
+  }
+ground_truth.cpp: |-
+  void BinaryFilter::maskCallback(
+    const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
+  {
+    std::lock_guard<CostmapFilter::mutex_t> guard(*getMutex());
+
+    if (!filter_mask_) {
+      RCLCPP_INFO(
+        logger_,
+        "BinaryFilter: Received filter mask from %s topic.", mask_topic_.c_str());
+    } else {
+      RCLCPP_WARN(
+        logger_,
+        "BinaryFilter: New filter mask arrived from %s topic. Updating old filter mask.",
+        mask_topic_.c_str());
+      filter_mask_.reset();
+    }
+
+    filter_mask_ = msg;
+    mask_frame_ = msg->header.frame_id;
+  }
+architecture-codes:
+  - ROS Logger Issues - ROS Logger Missing Issue
+functionality-codes:
+  - Conditional Checks Issues - Conditional Check Missing
+  - Incomplete Code - Missing Multiple Steps
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming

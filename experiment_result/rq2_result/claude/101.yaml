@@ -1,0 +1,82 @@
+compilation.log: |
+  Starting >>> autoware_external_cmd_converter
+  --- stderr: autoware_external_cmd_converter
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_external_cmd_converter/src/node.cpp: In member function ‘bool autoware::external_cmd_converter::ExternalCmdConverterNode::check_emergency_stop_topic_timeout()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_external_cmd_converter/src/node.cpp:222:47: error: ‘EMERGENCY’ is not a member of ‘tier4_control_msgs::msg::GateMode’ {aka ‘tier4_control_msgs::msg::GateMode_<std::allocator<void> >’}
+    222 |     if (current_gate_mode_->data == GateMode::EMERGENCY) {
+        |                                               ^~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_external_cmd_converter.dir/build.make:76: CMakeFiles/autoware_external_cmd_converter.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_external_cmd_converter.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_external_cmd_converter [7.69s, exited with code 2]
+
+  Summary: 0 packages finished [8.93s]
+    1 package failed: autoware_external_cmd_converter
+    1 package had stderr output: autoware_external_cmd_converter
+generate_code.cpp: |-
+  bool ExternalCmdConverterNode::check_emergency_stop_topic_timeout()
+  {
+      // If waiting for first topic, return true to continue waiting
+      if (wait_for_first_topic_) {
+          return true;
+      }
+
+      // If no gate mode is set, consider it as not timed out
+      if (!current_gate_mode_) {
+          return true;
+      }
+
+      // Check if in emergency stop mode
+      if (current_gate_mode_->data == GateMode::EMERGENCY) {
+          // If no heartbeat time is recorded, consider it timed out
+          if (!latest_emergency_stop_heartbeat_received_time_) {
+              return false;
+          }
+
+          // Calculate time since last heartbeat
+          auto current_time = rclcpp::Clock().now();
+          auto time_since_last_heartbeat = current_time - *latest_emergency_stop_heartbeat_received_time_;
+
+          // Check if time since last heartbeat exceeds timeout
+          if (time_since_last_heartbeat.seconds() > emergency_stop_timeout_) {
+              return false;
+          }
+      }
+
+      // Emergency stop is not timed out
+      return true;
+  }
+ground_truth.cpp: |-
+  bool ExternalCmdConverterNode::check_emergency_stop_topic_timeout()
+  {
+    if (!current_gate_mode_) {
+      return true;
+    }
+
+    if (current_gate_mode_->data == tier4_control_msgs::msg::GateMode::AUTO) {
+      latest_emergency_stop_heartbeat_received_time_ = nullptr;
+    }
+
+    if (!latest_emergency_stop_heartbeat_received_time_) {
+      return wait_for_first_topic_;
+    }
+
+    const auto duration = (this->now() - *latest_emergency_stop_heartbeat_received_time_);
+    return duration.seconds() <= emergency_stop_timeout_;
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Message Related Issues - Message Operation Issues
+
+functionality-codes:
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Missing
+  - Operation/Calculation Error - Incorrect comparison operation
+
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

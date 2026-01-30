@@ -1,0 +1,118 @@
+compilation.log: |
+  Starting >>> autoware_rtc_interface
+  --- stderr: autoware_rtc_interface
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp: In lambda function:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp:136:15: error: ‘using Module = struct tier4_rtc_msgs::msg::Module_<std::allocator<void> >’ {aka ‘struct tier4_rtc_msgs::msg::Module_<std::allocator<void> >’} has no member named ‘handleCooperateCommands’
+    136 |       module_.handleCooperateCommands(request, response);
+        |               ^~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp: In lambda function:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp:149:19: error: ‘using element_type = struct tier4_rtc_msgs::srv::AutoMode_Response_<std::allocator<void> >’ {aka ‘struct tier4_rtc_msgs::srv::AutoMode_Response_<std::allocator<void> >’} has no member named ‘message’
+    149 |         response->message = "RTCInterface is locked, cannot change auto mode.";
+        |                   ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp:151:42: error: ‘using element_type = struct tier4_rtc_msgs::srv::AutoMode_Request_<std::allocator<void> >’ {aka ‘struct tier4_rtc_msgs::srv::AutoMode_Request_<std::allocator<void> >’} has no member named ‘enable_auto_mode’
+    151 |         is_auto_mode_enabled_ = request->enable_auto_mode;
+        |                                          ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp:153:19: error: ‘using element_type = struct tier4_rtc_msgs::srv::AutoMode_Response_<std::allocator<void> >’ {aka ‘struct tier4_rtc_msgs::srv::AutoMode_Response_<std::allocator<void> >’} has no member named ‘message’
+    153 |         response->message = "Auto mode updated successfully.";
+        |                   ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp: At global scope:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_rtc_interface/src/rtc_interface.cpp:66:8: error: ‘tier4_rtc_msgs::msg::Module {anonymous}::getModuleType(const string&)’ defined but not used [-Werror=unused-function]
+     66 | Module getModuleType(const std::string & module_name)
+        |        ^~~~~~~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/autoware_rtc_interface.dir/build.make:76: CMakeFiles/autoware_rtc_interface.dir/src/rtc_interface.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_rtc_interface.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_rtc_interface [3.18s, exited with code 2]
+
+  Summary: 0 packages finished [4.60s]
+    1 package failed: autoware_rtc_interface
+    1 package had stderr output: autoware_rtc_interface
+generate_code.cpp: |-
+  RTCInterface::RTCInterface(rclcpp::Node * node, const std::string & name, const bool enable_rtc)
+  : clock_{node->get_clock()},
+    logger_{node->get_logger().get_child("RTCInterface[" + name + "]")},
+    is_auto_mode_enabled_{!enable_rtc},
+    is_locked_{false}
+  {
+    // Create a callback group for handling service and timer callbacks
+    callback_group_ = node->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+
+    // Initialize the publisher for cooperate statuses
+    pub_statuses_ = node->create_publisher<CooperateStatusArray>("cooperate_statuses", 10);
+
+    // Initialize the publisher for auto mode status
+    pub_auto_mode_status_ = node->create_publisher<AutoModeStatus>("auto_mode_status", 10);
+
+    // Initialize the service for cooperate commands
+    srv_commands_ = node->create_service<CooperateCommands>(
+      "cooperate_commands",
+      [this](const std::shared_ptr<CooperateCommands::Request> request,
+             std::shared_ptr<CooperateCommands::Response> response) {
+        // Handle cooperate commands service request
+        module_.handleCooperateCommands(request, response);
+      },
+      rmw_qos_profile_services_default,
+      callback_group_);
+
+    // Initialize the service for auto mode
+    srv_auto_mode_ = node->create_service<AutoMode>(
+      "auto_mode",
+      [this](const std::shared_ptr<AutoMode::Request> request,
+             std::shared_ptr<AutoMode::Response> response) {
+        // Handle auto mode service request
+        if (is_locked_) {
+          response->success = false;
+          response->message = "RTCInterface is locked, cannot change auto mode.";
+        } else {
+          is_auto_mode_enabled_ = request->enable_auto_mode;
+          response->success = true;
+          response->message = "Auto mode updated successfully.";
+        }
+      },
+      rmw_qos_profile_services_default,
+      callback_group_);
+
+    // Initialize the timer for periodic tasks
+    timer_ = node->create_wall_timer(
+      std::chrono::milliseconds(100),  // Timer interval
+      std::bind(&RTCInterface::onTimer, this),
+      callback_group_);
+  }
+ground_truth.cpp: |-
+  RTCInterface::RTCInterface(rclcpp::Node * node, const std::string & name, const bool enable_rtc)
+  : clock_{node->get_clock()},
+    logger_{node->get_logger().get_child("RTCInterface[" + name + "]")},
+    is_auto_mode_enabled_{!enable_rtc},
+    is_locked_{false}
+  {
+    using std::placeholders::_1;
+    using std::placeholders::_2;
+
+    constexpr double update_rate = 10.0;
+    const auto period_ns = rclcpp::Rate(update_rate).period();
+    timer_ = rclcpp::create_timer(
+      node, node->get_clock(), period_ns, std::bind(&RTCInterface::onTimer, this));
+
+    // Publisher
+    pub_statuses_ =
+      node->create_publisher<CooperateStatusArray>(cooperate_status_namespace_ + "/" + name, 1);
+
+    pub_auto_mode_status_ =
+      node->create_publisher<AutoModeStatus>(auto_mode_status_namespace_ + "/" + name, 1);
+
+    // Service
+    callback_group_ = node->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    srv_commands_ = node->create_service<CooperateCommands>(
+      cooperate_commands_namespace_ + "/" + name,
+      std::bind(&RTCInterface::onCooperateCommandService, this, _1, _2),
+      rmw_qos_profile_services_default, callback_group_);
+    srv_auto_mode_ = node->create_service<AutoMode>(
+      enable_auto_mode_namespace_ + "/" + name,
+      std::bind(&RTCInterface::onAutoModeService, this, _1, _2), rmw_qos_profile_services_default,
+      callback_group_);
+
+    // Module
+    module_ = getModuleType(name);
+  }

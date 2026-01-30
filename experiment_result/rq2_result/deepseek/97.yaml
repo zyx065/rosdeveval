@@ -1,0 +1,60 @@
+compilation.log: |
+  Starting >>> autoware_object_recognition_utils
+  --- stderr: autoware_object_recognition_utils
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_object_recognition_utils/test/src/test_matching.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_object_recognition_utils/include/autoware/object_recognition_utils/matching.hpp: In function ‘double autoware::object_recognition_utils::get2dIoU(T1, T2, double)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_object_recognition_utils/include/autoware/object_recognition_utils/matching.hpp:73:62: error: ‘getIntersectionArea’ is not a member of ‘autoware::universe_utils’; did you mean ‘autoware::object_recognition_utils::getIntersectionArea’?
+     73 |   const double intersection_area = autoware::universe_utils::getIntersectionArea(source_polygon, target_polygon);
+        |                                                              ^~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_object_recognition_utils/include/autoware/object_recognition_utils/matching.hpp:52:15: note: ‘autoware::object_recognition_utils::getIntersectionArea’ declared here
+     52 | inline double getIntersectionArea(
+        |               ^~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_object_recognition_utils/include/autoware/object_recognition_utils/matching.hpp:74:55: error: ‘getUnionArea’ is not a member of ‘autoware::universe_utils’; did you mean ‘autoware::object_recognition_utils::getUnionArea’?
+     74 |   const double union_area = autoware::universe_utils::getUnionArea(source_polygon, target_polygon);
+        |                                                       ^~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/common/autoware_object_recognition_utils/include/autoware/object_recognition_utils/matching.hpp:60:15: note: ‘autoware::object_recognition_utils::getUnionArea’ declared here
+     60 | inline double getUnionArea(const Polygon2d & source_polygon, const Polygon2d & target_polygon)
+        |               ^~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/test_object_recognition_utils.dir/build.make:104: CMakeFiles/test_object_recognition_utils.dir/test/src/test_matching.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:185: CMakeFiles/test_object_recognition_utils.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_object_recognition_utils [7.13s, exited with code 2]
+
+  Summary: 0 packages finished [8.59s]
+    1 package failed: autoware_object_recognition_utils
+    1 package had stderr output: autoware_object_recognition_utils
+generate_code.cpp: "double get2dIoU(const T1 source_object, const T2 target_object,\
+  \ const double min_union_area = 0.01)\n{\n  const auto source_polygon = autoware::universe_utils::toPolygon2d(source_object);\n\
+  \  const auto target_polygon = autoware::universe_utils::toPolygon2d(target_object);\n\
+  \  \n  const double intersection_area = autoware::universe_utils::getIntersectionArea(source_polygon,\
+  \ target_polygon);\n  const double union_area = autoware::universe_utils::getUnionArea(source_polygon,\
+  \ target_polygon);\n  \n  if (union_area < min_union_area) {\n    return 0.0;\n\
+  \  }\n  \n  return intersection_area / union_area;\n}"
+ground_truth.cpp: |-
+  double get2dIoU(const T1 source_object, const T2 target_object, const double min_union_area = 0.01)
+  {
+    const auto source_polygon = autoware::universe_utils::toPolygon2d(source_object);
+    if (boost::geometry::area(source_polygon) < MIN_AREA) return 0.0;
+    const auto target_polygon = autoware::universe_utils::toPolygon2d(target_object);
+    if (boost::geometry::area(target_polygon) < MIN_AREA) return 0.0;
+
+    const double intersection_area = getIntersectionArea(source_polygon, target_polygon);
+    if (intersection_area < MIN_AREA) return 0.0;
+    const double union_area = getUnionArea(source_polygon, target_polygon);
+
+    const double iou =
+      union_area < min_union_area ? 0.0 : std::min(1.0, intersection_area / union_area);
+    return iou;
+  }
+architecture-codes: []
+functionality-codes:
+    - Domain Library Issue - Lack of Domain Library Utilization Issue
+    - Condition Issue - Conditional Check Missing Issue
+    - Incomplete Code Issue - Missing Multiple Steps Issue
+    - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+
+root-cause-codes:
+    - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+    - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+    - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

@@ -1,0 +1,24 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/localization/autoware_localization_error_monitor
+ros_package: autoware_gyro_odometer
+file_path: src/diagnostics_helper.hpp
+method_name: check_localization_accuracy
+requirement: |
+  /**
+  * @brief Checks localization accuracy against warning and error thresholds.
+  * 
+  * @param ellipse_size Current localization accuracy as an ellipse size.
+  * @param warn_ellipse_size Threshold for warning status.
+  * @param error_ellipse_size Threshold for error status.
+  * @return DiagnosticStatus with level set to OK, WARN, or ERROR based on thresholds.
+  */
+category: utilities
+type: has_message
+signature: |
+  inline diagnostic_msgs::msg::DiagnosticStatus check_localization_accuracy(
+    const double ellipse_size, const double warn_ellipse_size, const double error_ellipse_size)
+additional_information: []
+test: test_diagnostics
+test_cases: 
+- CheckLocalizationAccuracy

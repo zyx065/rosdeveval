@@ -1,0 +1,90 @@
+compilation.log: |
+  Starting >>> autoware_scenario_selector
+  --- stderr: autoware_scenario_selector
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp: In member function ‘void autoware::scenario_selector::ScenarioSelectorNode::onTimer()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:393:16: error: ‘struct tier4_planning_msgs::msg::Scenario_<std::allocator<void> >’ has no member named ‘stamp’
+    393 |   scenario_msg.stamp = this->now();
+        |                ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:401:30: error: ‘tier4_debug_msgs’ has not been declared
+    401 |   auto processing_time_msg = tier4_debug_msgs::msg::Float64Stamped();
+        |                              ^~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_scenario_selector.dir/build.make:76: CMakeFiles/autoware_scenario_selector.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_scenario_selector.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_scenario_selector [14.9s, exited with code 2]
+
+  Summary: 0 packages finished [16.2s]
+    1 package failed: autoware_scenario_selector
+    1 package had stderr output: autoware_scenario_selector
+generate_code.cpp: |-
+  void ScenarioSelectorNode::onTimer()
+  {
+    // Start measuring processing time
+    auto start_time = this->now();
+
+    // Update internal data
+    updateData();
+
+    // Check if data is ready for processing
+    if (!isDataReady()) {
+      RCLCPP_WARN(this->get_logger(), "Data is not ready. Skipping scenario selection.");
+      return;
+    }
+
+    // If no scenario is currently active, select one based on vehicle position
+    if (current_scenario_.empty()) {
+      current_scenario_ = selectScenarioByPosition();
+    }
+
+    // Update the current scenario
+    updateCurrentScenario();
+
+    // Create and publish the scenario message
+    auto scenario_msg = tier4_planning_msgs::msg::Scenario();
+    scenario_msg.stamp = this->now();
+    scenario_msg.current_scenario = current_scenario_;
+    pub_scenario_->publish(scenario_msg);
+
+    // Calculate and publish processing time
+    auto end_time = this->now();
+    auto processing_time = (end_time - start_time).seconds();
+
+    auto processing_time_msg = tier4_debug_msgs::msg::Float64Stamped();
+    processing_time_msg.stamp = this->now();
+    processing_time_msg.data = processing_time;
+    pub_processing_time_->publish(processing_time_msg);
+
+    RCLCPP_INFO(this->get_logger(), "Scenario '%s' selected and published. Processing time: %f seconds.",
+                current_scenario_.c_str(), processing_time);
+  }
+ground_truth.cpp: |-
+  void ScenarioSelectorNode::onTimer()
+  {
+    updateData();
+
+    if (!isDataReady()) {
+      return;
+    }
+
+    // Initialize Scenario
+    if (current_scenario_ == tier4_planning_msgs::msg::Scenario::EMPTY) {
+      current_scenario_ = selectScenarioByPosition();
+    }
+
+    updateCurrentScenario();
+    tier4_planning_msgs::msg::Scenario scenario;
+    scenario.current_scenario = current_scenario_;
+
+    if (current_scenario_ == tier4_planning_msgs::msg::Scenario::PARKING) {
+      scenario.activating_scenarios.push_back(current_scenario_);
+    }
+
+    pub_scenario_->publish(scenario);
+
+    // Publish ProcessingTime
+    autoware_internal_debug_msgs::msg::Float64Stamped processing_time_msg;
+    processing_time_msg.stamp = get_clock()->now();
+    processing_time_msg.data = stop_watch.toc();
+    pub_processing_time_->publish(processing_time_msg);
+  }

@@ -1,0 +1,73 @@
+compilation.log: |
+  Starting >>> nav2_mppi_controller
+  [Processing: nav2_mppi_controller]
+  Finished <<< nav2_mppi_controller [54.6s]
+
+  Summary: 1 package finished [54.9s]
+generate_code.cpp: |
+  inline bool withinPositionGoalTolerance(
+    nav2_core::GoalChecker * goal_checker,
+    const geometry_msgs::msg::Pose & robot,
+    const geometry_msgs::msg::Pose & goal)
+  {
+    if (!goal_checker) {
+      return false;
+    }
+    
+    geometry_msgs::msg::Pose pose_tolerance;
+    geometry_msgs::msg::Twist vel_tolerance;
+    
+    if (!goal_checker->getTolerances(pose_tolerance, vel_tolerance)) {
+      return false;
+    }
+    
+    // Calculate position differences
+    double dx = robot.position.x - goal.position.x;
+    double dy = robot.position.y - goal.position.y;
+    double dz = robot.position.z - goal.position.z;
+    
+    // Check if within position tolerances
+    if (std::abs(dx) > pose_tolerance.position.x ||
+        std::abs(dy) > pose_tolerance.position.y ||
+        std::abs(dz) > pose_tolerance.position.z) {
+      return false;
+    }
+    
+    return true;
+  }
+ground_truth.cpp: |-
+  inline bool withinPositionGoalTolerance(
+    nav2_core::GoalChecker * goal_checker,
+    const geometry_msgs::msg::Pose & robot,
+    const geometry_msgs::msg::Pose & goal)
+  {
+    if (goal_checker) {
+      geometry_msgs::msg::Pose pose_tolerance;
+      geometry_msgs::msg::Twist velocity_tolerance;
+      goal_checker->getTolerances(pose_tolerance, velocity_tolerance);
+
+      const auto pose_tolerance_sq = pose_tolerance.position.x * pose_tolerance.position.x;
+
+      auto dx = robot.position.x - goal.position.x;
+      auto dy = robot.position.y - goal.position.y;
+
+      auto dist_sq = dx * dx + dy * dy;
+
+      if (dist_sq < pose_tolerance_sq) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Message Related Issues - Message Operation Issues
+functionality-codes:
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Operation/Calculation Error - Incorrect arithmetic operation
+  - Domain Library Issues - Domain Specific Library Utilization Error
+Root Cause Analysis:
+- Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+- Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+- Deficiencies in Domain Knowledge - Lack of ROS development best practices

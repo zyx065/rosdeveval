@@ -1,0 +1,67 @@
+compilation.log: |
+  Starting >>> nav2_route
+  Finished <<< nav2_route [0.68s]
+
+  Summary: 1 package finished [0.93s]
+generate_code.cpp: |-
+  void PathConverter::interpolateEdge(
+    float x0, float y0, float x1, float y1,
+    std::vector<geometry_msgs::msg::PoseStamped> & poses)
+  {
+    // Define the resolution for interpolation (distance between consecutive points)
+    const float resolution = 0.1; // Adjust this value as needed for finer or coarser interpolation
+
+    // Calculate the distance between the two points
+    float dx = x1 - x0;
+    float dy = y1 - y0;
+    float distance = std::sqrt(dx * dx + dy * dy);
+
+    // Calculate the number of interpolation steps
+    int steps = std::max(1, static_cast<int>(distance / resolution));
+
+    // Interpolate poses along the line
+    for (int i = 0; i <= steps; ++i) {
+      float t = static_cast<float>(i) / steps; // Interpolation factor (0 to 1)
+
+      // Interpolated x and y coordinates
+      float x = x0 + t * dx;
+      float y = y0 + t * dy;
+
+      // Create a new PoseStamped message
+      geometry_msgs::msg::PoseStamped pose;
+      pose.pose.position.x = x;
+      pose.pose.position.y = y;
+      pose.pose.position.z = 0.0; // Assuming a 2D plane, z is set to 0
+      pose.pose.orientation.w = 1.0; // Default orientation (no rotation)
+
+      // Add the pose to the vector
+      poses.push_back(pose);
+    }
+  }
+ground_truth.cpp: |-
+  void PathConverter::interpolateEdge(
+    float x0, float y0, float x1, float y1,
+    std::vector<geometry_msgs::msg::PoseStamped> & poses)
+  {
+    // Find number of points to populate by given density
+    const float mag = hypotf(x1 - x0, y1 - y0);
+    const unsigned int num_pts = ceil(mag / density_);
+    const float iterpolated_dist = mag / num_pts;
+
+    // Find unit vector direction
+    float ux = (x1 - x0) / mag;
+    float uy = (y1 - y0) / mag;
+
+    // March along it until dist
+    float x = x0;
+    float y = y0;
+    poses.push_back(utils::toMsg(x, y));
+
+    unsigned int pt_ctr = 0;
+    while (pt_ctr < num_pts - 1) {
+      x += ux * iterpolated_dist;
+      y += uy * iterpolated_dist;
+      pt_ctr++;
+      poses.push_back(utils::toMsg(x, y));
+    }
+  }

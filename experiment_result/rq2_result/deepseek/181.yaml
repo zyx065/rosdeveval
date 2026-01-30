@@ -1,0 +1,48 @@
+compilation.log: |
+  Starting >>> nav2_collision_monitor
+  --- stderr: nav2_collision_monitor
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp: In member function ‘void nav2_collision_monitor::CollisionMonitor::cmdVelInCallback(geometry_msgs::msg::Twist_<std::allocator<void> >::ConstSharedPtr)’:
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:160:14: error: ‘struct nav2_collision_monitor::Velocity’ has no member named ‘linear’
+    160 |   cmd_vel_in.linear = msg->linear.x;
+        |              ^~~~~~
+  /root/repos/nav_ws/src/nav2_collision_monitor/src/collision_monitor_node.cpp:161:14: error: ‘struct nav2_collision_monitor::Velocity’ has no member named ‘angular’
+    161 |   cmd_vel_in.angular = msg->angular.z;
+        |              ^~~~~~~
+  gmake[2]: *** [CMakeFiles/collision_monitor_core.dir/build.make:76: CMakeFiles/collision_monitor_core.dir/src/collision_monitor_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:180: CMakeFiles/collision_monitor_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_collision_monitor [4.55s, exited with code 2]
+
+  Summary: 0 packages finished [4.84s]
+    1 package failed: nav2_collision_monitor
+    1 package had stderr output: nav2_collision_monitor
+generate_code.cpp: "void CollisionMonitor::cmdVelInCallback(geometry_msgs::msg::Twist::ConstSharedPtr\
+  \ msg)\n{\n  // Check for NaN or infinite values in the message\n  if (!nav2_util::validateTwist(*msg))\
+  \ {\n    RCLCPP_WARN(\n      get_logger(), \"Received invalid Twist command with\
+  \ NaN or infinite values. Ignoring.\");\n    return;\n  }\n\n  // Convert to our\
+  \ internal Velocity type and process\n  Velocity cmd_vel_in;\n  cmd_vel_in.linear\
+  \ = msg->linear.x;\n  cmd_vel_in.angular = msg->angular.z;\n  \n  process(cmd_vel_in);\n\
+  }"
+ground_truth.cpp: |-
+  void CollisionMonitor::cmdVelInCallback(geometry_msgs::msg::Twist::ConstSharedPtr msg)
+  {
+    // If message contains NaN or Inf, ignore
+    if (!nav2_util::validateTwist(*msg)) {
+      RCLCPP_ERROR(get_logger(), "Velocity message contains NaNs or Infs! Ignoring as invalid!");
+      return;
+    }
+
+    process({msg->linear.x, msg->linear.y, msg->angular.z});
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Message Issue - Message Initialization Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing One Step Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

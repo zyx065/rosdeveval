@@ -1,0 +1,26 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/perception/autoware_traffic_light_arbiter
+ros_package: autoware_control_evaluator
+file_path: src/traffic_light_arbiter.cpp
+method_name: TrafficLightArbiter::onMap
+requirement: |
+  /**
+  * @brief Processes a lanelet map message to extract traffic signal information.
+  * 
+  * @param msg Shared pointer to the LaneletMapBin message containing map data.
+  */
+category: ros_architecture
+type: has_parameter,has_domain_library
+signature: |
+  void TrafficLightArbiter::onMap(const LaneletMapBin::ConstSharedPtr msg)
+additional_information: 
+  function_related_variable: |
+    std::unique_ptr<std::unordered_set<lanelet::Id>> map_regulatory_elements_set_;
+    bool enable_signal_matching_;
+    std::unique_ptr<SignalMatchValidator> signal_match_validator_;
+  function_related_class: |
+    SignalMatchValidator:
+      void setPedestrianSignals(const std::vector<TrafficLightConstPtr> & pedestrian_signals);
+test: autoware_traffic_light_arbiter_test
+test_cases: []

@@ -1,0 +1,155 @@
+compilation.log: |
+  Starting >>> autoware_velocity_smoother
+  --- stderr: autoware_velocity_smoother
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp: In constructor ‘autoware::velocity_smoother::VelocitySmootherNode::VelocitySmootherNode(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:75:17: error: ‘using element_type = class autoware::universe_utils::TimeKeeper’ {aka ‘class autoware::universe_utils::TimeKeeper’} has no member named ‘initialize’
+     75 |   time_keeper_->initialize(this);
+        |                 ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:82:38: error: ‘onParam’ is not a member of ‘autoware::velocity_smoother::VelocitySmootherNode’
+     82 |     std::bind(&VelocitySmootherNode::onParam, this, std::placeholders::_1));
+        |                                      ^~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_velocity_smoother_node.dir/build.make:76: CMakeFiles/autoware_velocity_smoother_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:208: CMakeFiles/autoware_velocity_smoother_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_velocity_smoother [9.86s, exited with code 2]
+
+  Summary: 0 packages finished [11.1s]
+    1 package failed: autoware_velocity_smoother
+    1 package had stderr output: autoware_velocity_smoother
+generate_code.cpp: |-
+  VelocitySmootherNode::VelocitySmootherNode(const rclcpp::NodeOptions & node_options)
+  : Node("velocity_smoother", node_options),
+    diagnostics_interface_(std::make_unique<DiagnosticsInterface>(this, "velocity_smoother"))
+  {
+    // Initialize parameters
+    initCommonParam();
+
+    // Setup clock
+    clock_ = std::make_shared<rclcpp::Clock>(RCL_ROS_TIME);
+
+    // Setup logger
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+
+    // Setup published time publisher
+    published_time_publisher_ = std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);
+
+    // Initialize publishers
+    pub_trajectory_raw_ = create_publisher<Trajectory>("~/output/trajectory_raw", 1);
+    pub_velocity_limit_ = create_publisher<VelocityLimit>("~/output/velocity_limit", 1);
+    pub_trajectory_vel_lim_ = create_publisher<Trajectory>("~/output/trajectory_vel_lim", 1);
+    pub_trajectory_latacc_filtered_ = create_publisher<Trajectory>("~/output/trajectory_latacc_filtered", 1);
+    pub_trajectory_steering_rate_limited_ = create_publisher<Trajectory>("~/output/trajectory_steering_rate_limited", 1);
+    pub_trajectory_resampled_ = create_publisher<Trajectory>("~/output/trajectory_resampled", 1);
+    pub_dist_to_stopline_ = create_publisher<Float32Stamped>("~/debug/distance_to_stopline", 1);
+    pub_forward_filtered_trajectory_ = create_publisher<Trajectory>("~/debug/forward_filtered_trajectory", 1);
+    pub_backward_filtered_trajectory_ = create_publisher<Trajectory>("~/debug/backward_filtered_trajectory", 1);
+    pub_merged_filtered_trajectory_ = create_publisher<Trajectory>("~/debug/merged_filtered_trajectory", 1);
+    pub_closest_merged_velocity_ = create_publisher<Float32Stamped>("~/debug/closest_merged_velocity", 1);
+    debug_closest_velocity_ = create_publisher<Float32Stamped>("~/debug/closest_velocity", 1);
+    debug_closest_acc_ = create_publisher<Float32Stamped>("~/debug/closest_acceleration", 1);
+    debug_closest_jerk_ = create_publisher<Float32Stamped>("~/debug/closest_jerk", 1);
+    debug_calculation_time_ = create_publisher<Float64Stamped>("~/debug/calculation_time", 1);
+    debug_closest_max_velocity_ = create_publisher<Float32Stamped>("~/debug/closest_max_velocity", 1);
+    debug_processing_time_detail_ = create_publisher<autoware::universe_utils::ProcessingTimeDetail>("~/debug/processing_time_detail", 1);
+
+    // Setup time keeper for diagnostics
+    time_keeper_ = std::make_shared<autoware::universe_utils::TimeKeeper>();
+    time_keeper_->initialize(this);
+
+    // Setup smoother with vehicle parameters
+    setupSmoother(wheelbase_);
+
+    // Set parameter callback
+    set_param_res_ = this->add_on_set_parameters_callback(
+      std::bind(&VelocitySmootherNode::onParam, this, std::placeholders::_1));
+  }
+ground_truth.cpp: |-
+  VelocitySmootherNode::VelocitySmootherNode(const rclcpp::NodeOptions & node_options)
+  : Node("velocity_smoother", node_options),
+    diagnostics_interface_(std::make_unique<DiagnosticsInterface>(this, "velocity_smoother"))
+  {
+    using std::placeholders::_1;
+
+    // set common params
+    const auto vehicle_info = autoware::vehicle_info_utils::VehicleInfoUtils(*this).getVehicleInfo();
+    wheelbase_ = vehicle_info.wheel_base_m;
+    base_link2front_ = vehicle_info.max_longitudinal_offset_m;
+    initCommonParam();
+    over_stop_velocity_warn_thr_ = declare_parameter<double>("over_stop_velocity_warn_thr");
+
+    // create time_keeper and its publisher
+    // NOTE: This has to be called before setupSmoother to pass the time_keeper to the smoother.
+    debug_processing_time_detail_ = create_publisher<autoware::universe_utils::ProcessingTimeDetail>(
+      "~/debug/processing_time_detail_ms", 1);
+    time_keeper_ =
+      std::make_shared<autoware::universe_utils::TimeKeeper>(debug_processing_time_detail_);
+
+    // create smoother
+    setupSmoother(wheelbase_);
+
+    // publishers, subscribers
+    pub_trajectory_ = create_publisher<Trajectory>("~/output/trajectory", 1);
+    pub_virtual_wall_ = create_publisher<MarkerArray>("~/virtual_wall", 1);
+    pub_velocity_limit_ = create_publisher<VelocityLimit>(
+      "~/output/current_velocity_limit_mps", rclcpp::QoS{1}.transient_local());
+    pub_dist_to_stopline_ = create_publisher<Float32Stamped>("~/distance_to_stopline", 1);
+    sub_current_trajectory_ = create_subscription<Trajectory>(
+      "~/input/trajectory", 1, std::bind(&VelocitySmootherNode::onCurrentTrajectory, this, _1));
+
+    // parameter update
+    set_param_res_ =
+      this->add_on_set_parameters_callback(std::bind(&VelocitySmootherNode::onParameter, this, _1));
+
+    // debug
+    publish_debug_trajs_ = declare_parameter<bool>("publish_debug_trajs");
+    debug_closest_velocity_ = create_publisher<Float32Stamped>("~/closest_velocity", 1);
+    debug_closest_acc_ = create_publisher<Float32Stamped>("~/closest_acceleration", 1);
+    debug_closest_jerk_ = create_publisher<Float32Stamped>("~/closest_jerk", 1);
+    debug_closest_max_velocity_ = create_publisher<Float32Stamped>("~/closest_max_velocity", 1);
+    debug_calculation_time_ = create_publisher<Float64Stamped>("~/debug/processing_time_ms", 1);
+    pub_trajectory_raw_ = create_publisher<Trajectory>("~/debug/trajectory_raw", 1);
+    pub_trajectory_vel_lim_ =
+      create_publisher<Trajectory>("~/debug/trajectory_external_velocity_limited", 1);
+    pub_trajectory_latacc_filtered_ =
+      create_publisher<Trajectory>("~/debug/trajectory_lateral_acc_filtered", 1);
+    pub_trajectory_steering_rate_limited_ =
+      create_publisher<Trajectory>("~/debug/trajectory_steering_rate_limited", 1);
+    pub_trajectory_resampled_ = create_publisher<Trajectory>("~/debug/trajectory_time_resampled", 1);
+
+    external_velocity_limit_.velocity = node_param_.max_velocity;
+    max_velocity_with_deceleration_ = node_param_.max_velocity;
+
+    // publish default max velocity
+    VelocityLimit max_vel_msg{};
+    max_vel_msg.stamp = this->now();
+    max_vel_msg.max_velocity = node_param_.max_velocity;
+    pub_velocity_limit_->publish(max_vel_msg);
+
+    clock_ = get_clock();
+
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+    published_time_publisher_ =
+      std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);
+  }
+architecture-codes:
+  - Topic/Service Issue - Topic/Service Name Mismatch Issue
+  - Topic/Service Issue - QoS Policy Incompatibility Issue
+  - Topic/Service Issue - Topic/Service Not Used Issue
+  - ROS Parameter Issue - Use Non-existent Parameter Issue
+  - ROS Parameter Issue - Insufficient Parameter Design Issue
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Timer Issue - Clock Source Instantiation and Synchronization Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Condition Issue - Conditional Check Missing Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

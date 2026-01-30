@@ -1,0 +1,105 @@
+compilation.log: |
+  Starting >>> autoware_behavior_path_side_shift_module
+  --- stderr: autoware_behavior_path_side_shift_module
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/behavior_path_planner/autoware_behavior_path_side_shift_module/src/utils.cpp: In function ‘void autoware::behavior_path_planner::setOrientation(tier4_planning_msgs::msg::PathWithLaneId*)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/behavior_path_planner/autoware_behavior_path_side_shift_module/src/utils.cpp:34:25: error: ‘__gnu_cxx::__alloc_traits<std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > >, tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > >::value_type’ {aka ‘struct tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >’} has no member named ‘pose’
+     34 |         path->points[0].pose.orientation = tf2::toMsg(tf2::Quaternion(0, 0, 0, 1));
+        |                         ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/behavior_path_planner/autoware_behavior_path_side_shift_module/src/utils.cpp:40:66: error: ‘__gnu_cxx::__alloc_traits<std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > >, tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > >::value_type’ {aka ‘struct tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >’} has no member named ‘pose’
+     40 |         geometry_msgs::msg::Pose& current_pose = path->points[i].pose;
+        |                                                                  ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/behavior_path_planner/autoware_behavior_path_side_shift_module/src/utils.cpp:44:58: error: ‘__gnu_cxx::__alloc_traits<std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > >, tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > >::value_type’ {aka ‘struct tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >’} has no member named ‘pose’
+     44 |             const auto& prev_point = path->points[i - 1].pose.position;
+        |                                                          ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/behavior_path_planner/autoware_behavior_path_side_shift_module/src/utils.cpp:45:57: error: ‘__gnu_cxx::__alloc_traits<std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > >, tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > >::value_type’ {aka ‘struct tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >’} has no member named ‘pose’
+     45 |             const auto& current_point = path->points[i].pose.position;
+        |                                                         ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/behavior_path_planner/autoware_behavior_path_side_shift_module/src/utils.cpp:56:57: error: ‘__gnu_cxx::__alloc_traits<std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > >, tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > >::value_type’ {aka ‘struct tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >’} has no member named ‘pose’
+     56 |             const auto& current_point = path->points[i].pose.position;
+        |                                                         ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/behavior_path_planner/autoware_behavior_path_side_shift_module/src/utils.cpp:57:58: error: ‘__gnu_cxx::__alloc_traits<std::allocator<tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > >, tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> > >::value_type’ {aka ‘struct tier4_planning_msgs::msg::PathPointWithLaneId_<std::allocator<void> >’} has no member named ‘pose’
+     57 |             const auto& next_point = path->points[i + 1].pose.position;
+        |                                                          ^~~~
+  gmake[2]: *** [CMakeFiles/autoware_behavior_path_side_shift_module.dir/build.make:90: CMakeFiles/autoware_behavior_path_side_shift_module.dir/src/utils.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:178: CMakeFiles/autoware_behavior_path_side_shift_module.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_behavior_path_side_shift_module [11.5s, exited with code 2]
+
+  Summary: 0 packages finished [12.9s]
+    1 package failed: autoware_behavior_path_side_shift_module
+    1 package had stderr output: autoware_behavior_path_side_shift_module
+generate_code.cpp: |
+  void setOrientation(PathWithLaneId* path) {
+      if (!path || path->points.empty()) {
+          return;
+      }
+
+      // Handle single point case
+      if (path->points.size() == 1) {
+          path->points[0].pose.orientation = tf2::toMsg(tf2::Quaternion(0, 0, 0, 1));
+          return;
+      }
+
+      // Iterate through points to set orientations
+      for (size_t i = 0; i < path->points.size(); ++i) {
+          geometry_msgs::msg::Pose& current_pose = path->points[i].pose;
+          
+          if (i == path->points.size() - 1) {
+              // Last point: use vector from previous point
+              const auto& prev_point = path->points[i - 1].pose.position;
+              const auto& current_point = path->points[i].pose.position;
+              
+              double dx = current_point.x - prev_point.x;
+              double dy = current_point.y - prev_point.y;
+              double yaw = std::atan2(dy, dx);
+              
+              tf2::Quaternion q;
+              q.setRPY(0, 0, yaw);
+              current_pose.orientation = tf2::toMsg(q);
+          } else {
+              // Other points: use vector to next point
+              const auto& current_point = path->points[i].pose.position;
+              const auto& next_point = path->points[i + 1].pose.position;
+              
+              double dx = next_point.x - current_point.x;
+              double dy = next_point.y - current_point.y;
+              double yaw = std::atan2(dy, dx);
+              
+              tf2::Quaternion q;
+              q.setRPY(0, 0, yaw);
+              current_pose.orientation = tf2::toMsg(q);
+          }
+      }
+  }
+ground_truth.cpp: |-
+  void setOrientation(PathWithLaneId * path)
+  {
+    // Reset orientation
+    for (size_t idx = 0; idx < path->points.size(); ++idx) {
+      double angle = 0.0;
+      auto & pt = path->points.at(idx);
+      if (idx + 1 < path->points.size()) {
+        const auto next_pt = path->points.at(idx + 1);
+        angle = std::atan2(
+          next_pt.point.pose.position.y - pt.point.pose.position.y,
+          next_pt.point.pose.position.x - pt.point.pose.position.x);
+      } else if (idx != 0) {
+        const auto prev_pt = path->points.at(idx - 1);
+        angle = std::atan2(
+          pt.point.pose.position.y - prev_pt.point.pose.position.y,
+          pt.point.pose.position.x - prev_pt.point.pose.position.x);
+      }
+      tf2::Quaternion yaw_quat;
+      yaw_quat.setRPY(0, 0, angle);
+      pt.point.pose.orientation = tf2::toMsg(yaw_quat);
+    }
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+functionality-codes:
+  - Reference Error - Wrong Variable
+  - Incomplete Code - Missing one step
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

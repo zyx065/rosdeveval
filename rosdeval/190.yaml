@@ -1,0 +1,78 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_collision_monitor
+ros_package: nav2_collision_monitor
+file_path: src/pointcloud.cpp
+method_name: Range::getData
+requirement: |
+  /**
+  * @brief Retrieves and transforms range sensor data into a set of points in the base frame.
+  * 
+  * @param[in] curr_time Current time used for data validation and transform lookup.
+  * @param[out] data Vector to be populated with transformed obstacle points in the base frame.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  void PointCloud::getData(
+    const rclcpp::Time & curr_time,
+    std::vector<Point> & data) const
+additional_information: 
+  function_related_variable: |
+    /// @brief PointCloud data subscriber
+    rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr data_sub_;
+
+    // Minimum and maximum height of PointCloud projected to 2D space
+    double min_height_, max_height_;
+
+    /// @brief Latest data obtained from pointcloud
+    sensor_msgs::msg::PointCloud2::ConstSharedPtr data_;
+  function_related_function: |
+    bool sourceValid(const rclcpp::Time & source_time,const rclcpp::Time & curr_time) const;
+  function_related_class: |
+    namespace nav2_util
+      /**
+      * @brief Obtains a transform from source_frame_id -> to target_frame_id
+      * @param source_frame_id Source frame ID to convert from
+      * @param target_frame_id Target frame ID to convert to
+      * @param transform_tolerance Transform tolerance
+      * @param tf_buffer TF buffer to use for the transformation
+      * @param tf_transform Output source->target transform
+      * @return True if got correct transform, otherwise false
+      */
+      bool getTransform(
+        const std::string & source_frame_id,
+        const std::string & target_frame_id,
+        const tf2::Duration & transform_tolerance,
+        const std::shared_ptr<tf2_ros::Buffer> tf_buffer,
+        tf2::Transform & tf2_transform);
+
+      /**
+      * @brief Obtains a transform from source_frame_id at source_time ->
+      * to target_frame_id at target_time time
+      * @param source_frame_id Source frame ID to convert from
+      * @param source_time Source timestamp to convert from
+      * @param target_frame_id Target frame ID to convert to
+      * @param target_time Current node time to interpolate to
+      * @param fixed_frame_id The frame in which to assume the transform is constant in time
+      * @param transform_tolerance Transform tolerance
+      * @param tf_buffer TF buffer to use for the transformation
+      * @param tf_transform Output source->target transform
+      * @return True if got correct transform, otherwise false
+      */
+      bool getTransform(
+        const std::string & source_frame_id,
+        const rclcpp::Time & source_time,
+        const std::string & target_frame_id,
+        const rclcpp::Time & target_time,
+        const std::string & fixed_frame_id,
+        const tf2::Duration & transform_tolerance,
+        const std::shared_ptr<tf2_ros::Buffer> tf_buffer,
+        tf2::Transform & tf2_transform);
+test: sources_test
+test_cases: 
+- testGetData
+- testGetOutdatedData
+- testIncorrectFrameData
+- testIncorrectData
+- testIgnoreTimeShift

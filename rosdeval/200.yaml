@@ -1,0 +1,32 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_util
+ros_package: nav2_util
+file_path: src/robot_utils.cpp
+method_name: getCurrentPose
+requirement: |
+  /**
+  * Retrieves the current robot pose in the global frame.
+  * 
+  * @param[out] global_pose The transformed pose in the global frame.
+  * @param[in] tf_buffer TF buffer to use for transform lookup.
+  * @param[in] global_frame The target frame to transform the pose into.
+  * @param[in] robot_frame The source frame of the robot's current pose.
+  * @param[in] transform_timeout Timeout for the transform lookup.
+  * @param[in] stamp Timestamp for the pose transformation.
+  * @return bool True if the transform was successful, false otherwise.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  bool getCurrentPose(
+    geometry_msgs::msg::PoseStamped & global_pose,
+    tf2_ros::Buffer & tf_buffer, const std::string global_frame,
+    const std::string robot_frame, const double transform_timeout,
+    const rclcpp::Time stamp)
+additional_information: 
+  function_related_function: 
+    bool transformPoseInTargetFrame(const geometry_msgs::msg::PoseStamped & input_pose, geometry_msgs::msg::PoseStamped & transformed_pose,tf2_ros::Buffer & tf_buffer, const std::string target_frame,const double transform_timeout)
+test: test_robot_utils
+test_cases: 
+- LookupExceptionError

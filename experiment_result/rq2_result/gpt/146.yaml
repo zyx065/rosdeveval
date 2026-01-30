@@ -1,0 +1,146 @@
+compilation.log: |
+  Starting >>> moveit_core
+  --- stderr: moveit_core
+  /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/src/robot_state.cpp: In member function ‘void moveit::core::RobotState::computeAABB(std::vector<double, std::allocator<double> >&) const’:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/src/robot_state.cpp:2112:72: error: no matching function for call to ‘computeShapeExtents(std::__shared_ptr_access<const shapes::Shape, __gnu_cxx::_S_atomic, false, false>::element_type&)’
+   2112 |             Eigen::Vector3d shape_extents = shapes::computeShapeExtents(*shape);
+        |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+  In file included from /root/repos/moveit_ws/src/moveit2/moveit_core/robot_state/src/robot_state.cpp:39:
+  /opt/ros/humble/include/geometric_shapes/geometric_shapes/shape_operations.h:62:17: note: candidate: ‘Eigen::Vector3d shapes::computeShapeExtents(const ShapeMsg&)’
+     62 | Eigen::Vector3d computeShapeExtents(const ShapeMsg& shape_msg);
+        |                 ^~~~~~~~~~~~~~~~~~~
+  /opt/ros/humble/include/geometric_shapes/geometric_shapes/shape_operations.h:62:53: note:   no known conversion for argument 1 from ‘std::__shared_ptr_access<const shapes::Shape, __gnu_cxx::_S_atomic, false, false>::element_type’ {aka ‘const shapes::Shape’} to ‘const ShapeMsg&’ {aka ‘const boost::variant<shape_msgs::msg::SolidPrimitive_<std::allocator<void> >, shape_msgs::msg::Mesh_<std::allocator<void> >, shape_msgs::msg::Plane_<std::allocator<void> > >&’}
+     62 | Eigen::Vector3d computeShapeExtents(const ShapeMsg& shape_msg);
+        |                                     ~~~~~~~~~~~~~~~~^~~~~~~~~
+  /opt/ros/humble/include/geometric_shapes/geometric_shapes/shape_operations.h:65:17: note: candidate: ‘Eigen::Vector3d shapes::computeShapeExtents(const shapes::Shape*)’
+     65 | Eigen::Vector3d computeShapeExtents(const Shape* shape);
+        |                 ^~~~~~~~~~~~~~~~~~~
+  /opt/ros/humble/include/geometric_shapes/geometric_shapes/shape_operations.h:65:50: note:   no known conversion for argument 1 from ‘std::__shared_ptr_access<const shapes::Shape, __gnu_cxx::_S_atomic, false, false>::element_type’ {aka ‘const shapes::Shape’} to ‘const shapes::Shape*’
+     65 | Eigen::Vector3d computeShapeExtents(const Shape* shape);
+        |                                     ~~~~~~~~~~~~~^~~~~
+  gmake[2]: *** [robot_state/CMakeFiles/moveit_robot_state.dir/build.make:107: robot_state/CMakeFiles/moveit_robot_state.dir/src/robot_state.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1656: robot_state/CMakeFiles/moveit_robot_state.dir/all] Error 2
+  gmake: *** [Makefile:149: all] Error 2
+  ---
+  Failed   <<< moveit_core [8.93s, exited with code 2]
+
+  Summary: 0 packages finished [9.41s]
+    1 package failed: moveit_core
+    1 package had stderr output: moveit_core
+generate_code.cpp: |-
+  void RobotState::computeAABB(std::vector<double>& aabb) const
+  {
+      // Initialize AABB with extreme values
+      double min_x = std::numeric_limits<double>::max();
+      double max_x = std::numeric_limits<double>::lowest();
+      double min_y = std::numeric_limits<double>::max();
+      double max_y = std::numeric_limits<double>::lowest();
+      double min_z = std::numeric_limits<double>::max();
+      double max_z = std::numeric_limits<double>::lowest();
+
+      // Get all links with collision geometry
+      const std::vector<const moveit::core::LinkModel*>& links = robot_model_->getLinkModelsWithCollisionGeometry();
+
+      // Iterate through each link
+      for (const moveit::core::LinkModel* link : links)
+      {
+          // Get the global transform of the link
+          const Eigen::Isometry3d& global_transform = getGlobalLinkTransform(link);
+
+          // Get the shape extents and offset for the link
+          Eigen::Vector3d shape_extents = link->getShapeExtentsAtOrigin();
+          Eigen::Vector3d offset = link->getCenteredBoundingBoxOffset();
+
+          // Compute the transformed bounding box corners
+          Eigen::Vector3d min_corner = global_transform * (offset - shape_extents / 2.0);
+          Eigen::Vector3d max_corner = global_transform * (offset + shape_extents / 2.0);
+
+          // Update the AABB bounds
+          min_x = std::min(min_x, min_corner.x());
+          max_x = std::max(max_x, max_corner.x());
+          min_y = std::min(min_y, min_corner.y());
+          max_y = std::max(max_y, max_corner.y());
+          min_z = std::min(min_z, min_corner.z());
+          max_z = std::max(max_z, max_corner.z());
+      }
+
+      // Include attached bodies in the AABB computation
+      for (const auto& attached_body_pair : attached_body_map_)
+      {
+          const AttachedBody* attached_body = attached_body_pair.second.get();
+
+          // Get the collision body transforms for the attached body
+          const EigenSTL::vector_Isometry3d& transforms = attached_body->getGlobalCollisionBodyTransforms();
+
+          // Get the shapes of the attached body
+          const std::vector<shapes::ShapeConstPtr>& shapes = attached_body->getShapes();
+
+          // Iterate through each shape and its corresponding transform
+          for (size_t i = 0; i < shapes.size(); ++i)
+          {
+              const shapes::ShapeConstPtr& shape = shapes[i];
+              const Eigen::Isometry3d& transform = transforms[i];
+
+              // Compute the shape extents
+              Eigen::Vector3d shape_extents = shapes::computeShapeExtents(*shape);
+
+              // Compute the transformed bounding box corners
+              Eigen::Vector3d min_corner = transform * (-shape_extents / 2.0);
+              Eigen::Vector3d max_corner = transform * (shape_extents / 2.0);
+
+              // Update the AABB bounds
+              min_x = std::min(min_x, min_corner.x());
+              max_x = std::max(max_x, max_corner.x());
+              min_y = std::min(min_y, min_corner.y());
+              max_y = std::max(max_y, max_corner.y());
+              min_z = std::min(min_z, min_corner.z());
+              max_z = std::max(max_z, max_corner.z());
+          }
+      }
+
+      // If no geometry is present, return a vector of 6 zeros
+      if (min_x == std::numeric_limits<double>::max())
+      {
+          aabb = std::vector<double>(6, 0.0);
+      }
+      else
+      {
+          // Populate the output AABB vector
+          aabb = {min_x, max_x, min_y, max_y, min_z, max_z};
+      }
+  }
+ground_truth.cpp: |-
+  void RobotState::computeAABB(std::vector<double>& aabb) const
+  {
+    assert(checkLinkTransforms());
+
+    core::AABB bounding_box;
+    std::vector<const LinkModel*> links = robot_model_->getLinkModelsWithCollisionGeometry();
+    for (const LinkModel* link : links)
+    {
+      Eigen::Isometry3d transform = getGlobalLinkTransform(link);  // intentional copy, we will translate
+      const Eigen::Vector3d& extents = link->getShapeExtentsAtOrigin();
+      transform.translate(link->getCenteredBoundingBoxOffset());
+      bounding_box.extendWithTransformedBox(transform, extents);
+    }
+    for (const auto& it : attached_body_map_)
+    {
+      const EigenSTL::vector_Isometry3d& transforms = it.second->getGlobalCollisionBodyTransforms();
+      const std::vector<shapes::ShapeConstPtr>& shapes = it.second->getShapes();
+      for (std::size_t i = 0; i < transforms.size(); ++i)
+      {
+        Eigen::Vector3d extents = shapes::computeShapeExtents(shapes[i].get());
+        bounding_box.extendWithTransformedBox(transforms[i], extents);
+      }
+    }
+
+    aabb.clear();
+    aabb.resize(6, 0.0);
+    if (!bounding_box.isEmpty())
+    {
+      // The following is a shorthand for something like:
+      // aabb[0, 2, 4] = bounding_box.min(); aabb[1, 3, 5] = bounding_box.max();
+      Eigen::Map<Eigen::VectorXd, Eigen::Unaligned, Eigen::InnerStride<2> >(aabb.data(), 3) = bounding_box.min();
+      Eigen::Map<Eigen::VectorXd, Eigen::Unaligned, Eigen::InnerStride<2> >(aabb.data() + 1, 3) = bounding_box.max();
+    }
+  }

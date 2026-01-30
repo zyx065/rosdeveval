@@ -1,0 +1,77 @@
+compilation.log: |
+  Starting >>> nav2_util
+  Finished <<< nav2_util [0.35s]
+
+  Summary: 1 package finished [0.66s]
+generate_code.cpp: |
+  void OdomSmoother::odomCallback(const nav_msgs::msg::Odometry::SharedPtr msg)
+  {
+      std::lock_guard<std::mutex> lock(odom_mutex_);
+      
+      // Add the new odometry message to history
+      odom_history_.push_back(*msg);
+      
+      // Remove old messages outside the filter duration window
+      rclcpp::Time current_time = msg->header.stamp;
+      while (!odom_history_.empty()) {
+          rclcpp::Time oldest_time = odom_history_.front().header.stamp;
+          if ((current_time - oldest_time) > odom_history_duration_) {
+              odom_history_.pop_front();
+          } else {
+              break;
+          }
+      }
+      
+      // Update the cumulative odometry with the latest message
+      odom_cumulate_ = *msg;
+      
+      // Update smoothed velocity and state
+      updateState();
+  }
+ground_truth.cpp: |-
+  void OdomSmoother::odomCallback(const nav_msgs::msg::Odometry::SharedPtr msg)
+  {
+    std::lock_guard<std::mutex> lock(odom_mutex_);
+
+    // update cumulated odom only if history is not empty
+    if (!odom_history_.empty()) {
+      // to store current time
+      auto current_time = rclcpp::Time(msg->header.stamp);
+
+      // to store time of the first odom in history
+      auto front_time = rclcpp::Time(odom_history_.front().header.stamp);
+
+      // update cumulated odom when duration has exceeded and pop earliest msg
+      while (current_time - front_time > odom_history_duration_) {
+        const auto & odom = odom_history_.front();
+        odom_cumulate_.twist.twist.linear.x -= odom.twist.twist.linear.x;
+        odom_cumulate_.twist.twist.linear.y -= odom.twist.twist.linear.y;
+        odom_cumulate_.twist.twist.linear.z -= odom.twist.twist.linear.z;
+        odom_cumulate_.twist.twist.angular.x -= odom.twist.twist.angular.x;
+        odom_cumulate_.twist.twist.angular.y -= odom.twist.twist.angular.y;
+        odom_cumulate_.twist.twist.angular.z -= odom.twist.twist.angular.z;
+        odom_history_.pop_front();
+
+        if (odom_history_.empty()) {
+          break;
+        }
+
+        // update with the timestamp of earliest odom message in history
+        front_time = rclcpp::Time(odom_history_.front().header.stamp);
+      }
+    }
+
+    odom_history_.push_back(*msg);
+    updateState();
+  }
+architecture-codes:
+  - ROS Message Related Issues - Message Operation Issues
+functionality-codes:
+  - Incomplete Code - Missing Multiple Steps
+  - Operation/Calculation Error - Incorrect arithmetic operation
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Garbage Code - Wrong logical
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

@@ -1,0 +1,75 @@
+compilation.log: |
+  Starting >>> autoware_detected_object_validation
+  --- stderr: autoware_detected_object_validation
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/lanelet_filter/lanelet_filter.cpp: In member function ‘void autoware::detected_object_validation::lanelet_filter::ObjectLaneletFilterNode::mapCallback(autoware_map_msgs::msg::LaneletMapBin_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/lanelet_filter/lanelet_filter.cpp:137:12: error: ‘ErrorMessages’ is not a member of ‘lanelet’
+    137 |   lanelet::ErrorMessages errors;
+        |            ^~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/lanelet_filter/lanelet_filter.cpp:138:12: error: ‘lanelet::io_handlers’ has not been declared
+    138 |   lanelet::io_handlers::BinMapLoader loader;
+        |            ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/lanelet_filter/lanelet_filter.cpp:140:5: error: ‘loader’ was not declared in this scope
+    140 |     loader.load(map_msg->data, new_lanelet_map_ptr, &errors);
+        |     ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/lanelet_filter/lanelet_filter.cpp:140:54: error: ‘errors’ was not declared in this scope; did you mean ‘perror’?
+    140 |     loader.load(map_msg->data, new_lanelet_map_ptr, &errors);
+        |                                                      ^~~~~~
+        |                                                      perror
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/lanelet_filter/lanelet_filter.cpp:147:8: error: ‘errors’ was not declared in this scope; did you mean ‘perror’?
+    147 |   if (!errors.empty()) {
+        |        ^~~~~~
+        |        perror
+  gmake[2]: *** [CMakeFiles/object_lanelet_filter.dir/build.make:90: CMakeFiles/object_lanelet_filter.dir/src/lanelet_filter/lanelet_filter.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:226: CMakeFiles/object_lanelet_filter.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_detected_object_validation [16.8s, exited with code 2]
+
+  Summary: 0 packages finished [18.3s]
+    1 package failed: autoware_detected_object_validation
+    1 package had stderr output: autoware_detected_object_validation
+generate_code.cpp: |-
+  void ObjectLaneletFilterNode::mapCallback(
+    const autoware_map_msgs::msg::LaneletMapBin::ConstSharedPtr map_msg)
+  {
+    // Check if the incoming map message is valid
+    if (!map_msg) {
+      RCLCPP_WARN(this->get_logger(), "Received null LaneletMapBin message.");
+      return;
+    }
+
+    // Deserialize the binary map data into a Lanelet2 map
+    lanelet::LaneletMapPtr new_lanelet_map_ptr = std::make_shared<lanelet::LaneletMap>();
+    lanelet::ErrorMessages errors;
+    lanelet::io_handlers::BinMapLoader loader;
+    try {
+      loader.load(map_msg->data, new_lanelet_map_ptr, &errors);
+    } catch (const std::exception &e) {
+      RCLCPP_ERROR(this->get_logger(), "Failed to load Lanelet2 map: %s", e.what());
+      return;
+    }
+
+    // Log any errors encountered during deserialization
+    if (!errors.empty()) {
+      for (const auto &error : errors) {
+        RCLCPP_WARN(this->get_logger(), "Lanelet2 map loading error: %s", error.c_str());
+      }
+    }
+
+    // Update the lanelet map pointer with the new map
+    lanelet_map_ptr_ = new_lanelet_map_ptr;
+
+    // Update the frame ID for the lanelet map
+    lanelet_frame_id_ = map_msg->header.frame_id;
+
+    // Log success
+    RCLCPP_INFO(this->get_logger(), "Lanelet2 map successfully updated. Frame ID: %s", lanelet_frame_id_.c_str());
+  }
+ground_truth.cpp: |-
+  void ObjectLaneletFilterNode::mapCallback(
+    const autoware_map_msgs::msg::LaneletMapBin::ConstSharedPtr map_msg)
+  {
+    lanelet_frame_id_ = map_msg->header.frame_id;
+    lanelet_map_ptr_ = std::make_shared<lanelet::LaneletMap>();
+    lanelet::utils::conversion::fromBinMsg(*map_msg, lanelet_map_ptr_);
+  }

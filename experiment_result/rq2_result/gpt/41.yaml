@@ -1,0 +1,113 @@
+compilation.log: |
+  Starting >>> autoware_traffic_light_arbiter
+  --- stderr: autoware_traffic_light_arbiter
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/src/traffic_light_arbiter.cpp: In member function ‘void autoware::TrafficLightArbiter::onMap(autoware_map_msgs::msg::LaneletMapBin_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/src/traffic_light_arbiter.cpp:124:21: error: ‘TrafficLightConstPtr’ was not declared in this scope; did you mean ‘lanelet::TrafficLightConstPtr’?
+    124 |         std::vector<TrafficLightConstPtr> pedestrian_signals;
+        |                     ^~~~~~~~~~~~~~~~~~~~
+        |                     lanelet::TrafficLightConstPtr
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/src/traffic_light_arbiter.cpp:34:7: note: ‘lanelet::TrafficLightConstPtr’ declared here
+     34 | using TrafficLightConstPtr = std::shared_ptr<const TrafficLight>;
+        |       ^~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/src/traffic_light_arbiter.cpp:124:41: error: template argument 1 is invalid
+    124 |         std::vector<TrafficLightConstPtr> pedestrian_signals;
+        |                                         ^
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/src/traffic_light_arbiter.cpp:124:41: error: template argument 2 is invalid
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/src/traffic_light_arbiter.cpp:132:40: error: request for member ‘push_back’ in ‘pedestrian_signals’, which is of non-class type ‘int’
+    132 |                     pedestrian_signals.push_back(traffic_light);
+        |                                        ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/src/traffic_light_arbiter.cpp:139:59: error: cannot convert ‘int’ to ‘const std::vector<std::shared_ptr<const lanelet::TrafficLight> >&’
+    139 |             signal_match_validator_->setPedestrianSignals(pedestrian_signals);
+        |                                                           ^~~~~~~~~~~~~~~~~~
+        |                                                           |
+        |                                                           int
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/include/autoware/traffic_light_arbiter/traffic_light_arbiter.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/src/traffic_light_arbiter.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/include/autoware/traffic_light_arbiter/signal_match_validator.hpp:75:71: note:   initializing argument 1 of ‘void SignalMatchValidator::setPedestrianSignals(const std::vector<std::shared_ptr<const lanelet::TrafficLight> >&)’
+     75 |   void setPedestrianSignals(const std::vector<TrafficLightConstPtr> & pedestrian_signals);
+        |                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/lanelet2_core/Attribute.h:6,
+                   from /workspace/repos/autoware/install/autoware_lanelet2_extension/include/autoware_lanelet2_extension/regulatory_elements/Forward.hpp:20,
+                   from /workspace/repos/autoware/install/autoware_lanelet2_extension/include/autoware_lanelet2_extension/regulatory_elements/autoware_traffic_light.hpp:22,
+                   from /workspace/repos/autoware/install/autoware_lanelet2_extension/include/autoware_lanelet2_extension/utility/query.hpp:22,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/include/autoware/traffic_light_arbiter/signal_match_validator.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/include/autoware/traffic_light_arbiter/traffic_light_arbiter.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/src/traffic_light_arbiter.cpp:15:
+  /usr/include/c++/11/bits/shared_ptr.h: In instantiation of ‘std::shared_ptr<_Tp> std::dynamic_pointer_cast(const std::shared_ptr<_Tp>&) [with _Tp = lanelet::TrafficLight; _Up = const lanelet::RegulatoryElement]’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_traffic_light_arbiter/src/traffic_light_arbiter.cpp:128:82:   required from here
+  /usr/include/c++/11/bits/shared_ptr.h:603:23: error: cannot ‘dynamic_cast’ ‘(& __r)->std::shared_ptr<const lanelet::RegulatoryElement>::<anonymous>.std::__shared_ptr<const lanelet::RegulatoryElement, __gnu_cxx::_S_atomic>::get()’ (of type ‘using element_type = std::remove_extent<const lanelet::RegulatoryElement>::type*’ {aka ‘const class lanelet::RegulatoryElement*’}) to type ‘using element_type = using element_type = std::remove_extent<lanelet::TrafficLight>::type*’ {aka ‘class lanelet::TrafficLight*’} (conversion casts away constness)
+    603 |       if (auto* __p = dynamic_cast<typename _Sp::element_type*>(__r.get()))
+        |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_traffic_light_arbiter.dir/build.make:76: CMakeFiles/autoware_traffic_light_arbiter.dir/src/traffic_light_arbiter.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_traffic_light_arbiter.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_traffic_light_arbiter [8.30s, exited with code 2]
+
+  Summary: 0 packages finished [9.78s]
+    1 package failed: autoware_traffic_light_arbiter
+    1 package had stderr output: autoware_traffic_light_arbiter
+generate_code.cpp: |-
+  void TrafficLightArbiter::onMap(const LaneletMapBin::ConstSharedPtr msg)
+  {
+      // Deserialize the LaneletMapBin message into a lanelet::LaneletMap object
+      auto lanelet_map = std::make_shared<lanelet::LaneletMap>();
+      lanelet::utils::conversion::fromBinMsg(*msg, lanelet_map);
+
+      // Extract all regulatory elements from the map
+      const auto& regulatory_elements = lanelet_map->regulatoryElementLayer;
+
+      // Initialize the map_regulatory_elements_set_ if not already initialized
+      if (!map_regulatory_elements_set_) {
+          map_regulatory_elements_set_ = std::make_unique<std::unordered_set<lanelet::Id>>();
+      }
+
+      // Clear the existing set of regulatory elements
+      map_regulatory_elements_set_->clear();
+
+      // Iterate through all regulatory elements and store their IDs
+      for (const auto& reg_elem : regulatory_elements) {
+          map_regulatory_elements_set_->insert(reg_elem->id());
+      }
+
+      // If signal matching is enabled, process pedestrian signals
+      if (enable_signal_matching_) {
+          std::vector<TrafficLightConstPtr> pedestrian_signals;
+
+          // Iterate through all regulatory elements to find traffic lights
+          for (const auto& reg_elem : regulatory_elements) {
+              auto traffic_light = std::dynamic_pointer_cast<lanelet::TrafficLight>(reg_elem);
+              if (traffic_light) {
+                  // Check if the traffic light is a pedestrian signal
+                  if (traffic_light->attribute(lanelet::AttributeName::Subtype).value() == "pedestrian") {
+                      pedestrian_signals.push_back(traffic_light);
+                  }
+              }
+          }
+
+          // Pass the pedestrian signals to the signal match validator
+          if (signal_match_validator_) {
+              signal_match_validator_->setPedestrianSignals(pedestrian_signals);
+          }
+      }
+  }
+ground_truth.cpp: |-
+  void TrafficLightArbiter::onMap(const LaneletMapBin::ConstSharedPtr msg)
+  {
+    const auto map = std::make_shared<lanelet::LaneletMap>();
+    lanelet::utils::conversion::fromBinMsg(*msg, map);
+
+    const auto signals = lanelet::filter_traffic_signals(map);
+    map_regulatory_elements_set_ = std::make_unique<std::unordered_set<lanelet::Id>>();
+
+    for (const auto & signal : signals) {
+      map_regulatory_elements_set_->emplace(signal->id());
+    }
+
+    if (enable_signal_matching_) {
+      // Filter only pedestrian signals to distinguish them in signal matching
+      const auto pedestrian_signals = lanelet::filter_pedestrian_signals(map);
+      signal_match_validator_->setPedestrianSignals(pedestrian_signals);
+    }
+  }

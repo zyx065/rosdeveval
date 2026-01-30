@@ -1,0 +1,40 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_constrained_smoother
+ros_package: nav2_constrained_smoother
+file_path: src/constrained_smoother.cpp
+method_name: ConstrainedSmoother::configure
+requirement: |
+  /**
+  * Configures the smoother with ROS parameters and required components.
+  * 
+  * @param parent Weak pointer to the parent lifecycle node for parameter retrieval
+  * @param name Plugin name used for parameter namespace
+  * @param tf TF buffer for coordinate transformations
+  * @param costmap_sub Costmap subscriber for obstacle information
+  * @param[in] Footprint subscriber for robot footprint (parameter name omitted in implementation)
+  */
+category: ros_architecture
+type: has_topic,has_parameter
+signature: |
+  void ConstrainedSmoother::configure(
+    const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent,
+    std::string name, std::shared_ptr<tf2_ros::Buffer> tf,
+    std::shared_ptr<nav2_costmap_2d::CostmapSubscriber> costmap_sub,
+    std::shared_ptr<nav2_costmap_2d::FootprintSubscriber>)
+additional_information: 
+  function_related_variable: |
+    std::shared_ptr<tf2_ros::Buffer> tf_;
+    std::string plugin_name_;
+    std::shared_ptr<nav2_costmap_2d::CostmapSubscriber> costmap_sub_;
+    rclcpp::Logger logger_ {rclcpp::get_logger("ConstrainedSmoother")};
+
+    std::unique_ptr<nav2_constrained_smoother::Smoother> smoother_;
+    SmootherParams smoother_params_;
+    OptimizerParams optimizer_params_;
+  function_related_class: |
+    class Smoother{
+      void initialize(const OptimizerParams params)
+    }
+test: test_smoother_cost_function
+test_cases: []

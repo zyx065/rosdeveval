@@ -1,0 +1,60 @@
+compilation.log: |
+  Starting >>> nav2_mppi_controller
+  Finished <<< nav2_mppi_controller [0.83s]
+
+  Summary: 1 package finished [1.15s]
+generate_code.cpp: |-
+  inline float posePointAngle(
+    const geometry_msgs::msg::Pose & pose, double point_x, double point_y, bool forward_preference)
+  {
+    // Extract the position of the pose
+    double pose_x = pose.position.x;
+    double pose_y = pose.position.y;
+
+    // Calculate the angle from the pose to the point
+    double angle_to_point = std::atan2(point_y - pose_y, point_x - pose_x);
+
+    // Extract the orientation of the pose (convert quaternion to yaw)
+    tf2::Quaternion q(
+      pose.orientation.x,
+      pose.orientation.y,
+      pose.orientation.z,
+      pose.orientation.w);
+    double pose_yaw = tf2::getYaw(q);
+
+    // Calculate the relative angle
+    double relative_angle = angle_to_point - pose_yaw;
+
+    // Normalize the angle to the range [-pi, pi]
+    relative_angle = std::atan2(std::sin(relative_angle), std::cos(relative_angle));
+
+    // If forward preference is true, ensure the angle is within the forward range
+    if (forward_preference && std::abs(relative_angle) > M_PI_2) {
+      if (relative_angle > 0) {
+        relative_angle -= M_PI;
+      } else {
+        relative_angle += M_PI;
+      }
+    }
+
+    return relative_angle;
+  }
+ground_truth.cpp: |-
+  inline float posePointAngle(
+    const geometry_msgs::msg::Pose & pose, double point_x, double point_y, bool forward_preference)
+  {
+    float pose_x = pose.position.x;
+    float pose_y = pose.position.y;
+    float pose_yaw = tf2::getYaw(pose.orientation);
+
+    float yaw = atan2f(point_y - pose_y, point_x - pose_x);
+
+    // If no preference for forward, return smallest angle either in heading or 180 of heading
+    if (!forward_preference) {
+      return std::min(
+        fabs(angles::shortest_angular_distance(yaw, pose_yaw)),
+        fabs(angles::shortest_angular_distance(yaw, angles::normalize_angle(pose_yaw + M_PI))));
+    }
+
+    return fabs(angles::shortest_angular_distance(yaw, pose_yaw));
+  }

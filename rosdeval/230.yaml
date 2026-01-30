@@ -1,0 +1,21 @@
+repository: diagnostics-ros2-humble
+language: C++
+ros_package_file: src/diagnostic_remote_logging
+ros_package: diagnostic_remote_logging
+file_path: include/diagnostic_remote_logging/influx_line_protocol.hpp
+method_name: toInfluxTimestamp
+requirement: |
+  /**
+  * Converts a ROS 2 time to an InfluxDB timestamp string.
+  * 
+  * @param time The ROS 2 time to convert, containing seconds and nanoseconds.
+  * @return String representing the timestamp in InfluxDB format (seconds + nanoseconds).
+  */
+category: utilities
+type: []
+signature: |
+  std::string toInfluxTimestamp(const rclcpp::Time & time)
+additional_information: []
+test: unit_tests
+test_cases: 
+- CorrectConversion

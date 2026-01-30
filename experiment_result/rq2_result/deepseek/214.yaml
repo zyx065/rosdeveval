@@ -1,0 +1,79 @@
+compilation.log: |
+  Starting >>> nav2_mppi_controller
+  Finished <<< nav2_mppi_controller [0.84s]
+
+  Summary: 1 package finished [1.15s]
+generate_code.cpp: |-
+  inline size_t findPathFurthestReachedPoint(const CriticData & data)
+  {
+      size_t furthest_idx = 0;
+      float min_distance = std::numeric_limits<float>::max();
+
+      // Iterate through each point in the path
+      for (size_t path_idx = 0; path_idx < data.path.x.shape(0); ++path_idx) {
+          float current_min_distance = std::numeric_limits<float>::max();
+
+          // For each trajectory in the generated trajectories
+          for (size_t traj_idx = 0; traj_idx < data.trajectories.x.shape(0); ++traj_idx) {
+              // For each point in the current trajectory
+              for (size_t traj_point_idx = 0; traj_point_idx < data.trajectories.x.shape(1); ++traj_point_idx) {
+                  // Calculate distance between path point and trajectory point
+                  float dx = data.path.x(path_idx) - data.trajectories.x(traj_idx, traj_point_idx);
+                  float dy = data.path.y(path_idx) - data.trajectories.y(traj_idx, traj_point_idx);
+                  float distance = std::hypot(dx, dy);
+
+                  // Track the minimum distance for this path point
+                  if (distance < current_min_distance) {
+                      current_min_distance = distance;
+                  }
+              }
+          }
+
+          // Update furthest index if this path point is closer than previous ones
+          if (current_min_distance < min_distance) {
+              min_distance = current_min_distance;
+              furthest_idx = path_idx;
+          }
+      }
+
+      return furthest_idx;
+  }
+ground_truth.cpp: |-
+  inline size_t findPathFurthestReachedPoint(const CriticData & data)
+  {
+    const auto traj_x = xt::view(data.trajectories.x, xt::all(), -1, xt::newaxis());
+    const auto traj_y = xt::view(data.trajectories.y, xt::all(), -1, xt::newaxis());
+
+    const auto dx = data.path.x - traj_x;
+    const auto dy = data.path.y - traj_y;
+
+    const auto dists = dx * dx + dy * dy;
+
+    size_t max_id_by_trajectories = 0, min_id_by_path = 0;
+    float min_distance_by_path = std::numeric_limits<float>::max();
+    float cur_dist = 0.0f;
+
+    for (size_t i = 0; i < dists.shape(0); i++) {
+      min_id_by_path = 0;
+      min_distance_by_path = std::numeric_limits<float>::max();
+      for (size_t j = 0; j < dists.shape(1); j++) {
+        cur_dist = dists(i, j);
+        if (cur_dist < min_distance_by_path) {
+          min_distance_by_path = cur_dist;
+          min_id_by_path = j;
+        }
+      }
+      max_id_by_trajectories = std::max(max_id_by_trajectories, min_id_by_path);
+    }
+    return max_id_by_trajectories;
+  }
+architecture-codes: []
+functionality-codes:
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

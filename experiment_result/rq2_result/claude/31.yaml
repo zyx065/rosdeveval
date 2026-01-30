@@ -1,0 +1,156 @@
+compilation.log: |
+  Starting >>> autoware_control_evaluator
+  --- stderr: autoware_control_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp: In member function ‘void control_diagnostics::ControlEvaluatorNode::onTimer()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:334:18: error: ‘using MetricArrayMsg = using MetricArray = struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’ {aka ‘struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’} has no member named ‘metrics’
+    334 |     metrics_msg_.metrics.clear();
+        |                  ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:337:24: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void> > >’ has no member named ‘hasMsg’
+    337 |     if (!odometry_sub_.hasMsg() || !accel_sub_.hasMsg() ||
+        |                        ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:337:48: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<geometry_msgs::msg::AccelWithCovarianceStamped_<std::allocator<void> > >’ has no member named ‘hasMsg’
+    337 |     if (!odometry_sub_.hasMsg() || !accel_sub_.hasMsg() ||
+        |                                                ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:338:20: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<autoware_planning_msgs::msg::Trajectory_<std::allocator<void> > >’ has no member named ‘hasMsg’
+    338 |         !traj_sub_.hasMsg() || !route_subscriber_.hasMsg() ||
+        |                    ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:338:51: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<autoware_planning_msgs::msg::LaneletRoute_<std::allocator<void> >, autoware::universe_utils::polling_policy::Newest>’ has no member named ‘hasMsg’
+    338 |         !traj_sub_.hasMsg() || !route_subscriber_.hasMsg() ||
+        |                                                   ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:339:33: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<autoware_map_msgs::msg::LaneletMapBin_<std::allocator<void> >, autoware::universe_utils::polling_policy::Newest>’ has no member named ‘hasMsg’
+    339 |         !vector_map_subscriber_.hasMsg() ||
+        |                                 ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:340:36: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<tier4_planning_msgs::msg::PathWithLaneId_<std::allocator<void> > >’ has no member named ‘hasMsg’
+    340 |         !behavior_path_subscriber_.hasMsg() ||
+        |                                    ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:341:24: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<autoware_vehicle_msgs::msg::SteeringReport_<std::allocator<void> > >’ has no member named ‘hasMsg’
+    341 |         !steering_sub_.hasMsg()) {
+        |                        ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:346:35: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void> > >’ has no member named ‘getMessage’
+    346 |     auto odometry = odometry_sub_.getMessage();
+        |                                   ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:347:36: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<geometry_msgs::msg::AccelWithCovarianceStamped_<std::allocator<void> > >’ has no member named ‘getMessage’
+    347 |     auto acceleration = accel_sub_.getMessage();
+        |                                    ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:348:33: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<autoware_planning_msgs::msg::Trajectory_<std::allocator<void> > >’ has no member named ‘getMessage’
+    348 |     auto trajectory = traj_sub_.getMessage();
+        |                                 ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:349:52: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<tier4_planning_msgs::msg::PathWithLaneId_<std::allocator<void> > >’ has no member named ‘getMessage’
+    349 |     auto behavior_path = behavior_path_subscriber_.getMessage();
+        |                                                    ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:350:42: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<autoware_vehicle_msgs::msg::SteeringReport_<std::allocator<void> > >’ has no member named ‘getMessage’
+    350 |     auto steering_report = steering_sub_.getMessage();
+        |                                          ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:365:23: error: ‘using MetricArrayMsg = using MetricArray = struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’ {aka ‘struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’} has no member named ‘metrics’
+    365 |     if (!metrics_msg_.metrics.empty()) {
+        |                       ^~~~~~~
+  gmake[2]: *** [CMakeFiles/control_evaluator_node.dir/build.make:76: CMakeFiles/control_evaluator_node.dir/src/control_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/control_evaluator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_control_evaluator [14.5s, exited with code 2]
+
+  Summary: 0 packages finished [16.0s]
+    1 package failed: autoware_control_evaluator
+    1 package had stderr output: autoware_control_evaluator
+generate_code.cpp: |
+  void ControlEvaluatorNode::onTimer()
+  {
+      // Reset metrics message for new cycle
+      metrics_msg_.metrics.clear();
+
+      // Check if all required inputs are available
+      if (!odometry_sub_.hasMsg() || !accel_sub_.hasMsg() || 
+          !traj_sub_.hasMsg() || !route_subscriber_.hasMsg() || 
+          !vector_map_subscriber_.hasMsg() || 
+          !behavior_path_subscriber_.hasMsg() || 
+          !steering_sub_.hasMsg()) {
+          return;
+      }
+
+      // Get latest messages from subscribers
+      auto odometry = odometry_sub_.getMessage();
+      auto acceleration = accel_sub_.getMessage();
+      auto trajectory = traj_sub_.getMessage();
+      auto behavior_path = behavior_path_subscriber_.getMessage();
+      auto steering_report = steering_sub_.getMessage();
+      auto ego_pose = odometry.pose.pose;
+
+      // Compute and add various metrics
+      AddLateralDeviationMetricMsg(trajectory, ego_pose.position);
+      AddYawDeviationMetricMsg(trajectory, ego_pose);
+      AddGoalLongitudinalDeviationMetricMsg(ego_pose);
+      AddGoalLateralDeviationMetricMsg(ego_pose);
+      AddGoalYawDeviationMetricMsg(ego_pose);
+      AddBoundaryDistanceMetricMsg(behavior_path, ego_pose);
+      AddLaneletInfoMsg(ego_pose);
+      AddKinematicStateMetricMsg(odometry, acceleration);
+      AddSteeringMetricMsg(steering_report);
+
+      // Publish metrics
+      if (!metrics_msg_.metrics.empty()) {
+          metrics_pub_->publish(metrics_msg_);
+      }
+  }
+ground_truth.cpp: |-
+  void ControlEvaluatorNode::onTimer()
+  {
+    autoware::universe_utils::StopWatch<std::chrono::milliseconds> stop_watch;
+    const auto traj = traj_sub_.takeData();
+    const auto odom = odometry_sub_.takeData();
+    const auto acc = accel_sub_.takeData();
+    const auto behavior_path = behavior_path_subscriber_.takeData();
+    const auto steering_status = steering_sub_.takeData();
+
+    // calculate deviation metrics
+    if (odom && traj && !traj->points.empty()) {
+      const Pose ego_pose = odom->pose.pose;
+      AddLateralDeviationMetricMsg(*traj, ego_pose.position);
+      AddYawDeviationMetricMsg(*traj, ego_pose);
+    }
+
+    getRouteData();
+    if (odom && route_handler_.isHandlerReady()) {
+      const Pose ego_pose = odom->pose.pose;
+      AddLaneletInfoMsg(ego_pose);
+      AddGoalLongitudinalDeviationMetricMsg(ego_pose);
+      AddGoalLateralDeviationMetricMsg(ego_pose);
+      AddGoalYawDeviationMetricMsg(ego_pose);
+    }
+
+    if (odom && acc) {
+      AddKinematicStateMetricMsg(*odom, *acc);
+    }
+
+    if (odom && behavior_path) {
+      const Pose ego_pose = odom->pose.pose;
+      AddBoundaryDistanceMetricMsg(*behavior_path, ego_pose);
+    }
+
+    if (steering_status) {
+      AddSteeringMetricMsg(*steering_status);
+    }
+
+    // Publish metrics
+    metrics_msg_.stamp = now();
+    metrics_pub_->publish(metrics_msg_);
+    metrics_msg_ = MetricArrayMsg{};
+
+    // Publish processing time
+    autoware_internal_debug_msgs::msg::Float64Stamped processing_time_msg;
+    processing_time_msg.stamp = get_clock()->now();
+    processing_time_msg.data = stop_watch.toc();
+    processing_time_pub_->publish(processing_time_msg);
+  }
+architecture-codes:
+  - ROS Topic/Service Related Issues - Callback Function Binding Signature Mismatch
+  - ROS Message Related Issues - Improper Message Type Usage Issue
+  - ROS Message Related Issues - Message Initialization Issues
+functionality-codes:
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Reference Error - Wrong Method
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

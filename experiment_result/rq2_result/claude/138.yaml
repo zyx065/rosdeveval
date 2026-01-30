@@ -1,0 +1,147 @@
+compilation.log: |
+  Starting >>> moveit_core
+  --- stderr: moveit_core
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp: In member function ‘virtual kinematic_constraints::ConstraintEvaluationResult kinematic_constraints::JointConstraint::decide(const moveit::core::RobotState&, bool) const’:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:295:9: error: ‘ROS_INFO_NAMED’ was not declared in this scope
+    295 |         ROS_INFO_NAMED("kinematic_constraints", "Continuous joint '%s' is within bounds: value = %f, bounds = [%f, %f]",
+        |         ^~~~~~~~~~~~~~
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:305:9: error: ‘ROS_INFO_NAMED’ was not declared in this scope
+    305 |         ROS_INFO_NAMED("kinematic_constraints", "Continuous joint '%s' is out of bounds: value = %f, bounds = [%f, %f]",
+        |         ^~~~~~~~~~~~~~
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:321:9: error: ‘ROS_INFO_NAMED’ was not declared in this scope
+    321 |         ROS_INFO_NAMED("kinematic_constraints", "Joint '%s' is within bounds: value = %f, bounds = [%f, %f]",
+        |         ^~~~~~~~~~~~~~
+  /root/repos/moveit_ws/src/moveit2/moveit_core/kinematic_constraints/src/kinematic_constraint.cpp:331:9: error: ‘ROS_INFO_NAMED’ was not declared in this scope
+    331 |         ROS_INFO_NAMED("kinematic_constraints", "Joint '%s' is out of bounds: value = %f, bounds = [%f, %f]",
+        |         ^~~~~~~~~~~~~~
+  gmake[2]: *** [kinematic_constraints/CMakeFiles/moveit_kinematic_constraints.dir/build.make:79: kinematic_constraints/CMakeFiles/moveit_kinematic_constraints.dir/src/kinematic_constraint.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1126: kinematic_constraints/CMakeFiles/moveit_kinematic_constraints.dir/all] Error 2
+  gmake: *** [Makefile:149: all] Error 2
+  ---
+  Failed   <<< moveit_core [7.74s, exited with code 2]
+
+  Summary: 0 packages finished [8.21s]
+    1 package failed: moveit_core
+    1 package had stderr output: moveit_core
+generate_code.cpp: |
+  ConstraintEvaluationResult JointConstraint::decide(const moveit::core::RobotState& state, bool verbose) const
+  {
+    // Get the current position of the joint
+    double current_joint_position = state.getVariablePosition(joint_variable_index_);
+    
+    // For continuous joints, we need to normalize the angle
+    if (joint_is_continuous_)
+    {
+      current_joint_position = normalizeAngle(current_joint_position);
+      double target_position = normalizeAngle(joint_position_);
+      
+      // Calculate the shortest angular distance between current and target positions
+      double delta = current_joint_position - target_position;
+      if (delta > M_PI)
+        delta -= 2.0 * M_PI;
+      else if (delta < -M_PI)
+        delta += 2.0 * M_PI;
+      
+      // Check if the joint position is within tolerance
+      if (delta <= joint_tolerance_above_ && delta >= -joint_tolerance_below_)
+      {
+        if (verbose)
+          ROS_INFO_NAMED("kinematic_constraints", "Continuous joint '%s' is within bounds: value = %f, bounds = [%f, %f]",
+                        joint_variable_name_.c_str(), current_joint_position,
+                        target_position - joint_tolerance_below_, target_position + joint_tolerance_above_);
+        
+        // Calculate the cost (distance) based on how far the joint is from the target position
+        return ConstraintEvaluationResult(true, 0.0);
+      }
+      else
+      {
+        if (verbose)
+          ROS_INFO_NAMED("kinematic_constraints", "Continuous joint '%s' is out of bounds: value = %f, bounds = [%f, %f]",
+                        joint_variable_name_.c_str(), current_joint_position,
+                        target_position - joint_tolerance_below_, target_position + joint_tolerance_above_);
+        
+        // Calculate the cost (distance) based on how far the joint is from the nearest bound
+        double cost = delta > 0.0 ? delta - joint_tolerance_above_ : -joint_tolerance_below_ - delta;
+        return ConstraintEvaluationResult(false, cost * constraint_weight_);
+      }
+    }
+    else  // Non-continuous joint
+    {
+      // Check if the joint position is within tolerance
+      if (current_joint_position <= joint_position_ + joint_tolerance_above_ &&
+          current_joint_position >= joint_position_ - joint_tolerance_below_)
+      {
+        if (verbose)
+          ROS_INFO_NAMED("kinematic_constraints", "Joint '%s' is within bounds: value = %f, bounds = [%f, %f]",
+                        joint_variable_name_.c_str(), current_joint_position,
+                        joint_position_ - joint_tolerance_below_, joint_position_ + joint_tolerance_above_);
+        
+        // Calculate the cost (distance) based on how far the joint is from the target position
+        return ConstraintEvaluationResult(true, 0.0);
+      }
+      else
+      {
+        if (verbose)
+          ROS_INFO_NAMED("kinematic_constraints", "Joint '%s' is out of bounds: value = %f, bounds = [%f, %f]",
+                        joint_variable_name_.c_str(), current_joint_position,
+                        joint_position_ - joint_tolerance_below_, joint_position_ + joint_tolerance_above_);
+        
+        // Calculate the cost (distance) based on how far the joint is from the nearest bound
+        double cost;
+        if (current_joint_position > joint_position_ + joint_tolerance_above_)
+          cost = (current_joint_position - joint_position_ - joint_tolerance_above_);
+        else
+          cost = (joint_position_ - joint_tolerance_below_ - current_joint_position);
+        
+        return ConstraintEvaluationResult(false, cost * constraint_weight_);
+      }
+    }
+  }
+ground_truth.cpp: |-
+  ConstraintEvaluationResult JointConstraint::decide(const moveit::core::RobotState& state, bool verbose) const
+  {
+    if (!joint_model_)
+      return ConstraintEvaluationResult(true, 0.0);
+
+    double current_joint_position = state.getVariablePosition(joint_variable_index_);
+    double dif = 0.0;
+
+    // compute signed shortest distance for continuous joints
+    if (joint_is_continuous_)
+    {
+      dif = normalizeAngle(current_joint_position) - joint_position_;
+
+      if (dif > M_PI)
+        dif = 2.0 * M_PI - dif;
+      else if (dif < -M_PI)
+        dif += 2.0 * M_PI;  // we include a sign change to have dif > 0
+    }
+    else
+      dif = current_joint_position - joint_position_;
+
+    // check bounds
+    bool result = dif <= (joint_tolerance_above_ + 2.0 * std::numeric_limits<double>::epsilon()) &&
+                  dif >= (-joint_tolerance_below_ - 2.0 * std::numeric_limits<double>::epsilon());
+    if (verbose)
+      RCLCPP_INFO(LOGGER,
+                  "Constraint %s:: Joint name: '%s', actual value: %f, desired value: %f, "
+                  "tolerance_above: %f, tolerance_below: %f",
+                  result ? "satisfied" : "violated", joint_variable_name_.c_str(), current_joint_position,
+                  joint_position_, joint_tolerance_above_, joint_tolerance_below_);
+    return ConstraintEvaluationResult(result, constraint_weight_ * fabs(dif));
+  }
+architecture-codes:
+  - ROS Logger Issues - ROS Logger Missing Issue (ROS 1 vs ROS 2 macro)
+
+functionality-codes:
+  - Conditional Checks Issues - Conditional Check Missing (null check)
+  - Conditional Checks Issues - Conditional Check Logic Misapplication (epsilon handling)
+  - Incomplete Code - Missing Multiple Steps (epsilon, unified cost)
+  - Operation/Calculation Error - Incorrect arithmetic operation (angle wrapping)
+  - Garbage Code - Wrong logical (overcomplicated cost calculation)
+
+Root Cause Analysis:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

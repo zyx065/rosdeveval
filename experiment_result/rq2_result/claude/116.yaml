@@ -1,0 +1,121 @@
+compilation.log: |
+  Starting >>> autoware_motion_velocity_dynamic_obstacle_stop_module
+  --- stderr: autoware_motion_velocity_dynamic_obstacle_stop_module
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp: In function ‘std::vector<autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >, std::allocator<autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> > > > autoware::motion_velocity_planner::dynamic_obstacle_stop::filter_predicted_objects(const std::vector<autoware::motion_velocity_planner::PlannerData::Object>&, const autoware::motion_velocity_planner::dynamic_obstacle_stop::EgoData&, const autoware::motion_velocity_planner::dynamic_obstacle_stop::PlannerParam&, double)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:106:25: error: invalid initialization of reference of type ‘const PredictedObject&’ {aka ‘const autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >&’} from expression of type ‘const autoware::motion_velocity_planner::PlannerData::Object’
+    106 |         if (!is_vehicle(object)) {
+        |                         ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:29:72: note: in passing argument 1 of ‘bool autoware::motion_velocity_planner::dynamic_obstacle_stop::is_vehicle(const PredictedObject&)’
+     29 | bool is_vehicle(const autoware_perception_msgs::msg::PredictedObject & object)
+        |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:111:26: error: invalid initialization of reference of type ‘const PredictedObject&’ {aka ‘const autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >&’} from expression of type ‘const autoware::motion_velocity_planner::PlannerData::Object’
+    111 |         if (!is_in_range(object, ego_data.trajectory, params, hysteresis)) {
+        |                          ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:45:58: note: in passing argument 1 of ‘bool autoware::motion_velocity_planner::dynamic_obstacle_stop::is_in_range(const PredictedObject&, const TrajectoryPoints&, const autoware::motion_velocity_planner::dynamic_obstacle_stop::PlannerParam&, double)’
+     45 |   const autoware_perception_msgs::msg::PredictedObject & object,
+        |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:116:31: error: invalid initialization of reference of type ‘const PredictedObject&’ {aka ‘const autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >&’} from expression of type ‘const autoware::motion_velocity_planner::PlannerData::Object’
+    116 |         if (!is_not_too_close(object, ego_data, params.ego_longitudinal_offset)) {
+        |                               ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:55:58: note: in passing argument 1 of ‘bool autoware::motion_velocity_planner::dynamic_obstacle_stop::is_not_too_close(const PredictedObject&, const autoware::motion_velocity_planner::dynamic_obstacle_stop::EgoData&, const double&)’
+     55 |   const autoware_perception_msgs::msg::PredictedObject & object, const EgoData & ego_data,
+        |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:121:45: error: ‘const struct autoware::motion_velocity_planner::dynamic_obstacle_stop::EgoData’ has no member named ‘current_pose’
+    121 |         if (is_unavoidable(object, ego_data.current_pose, ego_data.earliest_stop_pose, params)) {
+        |                                             ^~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:122:39: error: no matching function for call to ‘std::vector<autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >, std::allocator<autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> > > >::push_back(const autoware::motion_velocity_planner::PlannerData::Object&)’
+    122 |             filtered_objects.push_back(object);
+        |             ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+  In file included from /usr/include/c++/11/vector:67,
+                   from /usr/include/boost/geometry/geometries/linestring.hpp:19,
+                   from /usr/include/boost/geometry/geometries/geometries.hpp:18,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/boost_geometry.hpp:19,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/types.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:15:
+  /usr/include/c++/11/bits/stl_vector.h:1187:7: note: candidate: ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >; _Alloc = std::allocator<autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> > >; std::vector<_Tp, _Alloc>::value_type = autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >]’
+   1187 |       push_back(const value_type& __x)
+        |       ^~~~~~~~~
+  /usr/include/c++/11/bits/stl_vector.h:1187:35: note:   no known conversion for argument 1 from ‘const autoware::motion_velocity_planner::PlannerData::Object’ to ‘const value_type&’ {aka ‘const autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >&’}
+   1187 |       push_back(const value_type& __x)
+        |                 ~~~~~~~~~~~~~~~~~~^~~
+  /usr/include/c++/11/bits/stl_vector.h:1203:7: note: candidate: ‘void std::vector<_Tp, _Alloc>::push_back(std::vector<_Tp, _Alloc>::value_type&&) [with _Tp = autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >; _Alloc = std::allocator<autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> > >; std::vector<_Tp, _Alloc>::value_type = autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >]’
+   1203 |       push_back(value_type&& __x)
+        |       ^~~~~~~~~
+  /usr/include/c++/11/bits/stl_vector.h:1203:30: note:   no known conversion for argument 1 from ‘const autoware::motion_velocity_planner::PlannerData::Object’ to ‘std::vector<autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >, std::allocator<autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> > > >::value_type&&’ {aka ‘autoware_perception_msgs::msg::PredictedObject_<std::allocator<void> >&&’}
+   1203 |       push_back(value_type&& __x)
+        |                 ~~~~~~~~~~~~~^~~
+  gmake[2]: *** [CMakeFiles/autoware_motion_velocity_dynamic_obstacle_stop_module.dir/build.make:132: CMakeFiles/autoware_motion_velocity_dynamic_obstacle_stop_module.dir/src/object_filtering.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_motion_velocity_dynamic_obstacle_stop_module.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_motion_velocity_dynamic_obstacle_stop_module [9.83s, exited with code 2]
+
+  Summary: 0 packages finished [11.2s]
+    1 package failed: autoware_motion_velocity_dynamic_obstacle_stop_module
+    1 package had stderr output: autoware_motion_velocity_dynamic_obstacle_stop_module
+generate_code.cpp: |-
+  std::vector<autoware_perception_msgs::msg::PredictedObject> filter_predicted_objects(
+    const std::vector<PlannerData::Object> & objects, const EgoData & ego_data,
+    const PlannerParam & params, const double hysteresis)
+  {
+      std::vector<autoware_perception_msgs::msg::PredictedObject> filtered_objects;
+
+      for (const auto& object : objects) {
+          // Skip non-vehicle objects
+          if (!is_vehicle(object)) {
+              continue;
+          }
+
+          // Check if object is in range of ego trajectory
+          if (!is_in_range(object, ego_data.trajectory, params, hysteresis)) {
+              continue;
+          }
+
+          // Check if object is not too close to ego vehicle
+          if (!is_not_too_close(object, ego_data, params.ego_longitudinal_offset)) {
+              continue;
+          }
+
+          // Check if collision is unavoidable
+          if (is_unavoidable(object, ego_data.current_pose, ego_data.earliest_stop_pose, params)) {
+              filtered_objects.push_back(object);
+          }
+      }
+
+      return filtered_objects;
+  }
+ground_truth.cpp: |-
+  std::vector<autoware_perception_msgs::msg::PredictedObject> filter_predicted_objects(
+    const std::vector<PlannerData::Object> & objects, const EgoData & ego_data,
+    const PlannerParam & params, const double hysteresis)
+  {
+    std::vector<autoware_perception_msgs::msg::PredictedObject> filtered_objects;
+    for (const auto & object : objects) {
+      const auto & predicted_object = object.predicted_object;
+      const auto is_not_too_slow =
+        predicted_object.kinematics.initial_twist_with_covariance.twist.linear.x >=
+        params.minimum_object_velocity;
+      if (
+        is_vehicle(predicted_object) && is_not_too_slow &&
+        is_in_range(predicted_object, ego_data.trajectory, params, hysteresis) &&
+        is_not_too_close(predicted_object, ego_data, params.ego_longitudinal_offset) &&
+        (!params.ignore_unavoidable_collisions ||
+         !is_unavoidable(predicted_object, ego_data.pose, ego_data.earliest_stop_pose, params)))
+        filtered_objects.push_back(predicted_object);
+    }
+    return filtered_objects;
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Message Related Issues - Message Operation Issues
+
+functionality-codes:
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Reference Error - Wrong Variable
+
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient Understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of Familiarity with the Existing Codebase

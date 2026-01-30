@@ -1,0 +1,73 @@
+compilation.log: |
+  Starting >>> moveit_ros_planning
+  Finished <<< moveit_ros_planning [0.71s]
+
+  Summary: 1 package finished [1.31s]
+generate_code.cpp: |-
+  void CurrentStateMonitor::transformCallback(const tf2_msgs::msg::TFMessage::ConstSharedPtr& msg, const bool is_static)
+  {
+    if (!tf_buffer_)
+    {
+      RCLCPP_WARN(LOGGER, "Transform buffer is not initialized");
+      return;
+    }
+
+    if (!msg || msg->transforms.empty())
+    {
+      RCLCPP_DEBUG(LOGGER, "Received empty transform message");
+      return;
+    }
+
+    try
+    {
+      // Process each transform in the message
+      for (const auto& transform : msg->transforms)
+      {
+        // Set the transform in the buffer
+        // For static transforms, set can_transform_time to rclcpp::Time(0)
+        // For dynamic transforms, use the timestamp from the transform
+        tf_buffer_->setTransform(transform, "CurrentStateMonitor", is_static);
+      }
+
+      // Update multi-DOF joints after processing transforms
+      updateMultiDofJoints();
+    }
+    catch (const std::exception& e)
+    {
+      RCLCPP_ERROR(LOGGER, "Error processing transform message: %s", e.what());
+    }
+  }
+ground_truth.cpp: |-
+  void CurrentStateMonitor::transformCallback(const tf2_msgs::msg::TFMessage::ConstSharedPtr& msg, const bool is_static)
+  {
+    for (const auto& transform : msg->transforms)
+    {
+      try
+      {
+        tf_buffer_->setTransform(transform,
+                                 is_static ? middleware_handle_->getStaticTfTopicName() :
+                                             middleware_handle_->getDynamicTfTopicName(),
+                                 is_static);
+      }
+      catch (tf2::TransformException& ex)
+      {
+        std::string temp = ex.what();
+        RCLCPP_ERROR(LOGGER, "Failure to set received transform from %s to %s with error: %s\n",
+                     transform.child_frame_id.c_str(), transform.header.frame_id.c_str(), temp.c_str());
+      }
+    }
+    updateMultiDofJoints();
+  }
+architecture-codes:
+  - Topic/Service Related Issues - Topic Name Mismatch
+  - ROS Message Related Issues - Message Operation Issues
+functionality-codes:
+  - Reference Error - Wrong method
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Incomplete Code - Missing one step
+  - Operation/Calculation Error - Incorrect comparison operation
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

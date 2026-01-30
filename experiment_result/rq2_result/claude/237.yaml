@@ -1,0 +1,254 @@
+compilation.log: |
+  Starting >>> autoware_vehicle_cmd_gate
+  --- stderr: autoware_vehicle_cmd_gate
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp: In constructor ‘autoware::vehicle_cmd_gate::VehicleCmdGate::VehicleCmdGate(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:57:41: error: ‘AUTOMATIC’ is not a member of ‘tier4_control_msgs::msg::GateMode’ {aka ‘tier4_control_msgs::msg::GateMode_<std::allocator<void> >’}
+     57 |     current_gate_mode_.data = GateMode::AUTOMATIC;
+        |                                         ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:72:61: error: ‘checkGateModeStatus’ is not a member of ‘autoware::vehicle_cmd_gate::VehicleCmdGate’
+     72 |     updater_.add("gate_mode_status", this, &VehicleCmdGate::checkGateModeStatus);
+        |                                                             ^~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp: In member function ‘void autoware::vehicle_cmd_gate::VehicleCmdGate::onTimer()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:369:3: error: ‘tier4_debug_msgs’ has not been declared
+    369 |   tier4_debug_msgs::msg::Float64Stamped processing_time_msg;
+        |   ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:370:3: error: ‘processing_time_msg’ was not declared in this scope; did you mean ‘processing_time_pub_’?
+    370 |   processing_time_msg.stamp = get_clock()->now();
+        |   ^~~~~~~~~~~~~~~~~~~
+        |   processing_time_pub_
+  gmake[2]: *** [CMakeFiles/vehicle_cmd_gate_node.dir/build.make:76: CMakeFiles/vehicle_cmd_gate_node.dir/src/vehicle_cmd_gate.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:206: CMakeFiles/vehicle_cmd_gate_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_vehicle_cmd_gate [11.8s, exited with code 2]
+
+  Summary: 0 packages finished [13.2s]
+    1 package failed: autoware_vehicle_cmd_gate
+    1 package had stderr output: autoware_vehicle_cmd_gate
+generate_code.cpp: |-
+  VehicleCmdGate::VehicleCmdGate(const rclcpp::NodeOptions & node_options)
+  : Node("vehicle_cmd_gate", node_options), is_engaged_(false), updater_(this)
+  {
+      // Declare parameters
+      declare_parameter<bool>("use_emergency_handling", true);
+      declare_parameter<double>("timeout_emergency_handling", 1.0);
+
+      // Initialize gate mode to AUTOMATIC by default
+      current_gate_mode_.data = GateMode::AUTOMATIC;
+
+      // Setup publishers for gate mode and emergency state
+      gate_mode_pub_ = create_publisher<tier4_control_msgs::msg::GateMode>(
+          "~/output/gate_mode", rclcpp::QoS(1)
+      );
+
+      // Setup subscribers for gate mode commands
+      gate_mode_sub_ = create_subscription<tier4_control_msgs::msg::GateMode>(
+          "~/input/gate_mode", rclcpp::QoS(1),
+          std::bind(&VehicleCmdGate::onGateMode, this, std::placeholders::_1)
+      );
+
+      // Initialize diagnostic updater
+      updater_.setHardwareID("vehicle_cmd_gate");
+      updater_.add("gate_mode_status", this, &VehicleCmdGate::checkGateModeStatus);
+  }
+ground_truth.cpp: |-
+  VehicleCmdGate::VehicleCmdGate(const rclcpp::NodeOptions & node_options)
+  : Node("vehicle_cmd_gate", node_options), is_engaged_(false), updater_(this)
+  {
+    using std::placeholders::_1;
+    using std::placeholders::_2;
+    using std::placeholders::_3;
+
+    prev_turn_indicator_ = nullptr;
+    prev_hazard_light_ = nullptr;
+    prev_gear_ = nullptr;
+
+    rclcpp::QoS durable_qos{1};
+    durable_qos.transient_local();
+
+    // Stop Checker
+    vehicle_stop_checker_ = std::make_unique<VehicleStopChecker>(this);
+
+    // Publisher
+    vehicle_cmd_emergency_pub_ =
+      create_publisher<VehicleEmergencyStamped>("output/vehicle_cmd_emergency", durable_qos);
+    control_cmd_pub_ = create_publisher<Control>("output/control_cmd", durable_qos);
+    gear_cmd_pub_ = create_publisher<GearCommand>("output/gear_cmd", durable_qos);
+    turn_indicator_cmd_pub_ =
+      create_publisher<TurnIndicatorsCommand>("output/turn_indicators_cmd", durable_qos);
+    hazard_light_cmd_pub_ =
+      create_publisher<HazardLightsCommand>("output/hazard_lights_cmd", durable_qos);
+
+    gate_mode_pub_ = create_publisher<GateMode>("output/gate_mode", durable_qos);
+    engage_pub_ = create_publisher<EngageMsg>("output/engage", durable_qos);
+    pub_external_emergency_ = create_publisher<Emergency>("output/external_emergency", durable_qos);
+    operation_mode_pub_ = create_publisher<OperationModeState>("output/operation_mode", durable_qos);
+    processing_time_pub_ =
+      this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>("~/debug/processing_time_ms", 1);
+
+    is_filter_activated_pub_ =
+      create_publisher<IsFilterActivated>("~/is_filter_activated", durable_qos);
+    filter_activated_marker_pub_ =
+      create_publisher<MarkerArray>("~/is_filter_activated/marker", durable_qos);
+    filter_activated_marker_raw_pub_ =
+      create_publisher<MarkerArray>("~/is_filter_activated/marker_raw", durable_qos);
+    filter_activated_flag_pub_ =
+      create_publisher<BoolStamped>("~/is_filter_activated/flag", durable_qos);
+
+    // Subscriber
+    external_emergency_stop_heartbeat_sub_ = create_subscription<Heartbeat>(
+      "input/external_emergency_stop_heartbeat", 1,
+      std::bind(&VehicleCmdGate::onExternalEmergencyStopHeartbeat, this, _1));
+    gate_mode_sub_ = create_subscription<GateMode>(
+      "input/gate_mode", 1, std::bind(&VehicleCmdGate::onGateMode, this, _1));
+    engage_sub_ = create_subscription<EngageMsg>(
+      "input/engage", 1, std::bind(&VehicleCmdGate::onEngage, this, _1));
+    kinematics_sub_ = create_subscription<Odometry>(
+      "/localization/kinematic_state", 1,
+      [this](Odometry::SharedPtr msg) { current_kinematics_ = *msg; });
+    acc_sub_ = create_subscription<AccelWithCovarianceStamped>(
+      "input/acceleration", 1, [this](AccelWithCovarianceStamped::SharedPtr msg) {
+        current_acceleration_ = msg->accel.accel.linear.x;
+      });
+    steer_sub_ = create_subscription<SteeringReport>(
+      "input/steering", 1,
+      [this](SteeringReport::SharedPtr msg) { current_steer_ = msg->steering_tire_angle; });
+    operation_mode_sub_ = create_subscription<OperationModeState>(
+      "input/operation_mode", rclcpp::QoS(1).transient_local(),
+      [this](const OperationModeState::SharedPtr msg) { current_operation_mode_ = *msg; });
+    mrm_state_sub_ = create_subscription<MrmState>(
+      "input/mrm_state", 1, std::bind(&VehicleCmdGate::onMrmState, this, _1));
+
+    // Subscriber for auto
+    auto_control_cmd_sub_ = create_subscription<Control>(
+      "input/auto/control_cmd", 1, std::bind(&VehicleCmdGate::onAutoCtrlCmd, this, _1));
+
+    // Subscriber for external
+    remote_control_cmd_sub_ = create_subscription<Control>(
+      "input/external/control_cmd", 1, std::bind(&VehicleCmdGate::onRemoteCtrlCmd, this, _1));
+
+    // Subscriber for emergency
+    emergency_control_cmd_sub_ = create_subscription<Control>(
+      "input/emergency/control_cmd", 1, std::bind(&VehicleCmdGate::onEmergencyCtrlCmd, this, _1));
+
+    // Parameter
+    use_emergency_handling_ = declare_parameter<bool>("use_emergency_handling");
+    check_external_emergency_heartbeat_ =
+      declare_parameter<bool>("check_external_emergency_heartbeat");
+    system_emergency_heartbeat_timeout_ =
+      declare_parameter<double>("system_emergency_heartbeat_timeout");
+    external_emergency_stop_heartbeat_timeout_ =
+      declare_parameter<double>("external_emergency_stop_heartbeat_timeout");
+    stop_hold_acceleration_ = declare_parameter<double>("stop_hold_acceleration");
+    emergency_acceleration_ = declare_parameter<double>("emergency_acceleration");
+    moderate_stop_service_acceleration_ =
+      declare_parameter<double>("moderate_stop_service_acceleration");
+    stop_check_duration_ = declare_parameter<double>("stop_check_duration");
+    enable_cmd_limit_filter_ = declare_parameter<bool>("enable_cmd_limit_filter");
+    filter_activated_count_threshold_ = declare_parameter<int>("filter_activated_count_threshold");
+    filter_activated_velocity_threshold_ =
+      declare_parameter<double>("filter_activated_velocity_threshold");
+
+    // Vehicle Parameter
+    const auto vehicle_info = autoware::vehicle_info_utils::VehicleInfoUtils(*this).getVehicleInfo();
+    {
+      VehicleCmdFilterParam p;
+      p.wheel_base = vehicle_info.wheel_base_m;
+      p.vel_lim = declare_parameter<double>("nominal.vel_lim");
+      p.reference_speed_points =
+        declare_parameter<std::vector<double>>("nominal.reference_speed_points");
+      p.steer_lim = declare_parameter<std::vector<double>>("nominal.steer_lim");
+      p.steer_rate_lim = declare_parameter<std::vector<double>>("nominal.steer_rate_lim");
+      p.lon_acc_lim = declare_parameter<std::vector<double>>("nominal.lon_acc_lim");
+      p.lon_jerk_lim = declare_parameter<std::vector<double>>("nominal.lon_jerk_lim");
+      p.lat_acc_lim = declare_parameter<std::vector<double>>("nominal.lat_acc_lim");
+      p.lat_jerk_lim = declare_parameter<std::vector<double>>("nominal.lat_jerk_lim");
+      p.actual_steer_diff_lim =
+        declare_parameter<std::vector<double>>("nominal.actual_steer_diff_lim");
+      filter_.setParam(p);
+    }
+
+    {
+      VehicleCmdFilterParam p;
+      p.wheel_base = vehicle_info.wheel_base_m;
+      p.vel_lim = declare_parameter<double>("on_transition.vel_lim");
+      p.reference_speed_points =
+        declare_parameter<std::vector<double>>("on_transition.reference_speed_points");
+      p.steer_lim = declare_parameter<std::vector<double>>("on_transition.steer_lim");
+      p.steer_rate_lim = declare_parameter<std::vector<double>>("on_transition.steer_rate_lim");
+      p.lon_acc_lim = declare_parameter<std::vector<double>>("on_transition.lon_acc_lim");
+      p.lon_jerk_lim = declare_parameter<std::vector<double>>("on_transition.lon_jerk_lim");
+      p.lat_acc_lim = declare_parameter<std::vector<double>>("on_transition.lat_acc_lim");
+      p.lat_jerk_lim = declare_parameter<std::vector<double>>("on_transition.lat_jerk_lim");
+      p.actual_steer_diff_lim =
+        declare_parameter<std::vector<double>>("on_transition.actual_steer_diff_lim");
+      filter_on_transition_.setParam(p);
+    }
+
+    // Set default value
+    current_gate_mode_.data = GateMode::AUTO;
+    current_operation_mode_.mode = OperationModeState::STOP;
+
+    // Service
+    srv_engage_ = create_service<EngageSrv>(
+      "~/service/engage", std::bind(&VehicleCmdGate::onEngageService, this, _1, _2));
+    srv_external_emergency_ = create_service<SetEmergency>(
+      "~/service/external_emergency",
+      std::bind(&VehicleCmdGate::onExternalEmergencyStopService, this, _1, _2, _3));
+    srv_external_emergency_stop_ = create_service<Trigger>(
+      "~/service/external_emergency_stop",
+      std::bind(&VehicleCmdGate::onSetExternalEmergencyStopService, this, _1, _2, _3));
+    srv_clear_external_emergency_stop_ = create_service<Trigger>(
+      "~/service/clear_external_emergency_stop",
+      std::bind(&VehicleCmdGate::onClearExternalEmergencyStopService, this, _1, _2, _3));
+
+    // Diagnostics Updater
+    updater_.setHardwareID("vehicle_cmd_gate");
+    updater_.add("heartbeat", [](auto & stat) {
+      stat.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "Alive");
+    });
+    updater_.add("emergency_stop_operation", this, &VehicleCmdGate::checkExternalEmergencyStop);
+
+    // Pause interface
+    adapi_pause_ = std::make_unique<AdapiPauseInterface>(this);
+    moderate_stop_interface_ = std::make_unique<ModerateStopInterface>(this);
+
+    // Timer
+    const auto update_period = 1.0 / declare_parameter<double>("update_rate");
+    const auto period_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(
+      std::chrono::duration<double>(update_period));
+    timer_ =
+      rclcpp::create_timer(this, get_clock(), period_ns, std::bind(&VehicleCmdGate::onTimer, this));
+    timer_pub_status_ = rclcpp::create_timer(
+      this, get_clock(), period_ns, std::bind(&VehicleCmdGate::publishStatus, this));
+
+    logger_configure_ = std::make_unique<autoware::universe_utils::LoggerLevelConfigure>(this);
+
+    published_time_publisher_ =
+      std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);
+
+    // Parameter Callback
+    set_param_res_ =
+      this->add_on_set_parameters_callback(std::bind(&VehicleCmdGate::onParameter, this, _1));
+  }
+architecture-codes:
+  - Topic/Service Related Issues - Topic Name Mismatch
+  - Topic/Service Related Issues - QoS Policy Incompatibility
+  - Topic/Service Related Issues - Incomplete Topic/Service Initialization
+  - ROS Parameter Related Issues - Insufficient Parameter Design
+  - ROS Parameter Related Issues - Use Non-exist Parameter
+  - ROS Diagnostic Issues
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Timer Issues - Missing
+functionality-codes:
+  - Reference Error - Wrong method
+  - Reference Error - Wrong Variable
+  - Reference Error - Undefined Name
+  - Incomplete Code - Missing Multiple Steps
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Unclear of ROS computation Graph
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

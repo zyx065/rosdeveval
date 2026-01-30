@@ -1,0 +1,25 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_dwb_controller/nav_2d_utils
+ros_package: nav_2d_utils
+file_path: src/path_ops.cpp
+method_name: adjustPlanResolution
+requirement: |
+  /**
+  * Adjusts the resolution of a 2D path by adding intermediate poses where necessary.
+  * 
+  * @param global_plan_in The input path to be resampled.
+  * @param resolution The desired minimum distance between consecutive poses in the output path.
+  * @return A new path with poses spaced approximately by the specified resolution.
+  */
+category: utilities
+type: has_message
+signature: |
+  nav_2d_msgs::msg::Path2D adjustPlanResolution(
+    const nav_2d_msgs::msg::Path2D & global_plan_in,
+    double resolution)
+additional_information: []
+test: path_ops_tests
+test_cases: 
+- AdjustResolutionEmpty
+- AdjustResolutionSimple

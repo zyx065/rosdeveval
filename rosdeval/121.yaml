@@ -1,0 +1,102 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/constraint_samplers
+ros_package: moveit_core
+file_path: src/default_constraint_samplers.cpp
+method_name: IKConstraintSampler::callIK
+requirement: |
+  /**
+  * Attempts to compute an inverse kinematics solution for a given pose.
+  * 
+  * @param ik_query The target end-effector pose for which to solve IK.
+  * @param adapted_ik_validity_callback Optional callback function for custom IK solution validation.
+  * @param timeout Maximum time allowed for the IK computation.
+  * @param state[out] The robot state that will be updated with the IK solution if successful.
+  * @param use_as_seed If true, uses the current state as seed; otherwise samples a random seed.
+  * @return True if a valid IK solution was found and validated, false otherwise.
+  */
+category: ros_architecture
+type: has_domain_library,has_message,has_logger
+signature: |
+  bool IKConstraintSampler::callIK(const geometry_msgs::msg::Pose& ik_query,
+                                   const kinematics::KinematicsBase::IKCallbackFn& adapted_ik_validity_callback,
+                                   double timeout, moveit::core::RobotState& state, bool use_as_seed)
+additional_information: 
+  function_related_variable: |
+    const moveit::core::JointModelGroup* const jmg_;
+    kinematics::KinematicsBaseConstPtr kb_;  
+    random_numbers::RandomNumberGenerator random_number_generator_;
+    geometry_msgs::msg::Pose ik_query
+    static const rclcpp::Logger LOGGER = rclcpp::get_logger("moveit_constraint_samplers.default_constraint_samplers");
+  function_related_function: |
+    bool IKConstraintSampler::validate(moveit::core::RobotState& state) const
+  function_related_class: |
+    namespace moveit{
+      namespace core{
+        void RobotState::copyJointGroupPositions(const JointModelGroup* group, double* gstate) const
+        
+        /** \brief Given positions for the variables that make up a group, in the order found in the group (including values
+        *   of mimic joints), set those as the new values that correspond to the group */
+        void setJointGroupPositions(const std::string& joint_group_name, const std::vector<double>& gstate)
+      }
+    }
+
+    class JointModelGroup
+    {
+    public:
+      const std::vector<size_t>& getKinematicsSolverJointBijection() const
+      {
+        return group_kinematics_.first.bijection_;
+      }
+    }
+
+    namespace moveit
+    {
+      namespace core
+      {
+        class FixedJointModel : public JointModel
+        {
+        public:
+          FixedJointModel(const std::string& name, size_t joint_index, size_t first_variable_index);
+
+          void getVariableDefaultPositions(double* values, const Bounds& other_bounds) const override;
+          void getVariableRandomPositions(random_numbers::RandomNumberGenerator& rng, double* values,
+                                          const Bounds& other_bounds) const override;
+        }
+      }
+    }
+
+    namespace pr2_arm_kinematics{
+      class PR2ArmIKSolver : public KDL::ChainIkSolverPos:{
+          /**
+          * @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
+          * This particular method is intended for "searching" for a solutions by stepping through the redundancy
+          * (or other numerical routines).
+          * @param ik_pose the desired pose of the link
+          * @param ik_seed_state an initial guess solution for the inverse kinematics
+          * @return True if a valid solution was found, false otherwise
+          */
+          bool searchPositionIK(
+              const geometry_msgs::msg::Pose& ik_pose, const std::vector<double>& ik_seed_state, double timeout,
+              std::vector<double>& solution, moveit_msgs::msg::MoveItErrorCodes& error_code,
+              const kinematics::KinematicsQueryOptions& options = kinematics::KinematicsQueryOptions()) const override;
+
+            /**
+            * @brief Given a desired pose of the end-effector, search for the joint angles required to reach it.
+            * This particular method is intended for "searching" for a solutions by stepping through the redundancy
+            * (or other numerical routines).  The consistency_limit specifies that only certain redundancy positions
+            * around those specified in the seed state are admissible and need to be searched.
+            * @param ik_pose the desired pose of the link
+            * @param ik_seed_state an initial guess solution for the inverse kinematics
+            * @param consistency_limit the distance that the redundancy can be from the current position
+            * @return True if a valid solution was found, false otherwise
+            */
+            bool searchPositionIK(
+                const geometry_msgs::msg::Pose& ik_pose, const std::vector<double>& ik_seed_state, double timeout,
+                const std::vector<double>& consistency_limits, std::vector<double>& solution,
+                const IKCallbackFn& solution_callback, moveit_msgs::msg::MoveItErrorCodes& error_code,
+                const kinematics::KinematicsQueryOptions& options = kinematics::KinematicsQueryOptions()) const override;
+      }
+    }
+test: test_constraint_samplers
+test_cases: []

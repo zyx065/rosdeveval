@@ -1,0 +1,107 @@
+compilation.log: |
+  Starting >>> nav_2d_utils
+  Finished <<< nav_2d_utils [0.23s]
+
+  Summary: 1 package finished [0.47s]
+generate_code.cpp: |
+  nav_2d_msgs::msg::Path2D adjustPlanResolution(
+    const nav_2d_msgs::msg::Path2D & global_plan_in,
+    double resolution)
+  {
+    nav_2d_msgs::msg::Path2D adjusted_plan;
+    adjusted_plan.header = global_plan_in.header;
+    
+    if (global_plan_in.poses.empty() || resolution <= 0.0) {
+      return adjusted_plan;
+    }
+    
+    // Always include the first pose
+    adjusted_plan.poses.push_back(global_plan_in.poses[0]);
+    
+    for (size_t i = 1; i < global_plan_in.poses.size(); ++i) {
+      const auto& prev_pose = global_plan_in.poses[i - 1];
+      const auto& curr_pose = global_plan_in.poses[i];
+      
+      // Calculate distance between consecutive poses
+      double dx = curr_pose.x - prev_pose.x;
+      double dy = curr_pose.y - prev_pose.y;
+      double distance = sqrt(dx * dx + dy * dy);
+      
+      if (distance > resolution) {
+        // Add intermediate poses
+        int num_segments = static_cast<int>(ceil(distance / resolution));
+        double step_x = dx / num_segments;
+        double step_y = dy / num_segments;
+        double step_theta = atan2(dy, dx);
+        
+        // Add intermediate poses (excluding the start point which is already added)
+        for (int j = 1; j < num_segments; ++j) {
+          geometry_msgs::msg::Pose2D intermediate_pose;
+          intermediate_pose.x = prev_pose.x + j * step_x;
+          intermediate_pose.y = prev_pose.y + j * step_y;
+          intermediate_pose.theta = step_theta;
+          adjusted_plan.poses.push_back(intermediate_pose);
+        }
+      }
+      
+      // Always add the current pose
+      adjusted_plan.poses.push_back(curr_pose);
+    }
+    
+    return adjusted_plan;
+  }
+ground_truth.cpp: |-
+  nav_2d_msgs::msg::Path2D adjustPlanResolution(
+    const nav_2d_msgs::msg::Path2D & global_plan_in,
+    double resolution)
+  {
+    nav_2d_msgs::msg::Path2D global_plan_out;
+    if (global_plan_in.poses.size() == 0) {
+      return global_plan_out;
+    }
+
+    geometry_msgs::msg::Pose2D last = global_plan_in.poses[0];
+    global_plan_out.poses.push_back(last);
+
+    // we can take "holes" in the plan smaller than 2 grid cells (squared = 4)
+    double min_sq_resolution = resolution * resolution * 4.0;
+
+    for (unsigned int i = 1; i < global_plan_in.poses.size(); ++i) {
+      geometry_msgs::msg::Pose2D loop = global_plan_in.poses[i];
+      double sq_dist = (loop.x - last.x) * (loop.x - last.x) + (loop.y - last.y) * (loop.y - last.y);
+      if (sq_dist > min_sq_resolution) {
+        // add points in-between
+        double diff = sqrt(sq_dist) - sqrt(min_sq_resolution);
+        int steps = static_cast<int>(diff / resolution) - 1;
+        double steps_double = static_cast<double>(steps);
+
+        double delta_x = (loop.x - last.x) / steps_double;
+        double delta_y = (loop.y - last.y) / steps_double;
+        double delta_t = (loop.theta - last.theta) / steps_double;
+
+        for (int j = 1; j < steps; ++j) {
+          geometry_msgs::msg::Pose2D pose;
+          pose.x = last.x + j * delta_x;
+          pose.y = last.y + j * delta_y;
+          pose.theta = last.theta + j * delta_t;
+          global_plan_out.poses.push_back(pose);
+        }
+      }
+      global_plan_out.poses.push_back(global_plan_in.poses[i]);
+      last.x = loop.x;
+      last.y = loop.y;
+    }
+    return global_plan_out;
+  }
+architecture-codes: 
+  - ROS Message Related Issues - Message Member Access
+functionality-codes:
+  - Operation/Calculation Error - Incorrect arithmetic operation
+  - Operation/Calculation Error - Incorrect calculation logic
+  - Incomplete Code - Missing critical functionality
+  - Reference Error - Wrong variable tracking
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements

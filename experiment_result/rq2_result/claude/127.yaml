@@ -1,0 +1,42 @@
+compilation.log: |
+  Starting >>> moveit_servo
+  Finished <<< moveit_servo [0.72s]
+
+  Summary: 1 package finished [1.35s]
+generate_code.cpp: |
+  void ServoCalcs::jointCmdCB(const control_msgs::msg::JointJog::ConstSharedPtr& msg)
+  {
+      std::lock_guard<std::mutex> lock(main_loop_mutex_);
+      
+      latest_joint_cmd_ = msg;
+      latest_joint_cmd_is_nonzero_ = isNonZero(*msg);
+      latest_joint_command_stamp_ = rclcpp::Clock().now();
+      new_input_cmd_ = true;
+      
+      input_cv_.notify_one();
+  }
+ground_truth.cpp: |-
+  void ServoCalcs::jointCmdCB(const control_msgs::msg::JointJog::ConstSharedPtr& msg)
+  {
+    const std::lock_guard<std::mutex> lock(main_loop_mutex_);
+    latest_joint_cmd_ = msg;
+    latest_joint_cmd_is_nonzero_ = isNonZero(*latest_joint_cmd_);
+
+    if (msg->header.stamp != rclcpp::Time(0.))
+      latest_joint_command_stamp_ = msg->header.stamp;
+
+    // notify that we have a new input
+    new_input_cmd_ = true;
+    input_cv_.notify_all();
+  }
+architecture-codes:
+  - ROS Timer Issues - Timestamp Processing Errors
+  - ROS Message Related Issues - Incorrect Message Member Access
+functionality-codes:
+  - Conditional Checks Issues - Conditional Check Missing
+  - Reference Error - Wrong Variable
+  - Operation/Calculation Error - Incorrect operation
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

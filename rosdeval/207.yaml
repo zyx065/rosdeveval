@@ -1,0 +1,24 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_route
+ros_package: nav2_route
+file_path: include/nav2_route/utils.hpp
+method_name: findClosestPoint
+requirement: |
+  /**
+  * @brief Finds the closest point on the line segment made up of start-end to pose
+  * @param pose Pose to find point closest on the line with respect to
+  * @param start Start of line segment
+  * @param end End of line segment
+  * @return Coordinates of point on the line closest to the pose
+  */
+category: utilities
+type: []
+signature: |
+  inline Coordinates findClosestPoint(
+    const geometry_msgs::msg::PoseStamped & pose,
+    const Coordinates & start, const Coordinates & end)
+additional_information: []
+test: test_utils_and_types
+test_cases: 
+- test_find_closest_point

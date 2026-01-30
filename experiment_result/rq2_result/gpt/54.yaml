@@ -1,0 +1,62 @@
+compilation.log: |
+  Starting >>> autoware_planning_validator
+  --- stderr: autoware_planning_validator
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp: In member function ‘void autoware::planning_validator::PlanningValidator::publishProcessingTime(double)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:264:52: error: ‘Float64Stamped’ is not a member of ‘std_msgs::msg’
+    264 |     auto message = std::make_shared<std_msgs::msg::Float64Stamped>();
+        |                                                    ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:264:52: note: suggested alternatives:
+  In file included from /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/float64_stamped.hpp:7,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/include/autoware/planning_validator/planning_validator.hpp:29,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:15:
+  /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/detail/float64_stamped__struct.hpp:139:7: note:   ‘autoware_internal_debug_msgs::msg::Float64Stamped’
+    139 | using Float64Stamped =
+        |       ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/detail/float64_stamped__struct.hpp:139:7: note:   ‘autoware_internal_debug_msgs::msg::Float64Stamped’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:264:67: error: no matching function for call to ‘make_shared<<expression error> >()’
+    264 |     auto message = std::make_shared<std_msgs::msg::Float64Stamped>();
+        |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+  In file included from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/include/autoware/planning_validator/debug_marker.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/include/autoware/planning_validator/planning_validator.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:15:
+  /usr/include/c++/11/bits/shared_ptr.h:875:5: note: candidate: ‘template<class _Tp, class ... _Args> std::shared_ptr<_Tp> std::make_shared(_Args&& ...)’
+    875 |     make_shared(_Args&&... __args)
+        |     ^~~~~~~~~~~
+  /usr/include/c++/11/bits/shared_ptr.h:875:5: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:264:67: error: template argument 1 is invalid
+    264 |     auto message = std::make_shared<std_msgs::msg::Float64Stamped>();
+        |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+  gmake[2]: *** [CMakeFiles/autoware_planning_validator_component.dir/build.make:76: CMakeFiles/autoware_planning_validator_component.dir/src/planning_validator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:239: CMakeFiles/autoware_planning_validator_component.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_planning_validator [8.35s, exited with code 2]
+
+  Summary: 0 packages finished [9.80s]
+    1 package failed: autoware_planning_validator
+    1 package had stderr output: autoware_planning_validator
+generate_code.cpp: |-
+  void PlanningValidator::publishProcessingTime(const double processing_time_ms)
+  {
+      // Create a Float64Stamped message
+      auto message = std::make_shared<std_msgs::msg::Float64Stamped>();
+
+      // Set the current time as the header's timestamp
+      message->header.stamp = this->get_clock()->now();
+
+      // Set the processing time in the message
+      message->data = processing_time_ms;
+
+      // Publish the message
+      pub_processing_time_ms_->publish(*message);
+  }
+ground_truth.cpp: |-
+  void PlanningValidator::publishProcessingTime(const double processing_time_ms)
+  {
+    Float64Stamped msg{};
+    msg.stamp = this->now();
+    msg.data = processing_time_ms;
+    pub_processing_time_ms_->publish(msg);
+  }

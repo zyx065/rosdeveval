@@ -1,0 +1,81 @@
+compilation.log: |
+  Starting >>> autoware_detected_object_validation
+  --- stderr: autoware_detected_object_validation
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/position_filter/position_filter.cpp: In constructor ‘autoware::detected_object_validation::position_filter::ObjectPositionFilterNode::ObjectPositionFilterNode(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/position_filter/position_filter.cpp:41:18: error: ‘struct autoware::detected_object_validation::utils::FilterTargetLabel’ has no member named ‘initialize’
+     41 |   filter_target_.initialize(this);
+        |                  ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/position_filter/position_filter.cpp:49:42: error: ‘onObjects’ is not a member of ‘autoware::detected_object_validation::position_filter::ObjectPositionFilterNode’
+     49 |     std::bind(&ObjectPositionFilterNode::onObjects, this, std::placeholders::_1));
+        |                                          ^~~~~~~~~
+  gmake[2]: *** [CMakeFiles/object_position_filter.dir/build.make:76: CMakeFiles/object_position_filter.dir/src/position_filter/position_filter.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:254: CMakeFiles/object_position_filter.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_detected_object_validation [1min 33s, exited with code 2]
+  [Processing: autoware_detected_object_validation]
+  [Processing: autoware_detected_object_validation]
+  [Processing: autoware_detected_object_validation]
+
+  Summary: 0 packages finished [1min 34s]
+    1 package failed: autoware_detected_object_validation
+    1 package had stderr output: autoware_detected_object_validation
+generate_code.cpp: "ObjectPositionFilterNode::ObjectPositionFilterNode(const rclcpp::NodeOptions\
+  \ & node_options)\n: Node(\"object_position_filter_node\", node_options),\n  tf_buffer_(this->get_clock()),\n\
+  \  tf_listener_(tf_buffer_)\n{\n  // Declare parameters\n  this->declare_parameter<float>(\"\
+  upper_bound_x\");\n  this->declare_parameter<float>(\"upper_bound_y\");\n  this->declare_parameter<float>(\"\
+  lower_bound_x\");\n  this->declare_parameter<float>(\"lower_bound_y\");\n  \n  //\
+  \ Get parameters\n  upper_bound_x_ = this->get_parameter(\"upper_bound_x\").as_double();\n\
+  \  upper_bound_y_ = this->get_parameter(\"upper_bound_y\").as_double();\n  lower_bound_x_\
+  \ = this->get_parameter(\"lower_bound_x\").as_double();\n  lower_bound_y_ = this->get_parameter(\"\
+  lower_bound_y\").as_double();\n\n  // Initialize filter target\n  filter_target_.initialize(this);\n\
+  \n  // Create publisher and subscriber\n  object_pub_ = this->create_publisher<autoware_perception_msgs::msg::DetectedObjects>(\n\
+  \    \"~/output/objects\", rclcpp::QoS{1});\n  \n  object_sub_ = this->create_subscription<autoware_perception_msgs::msg::DetectedObjects>(\n\
+  \    \"~/input/objects\", rclcpp::QoS{1},\n    std::bind(&ObjectPositionFilterNode::onObjects,\
+  \ this, std::placeholders::_1));\n\n  // Initialize published time publisher\n \
+  \ published_time_publisher_ = std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);\n\
+  }"
+ground_truth.cpp: |-
+  ObjectPositionFilterNode::ObjectPositionFilterNode(const rclcpp::NodeOptions & node_options)
+  : Node("object_position_filter_node", node_options),
+    tf_buffer_(this->get_clock()),
+    tf_listener_(tf_buffer_)
+  {
+    using std::placeholders::_1;
+
+    // Set parameters
+    upper_bound_x_ = declare_parameter<float>("upper_bound_x");
+    upper_bound_y_ = declare_parameter<float>("upper_bound_y");
+    lower_bound_x_ = declare_parameter<float>("lower_bound_x");
+    lower_bound_y_ = declare_parameter<float>("lower_bound_y");
+    filter_target_.UNKNOWN = declare_parameter<bool>("filter_target_label.UNKNOWN");
+    filter_target_.CAR = declare_parameter<bool>("filter_target_label.CAR");
+    filter_target_.TRUCK = declare_parameter<bool>("filter_target_label.TRUCK");
+    filter_target_.BUS = declare_parameter<bool>("filter_target_label.BUS");
+    filter_target_.TRAILER = declare_parameter<bool>("filter_target_label.TRAILER");
+    filter_target_.MOTORCYCLE = declare_parameter<bool>("filter_target_label.MOTORCYCLE");
+    filter_target_.BICYCLE = declare_parameter<bool>("filter_target_label.BICYCLE");
+    filter_target_.PEDESTRIAN = declare_parameter<bool>("filter_target_label.PEDESTRIAN");
+
+    // Set publisher/subscriber
+    object_sub_ = this->create_subscription<autoware_perception_msgs::msg::DetectedObjects>(
+      "input/object", rclcpp::QoS{1}, std::bind(&ObjectPositionFilterNode::objectCallback, this, _1));
+    object_pub_ = this->create_publisher<autoware_perception_msgs::msg::DetectedObjects>(
+      "output/object", rclcpp::QoS{1});
+    published_time_publisher_ =
+      std::make_unique<autoware::universe_utils::PublishedTimePublisher>(this);
+  }
+architecture-codes:
+  - Topic/Service Issue - Topic/Service Name Mismatch Issue
+  - Topic/Service Issue - Callback Function Binding Issue
+  - ROS Parameter Issue - Insufficient Parameter Design Issue
+  - ROS Parameter Issue - Parameter Type and Unit Mismatch Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

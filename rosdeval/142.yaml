@@ -1,0 +1,26 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_lane_departure_checker
+ros_package: autoware_lane_departure_checker
+file_path: src/lane_departure_checker_node/utils.cpp
+method_name: cutTrajectory
+test_coverage: 100%
+requirement: |
+  /**
+  * @brief Cuts a trajectory to the specified length from its start point.
+  *
+  * @param trajectory The input trajectory to be cut.
+  * @param length The desired length of the resulting trajectory.
+  * @return TrajectoryPoints The cut trajectory, truncated or interpolated to the specified length.
+  *                         Returns an empty trajectory if the input is empty.
+  */
+category: utilities
+type: has_domain_library,has_message
+signature: |
+  TrajectoryPoints cutTrajectory(const TrajectoryPoints & trajectory, const double length)
+additional_information: 
+  function_related_variable: |
+    TrajectoryPoints = std::vector<TrajectoryPoint>
+test: test_autoware_lane_departure_checker
+test_cases: 
+- test_cut_trajectory

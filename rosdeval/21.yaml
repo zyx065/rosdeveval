@@ -1,0 +1,37 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/evaluator/autoware_planning_evaluator
+ros_package: autoware_planning_evaluator
+file_path: src/planning_evaluator_node.cpp
+method_name: PlanningEvaluatorNode::onOdometry
+requirement: |
+  /**
+  * Calculates and records planning metrics based on the modified goal pose and current ego state.
+  * 
+  * @param[in] modified_goal_msg The modified goal pose message containing position and UUID.
+  * @param[in] ego_state_ptr The current odometry state of the ego vehicle.
+  * 
+  * @note This method silently returns if either input pointer is null.
+  */
+category: ros_architecture
+type: has_topic,has_message
+signature: |
+  void PlanningEvaluatorNode::onOdometry(const Odometry::ConstSharedPtr odometry_msg)
+additional_information: 
+  function_related_variable: | 
+    MetricsCalculator metrics_calculator_;
+    autoware::route_handler::RouteHandler route_handler_;
+    autoware::universe_utils::InterProcessPollingSubscriber<AccelWithCovarianceStamped> accel_sub_{this, "~/input/acceleration"};
+  function_related_class: |
+    class RouteHandler{
+      bool isHandlerReady() const;
+    };
+    class MetricsCalculator{
+      void setEgoPose(const geometry_msgs::msg::Pose & pose);
+    }
+  function_related_function: |
+    void getRouteData() 
+    void AddLaneletMetricMsg(const Odometry::ConstSharedPtr ego_state_ptr)
+    void AddKinematicStateMetricMsg(const AccelWithCovarianceStamped & accel_stamped, const Odometry::ConstSharedPtr ego_state_ptr)
+test: test_planning_evaluator
+test_cases: []

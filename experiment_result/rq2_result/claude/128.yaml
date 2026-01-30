@@ -1,0 +1,167 @@
+compilation.log: |
+  Starting >>> moveit_servo
+  --- stderr: moveit_servo
+  In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/c++allocator.h:33,
+                   from /usr/include/c++/11/bits/allocator.h:46,
+                   from /usr/include/c++/11/memory:64,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/servo.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/servo_node.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/servo_node.cpp:40:
+  /usr/include/c++/11/ext/new_allocator.h: In instantiation of ‘void __gnu_cxx::new_allocator<_Tp>::construct(_Up*, _Args&& ...) [with _Up = const moveit_servo::ServoParameters; _Args = {const char (&)[13]}; _Tp = moveit_servo::ServoParameters]’:
+  /usr/include/c++/11/bits/alloc_traits.h:516:17:   required from ‘static void std::allocator_traits<std::allocator<_Tp1> >::construct(std::allocator_traits<std::allocator<_Tp1> >::allocator_type&, _Up*, _Args&& ...) [with _Up = const moveit_servo::ServoParameters; _Args = {const char (&)[13]}; _Tp = moveit_servo::ServoParameters; std::allocator_traits<std::allocator<_Tp1> >::allocator_type = std::allocator<moveit_servo::ServoParameters>]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:519:39:   required from ‘std::_Sp_counted_ptr_inplace<_Tp, _Alloc, _Lp>::_Sp_counted_ptr_inplace(_Alloc, _Args&& ...) [with _Args = {const char (&)[13]}; _Tp = const moveit_servo::ServoParameters; _Alloc = std::allocator<moveit_servo::ServoParameters>; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:650:16:   required from ‘std::__shared_count<_Lp>::__shared_count(_Tp*&, std::_Sp_alloc_shared_tag<_Alloc>, _Args&& ...) [with _Tp = const moveit_servo::ServoParameters; _Alloc = std::allocator<moveit_servo::ServoParameters>; _Args = {const char (&)[13]}; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr_base.h:1342:14:   required from ‘std::__shared_ptr<_Tp, _Lp>::__shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<moveit_servo::ServoParameters>; _Args = {const char (&)[13]}; _Tp = const moveit_servo::ServoParameters; __gnu_cxx::_Lock_policy _Lp = __gnu_cxx::_S_atomic]’
+  /usr/include/c++/11/bits/shared_ptr.h:409:59:   required from ‘std::shared_ptr<_Tp>::shared_ptr(std::_Sp_alloc_shared_tag<_Tp>, _Args&& ...) [with _Alloc = std::allocator<moveit_servo::ServoParameters>; _Args = {const char (&)[13]}; _Tp = const moveit_servo::ServoParameters]’
+  /usr/include/c++/11/bits/shared_ptr.h:862:14:   required from ‘std::shared_ptr<_Tp> std::allocate_shared(const _Alloc&, _Args&& ...) [with _Tp = const moveit_servo::ServoParameters; _Alloc = std::allocator<moveit_servo::ServoParameters>; _Args = {const char (&)[13]}]’
+  /usr/include/c++/11/bits/shared_ptr.h:878:39:   required from ‘std::shared_ptr<_Tp> std::make_shared(_Args&& ...) [with _Tp = const moveit_servo::ServoParameters; _Args = {const char (&)[13]}]’
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/servo_node.cpp:77:62:   required from here
+  /usr/include/c++/11/ext/new_allocator.h:162:11: error: no matching function for call to ‘moveit_servo::ServoParameters::ServoParameters(const char [13])’
+    162 |         { ::new((void *)__p) _Up(std::forward<_Args>(__args)...); }
+        |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/collision_check.h:50,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/servo.h:45,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/servo_node.h:43,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/servo_node.cpp:40:
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/servo_parameters.h:148:3: note: candidate: ‘moveit_servo::ServoParameters::ServoParameters()’
+    148 |   ServoParameters()
+        |   ^~~~~~~~~~~~~~~
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/servo_parameters.h:148:3: note:   candidate expects 0 arguments, 1 provided
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/servo_parameters.h:52:8: note: candidate: ‘moveit_servo::ServoParameters::ServoParameters(const moveit_servo::ServoParameters&)’
+     52 | struct ServoParameters
+        |        ^~~~~~~~~~~~~~~
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/servo_parameters.h:52:8: note:   no known conversion for argument 1 from ‘const char [13]’ to ‘const moveit_servo::ServoParameters&’
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/servo_parameters.h:52:8: note: candidate: ‘moveit_servo::ServoParameters::ServoParameters(moveit_servo::ServoParameters&&)’
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/servo_parameters.h:52:8: note:   no known conversion for argument 1 from ‘const char [13]’ to ‘moveit_servo::ServoParameters&&’
+  gmake[2]: *** [CMakeFiles/servo_node.dir/build.make:76: CMakeFiles/servo_node.dir/src/servo_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:257: CMakeFiles/servo_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< moveit_servo [7.92s, exited with code 2]
+
+  Summary: 0 packages finished [8.52s]
+    1 package failed: moveit_servo
+    1 package had stderr output: moveit_servo
+generate_code.cpp: |
+  ServoNode::ServoNode(const rclcpp::NodeOptions& options)
+    : node_{ std::make_shared<rclcpp::Node>("servo_node", options) }
+  {
+    // Create planning scene monitor
+    planning_scene_monitor_ = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(
+      node_, "robot_description");
+    
+    if (planning_scene_monitor_->getPlanningScene())
+    {
+      // Start monitoring components
+      planning_scene_monitor_->startSceneMonitor();
+      planning_scene_monitor_->startWorldGeometryMonitor();
+      planning_scene_monitor_->startStateMonitor();
+      
+      // Enable copy dynamics for state monitor
+      planning_scene_monitor_->getStateMonitor()->enableCopyDynamics(true);
+      
+      // Set publishing frequency and start publishing
+      planning_scene_monitor_->setPlanningScenePublishingFrequency(25.0);
+      planning_scene_monitor_->startPublishingPlanningScene(
+        planning_scene_monitor::PlanningSceneMonitor::UPDATE_SCENE);
+      
+      // Provide planning scene service
+      planning_scene_monitor_->providePlanningSceneService();
+      
+      // Request initial planning scene state
+      planning_scene_monitor_->requestPlanningSceneState();
+    }
+    
+    // Create servo parameters with default namespace
+    auto servo_params = std::make_shared<const ServoParameters>("moveit_servo");
+    
+    // Initialize servo with node and parameters
+    servo_ = std::make_unique<moveit_servo::Servo>(node_, servo_params, planning_scene_monitor_);
+    
+    RCLCPP_INFO(node_->get_logger(), "ServoNode initialized successfully");
+  }
+ground_truth.cpp: |-
+  ServoNode::ServoNode(const rclcpp::NodeOptions& options)
+    : node_{ std::make_shared<rclcpp::Node>("servo_node", options) }
+  {
+    if (!options.use_intra_process_comms())
+    {
+      RCLCPP_WARN_STREAM(LOGGER, "Intra-process communication is disabled, consider enabling it by adding: "
+                                 "\nextra_arguments=[{'use_intra_process_comms' : True}]\nto the Servo composable node "
+                                 "in the launch file");
+    }
+
+    // Set up services for interacting with Servo
+    start_servo_service_ = node_->create_service<std_srvs::srv::Trigger>(
+        "~/start_servo",
+        [this](const std::shared_ptr<std_srvs::srv::Trigger::Request>& request,
+               const std::shared_ptr<std_srvs::srv::Trigger::Response>& response) { return startCB(request, response); });
+    stop_servo_service_ = node_->create_service<std_srvs::srv::Trigger>(
+        "~/stop_servo",
+        [this](const std::shared_ptr<std_srvs::srv::Trigger::Request>& request,
+               const std::shared_ptr<std_srvs::srv::Trigger::Response>& response) { return stopCB(request, response); });
+    pause_servo_service_ = node_->create_service<std_srvs::srv::Trigger>(
+        "~/pause_servo",
+        [this](const std::shared_ptr<std_srvs::srv::Trigger::Request>& request,
+               const std::shared_ptr<std_srvs::srv::Trigger::Response>& response) { return pauseCB(request, response); });
+    unpause_servo_service_ = node_->create_service<std_srvs::srv::Trigger>(
+        "~/unpause_servo", [this](const std::shared_ptr<std_srvs::srv::Trigger::Request>& request,
+                                  const std::shared_ptr<std_srvs::srv::Trigger::Response>& response) {
+          return unpauseCB(request, response);
+        });
+
+    // Can set robot_description name from parameters
+    std::string robot_description_name = "robot_description";
+    node_->get_parameter_or("robot_description_name", robot_description_name, robot_description_name);
+
+    // Get the servo parameters
+    auto servo_parameters = moveit_servo::ServoParameters::makeServoParameters(node_);
+    if (servo_parameters == nullptr)
+    {
+      RCLCPP_ERROR(LOGGER, "Failed to load the servo parameters");
+      throw std::runtime_error("Failed to load the servo parameters");
+    }
+
+    // Set up planning_scene_monitor
+    planning_scene_monitor_ = std::make_shared<planning_scene_monitor::PlanningSceneMonitor>(
+        node_, robot_description_name, "planning_scene_monitor");
+    planning_scene_monitor_->startStateMonitor(servo_parameters->joint_topic);
+    planning_scene_monitor_->startSceneMonitor(servo_parameters->monitored_planning_scene_topic);
+    planning_scene_monitor_->startWorldGeometryMonitor();
+    planning_scene_monitor_->setPlanningScenePublishingFrequency(25);
+    planning_scene_monitor_->getStateMonitor()->enableCopyDynamics(true);
+    planning_scene_monitor_->startPublishingPlanningScene(planning_scene_monitor::PlanningSceneMonitor::UPDATE_SCENE,
+                                                          std::string(node_->get_fully_qualified_name()) +
+                                                              "/publish_planning_scene");
+    // If the planning scene monitor in servo is the primary one we provide /get_planning_scene service so RViz displays
+    // or secondary planning scene monitors can fetch the scene, otherwise we request the planning scene from the
+    // primary planning scene monitor (e.g. move_group)
+    if (servo_parameters->is_primary_planning_scene_monitor)
+      planning_scene_monitor_->providePlanningSceneService();
+    else
+      planning_scene_monitor_->requestPlanningSceneState();
+
+    // Create Servo
+    servo_ = std::make_unique<moveit_servo::Servo>(node_, servo_parameters, planning_scene_monitor_);
+  }
+architecture-codes:
+  - Topic/Service Related Issues - Topic Name Mismatch
+  - Topic/Service Related Issues - Incomplete Topic/Service Initialization Issues
+  - ROS Parameter Related Issues - Use Non-exist Parameter
+  - ROS Parameter Related Issues - Insufficient Parameter Design
+  - ROS Parameter Related Issues - Missing Dynamic Configuration Issue
+  - ROS Logger Issues - ROS Logger Missing Issue
+
+functionality-codes:
+  - Reference Error - Wrong method
+  - Reference Error - Wrong Variable
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Missing
+  - Constant Value Error - Constant value error
+
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

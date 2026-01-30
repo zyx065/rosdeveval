@@ -1,0 +1,23 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/robot_model
+ros_package: moveit_core
+file_path: src/floating_joint_model.cpp
+method_name: FloatingJointModel::interpolate
+requirement: |
+  /**
+  * Determines the alignment index for blending two trajectories at a transition window.
+  * 
+  * @param req Blend request containing the two trajectories to be blended.
+  * @param first_interse_index Index of the intersection point in the first trajectory.
+  * @param second_interse_index Index of the intersection point in the second trajectory.
+  * @param[out] blend_align_index Output parameter storing the calculated alignment index.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  void FloatingJointModel::interpolate(const double* from, const double* to, const double t, double* state) const
+additional_information: []
+test: test_robot_model
+test_cases: 
+- interpolation_test

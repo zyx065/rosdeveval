@@ -1,0 +1,30 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_smac_planner
+ros_package: nav2_smac_planner
+file_path: src/smoother.cpp
+method_name: Smoother::findDirectionalPathSegments
+requirement: |
+  /**
+  * @brief Splits a path into segments based on directional changes for non-holonomic robots.
+  * 
+  * For holonomic robots, returns a single segment spanning the entire path. For non-holonomic robots,
+  * segments are split at cusps (reversals) and in-place rotations.
+  * 
+  * @param[in] path The input path to analyze for directional changes.
+  * @return A vector of PathSegment objects representing continuous directional segments.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  std::vector<PathSegment> Smoother::findDirectionalPathSegments(const nav_msgs::msg::Path & path)
+additional_information: 
+  function_related_variable: 
+    double min_turning_rad_, tolerance_, data_w_, smooth_w_;
+    int max_its_, refinement_ctr_;
+    bool is_holonomic_, do_refinement_;
+    MotionModel motion_model_;
+    ompl::base::StateSpacePtr state_space_;
+test: test_smoother
+test_cases: 
+- test_full_smoother

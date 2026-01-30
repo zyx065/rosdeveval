@@ -1,0 +1,39 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/trajectory_processing
+ros_package: moveit_core
+file_path: src/time_optimal_trajectory_generation.cpp
+method_name: Trajectory::getPosition
+requirement: |
+  /**
+  * Computes the distance between this robot state and another state for a joint group.
+  * @param other The other robot state to compute the distance to
+  * @param joint_group The joint group for which to compute the distance
+  * @return The weighted sum of distances between joint positions
+  */
+category: utilities
+type: has_timer
+signature: |
+  Eigen::VectorXd Trajectory::getPosition(double time) const
+additional_information: 
+  function_related_variable: []
+  function_related_function: |
+    std::list<Trajectory::TrajectoryStep>::const_iterator Trajectory::getTrajectorySegment(double time) const
+  function_related_class: |
+    struct TrajectoryStep
+    {
+      TrajectoryStep()
+      {
+      }
+      TrajectoryStep(double path_pos, double path_vel) : path_pos_(path_pos), path_vel_(path_vel)
+      {
+      }
+      double path_pos_;
+      double path_vel_;
+      double time_;
+    };
+test: test_time_optimal_trajectory_generation
+test_cases: 
+- test1
+- test2 
+- test3

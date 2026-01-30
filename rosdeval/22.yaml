@@ -1,0 +1,29 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/evaluator/autoware_scenario_simulator_v2_adapter
+ros_package: autoware_scenario_simulator_v2_adapter
+file_path: src/converter_node.cpp
+method_name: MetricConverter::onMetrics
+test_coverage: 100%
+requirement: |
+  /**
+  * Calculates and records planning metrics based on the modified goal pose and current ego state.
+  * 
+  * @param[in] modified_goal_msg The modified goal pose message containing position and UUID.
+  * @param[in] ego_state_ptr The current odometry state of the ego vehicle.
+  * 
+  * @note This method silently returns if either input pointer is null.
+  */
+category: ros_architecture
+type: has_message
+signature: |
+  void MetricConverter::onMetrics(
+    const MetricArray::ConstSharedPtr metrics_msg, const size_t topic_idx,
+    const std::string & base_topic_name)
+additional_information: 
+  function_related_function: |
+    rclcpp::Publisher<UserDefinedValue>::SharedPtr MetricConverter::getPublisher(const std::string & topic_name, const size_t topic_idx)
+    std::string removeInvalidTopicString(const std::string & input_string)
+    UserDefinedValue MetricConverter::createUserDefinedValue(const Metric & metric) const
+test: test_scenario_simulator_v2_adapter
+test_cases: []

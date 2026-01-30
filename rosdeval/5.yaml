@@ -1,0 +1,39 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/evaluator/autoware_planning_evaluator
+ros_package: autoware_planning_evaluator
+file_path: src/planning_evaluator_node.cpp
+method_name: PlanningEvaluatorNode::onTimer
+requirement: |
+  /**
+  * @brief Timer callback to process incoming data and publish evaluation metrics.
+  * 
+  * This method handles the periodic evaluation of planning components by processing
+  * current odometry, object detections, reference trajectory, planned trajectory,
+  * and modified goal data. It publishes computed metrics and processing time.
+  * 
+  * @note This callback is triggered by a fixed-rate timer and coordinates the
+  *       evaluation pipeline without implementing the core evaluation logic.
+  */
+category: ros_architecture
+type: has_message,has_timer,has_topic
+signature: |
+  void PlanningEvaluatorNode::onTimer()
+additional_information: 
+  function_related_function: |
+    void onOdometry(const Odometry::ConstSharedPtr odometry_msg);
+    void onObjects(const PredictedObjects::ConstSharedPtr objects_msg);
+    void onReferenceTrajectory(const Trajectory::ConstSharedPtr traj_msg);
+    void onTrajectory(const Trajectory::ConstSharedPtr traj_msg, const Odometry::ConstSharedPtr ego_state_ptr);
+    void onModifiedGoal(const PoseWithUuidStamped::ConstSharedPtr modified_goal_msg,const Odometry::ConstSharedPtr ego_state_ptr);
+  function_related_variable: |
+    MetricArrayMsg metrics_msg_;
+    rclcpp::Publisher<autoware_internal_debug_msgs::msg::Float64Stamped>::SharedPtr processing_time_pub_;
+    autoware::universe_utils::InterProcessPollingSubscriber<Odometry> odometry_sub_{this, "~/input/odometry"};
+    autoware::universe_utils::InterProcessPollingSubscriber<PredictedObjects> objects_sub_{this, "~/input/objects"};
+    autoware::universe_utils::InterProcessPollingSubscriber<Trajectory> ref_sub_{this, "~/input/reference_trajectory"};
+    autoware::universe_utils::InterProcessPollingSubscriber<Trajectory> traj_sub_{this, "~/input/trajectory"};
+    autoware::universe_utils::InterProcessPollingSubscriber<PoseWithUuidStamped> modified_goal_sub_{this, "~/input/modified_goal"};
+test: test_planning_evaluator
+test_cases: 
+- TestCurvature

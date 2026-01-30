@@ -1,0 +1,24 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/robot_trajectory
+ros_package: moveit_core
+file_path: src/robot_trajectory.cpp
+method_name: RobotTrajectory::reverse
+requirement: |
+  /**
+  * Reverses the order of waypoints and inverts their velocity profiles.
+  * 
+  * @return A reference to this trajectory after reversal.
+  */
+category: utilities
+type: []
+signature: |
+  RobotTrajectory& RobotTrajectory::reverse()
+additional_information: 
+  function_related_variable: |
+    std::deque<moveit::core::RobotStatePtr> waypoints_;
+    std::deque<double> duration_from_previous_;
+test: test_robot_trajectory
+test_cases: 
+- DoubleReverse
+- ChainEdits

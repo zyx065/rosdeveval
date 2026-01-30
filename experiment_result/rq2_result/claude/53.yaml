@@ -1,0 +1,103 @@
+compilation.log: |
+  Starting >>> autoware_planning_validator
+  --- stderr: autoware_planning_validator
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp: In member function ‘void autoware::planning_validator::PlanningValidator::onTrajectory(autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:193:17: error: ‘class autoware::universe_utils::StopWatch<std::chrono::duration<long int, std::ratio<1, 1000> > >’ has no member named ‘start’; did you mean ‘std::unordered_map<std::__cxx11::basic_string<char>, std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::duration<long int, std::ratio<1, 1000000000> > >, std::hash<std::__cxx11::basic_string<char> >, std::equal_to<std::__cxx11::basic_string<char> >, std::allocator<std::pair<const std::__cxx11::basic_string<char>, std::chrono::time_point<std::chrono::_V2::steady_clock, std::chrono::duration<long int, std::ratio<1, 1000000000> > > > > > autoware::universe_utils::StopWatch<std::chrono::duration<long int, std::ratio<1, 1000> > >::t_start_’? (not accessible from this context)
+    193 |     stop_watch_.start();
+        |                 ^~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/include/autoware/planning_validator/planning_validator.hpp:21,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:15:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/system/stop_watch.hpp:59:41: note: declared private here
+     59 |   std::unordered_map<std::string, Time> t_start_;
+        |                                         ^~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:201:21: error: ‘class autoware::universe_utils::StopWatch<std::chrono::duration<long int, std::ratio<1, 1000> > >’ has no member named ‘stop’
+    201 |         stop_watch_.stop();
+        |                     ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_planning_validator/src/planning_validator.cpp:209:45: error: ‘class autoware::universe_utils::StopWatch<std::chrono::duration<long int, std::ratio<1, 1000> > >’ has no member named ‘stop’
+    209 |     double processing_time_ms = stop_watch_.stop();
+        |                                             ^~~~
+  gmake[2]: *** [CMakeFiles/autoware_planning_validator_component.dir/build.make:76: CMakeFiles/autoware_planning_validator_component.dir/src/planning_validator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:239: CMakeFiles/autoware_planning_validator_component.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_planning_validator [8.37s, exited with code 2]
+
+  Summary: 0 packages finished [9.78s]
+    1 package failed: autoware_planning_validator
+    1 package had stderr output: autoware_planning_validator
+generate_code.cpp: |-
+  void PlanningValidator::onTrajectory(const Trajectory::ConstSharedPtr msg)
+  {
+      // Start the stopwatch to measure processing time
+      stop_watch_.start();
+
+      // Store the received trajectory
+      current_trajectory_ = msg;
+
+      // Check if the required data is ready for validation
+      if (!isDataReady()) {
+          // If data is not ready, stop the stopwatch and return
+          stop_watch_.stop();
+          return;
+      }
+
+      // Validate the trajectory
+      validate(*current_trajectory_);
+
+      // Calculate processing time
+      double processing_time_ms = stop_watch_.stop();
+
+      // Publish processing time if diagnostics are enabled
+      if (publish_diag_) {
+          publishProcessingTime(processing_time_ms);
+      }
+
+      // Publish the validated trajectory
+      publishTrajectory();
+
+      // Publish debug information if available
+      publishDebugInfo();
+
+      // Display the current status
+      displayStatus();
+  }
+ground_truth.cpp: |-
+  void PlanningValidator::onTrajectory(const Trajectory::ConstSharedPtr msg)
+  {
+    stop_watch_.tic(__func__);
+
+    current_trajectory_ = msg;
+
+    // receive data
+    current_kinematics_ = sub_kinematics_.takeData();
+
+    if (!isDataReady()) return;
+
+    if (publish_diag_ && !diag_updater_) {
+      setupDiag();  // run setup after all data is ready.
+    }
+
+    debug_pose_publisher_->clearMarkers();
+
+    validate(*current_trajectory_);
+
+    diag_updater_->force_update();
+
+    publishTrajectory();
+
+    // for debug
+    publishProcessingTime(stop_watch_.toc(__func__));
+    publishDebugInfo();
+    displayStatus();
+  }
+architecture-codes:
+  - ROS Diagnostic Issues - Missing Diagnostic
+  - Topic/Service Related Issues - Incomplete Topic/Service Initialization Issues 
+functionality-codes:
+  - Reference Error - Wrong method 
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication 
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

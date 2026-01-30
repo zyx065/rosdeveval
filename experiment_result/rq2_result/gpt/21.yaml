@@ -1,0 +1,73 @@
+compilation.log: |
+  Starting >>> autoware_planning_evaluator
+  --- stderr: autoware_planning_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp: In member function ‘void planning_diagnostics::PlanningEvaluatorNode::onOdometry(nav_msgs::msg::Odometry_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp:367:53: error: cannot convert ‘const _pose_type’ {aka ‘const geometry_msgs::msg::Pose_<std::allocator<void> >’} to ‘const Odometry&’ {aka ‘const nav_msgs::msg::Odometry_<std::allocator<void> >&’}
+    367 |   metrics_calculator_.setEgoPose(odometry_msg->pose.pose);
+        |                                  ~~~~~~~~~~~~~~~~~~~^~~~
+        |                                                     |
+        |                                                     const _pose_type {aka const geometry_msgs::msg::Pose_<std::allocator<void> >}
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/include/autoware/planning_evaluator/planning_evaluator_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/include/autoware/planning_evaluator/metrics_calculator.hpp:78:51: note:   initializing argument 1 of ‘void planning_diagnostics::MetricsCalculator::setEgoPose(const Odometry&)’
+     78 |   void setEgoPose(const nav_msgs::msg::Odometry & ego_odometry);
+        |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/planning_evaluator_node.cpp:373:37: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<geometry_msgs::msg::AccelWithCovarianceStamped_<std::allocator<void> > >’ has no member named ‘getLatestMsg’
+    373 |   const auto accel_msg = accel_sub_.getLatestMsg();
+        |                                     ^~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/planning_evaluator_node.dir/build.make:174: CMakeFiles/planning_evaluator_node.dir/src/planning_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:161: CMakeFiles/planning_evaluator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_planning_evaluator [13.8s, exited with code 2]
+
+  Summary: 0 packages finished [15.1s]
+    1 package failed: autoware_planning_evaluator
+    1 package had stderr output: autoware_planning_evaluator
+generate_code.cpp: |-
+  void PlanningEvaluatorNode::onOdometry(const Odometry::ConstSharedPtr odometry_msg)
+  {
+    // Check if the odometry message is valid
+    if (!odometry_msg) {
+      RCLCPP_WARN(get_logger(), "Received null odometry message. Skipping processing.");
+      return;
+    }
+
+    // Check if the route handler is ready
+    if (!route_handler_.isHandlerReady()) {
+      RCLCPP_WARN(get_logger(), "Route handler is not ready. Skipping processing.");
+      return;
+    }
+
+    // Update the ego pose in the metrics calculator
+    metrics_calculator_.setEgoPose(odometry_msg->pose.pose);
+
+    // Add lanelet-based metrics
+    AddLaneletMetricMsg(odometry_msg);
+
+    // Retrieve acceleration data
+    const auto accel_msg = accel_sub_.getLatestMsg();
+    if (accel_msg) {
+      // Add kinematic state-based metrics
+      AddKinematicStateMetricMsg(*accel_msg, odometry_msg);
+    } else {
+      RCLCPP_WARN(get_logger(), "No acceleration data available. Skipping kinematic state metrics.");
+    }
+  }
+ground_truth.cpp: |-
+  void PlanningEvaluatorNode::onOdometry(const Odometry::ConstSharedPtr odometry_msg)
+  {
+    if (!odometry_msg) return;
+    metrics_calculator_.setEgoPose(*odometry_msg);
+    {
+      getRouteData();
+      if (route_handler_.isHandlerReady() && odometry_msg) {
+        AddLaneletMetricMsg(odometry_msg);
+      }
+
+      const auto acc_msg = accel_sub_.takeData();
+      if (acc_msg && odometry_msg) {
+        AddKinematicStateMetricMsg(*acc_msg, odometry_msg);
+      }
+    }
+  }

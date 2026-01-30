@@ -1,0 +1,77 @@
+compilation.log: |
+  Starting >>> autoware_motion_velocity_out_of_lane_module
+  [Processing: autoware_motion_velocity_out_of_lane_module]
+  Finished <<< autoware_motion_velocity_out_of_lane_module [39.4s]
+
+  Summary: 1 package finished [40.7s]
+generate_code.cpp: "void cut_predicted_path_beyond_line(\n  autoware_perception_msgs::msg::PredictedPath\
+  \ & predicted_path,\n  const universe_utils::LineString2d & stop_line, const double\
+  \ object_front_overhang)\n{\n  if (predicted_path.path.empty()) {\n    return;\n\
+  \  }\n\n  // Convert stop line to boost geometry format\n  using Point2d = boost::geometry::model::d2::point_xy<double>;\n\
+  \  boost::geometry::model::linestring<Point2d> bg_stop_line;\n  for (const auto\
+  \ & point : stop_line) {\n    bg_stop_line.push_back(Point2d(point.x(), point.y()));\n\
+  \  }\n\n  // Check each segment of the predicted path\n  for (size_t i = 1; i <\
+  \ predicted_path.path.size(); ++i) {\n    const auto & prev_point = predicted_path.path[i-1].position;\n\
+  \    const auto & curr_point = predicted_path.path[i].position;\n    \n    // Create\
+  \ path segment with overhang consideration\n    Point2d segment_start(prev_point.x,\
+  \ prev_point.y);\n    Point2d segment_end(curr_point.x, curr_point.y);\n    \n \
+  \   // Calculate direction vector\n    const double dx = segment_end.x() - segment_start.x();\n\
+  \    const double dy = segment_end.y() - segment_start.y();\n    const double segment_length\
+  \ = std::hypot(dx, dy);\n    \n    if (segment_length < 1e-6) {\n      continue;\
+  \ // Skip zero-length segments\n    }\n    \n    // Adjust segment start by overhang\
+  \ distance\n    const double overhang_ratio = object_front_overhang / segment_length;\n\
+  \    segment_start = Point2d(\n      segment_start.x() - dx * overhang_ratio,\n\
+  \      segment_start.y() - dy * overhang_ratio);\n    \n    // Create boost geometry\
+  \ segment\n    boost::geometry::model::linestring<Point2d> path_segment = {segment_start,\
+  \ segment_end};\n    \n    // Check for intersection\n    std::vector<Point2d> intersection_points;\n\
+  \    boost::geometry::intersection(bg_stop_line, path_segment, intersection_points);\n\
+  \    \n    if (!intersection_points.empty()) {\n      // Found intersection - truncate\
+  \ path up to this point\n      predicted_path.path.resize(i);\n      \n      //\
+  \ Optionally adjust the last point to the exact intersection\n      if (!intersection_points.empty())\
+  \ {\n        auto & last_point = predicted_path.path.back().position;\n        last_point.x\
+  \ = intersection_points[0].x();\n        last_point.y = intersection_points[0].y();\n\
+  \      }\n      return;\n    }\n  }\n}"
+ground_truth.cpp: |-
+  void cut_predicted_path_beyond_line(
+    autoware_perception_msgs::msg::PredictedPath & predicted_path,
+    const universe_utils::LineString2d & stop_line, const double object_front_overhang)
+  {
+    if (predicted_path.path.empty() || stop_line.size() < 2) return;
+
+    auto stop_line_idx = 0UL;
+    bool found = false;
+    lanelet::BasicSegment2d path_segment;
+    path_segment.first.x() = predicted_path.path.front().position.x;
+    path_segment.first.y() = predicted_path.path.front().position.y;
+    for (stop_line_idx = 1; stop_line_idx < predicted_path.path.size(); ++stop_line_idx) {
+      path_segment.second.x() = predicted_path.path[stop_line_idx].position.x;
+      path_segment.second.y() = predicted_path.path[stop_line_idx].position.y;
+      if (boost::geometry::intersects(stop_line, path_segment)) {
+        found = true;
+        break;
+      }
+      path_segment.first = path_segment.second;
+    }
+    if (found) {
+      auto cut_idx = stop_line_idx;
+      double arc_length = 0;
+      while (cut_idx > 0 && arc_length < object_front_overhang) {
+        arc_length += universe_utils::calcDistance2d(
+          predicted_path.path[cut_idx], predicted_path.path[cut_idx - 1]);
+        --cut_idx;
+      }
+      predicted_path.path.resize(cut_idx);
+    }
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Condition Issue - Conditional Check Missing Issue
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming

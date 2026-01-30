@@ -1,0 +1,52 @@
+compilation.log: |
+  Starting >>> autoware_probabilistic_occupancy_grid_map
+  [1.592s] WARNING:colcon.colcon_cmake.task.cmake.build:Could not run installation step for package 'autoware_probabilistic_occupancy_grid_map' because it has no 'install' target
+  Finished <<< autoware_probabilistic_occupancy_grid_map [0.23s]
+
+  Summary: 1 package finished [1.56s]
+generate_code.cpp: |
+  double logOddsFusion(const std::vector<double> & probabilities) {
+      const double EPSILON_PROB = 1e-10;
+      
+      // Clamp probabilities to avoid numerical instability
+      std::vector<double> clampedProbs;
+      for (double prob : probabilities) {
+          prob = std::max(EPSILON_PROB, std::min(prob, 1.0 - EPSILON_PROB));
+          clampedProbs.push_back(prob);
+      }
+      
+      // Convert probabilities to log-odds
+      std::vector<double> logOdds;
+      for (double prob : clampedProbs) {
+          double logOdd = std::log(prob / (1.0 - prob));
+          logOdds.push_back(logOdd);
+      }
+      
+      // Sum log-odds
+      double sumLogOdds = 0.0;
+      for (double logOdd : logOdds) {
+          sumLogOdds += logOdd;
+      }
+      
+      // Convert back to probability
+      double fusedProb = 1.0 - 1.0 / (1.0 + std::exp(sumLogOdds));
+      
+      return fusedProb;
+  }
+ground_truth.cpp: |-
+  double logOddsFusion(const std::vector<double> & probabilities)
+  {
+    double log_odds = 0.0;
+    for (const auto & probability : probabilities) {
+      const double p = std::max(EPSILON_PROB, std::min(1.0 - EPSILON_PROB, probability));
+      log_odds += std::log(p / (1.0 - p));
+    }
+    return 1.0 / (1.0 + std::exp(-log_odds));
+  }
+architecture-codes: []
+functionality-codes:
+  - Incomplete Code - Missing optimization
+  - Operation/Calculation Error - Suboptimal formula representation
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of best practices

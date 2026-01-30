@@ -1,0 +1,27 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_smac_planner
+ros_package: nav2_smac_planner
+file_path: src/node_hybrid.cpp
+method_name: NodeHybrid::getTraversalCost
+requirement: |
+  /**
+  * Calculates the traversal cost to a child node for hybrid-A* planning.
+  * 
+  * The cost incorporates distance, collision risk, and motion preferences including
+  * penalties for non-straight motions, direction changes, and reverse movements.
+  * 
+  * @param child The child node for which to calculate the traversal cost.
+  * @return float The calculated traversal cost to reach the child node.
+  * @throws std::runtime_error If the child node has an invalid (NaN) collision cost.
+  */
+category: utilities
+type: []
+signature: |
+  float NodeHybrid::getTraversalCost(const NodePtr & child)
+additional_information: 
+  function_related_function: |
+      inline unsigned int & getMotionPrimitiveIndex()
+test: test_nodehybrid
+test_cases: 
+- test_node_hybrid

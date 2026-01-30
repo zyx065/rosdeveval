@@ -1,0 +1,58 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_obstacle_cruise_planner
+ros_package: autoware_localization_evaluator
+file_path: src/node.cpp
+method_name: ObstacleCruisePlannerNode::ObstacleCruisePlannerNode
+requirement: |
+  /**
+  * @brief Constructs the ObstacleCruisePlannerNode for autonomous vehicle obstacle avoidance planning.
+  * 
+  * @param node_options Node configuration options for ROS 2 node initialization.
+  */
+category: ros_architecture
+type: has_parameter,has_topic,has_domain_library,has_logger
+signature: |
+  ObstacleCruisePlannerNode::ObstacleCruisePlannerNode(const rclcpp::NodeOptions & node_options)
+  : Node("obstacle_cruise_planner", node_options),
+    vehicle_info_(autoware::vehicle_info_utils::VehicleInfoUtils(*this).getVehicleInfo()),
+    debug_data_ptr_(std::make_shared<DebugData>())
+additional_information: 
+  function_related_variable: |
+    rclcpp::Subscription<Trajectory>::SharedPtr traj_sub_;
+    autoware::universe_utils::InterProcessPollingSubscriber<Odometry> ego_odom_sub_{this, "~/input/odometry"};
+    autoware::universe_utils::InterProcessPollingSubscriber<PredictedObjects> objects_sub_{this, "~/input/objects"};
+    autoware::universe_utils::InterProcessPollingSubscriber<PointCloud2> pointcloud_sub_{this, "~/input/pointcloud"};
+    autoware::universe_utils::InterProcessPollingSubscriber<AccelWithCovarianceStamped> acc_sub_{this, "~/input/acceleration"};
+    rclcpp::Publisher<Trajectory>::SharedPtr trajectory_pub_;
+    rclcpp::Publisher<VelocityLimit>::SharedPtr vel_limit_pub_;
+    rclcpp::Publisher<VelocityLimitClearCommand>::SharedPtr clear_vel_limit_pub_;
+    rclcpp::Publisher<MarkerArray>::SharedPtr debug_marker_pub_;
+    rclcpp::Publisher<MarkerArray>::SharedPtr debug_cruise_wall_marker_pub_;
+    rclcpp::Publisher<MarkerArray>::SharedPtr debug_stop_wall_marker_pub_;
+    rclcpp::Publisher<MarkerArray>::SharedPtr debug_slow_down_wall_marker_pub_;
+    rclcpp::Publisher<Float32MultiArrayStamped>::SharedPtr debug_stop_planning_info_pub_;
+    rclcpp::Publisher<Float32MultiArrayStamped>::SharedPtr debug_cruise_planning_info_pub_;
+    rclcpp::Publisher<Float32MultiArrayStamped>::SharedPtr debug_slow_down_planning_info_pub_;
+    rclcpp::Publisher<Float64Stamped>::SharedPtr debug_calculation_time_pub_;
+    std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+    std::shared_ptr<tf2_ros::TransformListener> tf_listener_{nullptr};
+    EgoNearestParam ego_nearest_param_;
+    bool enable_debug_info_;
+    bool enable_calculation_time_info_;
+    bool use_pointcloud_for_stop_;
+    bool use_pointcloud_for_slow_down_;
+    double min_behavior_stop_margin_;
+    bool enable_approaching_on_curve_;
+    double additional_safe_distance_margin_on_curve_;
+    double min_safe_distance_margin_on_curve_;
+    bool suppress_sudden_obstacle_stop_;
+    OnSetParametersCallbackHandle::SharedPtr set_param_res_;
+    std::unique_ptr<autoware::universe_utils::LoggerLevelConfigure> logger_configure_;
+    std::unique_ptr<autoware::universe_utils::PublishedTimePublisher> published_time_publisher_;
+  function_related_function: |
+    rcl_interfaces::msg::SetParametersResult onParam(const std::vector<rclcpp::Parameter> & parameters);
+    void onTrajectory(const Trajectory::ConstSharedPtr msg);
+    void onSmoothedTrajectory(const Trajectory::ConstSharedPtr msg);
+test: test_autoware_obstacle_cruise_planner
+test_cases: []

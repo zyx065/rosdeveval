@@ -1,0 +1,47 @@
+compilation.log: |
+  Starting >>> autoware_velocity_smoother
+  --- stderr: autoware_velocity_smoother
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp: In member function ‘void autoware::velocity_smoother::VelocitySmootherNode::publishClosestVelocity(const TrajectoryPoints&, const Pose&, rclcpp::Publisher<autoware_internal_debug_msgs::msg::Float32Stamped_<std::allocator<void> > >::SharedPtr) const’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1010:17: error: ‘using element_type = struct autoware_internal_debug_msgs::msg::Float32Stamped_<std::allocator<void> >’ {aka ‘struct autoware_internal_debug_msgs::msg::Float32Stamped_<std::allocator<void> >’} has no member named ‘header’
+   1010 |   velocity_msg->header.stamp = this->now(); // Set the timestamp to the current time
+        |                 ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1011:38: error: ‘using TrajectoryPoint = struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’} has no member named ‘velocity’
+   1011 |   velocity_msg->data = closest_point.velocity; // Assign the velocity of the closest trajectory point
+        |                                      ^~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_velocity_smoother_node.dir/build.make:76: CMakeFiles/autoware_velocity_smoother_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:208: CMakeFiles/autoware_velocity_smoother_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_velocity_smoother [10.6s, exited with code 2]
+
+  Summary: 0 packages finished [11.9s]
+    1 package failed: autoware_velocity_smoother
+    1 package had stderr output: autoware_velocity_smoother
+generate_code.cpp: |-
+  void VelocitySmootherNode::publishClosestVelocity(
+    const TrajectoryPoints & trajectory, const Pose & current_pose,
+    const rclcpp::Publisher<Float32Stamped>::SharedPtr pub) const
+  {
+    // Calculate the projected trajectory point closest to the current pose
+    TrajectoryPoint closest_point = calcProjectedTrajectoryPoint(trajectory, current_pose);
+
+    // Create a Float32Stamped message to publish the velocity
+    auto velocity_msg = std::make_shared<Float32Stamped>();
+    velocity_msg->header.stamp = this->now(); // Set the timestamp to the current time
+    velocity_msg->data = closest_point.velocity; // Assign the velocity of the closest trajectory point
+
+    // Publish the velocity message
+    pub->publish(*velocity_msg);
+  }
+ground_truth.cpp: |-
+  void VelocitySmootherNode::publishClosestVelocity(
+    const TrajectoryPoints & trajectory, const Pose & current_pose,
+    const rclcpp::Publisher<Float32Stamped>::SharedPtr pub) const
+  {
+    const auto closest_point = calcProjectedTrajectoryPoint(trajectory, current_pose);
+
+    Float32Stamped vel_data{};
+    vel_data.stamp = this->now();
+    vel_data.data = std::max(closest_point.longitudinal_velocity_mps, static_cast<float>(0.0));
+    pub->publish(vel_data);
+  }

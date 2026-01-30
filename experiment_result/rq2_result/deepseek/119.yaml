@@ -1,0 +1,65 @@
+compilation.log: |
+  Starting >>> autoware_dummy_perception_publisher
+  --- stderr: autoware_dummy_perception_publisher
+  /workspace/repos/autoware/src/universe/autoware.universe/simulator/autoware_dummy_perception_publisher/src/signed_distance_function.cpp: In member function ‘double autoware::dummy_perception_publisher::AbstractSignedDistanceFunction::getSphereTracingDist(double, double, double, double, double) const’:
+  /workspace/repos/autoware/src/universe/autoware.universe/simulator/autoware_dummy_perception_publisher/src/signed_distance_function.cpp:39:23: error: ‘getDistance’ was not declared in this scope
+     39 |         double dist = getDistance(x, y);
+        |                       ^~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/signed_distance_function.dir/build.make:76: CMakeFiles/signed_distance_function.dir/src/signed_distance_function.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:161: CMakeFiles/signed_distance_function.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_dummy_perception_publisher [0.76s, exited with code 2]
+
+  Summary: 0 packages finished [2.14s]
+    1 package failed: autoware_dummy_perception_publisher
+    1 package had stderr output: autoware_dummy_perception_publisher
+generate_code.cpp: "double AbstractSignedDistanceFunction::getSphereTracingDist(\n\
+  \    double x_start, double y_start, double angle, double max_dist, double eps)\
+  \ const\n{\n    double x = x_start;\n    double y = y_start;\n    double total_dist\
+  \ = 0.0;\n    \n    // Direction vector components\n    double dx = cos(angle);\n\
+  \    double dy = sin(angle);\n    \n    while (total_dist < max_dist)\n    {\n \
+  \       double dist = getDistance(x, y);\n        \n        // Check if we've hit\
+  \ the surface (within epsilon)\n        if (dist < eps)\n        {\n           \
+  \ return total_dist;\n        }\n        \n        // Move along the ray by the\
+  \ distance to the surface\n        x += dist * dx;\n        y += dist * dy;\n  \
+  \      total_dist += dist;\n    }\n    \n    // No intersection found within max_dist\n\
+  \    return std::numeric_limits<double>::infinity();\n}"
+ground_truth.cpp: |-
+  double AbstractSignedDistanceFunction::getSphereTracingDist(
+    double x_start, double y_start, double angle, double max_dist, double eps) const
+  {
+    // https://computergraphics.stackexchange.com/questions/161/what-is-ray-marching-is-sphere-tracing-the-same-thing/163
+    tf2::Vector3 direction(cos(angle), sin(angle), 0.0);
+
+    const size_t max_iter = 40;
+
+    const auto pos_start = tf2::Vector3(x_start, y_start, 0.0);
+
+    auto ray_tip = pos_start;
+    for (size_t itr = 0; itr < max_iter; ++itr) {
+      const auto dist = this->operator()(ray_tip.getX(), ray_tip.getY());
+      if (dist > max_dist) {
+        return std::numeric_limits<double>::infinity();
+      }
+      ray_tip = ray_tip + dist * direction;
+      bool almost_on_surface = std::abs(dist) < eps;
+      if (almost_on_surface) {
+        return tf2::tf2Distance(ray_tip, pos_start);
+      }
+    }
+    // ray did not hit the surface.
+    return std::numeric_limits<double>::infinity();
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Condition Issue - Conditional Check Missing Issue
+  - Incomplete Code Issue - Missing One Step Issue
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

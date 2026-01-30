@@ -1,0 +1,64 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/evaluator/autoware_planning_evaluator
+ros_package: autoware_planning_evaluator
+file_path: src/planning_evaluator_node.cpp
+method_name: PlanningEvaluatorNode::onModifiedGoal
+requirement: |
+  /**
+  * Calculates and records planning metrics based on the modified goal pose and current ego state.
+  * 
+  * @param[in] modified_goal_msg The modified goal pose message containing position and UUID.
+  * @param[in] ego_state_ptr The current odometry state of the ego vehicle.
+  * 
+  * @note This method silently returns if either input pointer is null.
+  */
+category: ros_architecture
+type: has_logger,has_message,has_timer
+signature: |
+  void PlanningEvaluatorNode::onModifiedGoal(
+    const PoseWithUuidStamped::ConstSharedPtr modified_goal_msg,
+    const Odometry::ConstSharedPtr ego_state_ptr)
+additional_information:
+  function_related_variable: |
+    std::vector<Metric> metrics_;
+    MetricsCalculator metrics_calculator_;
+    bool output_metrics_;
+  function_related_class: |
+    enum class Metric {
+      lateral_deviation,
+      yaw_deviation,
+      goal_longitudinal_deviation,
+      goal_lateral_deviation,
+      goal_yaw_deviation,
+      SIZE,
+    };
+    class MetricsCalculator
+    {
+    public:
+      Parameters parameters;
+
+      MetricsCalculator() = default;
+      std::optional<Accumulator<double>> calculate(const Metric metric, const Trajectory & traj) const;
+      std::optional<Accumulator<double>> calculate(const Metric metric, const Pose & base_pose, const Pose & target_pose) const;
+      void setReferenceTrajectory(const Trajectory & traj);
+      void setPreviousTrajectory(const Trajectory & traj);
+      void setPredictedObjects(const PredictedObjects & objects);
+      void setEgoPose(const geometry_msgs::msg::Pose & pose);
+      Pose getEgoPose();
+
+    private:
+      Trajectory getLookaheadTrajectory(const Trajectory & traj, const double max_dist_m, const double max_time_s) const;
+
+      Trajectory reference_trajectory_;
+      Trajectory reference_trajectory_lookahead_;
+      Trajectory previous_trajectory_;
+      Trajectory previous_trajectory_lookahead_;
+      PredictedObjects dynamic_objects_;
+      geometry_msgs::msg::Pose ego_pose_;
+      PoseWithUuidStamped modified_goal_;
+    };
+  function_related_function: |
+    void AddMetricMsg(const Metric & metric, const Accumulator<double> & metric_stat);
+test: test_planning_evaluator
+test_cases: []

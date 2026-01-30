@@ -1,0 +1,182 @@
+compilation.log: |
+  Starting >>> autoware_radar_crossing_objects_noise_filter
+  --- stderr: autoware_radar_crossing_objects_noise_filter
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:1321,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:22,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:15:
+  /opt/ros/humble/include/rclcpp/rclcpp/node_impl.hpp: In instantiation of ‘auto rclcpp::Node::declare_parameter(const string&, const ParameterT&, const ParameterDescriptor&, bool) [with ParameterT = autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam; std::string = std::__cxx11::basic_string<char>; rcl_interfaces::msg::ParameterDescriptor = rcl_interfaces::msg::ParameterDescriptor_<std::allocator<void> >]’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:63:34:   required from here
+  /opt/ros/humble/include/rclcpp/rclcpp/node_impl.hpp:204:15: error: no matching function for call to ‘rclcpp::ParameterValue::ParameterValue(const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam&)’
+    204 |       rclcpp::ParameterValue(default_value),
+        |               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/parameter.hpp:26,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_parameters_interface.hpp:28,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:54,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:22,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:15:
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:121:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(const std::vector<std::__cxx11::basic_string<char> >&)’
+    121 |   explicit ParameterValue(const std::vector<std::string> & string_array_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:121:60: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘const std::vector<std::__cxx11::basic_string<char> >&’
+    121 |   explicit ParameterValue(const std::vector<std::string> & string_array_value);
+        |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:118:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(const std::vector<double, std::allocator<double> >&)’
+    118 |   explicit ParameterValue(const std::vector<double> & double_array_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:118:55: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘const std::vector<double, std::allocator<double> >&’
+    118 |   explicit ParameterValue(const std::vector<double> & double_array_value);
+        |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:115:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(const std::vector<float>&)’
+    115 |   explicit ParameterValue(const std::vector<float> & double_array_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:115:54: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘const std::vector<float>&’
+    115 |   explicit ParameterValue(const std::vector<float> & double_array_value);
+        |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:112:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(const std::vector<long int, std::allocator<long int> >&)’
+    112 |   explicit ParameterValue(const std::vector<int64_t> & int_array_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:112:56: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘const std::vector<long int, std::allocator<long int> >&’
+    112 |   explicit ParameterValue(const std::vector<int64_t> & int_array_value);
+        |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:109:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(const std::vector<int>&)’
+    109 |   explicit ParameterValue(const std::vector<int> & int_array_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:109:52: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘const std::vector<int>&’
+    109 |   explicit ParameterValue(const std::vector<int> & int_array_value);
+        |                           ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:106:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(const std::vector<bool, std::allocator<bool> >&)’
+    106 |   explicit ParameterValue(const std::vector<bool> & bool_array_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:106:53: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘const std::vector<bool, std::allocator<bool> >&’
+    106 |   explicit ParameterValue(const std::vector<bool> & bool_array_value);
+        |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:103:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(const std::vector<unsigned char, std::allocator<unsigned char> >&)’
+    103 |   explicit ParameterValue(const std::vector<uint8_t> & byte_array_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:103:56: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘const std::vector<unsigned char, std::allocator<unsigned char> >&’
+    103 |   explicit ParameterValue(const std::vector<uint8_t> & byte_array_value);
+        |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:100:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(const char*)’
+    100 |   explicit ParameterValue(const char * string_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:100:40: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘const char*’
+    100 |   explicit ParameterValue(const char * string_value);
+        |                           ~~~~~~~~~~~~~^~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:97:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(const string&)’
+     97 |   explicit ParameterValue(const std::string & string_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:97:47: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘const string&’ {aka ‘const std::__cxx11::basic_string<char>&’}
+     97 |   explicit ParameterValue(const std::string & string_value);
+        |                           ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:94:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(double)’
+     94 |   explicit ParameterValue(const double double_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:94:40: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘double’
+     94 |   explicit ParameterValue(const double double_value);
+        |                           ~~~~~~~~~~~~~^~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:91:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(float)’
+     91 |   explicit ParameterValue(const float double_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:91:39: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘float’
+     91 |   explicit ParameterValue(const float double_value);
+        |                           ~~~~~~~~~~~~^~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:88:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(int64_t)’
+     88 |   explicit ParameterValue(const int64_t int_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:88:41: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘int64_t’ {aka ‘long int’}
+     88 |   explicit ParameterValue(const int64_t int_value);
+        |                           ~~~~~~~~~~~~~~^~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:85:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(int)’
+     85 |   explicit ParameterValue(const int int_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:85:37: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘int’
+     85 |   explicit ParameterValue(const int int_value);
+        |                           ~~~~~~~~~~^~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:82:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(bool)’
+     82 |   explicit ParameterValue(const bool bool_value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:82:38: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘bool’
+     82 |   explicit ParameterValue(const bool bool_value);
+        |                           ~~~~~~~~~~~^~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:79:12: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(const ParameterValue&)’
+     79 |   explicit ParameterValue(const rcl_interfaces::msg::ParameterValue & value);
+        |            ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:79:71: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘const ParameterValue&’ {aka ‘const rcl_interfaces::msg::ParameterValue_<std::allocator<void> >&’}
+     79 |   explicit ParameterValue(const rcl_interfaces::msg::ParameterValue & value);
+        |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:76:3: note: candidate: ‘rclcpp::ParameterValue::ParameterValue()’
+     76 |   ParameterValue();
+        |   ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:76:3: note:   candidate expects 0 arguments, 1 provided
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:71:7: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(const rclcpp::ParameterValue&)’
+     71 | class ParameterValue
+        |       ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:71:7: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘const rclcpp::ParameterValue&’
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:71:7: note: candidate: ‘rclcpp::ParameterValue::ParameterValue(rclcpp::ParameterValue&&)’
+  /opt/ros/humble/include/rclcpp/rclcpp/parameter_value.hpp:71:7: note:   no known conversion for argument 1 from ‘const autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::NodeParam’ to ‘rclcpp::ParameterValue&&’
+  gmake[2]: *** [CMakeFiles/autoware_radar_crossing_objects_noise_filter_node_component.dir/build.make:76: CMakeFiles/autoware_radar_crossing_objects_noise_filter_node_component.dir/src/radar_crossing_objects_noise_filter_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_radar_crossing_objects_noise_filter_node_component.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_radar_crossing_objects_noise_filter [5.54s, exited with code 2]
+
+  Summary: 0 packages finished [7.05s]
+    1 package failed: autoware_radar_crossing_objects_noise_filter
+    1 package had stderr output: autoware_radar_crossing_objects_noise_filter
+generate_code.cpp: |-
+  RadarCrossingObjectsNoiseFilterNode::RadarCrossingObjectsNoiseFilterNode(
+    const rclcpp::NodeOptions & node_options)
+  : Node("radar_crossing_objects_noise_filter", node_options)
+  {
+    // Declare and initialize parameters
+    node_param_ = declare_parameter("node_param", NodeParam{});
+
+    // Set up parameter callback
+    set_param_res_ = this->add_on_set_parameters_callback(
+      [this](const std::vector<rclcpp::Parameter> & params) {
+        return this->onSetParam(params);
+      });
+
+    // Subscription to detected objects topic
+    sub_objects_ = this->create_subscription<DetectedObjects>(
+      "input/detected_objects", rclcpp::QoS{10},
+      [this](const DetectedObjects::ConstSharedPtr objects_data) {
+        this->onObjects(objects_data);
+      });
+
+    // Publisher for filtered objects
+    pub_filtered_objects_ = this->create_publisher<DetectedObjects>(
+      "output/filtered_objects", rclcpp::QoS{10});
+
+    // Publisher for noise objects
+    pub_noise_objects_ = this->create_publisher<DetectedObjects>(
+      "output/noise_objects", rclcpp::QoS{10});
+  }
+ground_truth.cpp: |-
+  RadarCrossingObjectsNoiseFilterNode::RadarCrossingObjectsNoiseFilterNode(
+    const rclcpp::NodeOptions & node_options)
+  : Node("radar_crossing_objects_noise_filter", node_options)
+  {
+    // Parameter Server
+    set_param_res_ = this->add_on_set_parameters_callback(
+      std::bind(&RadarCrossingObjectsNoiseFilterNode::onSetParam, this, std::placeholders::_1));
+
+    // Node Parameter
+    node_param_.angle_threshold = declare_parameter<double>("angle_threshold");
+    node_param_.velocity_threshold = declare_parameter<double>("velocity_threshold");
+
+    // Subscriber
+    sub_objects_ = create_subscription<DetectedObjects>(
+      "~/input/objects", rclcpp::QoS{1},
+      std::bind(&RadarCrossingObjectsNoiseFilterNode::onObjects, this, std::placeholders::_1));
+
+    // Publisher
+    pub_filtered_objects_ = create_publisher<DetectedObjects>("~/output/filtered_objects", 1);
+    pub_noise_objects_ = create_publisher<DetectedObjects>("~/output/noise_objects", 1);
+  }

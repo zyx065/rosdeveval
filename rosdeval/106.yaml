@@ -1,0 +1,25 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/localization/autoware_ekf_localizer
+ros_package: autoware_ekf_localizer
+file_path: src/state_transition.cpp
+method_name: create_state_transition_matrix
+requirement: |
+  /**
+  * Creates the state transition matrix for a vehicle motion model.
+  * 
+  * This method computes the linearized state transition matrix used for predicting the next state
+  * in a Kalman filter, based on the current state and time increment.
+  * 
+  * @param X_curr The current state vector containing [x, y, yaw, yaw_bias, vx, wz] components.
+  * @param dt Time step for the state transition (in seconds).
+  * @return 6x6 state transition matrix that propagates the state from time t to t+dt.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  Matrix6d create_state_transition_matrix(const Vector6d & X_curr, const double dt)
+additional_information: []
+test: test_state_transition
+test_cases: 
+- NumericalApproximation

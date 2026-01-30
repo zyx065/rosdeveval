@@ -1,0 +1,81 @@
+compilation.log: |
+  Starting >>> autoware_detected_object_validation
+  --- stderr: autoware_detected_object_validation
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/position_filter/position_filter.cpp: In member function ‘void autoware::detected_object_validation::position_filter::ObjectPositionFilterNode::objectCallback(autoware_perception_msgs::msg::DetectedObjects_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/position_filter/position_filter.cpp:63:25: error: ‘struct autoware::detected_object_validation::utils::FilterTargetLabel’ has no member named ‘isTargetLabel’; did you mean ‘isTarget’?
+     63 |     if (!filter_target_.isTargetLabel(object.classification)) {
+        |                         ^~~~~~~~~~~~~
+        |                         isTarget
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/position_filter/position_filter.cpp:81:32: error: ‘class autoware::universe_utils::PublishedTimePublisher’ has no member named ‘publish’; did you mean ‘std::map<rmw_gid_s, std::shared_ptr<rclcpp::Publisher<autoware_internal_msgs::msg::PublishedTime_<std::allocator<void> > > >, autoware::universe_utils::PublishedTimePublisher::GidCompare> autoware::universe_utils::PublishedTimePublisher::publishers_’? (not accessible from this context)
+     81 |     published_time_publisher_->publish(filtered_objects.header.stamp);
+        |                                ^~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/position_filter/position_filter.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/position_filter/position_filter.cpp:15:
+  /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/ros/published_time_publisher.hpp:110:80: note: declared private here
+    110 |   std::map<rmw_gid_t, rclcpp::Publisher<PublishedTime>::SharedPtr, GidCompare> publishers_;
+        |                                                                                ^~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/object_position_filter.dir/build.make:76: CMakeFiles/object_position_filter.dir/src/position_filter/position_filter.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:254: CMakeFiles/object_position_filter.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_detected_object_validation [6.45s, exited with code 2]
+
+  Summary: 0 packages finished [7.86s]
+    1 package failed: autoware_detected_object_validation
+    1 package had stderr output: autoware_detected_object_validation
+generate_code.cpp: |-
+  void ObjectPositionFilterNode::objectCallback(
+    const autoware_perception_msgs::msg::DetectedObjects::ConstSharedPtr input_msg)
+  {
+    // Create a new message for filtered objects
+    autoware_perception_msgs::msg::DetectedObjects filtered_objects;
+    filtered_objects.header = input_msg->header;
+
+    // Iterate through the detected objects in the input message
+    for (const auto & object : input_msg->objects) {
+      // Check if the object matches the filter target label
+      if (!filter_target_.isTargetLabel(object.classification)) {
+        continue; // Skip objects that do not match the target label
+      }
+
+      // Check if the object is within the defined bounds
+      if (!isObjectInBounds(object)) {
+        continue; // Skip objects that are out of bounds
+      }
+
+      // Add the object to the filtered list
+      filtered_objects.objects.push_back(object);
+    }
+
+    // Publish the filtered objects
+    object_pub_->publish(filtered_objects);
+
+    // Publish the timestamp of the filtered message
+    if (published_time_publisher_) {
+      published_time_publisher_->publish(filtered_objects.header.stamp);
+    }
+  }
+ground_truth.cpp: |-
+  void ObjectPositionFilterNode::objectCallback(
+    const autoware_perception_msgs::msg::DetectedObjects::ConstSharedPtr input_msg)
+  {
+    // Guard
+    if (object_pub_->get_subscription_count() < 1) return;
+
+    autoware_perception_msgs::msg::DetectedObjects output_object_msg;
+    output_object_msg.header = input_msg->header;
+
+    for (const auto & object : input_msg->objects) {
+      const auto & label = object.classification.front().label;
+      if (filter_target_.isTarget(label)) {
+        if (isObjectInBounds(object)) {
+          output_object_msg.objects.emplace_back(object);
+        }
+      } else {
+        output_object_msg.objects.emplace_back(object);
+      }
+    }
+
+    object_pub_->publish(output_object_msg);
+    published_time_publisher_->publish_if_subscribed(object_pub_, output_object_msg.header.stamp);
+  }

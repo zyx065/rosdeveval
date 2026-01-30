@@ -1,0 +1,27 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/evaluator/autoware_planning_evaluator
+ros_package: autoware_planning_evaluator
+file_path: src/planning_evaluator_node.cpp
+method_name: PlanningEvaluatorNode::onTrajectory
+requirement: |
+  /**
+  * @brief Callback for processing a new trajectory and computing evaluation metrics.
+  * 
+  * @param[in] traj_msg The incoming trajectory message to evaluate.
+  * @param[in] ego_state_ptr The current ego vehicle state used for evaluation.
+  */
+category: ros_architecture
+type: has_logger,has_timer
+signature: |
+  void PlanningEvaluatorNode::onTrajectory(
+    const Trajectory::ConstSharedPtr traj_msg, const Odometry::ConstSharedPtr ego_state_ptr)
+additional_information: 
+  function_related_variable: |
+    std::vector<Metric> metrics_;
+    MetricsCalculator metrics_calculator_;
+    bool output_metrics_;
+  function_related_function: |
+    void AddMetricMsg(const Metric & metric, const Accumulator<double> & metric_stat);
+test: test_planning_evaluator
+test_cases: []

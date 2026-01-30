@@ -1,0 +1,186 @@
+compilation.log: |
+  Starting >>> moveit_servo
+  --- stderr: moveit_servo
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp: In member function ‘geometry_msgs::msg::TwistStamped_<std::allocator<void> >::ConstSharedPtr moveit_servo::PoseTracking::calculateTwistCommand()’:
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp:313:73: error: no matching function for call to ‘control_toolbox::Pid::computeCommand(Eigen::DenseCoeffsBase<Eigen::Matrix<double, 3, 1>, 1>::Scalar&, std::chrono::nanoseconds)’
+    313 |   twist_msg->twist.linear.x = cartesian_position_pids_[0].computeCommand(position_error.x(), loop_rate_.period());
+        |                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/pose_tracking.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp:35:
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:262:24: note: candidate: ‘double control_toolbox::Pid::computeCommand(double, uint64_t)’
+    262 |   [[nodiscard]] double computeCommand(double error, uint64_t dt);
+        |                        ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:262:62: note:   no known conversion for argument 2 from ‘std::chrono::nanoseconds’ {aka ‘std::chrono::duration<long int, std::ratio<1, 1000000000> >’} to ‘uint64_t’ {aka ‘long unsigned int’}
+    262 |   [[nodiscard]] double computeCommand(double error, uint64_t dt);
+        |                                                     ~~~~~~~~~^~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:275:24: note: candidate: ‘double control_toolbox::Pid::computeCommand(double, double, uint64_t)’
+    275 |   [[nodiscard]] double computeCommand(double error, double error_dot, uint64_t dt);
+        |                        ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:275:24: note:   candidate expects 3 arguments, 2 provided
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp:314:73: error: no matching function for call to ‘control_toolbox::Pid::computeCommand(Eigen::DenseCoeffsBase<Eigen::Matrix<double, 3, 1>, 1>::Scalar&, std::chrono::nanoseconds)’
+    314 |   twist_msg->twist.linear.y = cartesian_position_pids_[1].computeCommand(position_error.y(), loop_rate_.period());
+        |                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/pose_tracking.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp:35:
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:262:24: note: candidate: ‘double control_toolbox::Pid::computeCommand(double, uint64_t)’
+    262 |   [[nodiscard]] double computeCommand(double error, uint64_t dt);
+        |                        ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:262:62: note:   no known conversion for argument 2 from ‘std::chrono::nanoseconds’ {aka ‘std::chrono::duration<long int, std::ratio<1, 1000000000> >’} to ‘uint64_t’ {aka ‘long unsigned int’}
+    262 |   [[nodiscard]] double computeCommand(double error, uint64_t dt);
+        |                                                     ~~~~~~~~~^~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:275:24: note: candidate: ‘double control_toolbox::Pid::computeCommand(double, double, uint64_t)’
+    275 |   [[nodiscard]] double computeCommand(double error, double error_dot, uint64_t dt);
+        |                        ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:275:24: note:   candidate expects 3 arguments, 2 provided
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp:315:73: error: no matching function for call to ‘control_toolbox::Pid::computeCommand(Eigen::DenseCoeffsBase<Eigen::Matrix<double, 3, 1>, 1>::Scalar&, std::chrono::nanoseconds)’
+    315 |   twist_msg->twist.linear.z = cartesian_position_pids_[2].computeCommand(position_error.z(), loop_rate_.period());
+        |                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/pose_tracking.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp:35:
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:262:24: note: candidate: ‘double control_toolbox::Pid::computeCommand(double, uint64_t)’
+    262 |   [[nodiscard]] double computeCommand(double error, uint64_t dt);
+        |                        ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:262:62: note:   no known conversion for argument 2 from ‘std::chrono::nanoseconds’ {aka ‘std::chrono::duration<long int, std::ratio<1, 1000000000> >’} to ‘uint64_t’ {aka ‘long unsigned int’}
+    262 |   [[nodiscard]] double computeCommand(double error, uint64_t dt);
+        |                                                     ~~~~~~~~~^~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:275:24: note: candidate: ‘double control_toolbox::Pid::computeCommand(double, double, uint64_t)’
+    275 |   [[nodiscard]] double computeCommand(double error, double error_dot, uint64_t dt);
+        |                        ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:275:24: note:   candidate expects 3 arguments, 2 provided
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp:317:74: error: no matching function for call to ‘control_toolbox::Pid::computeCommand(Eigen::DenseCoeffsBase<Eigen::Matrix<double, 3, 1>, 1>::Scalar, std::chrono::nanoseconds)’
+    317 |   twist_msg->twist.angular.x = cartesian_position_pids_[3].computeCommand(orientation_error.axis().x() * orientation_error.angle(), loop_rate_.period());
+        |                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/pose_tracking.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp:35:
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:262:24: note: candidate: ‘double control_toolbox::Pid::computeCommand(double, uint64_t)’
+    262 |   [[nodiscard]] double computeCommand(double error, uint64_t dt);
+        |                        ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:262:62: note:   no known conversion for argument 2 from ‘std::chrono::nanoseconds’ {aka ‘std::chrono::duration<long int, std::ratio<1, 1000000000> >’} to ‘uint64_t’ {aka ‘long unsigned int’}
+    262 |   [[nodiscard]] double computeCommand(double error, uint64_t dt);
+        |                                                     ~~~~~~~~~^~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:275:24: note: candidate: ‘double control_toolbox::Pid::computeCommand(double, double, uint64_t)’
+    275 |   [[nodiscard]] double computeCommand(double error, double error_dot, uint64_t dt);
+        |                        ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:275:24: note:   candidate expects 3 arguments, 2 provided
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp:318:74: error: no matching function for call to ‘control_toolbox::Pid::computeCommand(Eigen::DenseCoeffsBase<Eigen::Matrix<double, 3, 1>, 1>::Scalar, std::chrono::nanoseconds)’
+    318 |   twist_msg->twist.angular.y = cartesian_position_pids_[4].computeCommand(orientation_error.axis().y() * orientation_error.angle(), loop_rate_.period());
+        |                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/pose_tracking.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp:35:
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:262:24: note: candidate: ‘double control_toolbox::Pid::computeCommand(double, uint64_t)’
+    262 |   [[nodiscard]] double computeCommand(double error, uint64_t dt);
+        |                        ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:262:62: note:   no known conversion for argument 2 from ‘std::chrono::nanoseconds’ {aka ‘std::chrono::duration<long int, std::ratio<1, 1000000000> >’} to ‘uint64_t’ {aka ‘long unsigned int’}
+    262 |   [[nodiscard]] double computeCommand(double error, uint64_t dt);
+        |                                                     ~~~~~~~~~^~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:275:24: note: candidate: ‘double control_toolbox::Pid::computeCommand(double, double, uint64_t)’
+    275 |   [[nodiscard]] double computeCommand(double error, double error_dot, uint64_t dt);
+        |                        ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:275:24: note:   candidate expects 3 arguments, 2 provided
+  /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp:319:74: error: no matching function for call to ‘control_toolbox::Pid::computeCommand(Eigen::DenseCoeffsBase<Eigen::Matrix<double, 3, 1>, 1>::Scalar, std::chrono::nanoseconds)’
+    319 |   twist_msg->twist.angular.z = cartesian_position_pids_[5].computeCommand(orientation_error.axis().z() * orientation_error.angle(), loop_rate_.period());
+        |                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/include/moveit_servo/pose_tracking.h:42,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_ros/moveit_servo/src/pose_tracking.cpp:35:
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:262:24: note: candidate: ‘double control_toolbox::Pid::computeCommand(double, uint64_t)’
+    262 |   [[nodiscard]] double computeCommand(double error, uint64_t dt);
+        |                        ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:262:62: note:   no known conversion for argument 2 from ‘std::chrono::nanoseconds’ {aka ‘std::chrono::duration<long int, std::ratio<1, 1000000000> >’} to ‘uint64_t’ {aka ‘long unsigned int’}
+    262 |   [[nodiscard]] double computeCommand(double error, uint64_t dt);
+        |                                                     ~~~~~~~~~^~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:275:24: note: candidate: ‘double control_toolbox::Pid::computeCommand(double, double, uint64_t)’
+    275 |   [[nodiscard]] double computeCommand(double error, double error_dot, uint64_t dt);
+        |                        ^~~~~~~~~~~~~~
+  /opt/ros/humble/include/control_toolbox/control_toolbox/pid.hpp:275:24: note:   candidate expects 3 arguments, 2 provided
+  gmake[2]: *** [CMakeFiles/pose_tracking.dir/build.make:76: CMakeFiles/pose_tracking.dir/src/pose_tracking.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:230: CMakeFiles/pose_tracking.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< moveit_servo [10.6s, exited with code 2]
+
+  Summary: 0 packages finished [11.3s]
+    1 package failed: moveit_servo
+    1 package had stderr output: moveit_servo
+generate_code.cpp: "geometry_msgs::msg::TwistStamped::ConstSharedPtr PoseTracking::calculateTwistCommand()\n\
+  {\n  // Create a new twist command message\n  auto twist_msg = moveit::util::make_shared_from_pool<geometry_msgs::msg::TwistStamped>();\n\
+  \n  // Set the header with current time and target pose frame\n  twist_msg->header.stamp\
+  \ = node_->now();\n  {\n    std::lock_guard<std::mutex> lock(target_pose_mtx_);\n\
+  \    twist_msg->header.frame_id = target_pose_.header.frame_id;\n  }\n\n  // Get\
+  \ the current target pose\n  geometry_msgs::msg::PoseStamped target_pose;\n  {\n\
+  \    std::lock_guard<std::mutex> lock(target_pose_mtx_);\n    target_pose = target_pose_;\n\
+  \  }\n\n  // Convert target pose to Eigen Isometry3d\n  Eigen::Isometry3d target_transform\
+  \ = Eigen::Isometry3d::Identity();\n  tf2::fromMsg(target_pose.pose, target_transform);\n\
+  \n  // Compute the error transform: command_frame_transform_^-1 * target_transform\n\
+  \  Eigen::Isometry3d error_transform = command_frame_transform_.inverse() * target_transform;\n\
+  \n  // Position error (linear components)\n  Eigen::Vector3d position_error = error_transform.translation();\n\
+  \n  // Orientation error (angular components) as axis-angle\n  Eigen::AngleAxisd\
+  \ orientation_error(error_transform.rotation());\n\n  // Compute PID outputs for\
+  \ each component\n  twist_msg->twist.linear.x = cartesian_position_pids_[0].computeCommand(position_error.x(),\
+  \ loop_rate_.period());\n  twist_msg->twist.linear.y = cartesian_position_pids_[1].computeCommand(position_error.y(),\
+  \ loop_rate_.period());\n  twist_msg->twist.linear.z = cartesian_position_pids_[2].computeCommand(position_error.z(),\
+  \ loop_rate_.period());\n  \n  twist_msg->twist.angular.x = cartesian_position_pids_[3].computeCommand(orientation_error.axis().x()\
+  \ * orientation_error.angle(), loop_rate_.period());\n  twist_msg->twist.angular.y\
+  \ = cartesian_position_pids_[4].computeCommand(orientation_error.axis().y() * orientation_error.angle(),\
+  \ loop_rate_.period());\n  twist_msg->twist.angular.z = cartesian_position_pids_[5].computeCommand(orientation_error.axis().z()\
+  \ * orientation_error.angle(), loop_rate_.period());\n\n  return twist_msg;\n}"
+ground_truth.cpp: |-
+  geometry_msgs::msg::TwistStamped::ConstSharedPtr PoseTracking::calculateTwistCommand()
+  {
+    // use the shared pool to create a message more efficiently
+    auto msg = moveit::util::make_shared_from_pool<geometry_msgs::msg::TwistStamped>();
+
+    // Get twist components from PID controllers
+    geometry_msgs::msg::Twist& twist = msg->twist;
+    Eigen::Quaterniond q_desired;
+
+    // Scope mutex locking only to operations which require access to target pose.
+    {
+      std::lock_guard<std::mutex> lock(target_pose_mtx_);
+      msg->header.frame_id = target_pose_.header.frame_id;
+
+      // Position
+      twist.linear.x = cartesian_position_pids_[0].computeCommand(
+          target_pose_.pose.position.x - command_frame_transform_.translation()(0), loop_rate_.period().count());
+      twist.linear.y = cartesian_position_pids_[1].computeCommand(
+          target_pose_.pose.position.y - command_frame_transform_.translation()(1), loop_rate_.period().count());
+      twist.linear.z = cartesian_position_pids_[2].computeCommand(
+          target_pose_.pose.position.z - command_frame_transform_.translation()(2), loop_rate_.period().count());
+
+      // Orientation algorithm:
+      // - Find the orientation error as a quaternion: q_error = q_desired * q_current ^ -1
+      // - Use the angle-axis PID controller to calculate an angular rate
+      // - Convert to angular velocity for the TwistStamped message
+      q_desired = Eigen::Quaterniond(target_pose_.pose.orientation.w, target_pose_.pose.orientation.x,
+                                     target_pose_.pose.orientation.y, target_pose_.pose.orientation.z);
+    }
+
+    Eigen::Quaterniond q_current(command_frame_transform_.rotation());
+    Eigen::Quaterniond q_error = q_desired * q_current.inverse();
+
+    // Convert axis-angle to angular velocity
+    Eigen::AngleAxisd axis_angle(q_error);
+    // Cache the angular error, for rotation tolerance checking
+    angular_error_ = axis_angle.angle();
+
+    double ang_vel_magnitude =
+        cartesian_orientation_pids_[0].computeCommand(*angular_error_, loop_rate_.period().count());
+    twist.angular.x = ang_vel_magnitude * axis_angle.axis()[0];
+    twist.angular.y = ang_vel_magnitude * axis_angle.axis()[1];
+    twist.angular.z = ang_vel_magnitude * axis_angle.axis()[2];
+
+    msg->header.stamp = node_->now();
+
+    return msg;
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+
+functionality-codes:
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

@@ -1,0 +1,23 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_mission_planner_universe
+ros_package: autoware_mission_planner_universe
+file_path: src/lanelet2_plugins/utility_functions.cpp
+method_name: is_in_parking_space
+requirement: |
+  /**
+  * Determines if a given point is inside any of the provided parking spaces.
+  * 
+  * @param parking_spaces The collection of parking space boundaries as 3D line strings.
+  * @param point The 3D point to check for containment within any parking space.
+  * @return True if the point is inside any parking space, false otherwise.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  bool is_in_parking_space(
+    const lanelet::ConstLineStrings3d & parking_spaces, const lanelet::ConstPoint3d & point)
+additional_information: []
+test: test_autoware_mission_planner_universe
+test_cases: 
+- is_in_parking_space

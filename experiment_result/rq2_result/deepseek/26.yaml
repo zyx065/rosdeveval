@@ -1,0 +1,63 @@
+compilation.log: |
+  Starting >>> autoware_control_validator
+  Finished <<< autoware_control_validator [22.1s]
+
+  Summary: 1 package finished [23.5s]
+generate_code.cpp: |-
+  void ControlValidator::on_predicted_trajectory(const Trajectory::ConstSharedPtr msg)
+  {
+      // Store the incoming predicted trajectory
+      current_predicted_trajectory_ = msg;
+
+      // Check if all required data is available
+      if (!is_data_ready()) {
+          return;
+      }
+
+      // Perform validation between predicted and reference trajectories
+      validate(*current_predicted_trajectory_, *current_reference_trajectory_, *current_kinematics_);
+
+      // Publish debug information if available
+      if (debug_pose_publisher_) {
+          publish_debug_info();
+      }
+
+      // Update diagnostic status
+      display_status();
+      diag_updater_.force_update();
+  }
+ground_truth.cpp: |-
+  void ControlValidator::on_predicted_trajectory(const Trajectory::ConstSharedPtr msg)
+  {
+    stop_watch.tic();
+
+    current_predicted_trajectory_ = msg;
+    current_reference_trajectory_ = sub_reference_traj_->takeData();
+    current_kinematics_ = sub_kinematics_->takeData();
+
+    if (!is_data_ready()) return;
+
+    debug_pose_publisher_->clear_markers();
+
+    validate(*current_predicted_trajectory_, *current_reference_trajectory_, *current_kinematics_);
+
+    diag_updater_.force_update();
+
+    // for debug
+    publish_debug_info();
+    display_status();
+  }
+architecture-codes:
+  - ROS Timer Issue - Clock Source Usage Issue
+  - Topic/Service Issue - Topic/Service Use Error Issue
+  - ROS Diagnostic Issue - Incomplete Diagnostic Lifecycle Implementation Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

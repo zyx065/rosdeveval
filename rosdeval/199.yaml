@@ -1,0 +1,30 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_costmap_2d
+ros_package: nav2_costmap_2d
+file_path: src/footprint_collision_checker.cpp
+method_name: footprintCostAtPose
+requirement: |
+  /**
+  * @brief Calculates the cost of a footprint at a given pose.
+  * 
+  * @tparam CostmapT The type of costmap used for collision checking.
+  * @param x The x-coordinate of the pose to check.
+  * @param y The y-coordinate of the pose to check.
+  * @param theta The orientation (yaw) of the pose to check.
+  * @param footprint The footprint polygon to check for collisions.
+  * @return double The cost value representing collision state (lower values indicate safer poses).
+  */
+category: utilities
+type: has_message
+signature: |
+  double FootprintCollisionChecker<CostmapT>::footprintCostAtPose(
+    double x, double y, double theta, const Footprint footprint)
+additional_information: 
+  function_related_function: |
+    double FootprintCollisionChecker<CostmapT>::footprintCost(const Footprint footprint)
+test: collision_footprint_test
+test_cases: 
+- test_basic
+- test_footprint_at_pose_with_movement
+- test_point_and_line_cost

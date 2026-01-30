@@ -1,0 +1,70 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/constraint_samplers
+ros_package: moveit_core
+file_path: src/default_constraint_samplers.cpp
+method_name: JointConstraintSampler::sample
+requirement: |
+  /**
+  * Calculates the maximum path velocity at a given path position due to joint velocity limits.
+  * 
+  * @param path_pos The path position to evaluate.
+  * @return The maximum achievable path velocity constrained by joint velocity limits.
+  */
+category: utilities
+type: has_logger
+signature: |
+  bool JointConstraintSampler::sample(moveit::core::RobotState& state,
+                                      const moveit::core::RobotState& /* reference_state */,
+                                      unsigned int /* max_attempts */)
+additional_information: 
+  function_related_variable: |
+    bool is_valid_;
+    std::vector<const moveit::core::JointModel*> unbounded_;
+    random_numbers::RandomNumberGenerator random_number_generator_;
+    std::vector<double> values_;
+    std::vector<unsigned int> uindex_;
+    std::vector<JointInfo> bounds_;
+  function_related_function: |
+    moveit::core::JointModel::getVariableCount()
+    moveit::core::JointModel::getVariableRandomPositions()
+    random_numbers::RandomNumberGenerator::uniformReal
+    moveit::core::RobotState::setJointGroupPositions(moveit::core::JointModelGroup* jmg_,std::vector<double> values_)
+  function_related_class: |
+    struct JointInfo
+    {
+      /**
+      * \brief Constructor
+      *
+      * @return
+      */
+      JointInfo()
+      {
+        min_bound_ = -std::numeric_limits<double>::max();
+        max_bound_ = std::numeric_limits<double>::max();
+      }
+
+      /**
+      * \brief Function that adjusts the joints only if they are more
+      * restrictive.  This means that the min limit is higher than the
+      * current limit, or the max limit is lower than the current max
+      * limit.
+      *
+      * @param min The min limit for potential adjustment
+      * @param max The max limit for potential adjustment
+      */
+      void potentiallyAdjustMinMaxBounds(double min, double max)
+      {
+        min_bound_ = std::max(min, min_bound_);
+        max_bound_ = std::min(max, max_bound_);
+      }
+
+      double min_bound_;  /**< The most restrictive min value of those set */
+      double max_bound_;  /**< The most restrictive max value of those set */
+      std::size_t index_; /**< The index within the joint state vector for this joint */
+    };
+test: test_constraint_samplers
+test_cases: 
+- UnionConstraintSampler
+- JointConstraintsSamplerSeeded
+- JointVersusPoseConstraintSamplerManager

@@ -1,0 +1,90 @@
+compilation.log: |
+  Starting >>> moveit_core
+  --- stderr: moveit_core
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [dynamics_solver/CMakeFiles/moveit_dynamics_solver.dir/build.make:79: dynamics_solver/CMakeFiles/moveit_dynamics_solver.dir/src/dynamics_solver.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1041: dynamics_solver/CMakeFiles/moveit_dynamics_solver.dir/all] Error 2
+  gmake[1]: *** Waiting for unfinished jobs....
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:107: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/ruckig_traj_smoothing.cpp.o] Error 1
+  gmake[2]: *** Waiting for unfinished jobs....
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [collision_detection_bullet/CMakeFiles/moveit_collision_detection_bullet.dir/build.make:149: collision_detection_bullet/CMakeFiles/moveit_collision_detection_bullet.dir/src/bullet_integration/contact_checker_common.cpp.o] Error 1
+  gmake[2]: *** Waiting for unfinished jobs....
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [robot_trajectory/CMakeFiles/test_robot_trajectory.dir/build.make:79: robot_trajectory/CMakeFiles/test_robot_trajectory.dir/test/test_robot_trajectory.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1889: robot_trajectory/CMakeFiles/test_robot_trajectory.dir/all] Error 2
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:79: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/iterative_time_parameterization.cpp.o] Error 1
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:135: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/time_optimal_trajectory_generation.cpp.o] Error 1
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:93: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/iterative_spline_parameterization.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1920: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/all] Error 2
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [robot_state/CMakeFiles/test_robot_state_complex.dir/build.make:79: robot_state/CMakeFiles/test_robot_state_complex.dir/test/test_kinematic_complex.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1758: robot_state/CMakeFiles/test_robot_state_complex.dir/all] Error 2
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [planning_interface/CMakeFiles/moveit_planning_interface.dir/build.make:93: planning_interface/CMakeFiles/moveit_planning_interface.dir/src/planning_response.cpp.o] Error 1
+  gmake[2]: *** Waiting for unfinished jobs....
+  gmake[1]: *** [CMakeFiles/Makefile2:2319: collision_detection_bullet/CMakeFiles/moveit_collision_detection_bullet.dir/all] Error 2
+  gmake[1]: *** [CMakeFiles/Makefile2:1376: planning_interface/CMakeFiles/moveit_planning_interface.dir/all] Error 2
+  gmake: *** [Makefile:149: all] Error 2
+  ---
+  Failed   <<< moveit_core [5min 10s, exited with code 2]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+
+  Summary: 0 packages finished [5min 10s]
+    1 package failed: moveit_core
+    1 package had stderr output: moveit_core
+generate_code.cpp: "RobotTrajectory& RobotTrajectory::reverse()\n{\n  // Reverse the\
+  \ order of waypoints\n  std::reverse(waypoints_.begin(), waypoints_.end());\n  \n\
+  \  // Reverse the order of durations and invert velocities\n  std::reverse(duration_from_previous_.begin(),\
+  \ duration_from_previous_.end());\n  for (auto& waypoint : waypoints_)\n  {\n  \
+  \  waypoint->invertVelocity();\n  }\n  \n  return *this;\n}"
+ground_truth.cpp: |-
+  RobotTrajectory& RobotTrajectory::reverse()
+  {
+    std::reverse(waypoints_.begin(), waypoints_.end());
+    for (moveit::core::RobotStatePtr& waypoint : waypoints_)
+    {
+      // reversing the trajectory implies inverting the velocity profile
+      waypoint->invertVelocity();
+    }
+    if (!duration_from_previous_.empty())
+    {
+      duration_from_previous_.push_back(duration_from_previous_.front());
+      std::reverse(duration_from_previous_.begin(), duration_from_previous_.end());
+      duration_from_previous_.pop_back();
+    }
+
+    return *this;
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+  - Condition Issue - Conditional Check Missing Issue
+  - Incomplete Code Issue - Missing One Step Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

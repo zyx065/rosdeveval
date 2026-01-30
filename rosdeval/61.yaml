@@ -1,0 +1,32 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/planning/autoware_velocity_smoother
+ros_package: autoware_velocity_smoother
+file_path: src/node.cpp
+method_name: VelocitySmootherNode::publishTrajectory
+requirement: |
+  /**
+  * @brief Publishes a smoothed trajectory message.
+  * 
+  * Converts the input trajectory points to a Trajectory message, updates its header with the original 
+  * trajectory's header, and publishes it. Also publishes the trajectory timestamp if subscribers exist.
+  * 
+  * @param trajectory The trajectory points to be converted and published.
+  */
+category: ros_architecture
+type: has_topic,has_parameter,has_message
+signature: |
+  void VelocitySmootherNode::publishTrajectory(const TrajectoryPoints & trajectory) const
+additional_information: 
+  function_related_variable: |
+    rclcpp::Publisher<Trajectory>::SharedPtr pub_trajectory_;
+    std::unique_ptr<autoware::universe_utils::PublishedTimePublisher> published_time_publisher_;
+    Trajectory::ConstSharedPtr base_traj_raw_ptr_;
+  function_related_class: |
+    namespace autoware::motion_utils
+    {
+    using TrajectoryPoints = std::vector<autoware_planning_msgs::msg::TrajectoryPoint>;
+    autoware_planning_msgs::msg::Trajectory convertToTrajectory(const std::vector<autoware_planning_msgs::msg::TrajectoryPoint> & trajectory,const std_msgs::msg::Header & header = std_msgs::msg::Header{});
+    }
+test: test_autoware_velocity_smoother
+test_cases: []

@@ -1,0 +1,45 @@
+compilation.log: |
+  Starting >>> pilz_industrial_motion_planner
+  Finished <<< pilz_industrial_motion_planner [0.86s]
+
+  Summary: 1 package finished [1.31s]
+generate_code.cpp: "bool pilz_industrial_motion_planner::isStateColliding(const planning_scene::PlanningSceneConstPtr&\
+  \ scene,\n                                                      moveit::core::RobotState*\
+  \ rstate,\n                                                      const moveit::core::JointModelGroup*\
+  \ const group,\n                                                      const double*\
+  \ const ik_solution)\n{\n    // Set the joint positions from the IK solution\n \
+  \   rstate->setJointGroupPositions(group, ik_solution);\n    \n    // Prepare collision\
+  \ request and result\n    collision_detection::CollisionRequest req;\n    collision_detection::CollisionResult\
+  \ res;\n    \n    // We only need to know if there's a collision, not the details\n\
+  \    req.contacts = false;\n    req.distance = false;\n    req.cost = false;\n \
+  \   req.max_contacts = 1;\n    \n    // Check for collisions\n    scene->checkSelfCollision(req,\
+  \ res, *rstate);\n    \n    // Return true if collision was detected\n    return\
+  \ res.collision;\n}"
+ground_truth.cpp: |-
+  bool pilz_industrial_motion_planner::isStateColliding(const planning_scene::PlanningSceneConstPtr& scene,
+                                                        moveit::core::RobotState* rstate,
+                                                        const moveit::core::JointModelGroup* const group,
+                                                        const double* const ik_solution)
+  {
+    rstate->setJointGroupPositions(group, ik_solution);
+    rstate->update();
+    collision_detection::CollisionRequest collision_req;
+    collision_req.group_name = group->getName();
+    collision_req.verbose = true;
+    collision_detection::CollisionResult collision_res;
+    scene->checkSelfCollision(collision_req, collision_res, *rstate);
+    return !collision_res.collision;
+  }
+architecture-codes:
+  - ROS Message Issue - Message Operation Issue
+  - ROS Diagnostic Issue - Incomplete Diagnostic Lifecycle Implementation Issue
+
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

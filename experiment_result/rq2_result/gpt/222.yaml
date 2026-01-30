@@ -1,0 +1,88 @@
+compilation.log: |
+  Starting >>> nav2_rotation_shim_controller
+  --- stderr: nav2_rotation_shim_controller
+  /root/repos/nav_ws/src/nav2_rotation_shim_controller/src/nav2_rotation_shim_controller.cpp: In member function ‘geometry_msgs::msg::TwistStamped nav2_rotation_shim_controller::RotationShimController::computeRotateToHeadingCommand(const double&, const PoseStamped&, const Twist&)’:
+  /root/repos/nav_ws/src/nav2_rotation_shim_controller/src/nav2_rotation_shim_controller.cpp:328:23: error: could not convert ‘((nav2_rotation_shim_controller::RotationShimController*)this)->nav2_rotation_shim_controller::RotationShimController::isCollisionFree(cmd_vel, (* & angular_distance_to_heading), (* & pose))’ from ‘void’ to ‘bool’
+    328 |   if (!isCollisionFree(cmd_vel, angular_distance_to_heading, pose)) {
+        |        ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        |                       |
+        |                       void
+  /root/repos/nav_ws/src/nav2_rotation_shim_controller/src/nav2_rotation_shim_controller.cpp:328:23: error: in argument to unary !
+  gmake[2]: *** [CMakeFiles/nav2_rotation_shim_controller.dir/build.make:76: CMakeFiles/nav2_rotation_shim_controller.dir/src/nav2_rotation_shim_controller.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:172: CMakeFiles/nav2_rotation_shim_controller.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_rotation_shim_controller [3.95s, exited with code 2]
+
+  Summary: 0 packages finished [4.25s]
+    1 package failed: nav2_rotation_shim_controller
+    1 package had stderr output: nav2_rotation_shim_controller
+generate_code.cpp: |-
+  geometry_msgs::msg::TwistStamped
+  RotationShimController::computeRotateToHeadingCommand(
+    const double & angular_distance_to_heading,
+    const geometry_msgs::msg::PoseStamped & pose,
+    const geometry_msgs::msg::Twist & velocity)
+  {
+    geometry_msgs::msg::TwistStamped cmd_vel;
+
+    // Set the header for the TwistStamped message
+    cmd_vel.header.stamp = clock_->now();
+    cmd_vel.header.frame_id = pose.header.frame_id;
+
+    // Compute the desired angular velocity based on the angular distance to heading
+    double desired_angular_vel = std::copysign(
+      std::min(std::abs(angular_distance_to_heading) * rotate_to_heading_angular_vel_, rotate_to_heading_angular_vel_),
+      angular_distance_to_heading);
+
+    // Limit the angular acceleration
+    double angular_accel = (desired_angular_vel - velocity.angular.z) / control_duration_;
+    if (std::abs(angular_accel) > max_angular_accel_) {
+      desired_angular_vel = velocity.angular.z + std::copysign(max_angular_accel_ * control_duration_, angular_accel);
+    }
+
+    // Check if the angular distance is within the disengage threshold
+    if (std::abs(angular_distance_to_heading) < angular_disengage_threshold_) {
+      desired_angular_vel = 0.0;
+      in_rotation_ = false;  // Stop rotation
+    } else {
+      in_rotation_ = true;  // Continue rotation
+    }
+
+    // Populate the TwistStamped message
+    cmd_vel.twist.angular.z = desired_angular_vel;
+    cmd_vel.twist.linear.x = 0.0;  // No linear movement during rotation
+    cmd_vel.twist.linear.y = 0.0;
+
+    // Check for collisions before returning the command
+    if (!isCollisionFree(cmd_vel, angular_distance_to_heading, pose)) {
+      cmd_vel.twist.angular.z = 0.0;  // Stop rotation if collision detected
+    }
+
+    return cmd_vel;
+  }
+ground_truth.cpp: |-
+  geometry_msgs::msg::TwistStamped
+  RotationShimController::computeRotateToHeadingCommand(
+    const double & angular_distance_to_heading,
+    const geometry_msgs::msg::PoseStamped & pose,
+    const geometry_msgs::msg::Twist & velocity)
+  {
+    auto current = closed_loop_ ? velocity.angular.z : last_angular_vel_;
+    if (current == std::numeric_limits<double>::max()) {
+      current = 0.0;
+    }
+
+    geometry_msgs::msg::TwistStamped cmd_vel;
+    cmd_vel.header = pose.header;
+    const double sign = angular_distance_to_heading > 0.0 ? 1.0 : -1.0;
+    const double angular_vel = sign * rotate_to_heading_angular_vel_;
+    const double & dt = control_duration_;
+    const double min_feasible_angular_speed = current - max_angular_accel_ * dt;
+    const double max_feasible_angular_speed = current + max_angular_accel_ * dt;
+    cmd_vel.twist.angular.z =
+      std::clamp(angular_vel, min_feasible_angular_speed, max_feasible_angular_speed);
+
+    isCollisionFree(cmd_vel, angular_distance_to_heading, pose);
+    return cmd_vel;
+  }

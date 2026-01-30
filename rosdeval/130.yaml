@@ -1,0 +1,35 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_planners/pilz_industrial_motion_planner
+ros_package: pilz_industrial_motion_planner
+file_path: src/trajectory_functions.cpp
+method_name: pilz_industrial_motion_planner::computeLinkFK
+requirement: |
+  /**
+  * @brief Computes the forward kinematics for a specified robot link.
+  * 
+  * @param[in] robot_state The current state of the robot model.
+  * @param[in] link_name The name of the target link for which to compute FK.
+  * @param[in] joint_state A map of joint names to positions defining the robot configuration.
+  * @param[out] pose The resulting transformation matrix from base to link frame.
+  * @return bool True if FK was successfully computed, false otherwise.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  bool pilz_industrial_motion_planner::computeLinkFK(moveit::core::RobotState& robot_state, const std::string& link_name,
+                                                     const std::map<std::string, double>& joint_state,
+                                                     Eigen::Isometry3d& pose)
+additional_information: 
+  function_related_variable: |
+    std::vector<int> common_joint_roots_;
+    std::vector<JointModel*> joint_model_vector_;
+    const JointModel* root_joint_;
+  function_related_function: |
+    moveit::core::RobotState::knowsFrameTransform(const std::string& frame_id)
+    moveit::core::RobotState::setVariablePositions(moveit::core::RobotState& robot_state)
+    moveit::core::RobotState::update()
+    moveit::core::RobotState::getFrameTransform(const std::string& frame_id)
+test: unittest_trajectory_functions
+test_cases: 
+- TipLinkFK

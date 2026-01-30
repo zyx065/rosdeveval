@@ -1,0 +1,70 @@
+compilation.log: |
+  Starting >>> autoware_velocity_smoother
+  --- stderr: autoware_velocity_smoother
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp: In member function ‘void autoware::velocity_smoother::VelocitySmootherNode::publishStopDistance(const TrajectoryPoints&) const’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:775:18: error: ‘Float32Stamped’ is not a member of ‘std_msgs::msg’
+    775 |   std_msgs::msg::Float32Stamped stop_distance_msg;
+        |                  ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:775:18: note: suggested alternatives:
+  In file included from /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/float32_stamped.hpp:7,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/include/autoware/velocity_smoother/node.hpp:43,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:15:
+  /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/detail/float32_stamped__struct.hpp:139:7: note:   ‘autoware_internal_debug_msgs::msg::Float32Stamped’
+    139 | using Float32Stamped =
+        |       ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/detail/float32_stamped__struct.hpp:139:7: note:   ‘autoware_internal_debug_msgs::msg::Float32Stamped’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:776:3: error: ‘stop_distance_msg’ was not declared in this scope
+    776 |   stop_distance_msg.header.stamp = this->now();
+        |   ^~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_velocity_smoother_node.dir/build.make:76: CMakeFiles/autoware_velocity_smoother_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:208: CMakeFiles/autoware_velocity_smoother_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_velocity_smoother [10.5s, exited with code 2]
+
+  Summary: 0 packages finished [11.7s]
+    1 package failed: autoware_velocity_smoother
+    1 package had stderr output: autoware_velocity_smoother
+generate_code.cpp: |-
+  void VelocitySmootherNode::publishStopDistance(const TrajectoryPoints & trajectory) const
+  {
+    // Find the nearest index to the ego vehicle in the trajectory
+    const size_t ego_nearest_idx = findNearestIndexFromEgo(trajectory);
+
+    // Search for the index of the stop point (zero velocity) in the trajectory
+    const auto stop_idx_opt = autoware::motion_utils::searchZeroVelocityIndex(trajectory);
+
+    // Initialize the stop distance to NaN (not available) in case no stop point is found
+    std_msgs::msg::Float32Stamped stop_distance_msg;
+    stop_distance_msg.header.stamp = this->now();
+    stop_distance_msg.data = std::numeric_limits<float>::quiet_NaN();
+
+    // If a stop point is found, calculate the signed arc length from the ego vehicle to the stop point
+    if (stop_idx_opt) {
+      const double stop_distance = autoware::motion_utils::calcSignedArcLength(
+        trajectory, ego_nearest_idx, stop_idx_opt.value());
+      stop_distance_msg.data = static_cast<float>(stop_distance);
+    }
+
+    // Publish the stop distance
+    pub_dist_to_stopline_->publish(stop_distance_msg);
+  }
+ground_truth.cpp: |-
+  void VelocitySmootherNode::publishStopDistance(const TrajectoryPoints & trajectory) const
+  {
+    const size_t closest = findNearestIndexFromEgo(trajectory);
+
+    // stop distance calculation
+    const double stop_dist_lim{50.0};
+    double stop_dist{stop_dist_lim};
+    const auto stop_idx{autoware::motion_utils::searchZeroVelocityIndex(trajectory)};
+    if (stop_idx) {
+      stop_dist = autoware::motion_utils::calcSignedArcLength(trajectory, closest, *stop_idx);
+    } else {
+      stop_dist = closest > 0 ? stop_dist : -stop_dist;
+    }
+    Float32Stamped dist_to_stopline{};
+    dist_to_stopline.stamp = this->now();
+    dist_to_stopline.data = std::clamp(stop_dist, -stop_dist_lim, stop_dist_lim);
+    pub_dist_to_stopline_->publish(dist_to_stopline);
+  }

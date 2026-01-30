@@ -1,0 +1,123 @@
+compilation.log: |
+  Starting >>> autoware_vehicle_cmd_gate
+  --- stderr: autoware_vehicle_cmd_gate
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp: In constructor ‘autoware::vehicle_cmd_gate::VehicleCmdGate::VehicleCmdGate(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:81:28: error: ‘tier4_debug_msgs’ was not declared in this scope; did you mean ‘tier4_vehicle_msgs’?
+     81 |     this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>("~/debug/processing_time_ms", 1);
+        |                            ^~~~~~~~~~~~~~~~
+        |                            tier4_vehicle_msgs
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:81:11: error: parse error in template argument list
+     81 |     this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>("~/debug/processing_time_ms", 1);
+        |           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:81:66: error: no matching function for call to ‘autoware::vehicle_cmd_gate::VehicleCmdGate::create_publisher<<expression error> >(const char [27], int)’
+     81 |     this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>("~/debug/processing_time_ms", 1);
+        |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/node.hpp:1321,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/single_threaded_executor.hpp:28,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:22,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/install/autoware_component_interface_utils/include/autoware/component_interface_utils/rclcpp/interface.hpp:18,
+                   from /workspace/repos/autoware/install/autoware_component_interface_utils/include/autoware/component_interface_utils/rclcpp/create_interface.hpp:18,
+                   from /workspace/repos/autoware/install/autoware_component_interface_utils/include/autoware/component_interface_utils/rclcpp.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/adapi_pause_interface.hpp:19,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:15:
+  /opt/ros/humble/include/rclcpp/rclcpp/node_impl.hpp:73:1: note: candidate: ‘template<class MessageT, class AllocatorT, class PublisherT> std::shared_ptr<PublisherT> rclcpp::Node::create_publisher(const string&, const rclcpp::QoS&, const rclcpp::PublisherOptionsWithAllocator<AllocatorT>&)’
+     73 | Node::create_publisher(
+        | ^~~~
+  /opt/ros/humble/include/rclcpp/rclcpp/node_impl.hpp:73:1: note:   template argument deduction/substitution failed:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:81:66: error: template argument 1 is invalid
+     81 |     this->create_publisher<tier4_debug_msgs::msg::Float64Stamped>("~/debug/processing_time_ms", 1);
+        |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp: In member function ‘void autoware::vehicle_cmd_gate::VehicleCmdGate::onTimer()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:523:3: error: ‘tier4_debug_msgs’ has not been declared
+    523 |   tier4_debug_msgs::msg::Float64Stamped processing_time_msg;
+        |   ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:524:3: error: ‘processing_time_msg’ was not declared in this scope; did you mean ‘processing_time_pub_’?
+    524 |   processing_time_msg.stamp = get_clock()->now();
+        |   ^~~~~~~~~~~~~~~~~~~
+        |   processing_time_pub_
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp: In member function ‘void autoware::vehicle_cmd_gate::VehicleCmdGate::publishMarkers(const IsFilterActivated&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:934:68: error: ‘OperationMode’ has not been declared
+    934 |   const bool is_autonomous_mode = (current_operation_mode_.mode == OperationMode::AUTONOMOUS);
+        |                                                                    ^~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:935:75: error: ‘using _twist_type = struct geometry_msgs::msg::TwistWithCovariance_<std::allocator<void> >’ {aka ‘struct geometry_msgs::msg::TwistWithCovariance_<std::allocator<void> >’} has no member named ‘linear’
+    935 |   const bool is_velocity_sufficient = (std::abs(current_kinematics_.twist.linear.x) > 1.0); // Example threshold
+        |                                                                           ^~~~~~
+  gmake[2]: *** [CMakeFiles/vehicle_cmd_gate_node.dir/build.make:76: CMakeFiles/vehicle_cmd_gate_node.dir/src/vehicle_cmd_gate.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:206: CMakeFiles/vehicle_cmd_gate_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_vehicle_cmd_gate [18.1s, exited with code 2]
+
+  Summary: 0 packages finished [19.4s]
+    1 package failed: autoware_vehicle_cmd_gate
+    1 package had stderr output: autoware_vehicle_cmd_gate
+generate_code.cpp: |-
+  void VehicleCmdGate::publishMarkers(const IsFilterActivated & filter_activated)
+  {
+    // Publish filter activation status as a boolean flag
+    BoolStamped filter_activated_flag_msg;
+    filter_activated_flag_msg.stamp = this->now();
+    filter_activated_flag_msg.data = filter_activated.is_activated;
+    filter_activated_flag_pub_->publish(filter_activated_flag_msg);
+
+    // Check vehicle conditions for publishing markers
+    const bool is_autonomous_mode = (current_operation_mode_.mode == OperationMode::AUTONOMOUS);
+    const bool is_velocity_sufficient = (std::abs(current_kinematics_.twist.linear.x) > 1.0); // Example threshold
+    const bool is_filter_sustained = (filter_activated_count_ > 10); // Example threshold for sustained activation
+
+    if (is_autonomous_mode && is_velocity_sufficient && is_filter_sustained) {
+      // Create and publish visualization markers
+      MarkerArray marker_array_msg;
+
+      // Example marker creation
+      visualization_msgs::msg::Marker marker;
+      marker.header.stamp = this->now();
+      marker.header.frame_id = "base_link"; // Example frame
+      marker.ns = "filter_activation";
+      marker.id = 0;
+      marker.type = visualization_msgs::msg::Marker::SPHERE;
+      marker.action = visualization_msgs::msg::Marker::ADD;
+      marker.pose.position.x = current_kinematics_.pose.pose.position.x;
+      marker.pose.position.y = current_kinematics_.pose.pose.position.y;
+      marker.pose.position.z = current_kinematics_.pose.pose.position.z;
+      marker.scale.x = 1.0;
+      marker.scale.y = 1.0;
+      marker.scale.z = 1.0;
+      marker.color.r = 1.0;
+      marker.color.g = 0.0;
+      marker.color.b = 0.0;
+      marker.color.a = 1.0;
+
+      marker_array_msg.markers.push_back(marker);
+
+      filter_activated_marker_pub_->publish(marker_array_msg);
+
+      // Optionally publish raw markers for debugging or additional visualization
+      filter_activated_marker_raw_pub_->publish(marker_array_msg);
+    }
+  }
+ground_truth.cpp: |-
+  void VehicleCmdGate::publishMarkers(const IsFilterActivated & filter_activated)
+  {
+    BoolStamped filter_activated_flag;
+    if (filter_activated.is_activated) {
+      filter_activated_count_++;
+    } else {
+      filter_activated_count_ = 0;
+    }
+    if (
+      filter_activated_count_ >= filter_activated_count_threshold_ &&
+      std::fabs(current_kinematics_.twist.twist.linear.x) >= filter_activated_velocity_threshold_ &&
+      current_operation_mode_.mode == OperationModeState::AUTONOMOUS) {
+      filter_activated_marker_pub_->publish(createMarkerArray(filter_activated));
+      filter_activated_flag.data = true;
+    } else {
+      filter_activated_flag.data = false;
+    }
+
+    filter_activated_flag.stamp = now();
+    filter_activated_flag_pub_->publish(filter_activated_flag);
+    filter_activated_marker_raw_pub_->publish(createMarkerArray(filter_activated));
+  }

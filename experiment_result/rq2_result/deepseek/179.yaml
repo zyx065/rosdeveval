@@ -1,0 +1,40 @@
+compilation.log: |
+  Starting >>> nav2_velocity_smoother
+  Finished <<< nav2_velocity_smoother [0.22s]
+
+  Summary: 1 package finished [0.51s]
+generate_code.cpp: |-
+  void VelocitySmoother::inputCommandCallback(const geometry_msgs::msg::Twist::SharedPtr msg)
+  {
+    // Validate the incoming twist command
+    if (!nav2_util::validateTwist(*msg)) {
+      RCLCPP_WARN(
+        get_logger(),
+        "Invalid twist command received. Linear or angular velocity values are not finite.");
+      return;
+    }
+
+    // Store the command and update the last command time
+    command_ = msg;
+    last_command_time_ = now();
+  }
+ground_truth.cpp: |-
+  void VelocitySmoother::inputCommandCallback(const geometry_msgs::msg::Twist::SharedPtr msg)
+  {
+    // If message contains NaN or Inf, ignore
+    if (!nav2_util::validateTwist(*msg)) {
+      RCLCPP_ERROR(get_logger(), "Velocity message contains NaNs or Infs! Ignoring as invalid!");
+      return;
+    }
+
+    command_ = msg;
+    last_command_time_ = now();
+  }
+architecture-codes:
+  - ROS Logger Issue - Log Level and Frequency Issue
+
+functionality-codes: []
+
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic

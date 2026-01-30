@@ -1,0 +1,104 @@
+compilation.log: |
+  Starting >>> autoware_obstacle_stop_planner
+  --- stderr: autoware_obstacle_stop_planner
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp: In member function ‘void autoware::motion_planning::ObstacleStopPlannerNode::onPointCloud(sensor_msgs::msg::PointCloud2_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:278:37: error: ‘struct autoware::motion_planning::NodeParam’ has no member named ‘min_obstacle_distance’
+    278 |         if (distance >= node_param_.min_obstacle_distance &&
+        |                                     ^~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_obstacle_stop_planner/src/node.cpp:279:37: error: ‘struct autoware::motion_planning::NodeParam’ has no member named ‘max_obstacle_distance’
+    279 |             distance <= node_param_.max_obstacle_distance) {
+        |                                     ^~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_obstacle_stop_planner.dir/build.make:104: CMakeFiles/autoware_obstacle_stop_planner.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_obstacle_stop_planner.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_obstacle_stop_planner [18.6s, exited with code 2]
+
+  Summary: 0 packages finished [20.0s]
+    1 package failed: autoware_obstacle_stop_planner
+    1 package had stderr output: autoware_obstacle_stop_planner
+generate_code.cpp: |
+  void ObstacleStopPlannerNode::onPointCloud(const PointCloud2::ConstSharedPtr input_msg)
+  {
+      // Check if input message is valid
+      if (!input_msg) {
+          RCLCPP_WARN(get_logger(), "Received empty point cloud message");
+          return;
+      }
+
+      // Lock mutex to ensure thread-safe access to shared resources
+      std::lock_guard<std::mutex> lock(mutex_);
+
+      // Create a filtered point cloud
+      PointCloud2::SharedPtr filtered_cloud = std::make_shared<PointCloud2>();
+
+      // Convert input point cloud to PCL point cloud for processing
+      pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_cloud(new pcl::PointCloud<pcl::PointXYZ>());
+      pcl::fromROSMsg(*input_msg, *pcl_cloud);
+
+      // Apply filtering based on node parameters
+      pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_pcl_cloud(new pcl::PointCloud<pcl::PointXYZ>());
+      
+      // Filter points within specified distance range
+      for (const auto& point : pcl_cloud->points) {
+          double distance = std::sqrt(point.x * point.x + point.y * point.y + point.z * point.z);
+          
+          if (distance >= node_param_.min_obstacle_distance && 
+              distance <= node_param_.max_obstacle_distance) {
+              filtered_pcl_cloud->points.push_back(point);
+          }
+      }
+
+      // Convert filtered PCL point cloud back to ROS point cloud message
+      pcl::toROSMsg(*filtered_pcl_cloud, *filtered_cloud);
+      filtered_cloud->header = input_msg->header;
+
+      // Store the filtered point cloud
+      obstacle_ros_pointcloud_ptr_ = filtered_cloud;
+
+      // Publish the filtered point cloud
+      if (pub_obstacle_pointcloud_) {
+          pub_obstacle_pointcloud_->publish(*filtered_cloud);
+      }
+  }
+ground_truth.cpp: |-
+  void ObstacleStopPlannerNode::onPointCloud(const PointCloud2::ConstSharedPtr input_msg)
+  {
+    // mutex for obstacle_ros_pointcloud_ptr_
+    // NOTE: *obstacle_ros_pointcloud_ptr_ is used
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    obstacle_ros_pointcloud_ptr_ = std::make_shared<PointCloud2>();
+    pcl::VoxelGrid<pcl::PointXYZ> filter;
+    PointCloud::Ptr pointcloud_ptr(new PointCloud);
+    PointCloud::Ptr no_height_filtered_pointcloud_ptr(new PointCloud);
+
+    pcl::fromROSMsg(*input_msg, *pointcloud_ptr);
+    if (!node_param_.enable_z_axis_obstacle_filtering) {
+      filter.setInputCloud(pointcloud_ptr);
+      filter.setLeafSize(
+        node_param_.voxel_grid_x, node_param_.voxel_grid_y, node_param_.voxel_grid_z);
+      filter.filter(*no_height_filtered_pointcloud_ptr);
+      pcl::toROSMsg(*no_height_filtered_pointcloud_ptr, *obstacle_ros_pointcloud_ptr_);
+    } else {
+      pcl::toROSMsg(*pointcloud_ptr, *obstacle_ros_pointcloud_ptr_);
+    }
+
+    obstacle_ros_pointcloud_ptr_->header = input_msg->header;
+    pub_obstacle_pointcloud_->publish(*obstacle_ros_pointcloud_ptr_);
+  }
+architecture-codes:
+  - Topic/Service Related Issues - Topic use Error
+  - ROS Parameter Related Issues - Use Non-exist Parameter
+  - ROS Parameter Related Issues - Insufficient Parameter Design
+  - ROS Logger Issues - ROS Logger Missing Issue
+functionality-codes:
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Domain Library Issues - Domain Specific Library Utilization Error
+  - Reference Error - Wrong Variable
+  - Incomplete Code - Missing Multiple Steps
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

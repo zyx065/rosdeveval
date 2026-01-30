@@ -1,0 +1,80 @@
+compilation.log: |
+  Starting >>> autoware_compare_map_segmentation
+  --- stderr: autoware_compare_map_segmentation
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/node.cpp: In member function ‘virtual void autoware::compare_map_segmentation::DistanceBasedStaticMapLoader::onMapCallback(sensor_msgs::msg::PointCloud2_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/node.cpp:41:18: error: ‘make_shared’ is not a member of ‘boost’
+     41 |   tree_ = boost::make_shared<pcl::search::KdTree<pcl::PointXYZ>>();
+        |                  ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/node.cpp:41:18: note: suggested alternatives:
+  In file included from /usr/include/c++/11/memory:77,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:153,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/../voxel_grid_map_loader/voxel_grid_map_loader.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/node.cpp:15:
+  /usr/include/c++/11/bits/shared_ptr.h:875:5: note:   ‘std::make_shared’
+    875 |     make_shared(_Args&&... __args)
+        |     ^~~~~~~~~~~
+  In file included from /usr/include/pcl-1.12/pcl/pcl_base.h:46,
+                   from /usr/include/pcl-1.12/pcl/filters/filter.h:42,
+                   from /usr/include/pcl-1.12/pcl/filters/voxel_grid.h:42,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/../voxel_grid_map_loader/voxel_grid_map_loader.hpp:25,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/node.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/node.cpp:15:
+  /usr/include/pcl-1.12/pcl/memory.h:122:66: note:   ‘pcl::make_shared’
+    122 | std::enable_if_t<!has_custom_allocator<T>::value, shared_ptr<T>> make_shared(Args&&... args)
+        |                                                                  ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/node.cpp:41:63: error: expected primary-expression before ‘>’ token
+     41 |   tree_ = boost::make_shared<pcl::search::KdTree<pcl::PointXYZ>>();
+        |                                                               ^~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/node.cpp:41:66: error: expected primary-expression before ‘)’ token
+     41 |   tree_ = boost::make_shared<pcl::search::KdTree<pcl::PointXYZ>>();
+        |                                                                  ^
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_compare_map_segmentation/src/distance_based_compare_map_filter/node.cpp:45:3: error: ‘map_frame_id_’ was not declared in this scope
+     45 |   map_frame_id_ = map->header.frame_id;
+        |   ^~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_compare_map_segmentation.dir/build.make:76: CMakeFiles/autoware_compare_map_segmentation.dir/src/distance_based_compare_map_filter/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:173: CMakeFiles/autoware_compare_map_segmentation.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_compare_map_segmentation [9.94s, exited with code 2]
+
+  Summary: 0 packages finished [11.3s]
+    1 package failed: autoware_compare_map_segmentation
+    1 package had stderr output: autoware_compare_map_segmentation
+generate_code.cpp: |-
+  void DistanceBasedStaticMapLoader::onMapCallback(
+    const sensor_msgs::msg::PointCloud2::ConstSharedPtr map)
+  {
+    // Convert the incoming ROS PointCloud2 message to a PCL PointCloud
+    pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::fromROSMsg(*map, *pcl_cloud);
+
+    // Store the converted point cloud in the internal variable
+    map_ptr_ = pcl_cloud;
+
+    // Initialize the KD-tree for nearest neighbor searches
+    tree_ = boost::make_shared<pcl::search::KdTree<pcl::PointXYZ>>();
+    tree_->setInputCloud(map_ptr_);
+
+    // Store the frame ID of the incoming map for future transform lookups
+    map_frame_id_ = map->header.frame_id;
+  }
+ground_truth.cpp: |-
+  void DistanceBasedStaticMapLoader::onMapCallback(
+    const sensor_msgs::msg::PointCloud2::ConstSharedPtr map)
+  {
+    pcl::PointCloud<pcl::PointXYZ> map_pcl;
+    pcl::fromROSMsg<pcl::PointXYZ>(*map, map_pcl);
+    const auto map_pcl_ptr = pcl::make_shared<pcl::PointCloud<pcl::PointXYZ>>(map_pcl);
+    map_ptr_ = map_pcl_ptr;
+    *tf_map_input_frame_ = map_ptr_->header.frame_id;
+    if (!tree_) {
+      if (map_ptr_->isOrganized()) {
+        tree_.reset(new pcl::search::OrganizedNeighbor<pcl::PointXYZ>());
+      } else {
+        tree_.reset(new pcl::search::KdTree<pcl::PointXYZ>(false));
+      }
+    }
+    tree_->setInputCloud(map_ptr_);
+    is_initialized_.store(true, std::memory_order_release);
+  }

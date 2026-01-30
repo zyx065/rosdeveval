@@ -1,0 +1,55 @@
+compilation.log: |
+  Starting >>> nav2_costmap_2d
+  Finished <<< nav2_costmap_2d [0.62s]
+
+  Summary: 1 package finished [0.92s]
+generate_code.cpp: |-
+  void CostmapFilter::enableCallback(
+    const std::shared_ptr<rmw_request_id_t>/*request_header*/,
+    const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
+    std::shared_ptr<std_srvs::srv::SetBool::Response> response)
+  {
+    // Lock mutex to ensure thread-safe operation
+    std::lock_guard<mutex_t> lock(*access_);
+
+    try {
+      if (request->data) {
+        // Enable the costmap filter
+        // Here you would typically enable publishers/subscribers or other filter components
+        response->success = true;
+        response->message = "Costmap filter enabled successfully";
+      } else {
+        // Disable the costmap filter
+        // Here you would typically disable publishers/subscribers or other filter components
+        response->success = true;
+        response->message = "Costmap filter disabled successfully";
+      }
+    } catch (const std::exception & e) {
+      response->success = false;
+      response->message = std::string("Failed to set costmap filter state: ") + e.what();
+    }
+  }
+ground_truth.cpp: |-
+  void CostmapFilter::enableCallback(
+    const std::shared_ptr<rmw_request_id_t>/*request_header*/,
+    const std::shared_ptr<std_srvs::srv::SetBool::Request> request,
+    std::shared_ptr<std_srvs::srv::SetBool::Response> response)
+  {
+    enabled_ = request->data;
+    response->success = true;
+    if (enabled_) {
+      response->message = "Enabled";
+    } else {
+      response->message = "Disabled";
+    }
+  }
+architecture-codes:
+  - ROS Message Issue - Improper Message Type Usage Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing One Step Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase 

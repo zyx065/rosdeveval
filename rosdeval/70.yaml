@@ -1,0 +1,22 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/localization/autoware_ekf_localizer
+ros_package: autoware_pose_instability_detector
+file_path: src/diagnostics.cpp
+method_name: check_process_activated
+requirement: |
+  /**
+  * @brief Checks process activation status and returns a diagnostic message.
+  * 
+  * @param is_activated Boolean indicating whether the process is currently activated.
+  * @return diagnostic_msgs::msg::DiagnosticStatus Diagnostic status message containing 
+  *         activation state and appropriate warning level.
+  */
+category: utilities
+type: has_message
+signature: |
+  diagnostic_msgs::msg::DiagnosticStatus check_process_activated(const bool is_activated)
+additional_information: []
+test: test_diagnostics
+test_cases: 
+- check_process_activated

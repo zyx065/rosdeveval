@@ -1,0 +1,29 @@
+repository: navigation2
+language: C++
+ros_package_file: src/nav2_mppi_controller
+ros_package: nav2_mppi_controller
+file_path: include/nav2_mppi_controller/tools/utils.hpp
+method_name: withinPositionGoalTolerance
+requirement: |
+  /**
+  * @brief Check if the robot pose is within the Goal Checker's tolerances to goal
+  * @param global_checker Pointer to the goal checker
+  * @param robot Pose of robot
+  * @param goal Goal pose
+  * @return bool If robot is within goal checker tolerances to the goal
+  */
+category: utilities
+type: has_message
+signature: |
+  inline bool withinPositionGoalTolerance(
+    nav2_core::GoalChecker * goal_checker,
+    const geometry_msgs::msg::Pose & robot,
+    const geometry_msgs::msg::Pose & goal)
+additional_information: 
+  function_related_function: |
+    bool PositionGoalChecker::getTolerances(
+      geometry_msgs::msg::Pose & pose_tolerance,
+      geometry_msgs::msg::Twist & vel_tolerance)
+test: utils_test
+test_cases: 
+- WithTolTests

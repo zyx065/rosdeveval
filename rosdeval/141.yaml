@@ -1,0 +1,58 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_core/trajectory_processing
+ros_package: moveit_core
+file_path: src/time_optimal_trajectory_generation.cpp
+method_name: Trajectory::getAcceleration
+requirement: |
+  /**
+  * Calculates the Cartesian acceleration along the path at the specified time.
+  * 
+  * @param time The time at which to evaluate the acceleration.
+  * @return The Cartesian acceleration vector in the world frame.
+  */
+category: utilities
+type: has_domain_library
+signature: |
+  Eigen::VectorXd Trajectory::getAcceleration(double time) const
+additional_information: 
+  function_related_variable:
+    Path path_;
+    unsigned int joint_num_;
+    Eigen::VectorXd max_velocity_;
+  function_related_function: |
+    std::list<Trajectory::TrajectoryStep>::const_iterator Trajectory::getTrajectorySegment(double time) const
+  function_related_class: |
+    struct TrajectoryStep
+    {
+      TrajectoryStep()
+      {
+      }
+      TrajectoryStep(double path_pos, double path_vel) : path_pos_(path_pos), path_vel_(path_vel)
+      {
+      }
+      double path_pos_;
+      double path_vel_;
+      double time_;
+    };
+    class Path
+    {
+    public:
+      Path(const std::list<Eigen::VectorXd>& path, double max_deviation = 0.0);
+      Path(const Path& path);
+      double getLength() const;
+      Eigen::VectorXd getConfig(double s) const;
+      Eigen::VectorXd getTangent(double s) const;
+      Eigen::VectorXd getCurvature(double s) const;
+      double getNextSwitchingPoint(double s, bool& discontinuity) const;
+      std::list<std::pair<double, bool>> getSwitchingPoints() const;
+
+    private:
+      PathSegment* getPathSegment(double& s) const;
+      double length_;
+      std::list<std::pair<double, bool>> switching_points_;
+      std::list<std::unique_ptr<PathSegment>> path_segments_;
+    };
+test: test_time_optimal_trajectory_generation
+test_cases: 
+- testLargeAccel

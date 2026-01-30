@@ -1,0 +1,76 @@
+compilation.log: |
+  Starting >>> autoware_perception_online_evaluator
+  Finished <<< autoware_perception_online_evaluator [14.6s]
+
+  Summary: 1 package finished [16.0s]
+generate_code.cpp: |-
+  PerceptionOnlineEvaluatorNode::PerceptionOnlineEvaluatorNode(
+    const rclcpp::NodeOptions & node_options)
+  : Node("perception_online_evaluator", node_options),
+    parameters_(std::make_shared<Parameters>()),
+    metrics_calculator_(parameters_)
+  {
+    // Initialize TF buffer and transform listener
+    tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+    transform_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
+
+    // Initialize parameters
+    initParameter();
+
+    // Set up parameter callback
+    set_param_res_ = this->add_on_set_parameters_callback(
+      std::bind(&PerceptionOnlineEvaluatorNode::onParameter, this, std::placeholders::_1)
+    );
+
+    // Initialize publishers
+    metrics_pub_ = this->create_publisher<tier4_metric_msgs::msg::MetricArray>(
+      "~/metrics", rclcpp::QoS(1)
+    );
+    pub_marker_ = this->create_publisher<MarkerArray>(
+      "~/debug_markers", rclcpp::QoS(1)
+    );
+
+    // Initialize object subscription
+    objects_sub_ = this->create_subscription<PredictedObjects>(
+      "~/input/objects", rclcpp::QoS(1),
+      std::bind(&PerceptionOnlineEvaluatorNode::onObjects, this, std::placeholders::_1)
+    );
+  }
+ground_truth.cpp: |-
+  PerceptionOnlineEvaluatorNode::PerceptionOnlineEvaluatorNode(
+    const rclcpp::NodeOptions & node_options)
+  : Node("perception_online_evaluator", node_options),
+    parameters_(std::make_shared<Parameters>()),
+    metrics_calculator_(parameters_)
+  {
+    using std::placeholders::_1;
+
+    if (!google::IsGoogleLoggingInitialized()) {
+      google::InitGoogleLogging("perception_online_evaluator_node");
+      google::InstallFailureSignalHandler();
+    }
+
+    objects_sub_ = create_subscription<PredictedObjects>(
+      "~/input/objects", 1, std::bind(&PerceptionOnlineEvaluatorNode::onObjects, this, _1));
+    metrics_pub_ = create_publisher<tier4_metric_msgs::msg::MetricArray>("~/metrics", 1);
+    pub_marker_ = create_publisher<MarkerArray>("~/markers", 10);
+
+    tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+    transform_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
+
+    // Parameters
+    initParameter();
+
+    set_param_res_ = this->add_on_set_parameters_callback(
+      std::bind(&PerceptionOnlineEvaluatorNode::onParameter, this, std::placeholders::_1));
+  }
+architecture-codes:
+  - ROS Logger Issues - ROS Logger Missing Issue
+  - Topic/Service Related Issues - Topic Name Mismatch Issues  
+  - Topic/Service Related Issues - QoS Policy Incompatibility
+functionality-codes:
+  - Incomplete Code - Missing Multiple Steps
+  - Initialization Order Difference
+root-cause-codes:
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS development best practices

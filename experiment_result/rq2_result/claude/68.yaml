@@ -1,0 +1,173 @@
+compilation.log: |
+  Starting >>> autoware_euclidean_cluster
+  --- stderr: autoware_euclidean_cluster
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/src/voxel_grid_based_euclidean_cluster_node.cpp: In member function ‘void autoware::euclidean_cluster::VoxelGridBasedEuclideanClusterNode::onPointCloud(sensor_msgs::msg::PointCloud2_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/src/voxel_grid_based_euclidean_cluster_node.cpp:74:33: error: no matching function for call to ‘autoware::euclidean_cluster::VoxelGridBasedEuclideanCluster::cluster(pcl::PointCloud<pcl::PointXYZ>::Ptr&)’
+     74 |     clusters = cluster_->cluster(pcl_cloud);
+        |                ~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/src/voxel_grid_based_euclidean_cluster_node.hpp:17,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/src/voxel_grid_based_euclidean_cluster_node.cpp:15:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/include/autoware/euclidean_cluster/voxel_grid_based_euclidean_cluster.hpp:35:8: note: candidate: ‘virtual bool autoware::euclidean_cluster::VoxelGridBasedEuclideanCluster::cluster(const ConstPtr&, std::vector<pcl::PointCloud<pcl::PointXYZ> >&)’
+     35 |   bool cluster(
+        |        ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/include/autoware/euclidean_cluster/voxel_grid_based_euclidean_cluster.hpp:35:8: note:   candidate expects 2 arguments, 1 provided
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/include/autoware/euclidean_cluster/voxel_grid_based_euclidean_cluster.hpp:38:8: note: candidate: ‘virtual bool autoware::euclidean_cluster::VoxelGridBasedEuclideanCluster::cluster(const ConstSharedPtr&, tier4_perception_msgs::msg::DetectedObjectsWithFeature&)’
+     38 |   bool cluster(
+        |        ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/include/autoware/euclidean_cluster/voxel_grid_based_euclidean_cluster.hpp:38:8: note:   candidate expects 2 arguments, 1 provided
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/src/voxel_grid_based_euclidean_cluster_node.cpp:91:10: error: ‘compute3DCentroid’ is not a member of ‘pcl’
+     91 |     pcl::compute3DCentroid(cluster, centroid);
+        |          ^~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/src/voxel_grid_based_euclidean_cluster_node.cpp:92:19: error: ‘using _object_type = struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’ {aka ‘struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’} has no member named ‘pose’
+     92 |     object.object.pose.position.x = centroid[0];
+        |                   ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/src/voxel_grid_based_euclidean_cluster_node.cpp:93:19: error: ‘using _object_type = struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’ {aka ‘struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’} has no member named ‘pose’
+     93 |     object.object.pose.position.y = centroid[1];
+        |                   ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/src/voxel_grid_based_euclidean_cluster_node.cpp:94:19: error: ‘using _object_type = struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’ {aka ‘struct autoware_perception_msgs::msg::DetectedObject_<std::allocator<void> >’} has no member named ‘pose’
+     94 |     object.object.pose.position.z = centroid[2];
+        |                   ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/src/voxel_grid_based_euclidean_cluster_node.cpp:96:16: error: ‘using DetectedObjectsWithFeature = struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’ {aka ‘struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’} has no member named ‘objects’
+     96 |     output_msg.objects.push_back(object);
+        |                ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_euclidean_cluster/src/voxel_grid_based_euclidean_cluster_node.cpp:100:19: error: ‘using DetectedObjectsWithFeature = struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’ {aka ‘struct tier4_perception_msgs::msg::DetectedObjectsWithFeature_<std::allocator<void> >’} has no member named ‘objects’
+    100 |   if (!output_msg.objects.empty()) {
+        |                   ^~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_euclidean_cluster_voxel_grid_node_core.dir/build.make:76: CMakeFiles/autoware_euclidean_cluster_voxel_grid_node_core.dir/src/voxel_grid_based_euclidean_cluster_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:244: CMakeFiles/autoware_euclidean_cluster_voxel_grid_node_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_euclidean_cluster [7.10s, exited with code 2]
+
+  Summary: 0 packages finished [8.37s]
+    1 package failed: autoware_euclidean_cluster
+    1 package had stderr output: autoware_euclidean_cluster
+generate_code.cpp: |
+  void VoxelGridBasedEuclideanClusterNode::onPointCloud(
+    const sensor_msgs::msg::PointCloud2::ConstSharedPtr input_msg)
+  {
+    // Start timing the point cloud processing
+    stop_watch_ptr_->tic(__func__);
+
+    // Check if input point cloud is empty
+    if (input_msg->width * input_msg->height == 0) {
+      return;
+    }
+
+    // Convert input point cloud to PCL format
+    pcl::PointCloud<pcl::PointXYZ>::Ptr pcl_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::fromROSMsg(*input_msg, *pcl_cloud);
+
+    // Perform clustering
+    tier4_perception_msgs::msg::DetectedObjectsWithFeature output_msg;
+    std::vector<pcl::PointCloud<pcl::PointXYZ>> clusters;
+    
+    try {
+      clusters = cluster_->cluster(pcl_cloud);
+    } catch (const std::runtime_error& e) {
+      RCLCPP_WARN(get_logger(), "Clustering failed: %s", e.what());
+      return;
+    }
+
+    // Convert clusters to detected objects
+    for (const auto& cluster : clusters) {
+      tier4_perception_msgs::msg::DetectedObjectWithFeature object;
+      
+      // Convert cluster to ROS point cloud
+      sensor_msgs::msg::PointCloud2 cluster_cloud;
+      pcl::toROSMsg(cluster, cluster_cloud);
+      object.feature.cluster = cluster_cloud;
+
+      // Calculate cluster centroid
+      Eigen::Vector4f centroid;
+      pcl::compute3DCentroid(cluster, centroid);
+      object.object.pose.position.x = centroid[0];
+      object.object.pose.position.y = centroid[1];
+      object.object.pose.position.z = centroid[2];
+
+      output_msg.objects.push_back(object);
+    }
+
+    // Publish clustered objects
+    if (!output_msg.objects.empty()) {
+      cluster_pub_->publish(output_msg);
+    }
+
+    // Publish debug information
+    if (debug_publisher_) {
+      debug_publisher_->publish<tier4_perception_msgs::msg::DetectedObjectsWithFeature>(
+        "debug/detected_objects", output_msg);
+    }
+
+    // Publish debug point cloud if enabled
+    if (debug_pub_) {
+      sensor_msgs::msg::PointCloud2 debug_cloud;
+      pcl::toROSMsg(clusters.front(), debug_cloud);
+      debug_pub_->publish(debug_cloud);
+    }
+
+    // Log processing time
+    const auto processing_time_ms = stop_watch_ptr_->toc(__func__);
+    RCLCPP_DEBUG(
+      get_logger(), "Processing time: %f [ms], Num of clusters: %zu",
+      processing_time_ms, clusters.size());
+  }
+ground_truth.cpp: |-
+  void VoxelGridBasedEuclideanClusterNode::onPointCloud(
+    const sensor_msgs::msg::PointCloud2::ConstSharedPtr input_msg)
+  {
+    stop_watch_ptr_->toc("processing_time", true);
+
+    // convert ros to pcl
+    if (input_msg->data.empty()) {
+      // NOTE: prevent pcl log spam
+      RCLCPP_WARN_STREAM_THROTTLE(
+        this->get_logger(), *this->get_clock(), 1000, "Empty sensor points!");
+    }
+    // cluster and build output msg
+    tier4_perception_msgs::msg::DetectedObjectsWithFeature output;
+
+    cluster_->cluster(input_msg, output);
+    cluster_pub_->publish(output);
+
+    // build debug msg
+    if (debug_pub_->get_subscription_count() >= 1) {
+      sensor_msgs::msg::PointCloud2 debug;
+      convertObjectMsg2SensorMsg(output, debug);
+      debug_pub_->publish(debug);
+    }
+    if (debug_publisher_) {
+      const double processing_time_ms = stop_watch_ptr_->toc("processing_time", true);
+      const double cyclic_time_ms = stop_watch_ptr_->toc("cyclic_time", true);
+      const double pipeline_latency_ms =
+        std::chrono::duration<double, std::milli>(
+          std::chrono::nanoseconds((this->get_clock()->now() - output.header.stamp).nanoseconds()))
+          .count();
+      debug_publisher_->publish<autoware_internal_debug_msgs::msg::Float64Stamped>(
+        "debug/cyclic_time_ms", cyclic_time_ms);
+      debug_publisher_->publish<autoware_internal_debug_msgs::msg::Float64Stamped>(
+        "debug/processing_time_ms", processing_time_ms);
+      debug_publisher_->publish<autoware_internal_debug_msgs::msg::Float64Stamped>(
+        "debug/pipeline_latency_ms", pipeline_latency_ms);
+    }
+  }
+architecture-codes:
+  - ROS Message Related Issues - Incorrect Message Member Access
+  - ROS Message Related Issues - Message Operation Issues
+  - ROS Logger Issues - Inappropriate Log Level Usage
+  - ROS Timer Issues - Timestamp Processing Errors
+  - ROS Diagnostic Issues - Missing
+
+functionality-codes:
+  - Domain Library Issues - Domain Specific Library Utilization Error
+  - Reference Error - Wrong Method
+  - Incomplete Code - Missing Multiple Steps
+  - Conditional Checks Issues - Conditional Check Logic Misapplication
+  - Garbage Code - Wrong Logical
+
+Root Cause Analysis:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of System Requirements
+  - Deficiencies in Domain Knowledge - Insufficient Understanding of ROS Programming
+  - Deficiencies in Domain Knowledge - Lack of ROS Development Best Practices
+  - Weakness in System-Level Integration - Lack of Familiarity with the Existing Codebase
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries

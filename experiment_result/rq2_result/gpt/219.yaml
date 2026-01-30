@@ -1,0 +1,177 @@
+compilation.log: |
+  Starting >>> nav2_smac_planner
+  --- stderr: nav2_smac_planner
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp: In member function ‘float nav2_smac_planner::NodeHybrid::getTraversalCost(nav2_smac_planner::NodeHybrid* const&)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:314:23: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘x’
+    314 |     float dx = child->x - this->x;
+        |                       ^
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:314:33: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘x’
+    314 |     float dx = child->x - this->x;
+        |                                 ^
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:315:23: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘y’
+    315 |     float dy = child->y - this->y;
+        |                       ^
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:315:33: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘y’
+    315 |     float dy = child->y - this->y;
+        |                                 ^
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:322:45: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘direction’
+    322 |     float direction_change_penalty = (this->direction != child->direction) ? 2.0f : 0.0f;
+        |                                             ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:322:65: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘direction’
+    322 |     float direction_change_penalty = (this->direction != child->direction) ? 2.0f : 0.0f;
+        |                                                                 ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:325:37: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘direction’
+    325 |     float reverse_penalty = (child->direction == Direction::REVERSE) ? 1.5f : 0.0f;
+        |                                     ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:325:50: error: ‘Direction’ has not been declared
+    325 |     float reverse_penalty = (child->direction == Direction::REVERSE) ? 1.5f : 0.0f;
+        |                                                  ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:328:35: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘collision_cost’
+    328 |     float collision_cost = child->collision_cost;
+        |                                   ^~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp: In member function ‘float nav2_smac_planner::NodeHybrid::getTraversalCost(nav2_smac_planner::NodeHybrid* const&)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:314:23: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘x’
+    314 |     float dx = child->x - this->x;
+        |                       ^
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:314:33: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘x’
+    314 |     float dx = child->x - this->x;
+        |                                 ^
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:315:23: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘y’
+    315 |     float dy = child->y - this->y;
+        |                       ^
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:315:33: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘y’
+    315 |     float dy = child->y - this->y;
+        |                                 ^
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:322:45: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘direction’
+    322 |     float direction_change_penalty = (this->direction != child->direction) ? 2.0f : 0.0f;
+        |                                             ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:322:65: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘direction’
+    322 |     float direction_change_penalty = (this->direction != child->direction) ? 2.0f : 0.0f;
+        |                                                                 ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:325:37: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘direction’
+    325 |     float reverse_penalty = (child->direction == Direction::REVERSE) ? 1.5f : 0.0f;
+        |                                     ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:325:50: error: ‘Direction’ has not been declared
+    325 |     float reverse_penalty = (child->direction == Direction::REVERSE) ? 1.5f : 0.0f;
+        |                                                  ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:328:35: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘collision_cost’
+    328 |     float collision_cost = child->collision_cost;
+        |                                   ^~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp: In member function ‘float nav2_smac_planner::NodeHybrid::getTraversalCost(nav2_smac_planner::NodeHybrid* const&)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:314:23: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘x’
+    314 |     float dx = child->x - this->x;
+        |                       ^
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:314:33: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘x’
+    314 |     float dx = child->x - this->x;
+        |                                 ^
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:315:23: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘y’
+    315 |     float dy = child->y - this->y;
+        |                       ^
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:315:33: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘y’
+    315 |     float dy = child->y - this->y;
+        |                                 ^
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:322:45: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘direction’
+    322 |     float direction_change_penalty = (this->direction != child->direction) ? 2.0f : 0.0f;
+        |                                             ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:322:65: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘direction’
+    322 |     float direction_change_penalty = (this->direction != child->direction) ? 2.0f : 0.0f;
+        |                                                                 ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:325:37: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘direction’
+    325 |     float reverse_penalty = (child->direction == Direction::REVERSE) ? 1.5f : 0.0f;
+        |                                     ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:325:50: error: ‘Direction’ has not been declared
+    325 |     float reverse_penalty = (child->direction == Direction::REVERSE) ? 1.5f : 0.0f;
+        |                                                  ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_hybrid.cpp:328:35: error: ‘class nav2_smac_planner::NodeHybrid’ has no member named ‘collision_cost’
+    328 |     float collision_cost = child->collision_cost;
+        |                                   ^~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner_2d.dir/build.make:146: CMakeFiles/nav2_smac_planner_2d.dir/src/node_hybrid.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:222: CMakeFiles/nav2_smac_planner_2d.dir/all] Error 2
+  gmake[1]: *** Waiting for unfinished jobs....
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner.dir/build.make:146: CMakeFiles/nav2_smac_planner.dir/src/node_hybrid.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:196: CMakeFiles/nav2_smac_planner.dir/all] Error 2
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner_lattice.dir/build.make:146: CMakeFiles/nav2_smac_planner_lattice.dir/src/node_hybrid.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:248: CMakeFiles/nav2_smac_planner_lattice.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_smac_planner [5.74s, exited with code 2]
+
+  Summary: 0 packages finished [6.05s]
+    1 package failed: nav2_smac_planner
+    1 package had stderr output: nav2_smac_planner
+generate_code.cpp: |-
+  float NodeHybrid::getTraversalCost(const NodePtr & child) {
+      // Ensure the child node is valid
+      if (!child) {
+          throw std::runtime_error("Child node is null.");
+      }
+
+      // Retrieve the motion primitive index for the child node
+      unsigned int motion_primitive_index = child->getMotionPrimitiveIndex();
+
+      // Calculate the Euclidean distance between the current node and the child node
+      float dx = child->x - this->x;
+      float dy = child->y - this->y;
+      float distance_cost = std::sqrt(dx * dx + dy * dy);
+
+      // Penalize non-straight motions (e.g., turning or curved paths)
+      float non_straight_penalty = (motion_primitive_index == 0) ? 0.0f : 1.0f;
+
+      // Penalize direction changes (e.g., switching between forward and reverse)
+      float direction_change_penalty = (this->direction != child->direction) ? 2.0f : 0.0f;
+
+      // Penalize reverse movements
+      float reverse_penalty = (child->direction == Direction::REVERSE) ? 1.5f : 0.0f;
+
+      // Incorporate collision risk
+      float collision_cost = child->collision_cost;
+      if (std::isnan(collision_cost)) {
+          throw std::runtime_error("Child node has an invalid (NaN) collision cost.");
+      }
+
+      // Combine all costs into the final traversal cost
+      float traversal_cost = distance_cost + non_straight_penalty + direction_change_penalty + reverse_penalty + collision_cost;
+
+      return traversal_cost;
+  }
+ground_truth.cpp: |-
+  float NodeHybrid::getTraversalCost(const NodePtr & child)
+  {
+    const float normalized_cost = child->getCost() / 252.0;
+    if (std::isnan(normalized_cost)) {
+      throw std::runtime_error(
+              "Node attempted to get traversal "
+              "cost without a known SE2 collision cost!");
+    }
+
+    // this is the first node
+    if (getMotionPrimitiveIndex() == std::numeric_limits<unsigned int>::max()) {
+      return NodeHybrid::travel_distance_cost;
+    }
+
+    float travel_cost = 0.0;
+    float travel_cost_raw =
+      NodeHybrid::travel_distance_cost *
+      (motion_table.travel_distance_reward + motion_table.cost_penalty * normalized_cost);
+
+    if (child->getMotionPrimitiveIndex() == 0 || child->getMotionPrimitiveIndex() == 3) {
+      // New motion is a straight motion, no additional costs to be applied
+      travel_cost = travel_cost_raw;
+    } else {
+      if (getMotionPrimitiveIndex() == child->getMotionPrimitiveIndex()) {
+        // Turning motion but keeps in same direction: encourages to commit to turning if starting it
+        travel_cost = travel_cost_raw * motion_table.non_straight_penalty;
+      } else {
+        // Turning motion and changing direction: penalizes wiggling
+        travel_cost = travel_cost_raw *
+          (motion_table.non_straight_penalty + motion_table.change_penalty);
+      }
+    }
+
+    if (child->getMotionPrimitiveIndex() > 2) {
+      // reverse direction
+      travel_cost *= motion_table.reverse_penalty;
+    }
+
+    return travel_cost;
+  }

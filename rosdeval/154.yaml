@@ -1,0 +1,23 @@
+repository: autoware
+language: C++
+ros_package_file: src/universe/autoware.universe/control/autoware_autonomous_emergency_braking
+ros_package: autoware_autonomous_emergency_braking
+file_path: src/utils.cpp
+method_name: transformObjectFrame
+requirement: |
+  /**
+  * Transforms a PredictedObject's pose and twist from one frame to another.
+  * 
+  * @param[in] input The input PredictedObject to be transformed.
+  * @param[in] transform_stamped The transform to apply, containing source and target frame info.
+  * @return A new PredictedObject with transformed pose and twist in the target frame.
+  */
+category: utilities
+type: has_domain_library,has_message
+signature: |
+  PredictedObject transformObjectFrame(
+    const PredictedObject & input, const geometry_msgs::msg::TransformStamped & transform_stamped)
+additional_information: []
+test: test_aeb
+test_cases: 
+- CollisionDataKeeper

@@ -1,0 +1,113 @@
+repository: moveit2
+language: C++
+ros_package_file: moveit_ros/planning/planning_scene_monitor
+ros_package: moveit_ros_planning
+file_path: src/current_state_monitor.cpp
+method_name: CurrentStateMonitor::transformCallback
+requirement: |
+  /**
+  * @brief Processes incoming TF messages and updates the internal transform buffer.
+  * 
+  * @param msg The TF message containing transform data to process.
+  * @param is_static Whether the transforms in the message are static (true) or dynamic (false).
+  */
+category: ros_architecture
+type: has_domain_library,has_message,has_logger
+signature: |
+  void CurrentStateMonitor::transformCallback(const tf2_msgs::msg::TFMessage::ConstSharedPtr& msg, const bool is_static)
+additional_information: 
+  function_related_variable: |
+    std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
+    std::unique_ptr<MiddlewareHandle> middleware_handle_;
+    static const rclcpp::Logger LOGGER = rclcpp::get_logger("moveit_constraint_samplers.default_constraint_samplers");
+  function_related_function: 
+    void updateMultiDofJoints();
+  function_related_class: |
+    class MiddlewareHandle
+    {
+    public:
+      using TfCallback = std::function<void(const tf2_msgs::msg::TFMessage::ConstSharedPtr)>;
+
+      /**
+      * @brief      Destroys the object.
+      */
+      virtual ~MiddlewareHandle() = default;
+
+      /**
+      * @brief      Get the current time
+      *
+      * @return     Time object representing the time when this is called
+      */
+      virtual rclcpp::Time now() const = 0;
+
+      /**
+      * @brief      Creates a joint state subscription
+      *
+      * @param[in]  topic     The topic
+      * @param[in]  callback  The callback
+      */
+      virtual void createJointStateSubscription(const std::string& topic, JointStateUpdateCallback callback) = 0;
+
+      /**
+      * @brief      Creates a static transform message subscription
+      *
+      * @param[in]  callback  The callback
+      */
+      virtual void createStaticTfSubscription(TfCallback callback) = 0;
+
+      /**
+      * @brief      Creates a dynamic transform message subscription
+      *
+      * @param[in]  callback  The callback
+      */
+      virtual void createDynamicTfSubscription(TfCallback callback) = 0;
+
+      /**
+      * @brief      Reset the joint state subscription
+      */
+      virtual void resetJointStateSubscription() = 0;
+
+      /**
+      * @brief      Get the joint state topic name
+      *
+      * @return     The joint state topic name.
+      */
+      virtual std::string getJointStateTopicName() const = 0;
+
+      /**
+      * @brief      Block for the specified amount of time.
+      *
+      * @param[in]  nanoseconds  The nanoseconds to sleep
+      *
+      * @return     True if sleep happened as expected.
+      */
+      virtual bool sleepFor(const std::chrono::nanoseconds& nanoseconds) const = 0;
+
+      /**
+      * @brief      Uses rclcpp::ok to check the context status
+      *
+      * @return     Return of rclcpp::ok
+      */
+      virtual bool ok() const = 0;
+
+      /**
+      * @brief      Get the static transform topic name
+      *
+      * @return     The static transform topic name.
+      */
+      virtual std::string getStaticTfTopicName() const = 0;
+
+      /**
+      * @brief      Get the dynamic transform topic name
+      *
+      * @return     The dynamic transform topic name.
+      */
+      virtual std::string getDynamicTfTopicName() const = 0;
+
+      /**
+      * @brief      Reset the static & dynamic transform subscriptions
+      */
+      virtual void resetTfSubscriptions() = 0;
+    };
+test: current_state_monitor_tests
+test_cases: []

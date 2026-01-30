@@ -1,0 +1,89 @@
+compilation.log: |
+  Starting >>> autoware_geography_utils
+  --- stderr: autoware_geography_utils
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/projection.cpp: In function ‘autoware::geography_utils::GeoPoint autoware::geography_utils::project_reverse(const LocalPoint&, const MapProjectorInfo&)’:
+  /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/projection.cpp:75:62: error: no matching function for call to ‘geographic_msgs::msg::GeoPoint_<std::allocator<void> >::GeoPoint_(<brace-enclosed initializer list>)’
+     75 |   return GeoPoint{gps_point.lat, gps_point.lon, gps_point.ele};
+        |                                                              ^
+  In file included from /workspace/repos/autoware/install/autoware_map_msgs/include/autoware_map_msgs/autoware_map_msgs/msg/detail/map_projector_info__struct.hpp:20,
+                   from /workspace/repos/autoware/install/autoware_map_msgs/include/autoware_map_msgs/autoware_map_msgs/msg/map_projector_info.hpp:7,
+                   from /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/include/autoware/geography_utils/lanelet2_projector.hpp:18,
+                   from /workspace/repos/autoware/src/core/autoware.core/common/autoware_geography_utils/src/projection.cpp:16:
+  /opt/ros/humble/include/geographic_msgs/geographic_msgs/msg/detail/geo_point__struct.hpp:47:12: note: candidate: ‘geographic_msgs::msg::GeoPoint_<ContainerAllocator>::GeoPoint_(const ContainerAllocator&, rosidl_runtime_cpp::MessageInitialization) [with ContainerAllocator = std::allocator<void>]’
+     47 |   explicit GeoPoint_(const ContainerAllocator & _alloc, rosidl_runtime_cpp::MessageInitialization _init = rosidl_runtime_cpp::MessageInitialization::ALL)
+        |            ^~~~~~~~~
+  /opt/ros/humble/include/geographic_msgs/geographic_msgs/msg/detail/geo_point__struct.hpp:47:12: note:   candidate expects 2 arguments, 3 provided
+  /opt/ros/humble/include/geographic_msgs/geographic_msgs/msg/detail/geo_point__struct.hpp:36:12: note: candidate: ‘geographic_msgs::msg::GeoPoint_<ContainerAllocator>::GeoPoint_(rosidl_runtime_cpp::MessageInitialization) [with ContainerAllocator = std::allocator<void>]’
+     36 |   explicit GeoPoint_(rosidl_runtime_cpp::MessageInitialization _init = rosidl_runtime_cpp::MessageInitialization::ALL)
+        |            ^~~~~~~~~
+  /opt/ros/humble/include/geographic_msgs/geographic_msgs/msg/detail/geo_point__struct.hpp:36:12: note:   candidate expects 1 argument, 3 provided
+  /opt/ros/humble/include/geographic_msgs/geographic_msgs/msg/detail/geo_point__struct.hpp:32:8: note: candidate: ‘constexpr geographic_msgs::msg::GeoPoint_<std::allocator<void> >::GeoPoint_(const geographic_msgs::msg::GeoPoint_<std::allocator<void> >&)’
+     32 | struct GeoPoint_
+        |        ^~~~~~~~~
+  /opt/ros/humble/include/geographic_msgs/geographic_msgs/msg/detail/geo_point__struct.hpp:32:8: note:   candidate expects 1 argument, 3 provided
+  /opt/ros/humble/include/geographic_msgs/geographic_msgs/msg/detail/geo_point__struct.hpp:32:8: note: candidate: ‘constexpr geographic_msgs::msg::GeoPoint_<std::allocator<void> >::GeoPoint_(geographic_msgs::msg::GeoPoint_<std::allocator<void> >&&)’
+  /opt/ros/humble/include/geographic_msgs/geographic_msgs/msg/detail/geo_point__struct.hpp:32:8: note:   candidate expects 1 argument, 3 provided
+  gmake[2]: *** [CMakeFiles/autoware_geography_utils.dir/build.make:90: CMakeFiles/autoware_geography_utils.dir/src/projection.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_geography_utils.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_geography_utils [1.53s, exited with code 2]
+
+  Summary: 0 packages finished [2.97s]
+    1 package failed: autoware_geography_utils
+    1 package had stderr output: autoware_geography_utils
+generate_code.cpp: "GeoPoint project_reverse(const LocalPoint & local_point, const\
+  \ MapProjectorInfo & projector_info)\n{\n  // Convert local point to BasicPoint3d\
+  \ format\n  const auto basic_point = to_basic_point_3d_pt(local_point);\n  \n  //\
+  \ Get the appropriate projector based on projector_info\n  auto projector = get_lanelet2_projector(projector_info);\n\
+  \  \n  // Perform reverse projection to get geographic coordinates\n  const auto\
+  \ gps_point = projector->reverse(basic_point);\n  \n  // Convert to GeoPoint format\
+  \ and return\n  return GeoPoint{gps_point.lat, gps_point.lon, gps_point.ele};\n}"
+ground_truth.cpp: |-
+  GeoPoint project_reverse(const LocalPoint & local_point, const MapProjectorInfo & projector_info)
+  {
+    std::unique_ptr<lanelet::Projector> projector = get_lanelet2_projector(projector_info);
+
+    lanelet::GPSPoint projected_gps_point;
+    if (projector_info.projector_type == MapProjectorInfo::MGRS) {
+      const auto * mgrs_projector =
+        dynamic_cast<lanelet::projection::MGRSProjector *>(projector.get());
+      // project latitude and longitude using projector
+      // note that the z is ignored in MGRS projection conventionally
+      projected_gps_point =
+        mgrs_projector->reverse(to_basic_point_3d_pt(local_point), projector_info.mgrs_grid);
+    } else {
+      // project latitude and longitude using projector
+      // note that the original projector such as UTM projector does not compensate for the altitude
+      // offset
+      projected_gps_point = projector->reverse(to_basic_point_3d_pt(local_point));
+
+      // correct altitude based on the map origin
+      // note that the converted altitude in local point is in the same vertical datum as the geo
+      // point
+      projected_gps_point.ele = local_point.z + projector_info.map_origin.altitude;
+    }
+
+    GeoPoint geo_point;
+    geo_point.latitude = projected_gps_point.lat;
+    geo_point.longitude = projected_gps_point.lon;
+    geo_point.altitude = projected_gps_point.ele;
+    return geo_point;
+  }
+architecture-codes:
+  - ROS Message Issue - Message Initialization Issue
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Parameter Issue - Use Non-existent Parameter Issue
+  - ROS Parameter Issue - Insufficient Parameter Design Issue
+
+functionality-codes:
+  - Condition Issue - Conditional Check Missing Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Operation/Calculation Issue - Violation of Physical & Kinematic Constraints Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Deficiencies in Domain Knowledge - Insufficient understanding of ROS Programming
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase

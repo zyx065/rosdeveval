@@ -1,0 +1,94 @@
+compilation.log: |
+  Starting >>> autoware_detected_object_validation
+  --- stderr: autoware_detected_object_validation
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/lanelet_filter/debug.cpp: In member function ‘void autoware::detected_object_validation::lanelet_filter::ObjectLaneletFilterNode::publishDebugMarkers(rclcpp::Time, const LinearRing2d&, const std::vector<std::pair<boost::geometry::model::box<boost::geometry::model::point<double, 2, boost::geometry::cs::cartesian> >, autoware::detected_object_validation::lanelet_filter::PolygonAndLanelet> >&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_detected_object_validation/src/lanelet_filter/debug.cpp:121:63: error: ‘const value_type’ {aka ‘const struct std::pair<boost::geometry::model::box<boost::geometry::model::point<double, 2, boost::geometry::cs::cartesian> >, autoware::detected_object_validation::lanelet_filter::PolygonAndLanelet>’} has no member named ‘box’
+    121 |     if (auto lanelet_marker = createPolygonMarker(lanelets[i].box, stamp, "lanelet", i + 1, lanelet_color)) {
+        |                                                               ^~~
+  gmake[2]: *** [CMakeFiles/object_lanelet_filter.dir/build.make:76: CMakeFiles/object_lanelet_filter.dir/src/lanelet_filter/debug.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:226: CMakeFiles/object_lanelet_filter.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_detected_object_validation [9.63s, exited with code 2]
+
+  Summary: 0 packages finished [11.0s]
+    1 package failed: autoware_detected_object_validation
+    1 package had stderr output: autoware_detected_object_validation
+generate_code.cpp: |-
+  void ObjectLaneletFilterNode::publishDebugMarkers(
+    rclcpp::Time stamp, const LinearRing2d & hull, const std::vector<BoxAndLanelet> & lanelets)
+  {
+    visualization_msgs::msg::MarkerArray marker_array;
+
+    // Create hull marker
+    std_msgs::msg::ColorRGBA hull_color;
+    hull_color.r = 1.0;
+    hull_color.g = 0.0;
+    hull_color.b = 0.0;
+    hull_color.a = 0.3;
+
+    if (auto hull_marker = createPolygonMarker(hull, stamp, "hull", 0, hull_color)) {
+      marker_array.markers.push_back(*hull_marker);
+    }
+
+    // Create lanelet markers
+    std_msgs::msg::ColorRGBA lanelet_color;
+    lanelet_color.r = 0.0;
+    lanelet_color.g = 1.0;
+    lanelet_color.b = 0.0;
+    lanelet_color.a = 0.3;
+
+    for (size_t i = 0; i < lanelets.size(); ++i) {
+      if (auto lanelet_marker = createPolygonMarker(lanelets[i].box, stamp, "lanelet", i + 1, lanelet_color)) {
+        marker_array.markers.push_back(*lanelet_marker);
+      }
+    }
+
+    // Publish markers
+    viz_pub_->publish(marker_array);
+  }
+ground_truth.cpp: |-
+  void ObjectLaneletFilterNode::publishDebugMarkers(
+    rclcpp::Time stamp, const LinearRing2d & hull, const std::vector<BoxAndLanelet> & lanelets)
+  {
+    using visualization_msgs::msg::Marker;
+    using visualization_msgs::msg::MarkerArray;
+
+    uint8_t marker_id = 0;
+    Marker delete_marker;
+    constexpr std::string_view lanelet_range = "lanelet_range";
+    constexpr std::string_view roi = "roi";
+
+    MarkerArray marker_array;
+
+    std_msgs::msg::ColorRGBA color;
+    color.a = 0.5f;
+    color.r = 0.3f;
+    color.g = 1.0f;
+    color.b = 0.2f;
+    if (auto marker = createPolygonMarker(hull, stamp, lanelet_range, ++marker_id, color); marker) {
+      marker_array.markers.push_back(std::move(*marker));
+    }
+    for (const auto & box_and_lanelet : lanelets) {
+      color.r = 0.2;
+      color.g = 0.5;
+      color.b = 1.0;
+      auto p = box_and_lanelet.second.polygon;
+      if (auto marker = createPolygonMarker(p, stamp, roi, ++marker_id, color); marker) {
+        marker_array.markers.push_back(std::move(*marker));
+      }
+    }
+    viz_pub_->publish(marker_array);
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+
+functionality-codes:
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Incomplete Code Issue - Missing One Step Issue
+
+root-cause-codes:
+  - Inadequate Comprehension of Functional Logic - Inadequate Understanding of Task Logic
+  - Deficiencies in Domain Knowledge - Lack of Knowledge of Domain-Specific Libraries
+  - Weakness in System-Level Integration - Lack of familiarity with the existing codebase
