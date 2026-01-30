@@ -1,0 +1,91 @@
+compilation.log: |
+  Starting >>> autoware_vehicle_cmd_gate
+  --- stderr: autoware_vehicle_cmd_gate
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp: In member function ‘void autoware::vehicle_cmd_gate::VehicleCmdGate::publishStatus()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_vehicle_cmd_gate/src/vehicle_cmd_gate.cpp:656:31: error: ‘is_external_emergency_’ was not declared in this scope; did you mean ‘srv_external_emergency_’?
+    656 |     emergency_msg.emergency = is_external_emergency_;
+        |                               ^~~~~~~~~~~~~~~~~~~~~~
+        |                               srv_external_emergency_
+  gmake[2]: *** [CMakeFiles/vehicle_cmd_gate_node.dir/build.make:76: CMakeFiles/vehicle_cmd_gate_node.dir/src/vehicle_cmd_gate.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:206: CMakeFiles/vehicle_cmd_gate_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_vehicle_cmd_gate [18.4s, exited with code 2]
+
+  Summary: 0 packages finished [19.7s]
+    1 package failed: autoware_vehicle_cmd_gate
+    1 package had stderr output: autoware_vehicle_cmd_gate
+generate_code.cpp: |-
+  void VehicleCmdGate::publishStatus()
+  {
+    // Publish gate mode
+    if (gate_mode_pub_) {
+      gate_mode_pub_->publish(current_gate_mode_);
+    }
+
+    // Publish engagement status
+    if (engage_pub_) {
+      EngageMsg engage_msg;
+      engage_msg.stamp = this->now();
+      engage_msg.engage = is_engaged_;
+      engage_pub_->publish(engage_msg);
+    }
+
+    // Publish external emergency status
+    if (pub_external_emergency_) {
+      Emergency emergency_msg;
+      emergency_msg.stamp = this->now();
+      emergency_msg.emergency = is_external_emergency_;
+      pub_external_emergency_->publish(emergency_msg);
+    }
+
+    // Publish operation mode
+    if (operation_mode_pub_) {
+      operation_mode_pub_->publish(current_operation_mode_);
+    }
+
+    // Publish ADAPI pause status if interface exists
+    if (adapi_pause_) {
+      adapi_pause_->publish();
+    }
+
+    // Publish moderate stop status if interface exists
+    if (moderate_stop_interface_) {
+      moderate_stop_interface_->publish();
+    }
+  }
+ground_truth.cpp: |-
+  void VehicleCmdGate::publishStatus()
+  {
+    const auto stamp = this->now();
+
+    // Engage
+    EngageMsg autoware_engage;
+    autoware_engage.stamp = stamp;
+    autoware_engage.engage = is_engaged_;
+
+    // External emergency
+    Emergency external_emergency;
+    external_emergency.stamp = stamp;
+    external_emergency.emergency = is_external_emergency_stop_;
+
+    gate_mode_pub_->publish(current_gate_mode_);
+    engage_pub_->publish(autoware_engage);
+    pub_external_emergency_->publish(external_emergency);
+    operation_mode_pub_->publish(current_operation_mode_);
+    adapi_pause_->publish();
+    moderate_stop_interface_->publish();
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+
+functionality-codes:
+
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Incomplete Code Issue - Missing One Step Issue
+
+root-cause-codes:
+
+  - Solving Robotic Tasks Issue - Inadequate Understanding of System Requirements
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Framework Integration Issue - Lack of ROS development best practices

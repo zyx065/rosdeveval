@@ -1,0 +1,42 @@
+compilation.log: |
+  Starting >>> autoware_motion_velocity_dynamic_obstacle_stop_module
+  Finished <<< autoware_motion_velocity_dynamic_obstacle_stop_module [21.9s]
+
+  Summary: 1 package finished [23.2s]
+generate_code.cpp: |-
+  bool is_vehicle(const autoware_perception_msgs::msg::PredictedObject & object)
+  {
+    for (const auto & classification : object.classification) {
+      if (classification.label == autoware_perception_msgs::msg::ObjectClassification::CAR ||
+          classification.label == autoware_perception_msgs::msg::ObjectClassification::BUS ||
+          classification.label == autoware_perception_msgs::msg::ObjectClassification::TRUCK ||
+          classification.label == autoware_perception_msgs::msg::ObjectClassification::TRAILER ||
+          classification.label == autoware_perception_msgs::msg::ObjectClassification::MOTORCYCLE ||
+          classification.label == autoware_perception_msgs::msg::ObjectClassification::BICYCLE) {
+        return true;
+      }
+    }
+    return false;
+  }
+ground_truth.cpp: |-
+  bool is_vehicle(const autoware_perception_msgs::msg::PredictedObject & object)
+  {
+    constexpr auto is_vehicle_class = [](const auto & c) {
+      return c.label == autoware_perception_msgs::msg::ObjectClassification::CAR ||
+             c.label == autoware_perception_msgs::msg::ObjectClassification::BUS ||
+             c.label == autoware_perception_msgs::msg::ObjectClassification::TRUCK ||
+             c.label == autoware_perception_msgs::msg::ObjectClassification::TRAILER ||
+             c.label == autoware_perception_msgs::msg::ObjectClassification::MOTORCYCLE ||
+             c.label == autoware_perception_msgs::msg::ObjectClassification::BICYCLE;
+    };
+    return std::find_if(
+             object.classification.begin(), object.classification.end(), is_vehicle_class) !=
+           object.classification.end();
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+
+root-cause-codes:
+  - Framework Integration Issue - Lack of ROS development best practices 

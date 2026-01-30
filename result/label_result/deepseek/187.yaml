@@ -1,0 +1,161 @@
+compilation.log: |
+  Starting >>> nav2_route
+  --- stderr: nav2_route
+  /root/repos/nav_ws/src/nav2_route/src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp: In member function ‘virtual bool nav2_route::GeoJsonGraphFileLoader::loadGraphFromFile(nav2_route::Graph&, nav2_route::GraphToIDMap&, std::string)’:
+  /root/repos/nav_ws/src/nav2_route/src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp:37:5: error: ‘ROS_ERROR’ was not declared in this scope
+     37 |     ROS_ERROR("Graph file does not exist: %s", filepath.c_str());
+        |     ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp:47:5: error: ‘ROS_ERROR’ was not declared in this scope
+     47 |     ROS_ERROR("Failed to parse JSON file: %s. Error: %s", filepath.c_str(), e.what());
+        |     ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp:53:5: error: ‘ROS_ERROR’ was not declared in this scope
+     53 |     ROS_ERROR("GeoJSON file missing required 'features' field");
+        |     ^~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp:68:9: error: ‘ROS_WARN’ was not declared in this scope
+     68 |         ROS_WARN("Edge missing required properties.nodes field, skipping");
+        |         ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp:74:9: error: ‘ROS_WARN’ was not declared in this scope
+     74 |         ROS_WARN("Edge must connect exactly 2 nodes, skipping");
+        |         ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp:84:9: error: ‘ROS_WARN’ was not declared in this scope
+     84 |         ROS_WARN("Edge references non-existent nodes (%lu, %lu), skipping", node1_id, node2_id);
+        |         ^~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp:93:13: error: ‘nav2_route::Graph’ {aka ‘class std::vector<nav2_route::Node>’} has no member named ‘addEdge’
+     93 |       graph.addEdge(node1_idx, node2_idx);
+        |             ^~~~~~~
+  /root/repos/nav_ws/src/nav2_route/src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp:94:13: error: ‘nav2_route::Graph’ {aka ‘class std::vector<nav2_route::Node>’} has no member named ‘addEdge’
+     94 |       graph.addEdge(node2_idx, node1_idx);
+        |             ^~~~~~~
+  /root/repos/nav_ws/src/nav2_route/src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp:97:7: error: ‘ROS_WARN’ was not declared in this scope
+     97 |       ROS_WARN("Failed to process edge: %s, skipping", e.what());
+        |       ^~~~~~~~
+  gmake[2]: *** [CMakeFiles/graph_file_loaders.dir/build.make:76: CMakeFiles/graph_file_loaders.dir/src/plugins/graph_file_loaders/geojson_graph_file_loader.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:318: CMakeFiles/graph_file_loaders.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_route [3.47s, exited with code 2]
+
+  Summary: 0 packages finished [3.76s]
+    1 package failed: nav2_route
+    1 package had stderr output: nav2_route
+generate_code.cpp: |-
+  bool GeoJsonGraphFileLoader::loadGraphFromFile(
+    Graph & graph, GraphToIDMap & graph_to_id_map, std::string filepath)
+  {
+    // Check if file exists
+    if (!doesFileExist(filepath)) {
+      ROS_ERROR("Graph file does not exist: %s", filepath.c_str());
+      return false;
+    }
+
+    // Read JSON file
+    std::ifstream input_file(filepath);
+    Json json_data;
+    try {
+      input_file >> json_data;
+    } catch (const std::exception& e) {
+      ROS_ERROR("Failed to parse JSON file: %s. Error: %s", filepath.c_str(), e.what());
+      return false;
+    }
+
+    // Check if JSON has required fields
+    if (!json_data.contains("features")) {
+      ROS_ERROR("GeoJSON file missing required 'features' field");
+      return false;
+    }
+
+    // Extract nodes and edges from features
+    std::vector<Json> nodes, edges;
+    getGraphElements(json_data["features"], nodes, edges);
+
+    // Add nodes to graph
+    addNodesToGraph(graph, graph_to_id_map, nodes);
+
+    // Add edges to graph
+    for (const auto& edge : edges) {
+      try {
+        if (!edge.contains("properties") || !edge["properties"].contains("nodes")) {
+          ROS_WARN("Edge missing required properties.nodes field, skipping");
+          continue;
+        }
+
+        const auto& nodes_array = edge["properties"]["nodes"];
+        if (nodes_array.size() != 2) {
+          ROS_WARN("Edge must connect exactly 2 nodes, skipping");
+          continue;
+        }
+
+        uint64_t node1_id = nodes_array[0].get<uint64_t>();
+        uint64_t node2_id = nodes_array[1].get<uint64_t>();
+
+        // Check if nodes exist in graph
+        if (graph_to_id_map.find(node1_id) == graph_to_id_map.end() ||
+            graph_to_id_map.find(node2_id) == graph_to_id_map.end()) {
+          ROS_WARN("Edge references non-existent nodes (%lu, %lu), skipping", node1_id, node2_id);
+          continue;
+        }
+
+        // Get node indices
+        auto node1_idx = graph_to_id_map[node1_id];
+        auto node2_idx = graph_to_id_map[node2_id];
+
+        // Add edge to graph (bidirectional)
+        graph.addEdge(node1_idx, node2_idx);
+        graph.addEdge(node2_idx, node1_idx);
+
+      } catch (const std::exception& e) {
+        ROS_WARN("Failed to process edge: %s, skipping", e.what());
+        continue;
+      }
+    }
+
+    return true;
+  }
+ground_truth.cpp: |-
+  bool GeoJsonGraphFileLoader::loadGraphFromFile(
+    Graph & graph, GraphToIDMap & graph_to_id_map, std::string filepath)
+  {
+    if (!doesFileExist(filepath)) {
+      RCLCPP_ERROR(logger_, "The filepath %s does not exist", filepath.c_str());
+      return false;
+    }
+
+    std::ifstream graph_file(filepath);
+    Json json_graph;
+
+    try {
+      json_graph = Json::parse(graph_file);
+    } catch (Json::parse_error & ex) {
+      RCLCPP_ERROR(logger_, "Failed to parse %s: %s", filepath.c_str(), ex.what());
+      return false;
+    }
+
+    auto features = json_graph["features"];
+    std::vector<Json> nodes, edges;
+    getGraphElements(features, nodes, edges);
+
+    if (nodes.empty() || edges.empty()) {
+      RCLCPP_ERROR(
+        logger_, "The graph is malformed. Is does not contain nodes or edges. Please check %s",
+        filepath.c_str());
+      return false;
+    }
+
+    graph.resize(nodes.size());
+    addNodesToGraph(graph, graph_to_id_map, nodes);
+    addEdgesToGraph(graph, graph_to_id_map, edges);
+    return true;
+  }
+architecture-codes: 
+  - ROS Logger Issue - ROS Logger Missing Issue
+  - ROS Message Issue - Improper Message Type Usage Issue 
+  - ROS Message Issue - Message Initialization Issue 
+
+functionality-codes:
+  - Condition Issue - Conditional Check Missing Issue 
+  - Incomplete Code Issue - Missing Multiple Steps Issue 
+
+root-cause-codes:
+  - Framework Integration Issue - Insufficient understanding of ROS Integration 
+  - Framework Integration Issue - Lack of ROS development best practices 
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase  

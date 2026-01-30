@@ -1,0 +1,117 @@
+compilation.log: |
+  Starting >>> moveit_core
+  --- stderr: moveit_core
+  /root/repos/moveit_ws/src/moveit2/moveit_core/collision_detection/src/world.cpp: In member function ‘bool collision_detection::World::moveShapeInObject(const string&, const ShapeConstPtr&, const Isometry3d&)’:
+  /root/repos/moveit_ws/src/moveit2/moveit_core/collision_detection/src/world.cpp:237:55: error: conversion from ‘vector<[...],Eigen::aligned_allocator<Eigen::Transform<double, 3, 1> >>’ to non-scalar type ‘vector<[...],std::allocator<Eigen::Transform<double, 3, 1> >>’ requested
+    237 |     std::vector<Eigen::Isometry3d> shape_poses = obj->shape_poses_;
+        |                                                  ~~~~~^~~~~~~~~~~~
+  /root/repos/moveit_ws/src/moveit2/moveit_core/collision_detection/src/world.cpp:255:25: error: no match for ‘operator=’ (operand types are ‘EigenSTL::vector_Isometry3d’ {aka ‘std::vector<Eigen::Transform<double, 3, 1>, Eigen::aligned_allocator<Eigen::Transform<double, 3, 1> > >’} and ‘std::vector<Eigen::Transform<double, 3, 1> >’)
+    255 |     obj->shape_poses_ = shape_poses;
+        |                         ^~~~~~~~~~~
+  In file included from /usr/include/c++/11/vector:72,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/collision_detection/include/moveit/collision_detection/world.h:41,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/collision_detection/src/world.cpp:37:
+  /usr/include/c++/11/bits/vector.tcc:198:5: note: candidate: ‘std::vector<_Tp, _Alloc>& std::vector<_Tp, _Alloc>::operator=(const std::vector<_Tp, _Alloc>&) [with _Tp = Eigen::Transform<double, 3, 1>; _Alloc = Eigen::aligned_allocator<Eigen::Transform<double, 3, 1> >]’
+    198 |     vector<_Tp, _Alloc>::
+        |     ^~~~~~~~~~~~~~~~~~~
+  /usr/include/c++/11/bits/vector.tcc:199:42: note:   no known conversion for argument 1 from ‘std::vector<Eigen::Transform<double, 3, 1> >’ to ‘const std::vector<Eigen::Transform<double, 3, 1>, Eigen::aligned_allocator<Eigen::Transform<double, 3, 1> > >&’
+    199 |     operator=(const vector<_Tp, _Alloc>& __x)
+        |               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+  In file included from /usr/include/c++/11/vector:67,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/collision_detection/include/moveit/collision_detection/world.h:41,
+                   from /root/repos/moveit_ws/src/moveit2/moveit_core/collision_detection/src/world.cpp:37:
+  /usr/include/c++/11/bits/stl_vector.h:709:7: note: candidate: ‘std::vector<_Tp, _Alloc>& std::vector<_Tp, _Alloc>::operator=(std::vector<_Tp, _Alloc>&&) [with _Tp = Eigen::Transform<double, 3, 1>; _Alloc = Eigen::aligned_allocator<Eigen::Transform<double, 3, 1> >]’
+    709 |       operator=(vector&& __x) noexcept(_Alloc_traits::_S_nothrow_move())
+        |       ^~~~~~~~
+  /usr/include/c++/11/bits/stl_vector.h:709:26: note:   no known conversion for argument 1 from ‘std::vector<Eigen::Transform<double, 3, 1> >’ to ‘std::vector<Eigen::Transform<double, 3, 1>, Eigen::aligned_allocator<Eigen::Transform<double, 3, 1> > >&&’
+    709 |       operator=(vector&& __x) noexcept(_Alloc_traits::_S_nothrow_move())
+        |                 ~~~~~~~~~^~~
+  /usr/include/c++/11/bits/stl_vector.h:730:7: note: candidate: ‘std::vector<_Tp, _Alloc>& std::vector<_Tp, _Alloc>::operator=(std::initializer_list<_Tp>) [with _Tp = Eigen::Transform<double, 3, 1>; _Alloc = Eigen::aligned_allocator<Eigen::Transform<double, 3, 1> >]’
+    730 |       operator=(initializer_list<value_type> __l)
+        |       ^~~~~~~~
+  /usr/include/c++/11/bits/stl_vector.h:730:46: note:   no known conversion for argument 1 from ‘std::vector<Eigen::Transform<double, 3, 1> >’ to ‘std::initializer_list<Eigen::Transform<double, 3, 1> >’
+    730 |       operator=(initializer_list<value_type> __l)
+        |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+  /root/repos/moveit_ws/src/moveit2/moveit_core/collision_detection/src/world.cpp:256:17: error: ‘UPDATE’ was not declared in this scope
+    256 |     notify(obj, UPDATE);
+        |                 ^~~~~~
+  gmake[2]: *** [collision_detection/CMakeFiles/moveit_collision_detection.dir/build.make:149: collision_detection/CMakeFiles/moveit_collision_detection.dir/src/world.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:2189: collision_detection/CMakeFiles/moveit_collision_detection.dir/all] Error 2
+  gmake[1]: *** Waiting for unfinished jobs....
+  gmake: *** [Makefile:149: all] Error 2
+  ---
+  Failed   <<< moveit_core [9.71s, exited with code 2]
+
+  Summary: 0 packages finished [10.2s]
+    1 package failed: moveit_core
+    1 package had stderr output: moveit_core
+generate_code.cpp: |-
+  bool World::moveShapeInObject(const std::string& object_id, const shapes::ShapeConstPtr& shape,
+                                const Eigen::Isometry3d& shape_pose)
+  {
+      auto it = objects_.find(object_id);
+      if (it == objects_.end())
+          return false;
+
+      ObjectPtr obj = it->second;
+      bool found = false;
+
+      // Make a copy of the object's shapes to modify
+      std::vector<shapes::ShapeConstPtr> shapes = obj->shapes_;
+      std::vector<Eigen::Isometry3d> shape_poses = obj->shape_poses_;
+
+      for (size_t i = 0; i < shapes.size(); ++i)
+      {
+          if (shapes[i] == shape)
+          {
+              shape_poses[i] = shape_pose;
+              found = true;
+              break;
+          }
+      }
+
+      if (!found)
+          return false;
+
+      // Update the object with modified shapes
+      ensureUnique(obj);
+      obj->shapes_ = shapes;
+      obj->shape_poses_ = shape_poses;
+      notify(obj, UPDATE);
+
+      return true;
+  }
+ground_truth.cpp: |-
+  bool World::moveShapeInObject(const std::string& object_id, const shapes::ShapeConstPtr& shape,
+                                const Eigen::Isometry3d& shape_pose)
+  {
+    const auto it = objects_.find(object_id);
+    if (it != objects_.end())
+    {
+      const unsigned int n = it->second->shapes_.size();
+      for (unsigned int i = 0; i < n; ++i)
+        if (it->second->shapes_[i] == shape)
+        {
+          ensureUnique(it->second);
+          ASSERT_ISOMETRY(shape_pose)  // unsanitized input, could contain a non-isometry
+          it->second->shape_poses_[i] = shape_pose;
+          it->second->global_shape_poses_[i] = it->second->pose_ * shape_pose;
+
+          notify(it->second, MOVE_SHAPE);
+          return true;
+        }
+    }
+    return false;
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Condition Issue - Conditional Check Missing Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Constant Value Issue
+  - Domain Library Issue - Domain Specific Library Utilization Error
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

@@ -1,0 +1,40 @@
+compilation.log: ""
+generate_code.cpp: "inline diagnostic_msgs::msg::DiagnosticStatus check_localization_accuracy(\n\
+  \  const double ellipse_size, const double warn_ellipse_size, const double error_ellipse_size)\n\
+  {\n  diagnostic_msgs::msg::DiagnosticStatus status;\n  \n  if (ellipse_size >= error_ellipse_size)\
+  \ {\n    status.level = diagnostic_msgs::msg::DiagnosticStatus::ERROR;\n    status.message\
+  \ = \"Localization accuracy is too low (ERROR threshold exceeded)\";\n  } else if\
+  \ (ellipse_size >= warn_ellipse_size) {\n    status.level = diagnostic_msgs::msg::DiagnosticStatus::WARN;\n\
+  \    status.message = \"Localization accuracy is degraded (WARNING threshold exceeded)\"\
+  ;\n  } else {\n    status.level = diagnostic_msgs::msg::DiagnosticStatus::OK;\n\
+  \    status.message = \"Localization accuracy is within acceptable limits\";\n \
+  \ }\n  \n  return status;\n}"
+ground_truth.cpp: |-
+  inline diagnostic_msgs::msg::DiagnosticStatus check_localization_accuracy(
+    const double ellipse_size, const double warn_ellipse_size, const double error_ellipse_size)
+  {
+    diagnostic_msgs::msg::DiagnosticStatus stat;
+
+    stat.level = diagnostic_msgs::msg::DiagnosticStatus::OK;
+    stat.message = "OK";
+    if (ellipse_size >= warn_ellipse_size) {
+      stat.level = diagnostic_msgs::msg::DiagnosticStatus::WARN;
+      stat.message = "ellipse size is too large";
+    }
+    if (ellipse_size >= error_ellipse_size) {
+      stat.level = diagnostic_msgs::msg::DiagnosticStatus::ERROR;
+      stat.message = "ellipse size is over the expected range";
+    }
+
+    return stat;
+  }
+architecture-codes:
+  - ROS Diagnostic Issue - Incomplete Diagnostic Lifecycle Implementation Issue
+
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+
+root-cause-codes:
+  - Framework Integration Issue - Lack of ROS development best practices
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic

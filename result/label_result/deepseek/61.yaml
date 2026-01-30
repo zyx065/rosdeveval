@@ -1,0 +1,34 @@
+compilation.log: |
+  Starting >>> autoware_velocity_smoother
+  Finished <<< autoware_velocity_smoother [27.8s]
+
+  Summary: 1 package finished [29.1s]
+generate_code.cpp: "void VelocitySmootherNode::publishTrajectory(const TrajectoryPoints\
+  \ & trajectory) const\n{\n  // Convert trajectory points to Trajectory message\n\
+  \  auto output_trajectory = autoware::motion_utils::convertToTrajectory(trajectory);\n\
+  \  \n  // Update header with the original trajectory's header if available\n  if\
+  \ (base_traj_raw_ptr_) {\n    output_trajectory.header = base_traj_raw_ptr_->header;\n\
+  \  }\n  \n  // Publish the trajectory\n  pub_trajectory_->publish(output_trajectory);\n\
+  \  \n  // Publish trajectory timestamp if subscribers exist\n  if (published_time_publisher_)\
+  \ {\n    published_time_publisher_->publish_if_subscribed(pub_trajectory_, output_trajectory.header.stamp);\n\
+  \  }\n}"
+ground_truth.cpp: |-
+  void VelocitySmootherNode::publishTrajectory(const TrajectoryPoints & trajectory) const
+  {
+    Trajectory publishing_trajectory = autoware::motion_utils::convertToTrajectory(trajectory);
+    publishing_trajectory.header = base_traj_raw_ptr_->header;
+    pub_trajectory_->publish(publishing_trajectory);
+    published_time_publisher_->publish_if_subscribed(
+      pub_trajectory_, publishing_trajectory.header.stamp);
+  }
+architecture-codes:
+  - ROS Logger Issue - Log Level and Frequency Issue 
+
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue 
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of System Requirements
+  - Framework Integration Issue - Lack of ROS development best practices 
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase  

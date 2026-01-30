@@ -1,0 +1,56 @@
+compilation.log: |
+  Starting >>> nav2_costmap_2d
+  Finished <<< nav2_costmap_2d [1.08s]
+
+  Summary: 1 package finished [1.37s]
+generate_code.cpp: "void BinaryFilter::maskCallback(\n  const nav_msgs::msg::OccupancyGrid::SharedPtr\
+  \ msg)\n{\n  // Update the filter mask with the new message\n  filter_mask_ = msg;\n\
+  \  \n  // Store the mask frame ID\n  mask_frame_ = msg->header.frame_id;\n  \n \
+  \ // Calculate the current state based on the new mask\n  bool new_state = default_state_;\n\
+  \  double max_value = 0.0;\n  \n  // Find the maximum value in the occupancy grid\n\
+  \  for (const auto& value : msg->data) {\n    if (value > max_value) {\n      max_value\
+  \ = value;\n    }\n  }\n  \n  // Apply the filter transformation: value = multiplier_\
+  \ * (max_value + base_)\n  double filtered_value = multiplier_ * (max_value + base_);\n\
+  \  \n  // Flip the state if the filtered value exceeds the threshold\n  if (filtered_value\
+  \ > flip_threshold_) {\n    new_state = !default_state_;\n  }\n  \n  // Only publish\
+  \ if the state has changed\n  if (new_state != binary_state_) {\n    binary_state_\
+  \ = new_state;\n    \n    // Publish the new binary state if the publisher is active\n\
+  \    if (binary_state_pub_->is_activated()) {\n      std_msgs::msg::Bool state_msg;\n\
+  \      state_msg.data = binary_state_;\n      binary_state_pub_->publish(state_msg);\n\
+  \    }\n  }\n}"
+ground_truth.cpp: |-
+  void BinaryFilter::maskCallback(
+    const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
+  {
+    std::lock_guard<CostmapFilter::mutex_t> guard(*getMutex());
+
+    if (!filter_mask_) {
+      RCLCPP_INFO(
+        logger_,
+        "BinaryFilter: Received filter mask from %s topic.", mask_topic_.c_str());
+    } else {
+      RCLCPP_WARN(
+        logger_,
+        "BinaryFilter: New filter mask arrived from %s topic. Updating old filter mask.",
+        mask_topic_.c_str());
+      filter_mask_.reset();
+    }
+
+    filter_mask_ = msg;
+    mask_frame_ = msg->header.frame_id;
+  }
+architecture-codes:
+  - ROS Logger Issue - ROS Logger Missing Issue
+  - Topic/Service Issue - Callback Function Binding Issue 
+  - ROS Parameter Issue - Missing Dynamic Configuration Issue 
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue 
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Framework Integration Issue - Lack of ROS development best practices
+  - Framework Integration Issue - Insufficient understanding of ROS Integration

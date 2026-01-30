@@ -1,0 +1,98 @@
+compilation.log: |
+  Starting >>> moveit_core
+  --- stderr: moveit_core
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [robot_state/CMakeFiles/test_robot_state.dir/build.make:79: robot_state/CMakeFiles/test_robot_state.dir/test/robot_state_test.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1690: robot_state/CMakeFiles/test_robot_state.dir/all] Error 2
+  gmake[1]: *** Waiting for unfinished jobs....
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [collision_detection_bullet/CMakeFiles/moveit_collision_detection_bullet.dir/build.make:149: collision_detection_bullet/CMakeFiles/moveit_collision_detection_bullet.dir/src/bullet_integration/contact_checker_common.cpp.o] Error 1
+  gmake[2]: *** Waiting for unfinished jobs....
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [planning_interface/CMakeFiles/moveit_planning_interface.dir/build.make:93: planning_interface/CMakeFiles/moveit_planning_interface.dir/src/planning_response.cpp.o] Error 1
+  gmake[2]: *** Waiting for unfinished jobs....
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:135: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/time_optimal_trajectory_generation.cpp.o] Error 1
+  gmake[2]: *** Waiting for unfinished jobs....
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:107: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/ruckig_traj_smoothing.cpp.o] Error 1
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [planning_interface/CMakeFiles/moveit_planning_interface.dir/build.make:79: planning_interface/CMakeFiles/moveit_planning_interface.dir/src/planning_interface.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1376: planning_interface/CMakeFiles/moveit_planning_interface.dir/all] Error 2
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [robot_trajectory/CMakeFiles/test_robot_trajectory.dir/build.make:79: robot_trajectory/CMakeFiles/test_robot_trajectory.dir/test/test_robot_trajectory.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1889: robot_trajectory/CMakeFiles/test_robot_trajectory.dir/all] Error 2
+  c++: fatal error: Killed signal terminated program cc1plus
+  compilation terminated.
+  gmake[2]: *** [trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/build.make:93: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/src/iterative_spline_parameterization.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:1920: trajectory_processing/CMakeFiles/moveit_trajectory_processing.dir/all] Error 2
+  gmake[1]: *** [CMakeFiles/Makefile2:2319: collision_detection_bullet/CMakeFiles/moveit_collision_detection_bullet.dir/all] Error 2
+  gmake: *** [Makefile:149: all] Error 2
+  ---
+  Failed   <<< moveit_core [3min 30s, exited with code 2]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+  [Processing: moveit_core]
+
+  Summary: 0 packages finished [3min 30s]
+    1 package failed: moveit_core
+    1 package had stderr output: moveit_core
+generate_code.cpp: "void FloatingJointModel::interpolate(const double* from, const\
+  \ double* to, const double t, double* state) const\n{\n    // For position\n   \
+  \ for (unsigned int i = 0; i < 3; ++i)\n    {\n        state[i] = from[i] + (to[i]\
+  \ - from[i]) * t;\n    }\n    \n    // For orientation (quaternion spherical interpolation)\n\
+  \    Eigen::Quaterniond q_from(from[3], from[4], from[5], from[6]);\n    Eigen::Quaterniond\
+  \ q_to(to[3], to[4], to[5], to[6]);\n    Eigen::Quaterniond q_interpolated = q_from.slerp(t,\
+  \ q_to);\n    \n    state[3] = q_interpolated.w();\n    state[4] = q_interpolated.x();\n\
+  \    state[5] = q_interpolated.y();\n    state[6] = q_interpolated.z();\n}"
+ground_truth.cpp: |-
+  void FloatingJointModel::interpolate(const double* from, const double* to, const double t, double* state) const
+  {
+    // interpolate position
+    state[0] = from[0] + (to[0] - from[0]) * t;
+    state[1] = from[1] + (to[1] - from[1]) * t;
+    state[2] = from[2] + (to[2] - from[2]) * t;
+
+    // Check if the quaternions are significantly different
+    if (abs(from[3] - to[3]) + abs(from[4] - to[4]) + abs(from[5] - to[5]) + abs(from[6] - to[6]) >
+        std::numeric_limits<double>::epsilon())
+    {
+      // Note the ordering: Eigen takes w first!
+      Eigen::Quaterniond q1(from[6], from[3], from[4], from[5]);
+      Eigen::Quaterniond q2(to[6], to[3], to[4], to[5]);
+
+      Eigen::Quaterniond q = q1.slerp(t, q2);
+
+      state[3] = q.x();
+      state[4] = q.y();
+      state[5] = q.z();
+      state[6] = q.w();
+    }
+    else
+    {
+      state[3] = from[3];
+      state[4] = from[4];
+      state[5] = from[5];
+      state[6] = from[6];
+    }
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Condition Issue - Conditional Check Missing Issue
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic

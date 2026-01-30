@@ -1,0 +1,164 @@
+compilation.log: |
+  Starting >>> autoware_autonomous_emergency_braking
+  --- stderr: autoware_autonomous_emergency_braking
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp: In member function ‘void autoware::motion::control::autonomous_emergency_braking::AEB::onPointCloud(sensor_msgs::msg::PointCloud2_<std::allocator<void> >::ConstSharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:305:46: error: no match for ‘operator*’ (operand type is ‘tf2_ros::Buffer’)
+    305 |     "base_link", input_msg->header.frame_id, *tf_buffer_, get_logger());
+        |                                              ^~~~~~~~~~~
+  In file included from /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:21,
+                   from /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp:57,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:40,
+                   from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/trajectory.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/include/autoware/autonomous_emergency_braking/node.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:15:
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:364:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2::Vector3&, const tf2::Vector3&)’
+    364 | operator*(const Vector3& v1, const Vector3& v2)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:364:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:384:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2::Vector3&, const tf2Scalar&)’
+    384 | operator*(const Vector3& v, const tf2Scalar& s)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:384:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:391:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2Scalar&, const tf2::Vector3&)’
+    391 | operator*(const tf2Scalar& s, const Vector3& v)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Vector3.h:391:1: note:   candidate expects 2 arguments, 1 provided
+  In file included from /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp:57,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:40,
+                   from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/trajectory.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/include/autoware/autonomous_emergency_braking/node.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:15:
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:368:1: note: candidate: ‘tf2::Quaternion tf2::operator*(const tf2::Quaternion&, const tf2::Quaternion&)’
+    368 | operator*(const Quaternion& q1, const Quaternion& q2) {
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:368:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:376:1: note: candidate: ‘tf2::Quaternion tf2::operator*(const tf2::Quaternion&, const tf2::Vector3&)’
+    376 | operator*(const Quaternion& q, const Vector3& w)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:376:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:385:1: note: candidate: ‘tf2::Quaternion tf2::operator*(const tf2::Vector3&, const tf2::Quaternion&)’
+    385 | operator*(const Vector3& w, const Quaternion& q)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Quaternion.h:385:1: note:   candidate expects 2 arguments, 1 provided
+  In file included from /opt/ros/humble/include/tf2/tf2/LinearMath/Transform.h:21,
+                   from /opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp:58,
+                   from /workspace/repos/autoware/install/autoware_universe_utils/include/autoware/universe_utils/geometry/geometry.hpp:40,
+                   from /workspace/repos/autoware/install/autoware_motion_utils/include/autoware/motion_utils/trajectory/trajectory.hpp:18,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/include/autoware/autonomous_emergency_braking/node.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:15:
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:611:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2::Matrix3x3&, const tf2::Vector3&)’
+    611 | operator*(const Matrix3x3& m, const Vector3& v)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:611:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:618:1: note: candidate: ‘tf2::Vector3 tf2::operator*(const tf2::Vector3&, const tf2::Matrix3x3&)’
+    618 | operator*(const Vector3& v, const Matrix3x3& m)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:618:1: note:   candidate expects 2 arguments, 1 provided
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:624:1: note: candidate: ‘tf2::Matrix3x3 tf2::operator*(const tf2::Matrix3x3&, const tf2::Matrix3x3&)’
+    624 | operator*(const Matrix3x3& m1, const Matrix3x3& m2)
+        | ^~~~~~~~
+  /opt/ros/humble/include/tf2/tf2/LinearMath/Matrix3x3.h:624:1: note:   candidate expects 2 arguments, 1 provided
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:304:26: error: ‘getTransform’ was not declared in this scope; did you mean ‘autoware::motion::control::autonomous_emergency_braking::utils::getTransform’?
+    304 |   const auto transform = getTransform(
+        |                          ^~~~~~~~~~~~
+        |                          autoware::motion::control::autonomous_emergency_braking::utils::getTransform
+  In file included from /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:16:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/include/autoware/autonomous_emergency_braking/utils.hpp:121:53: note: ‘autoware::motion::control::autonomous_emergency_braking::utils::getTransform’ declared here
+    121 | std::optional<geometry_msgs::msg::TransformStamped> getTransform(
+        |                                                     ^~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:326:35: error: ‘struct autoware::vehicle_info_utils::VehicleInfo’ has no member named ‘vehicle_height’; did you mean ‘vehicle_height_m’?
+    326 |         point.z <= (vehicle_info_.vehicle_height + detection_range_max_height_margin_)) {
+        |                                   ^~~~~~~~~~~~~~
+        |                                   vehicle_height_m
+  gmake[2]: *** [CMakeFiles/autoware_autonomous_emergency_braking_node.dir/build.make:76: CMakeFiles/autoware_autonomous_emergency_braking_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:187: CMakeFiles/autoware_autonomous_emergency_braking_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_autonomous_emergency_braking [17.8s, exited with code 2]
+
+  Summary: 0 packages finished [19.1s]
+    1 package failed: autoware_autonomous_emergency_braking
+    1 package had stderr output: autoware_autonomous_emergency_braking
+generate_code.cpp: "void AEB::onPointCloud(const PointCloud2::ConstSharedPtr input_msg)\n\
+  {\n  // Transform point cloud to base_link frame\n  const auto transform = getTransform(\n\
+  \    \"base_link\", input_msg->header.frame_id, *tf_buffer_, get_logger());\n  \n\
+  \  if (!transform) {\n    RCLCPP_ERROR(\n      get_logger(), \"Failed to transform\
+  \ point cloud from %s to base_link\",\n      input_msg->header.frame_id.c_str());\n\
+  \    return;\n  }\n\n  // Convert ROS PointCloud2 to PCL PointCloud\n  pcl::PointCloud<pcl::PointXYZ>::Ptr\
+  \ pcl_input_cloud(new pcl::PointCloud<pcl::PointXYZ>);\n  pcl::fromROSMsg(*input_msg,\
+  \ *pcl_input_cloud);\n\n  // Transform point cloud to base_link frame\n  pcl::PointCloud<pcl::PointXYZ>::Ptr\
+  \ transformed_cloud(new pcl::PointCloud<pcl::PointXYZ>);\n  pcl_ros::transformPointCloud(*pcl_input_cloud,\
+  \ *transformed_cloud, transform->transform);\n\n  // Apply height filtering\n  pcl::PointCloud<pcl::PointXYZ>::Ptr\
+  \ height_filtered_cloud(new pcl::PointCloud<pcl::PointXYZ>);\n  for (const auto\
+  \ & point : transformed_cloud->points) {\n    if (point.z >= detection_range_min_height_\
+  \ && \n        point.z <= (vehicle_info_.vehicle_height + detection_range_max_height_margin_))\
+  \ {\n      height_filtered_cloud->points.push_back(point);\n    }\n  }\n\n  // Apply\
+  \ voxel grid downsampling\n  pcl::PointCloud<pcl::PointXYZ>::Ptr downsampled_cloud(new\
+  \ pcl::PointCloud<pcl::PointXYZ>);\n  pcl::VoxelGrid<pcl::PointXYZ> voxel_grid;\n\
+  \  voxel_grid.setInputCloud(height_filtered_cloud);\n  voxel_grid.setLeafSize(voxel_grid_x_,\
+  \ voxel_grid_y_, voxel_grid_z_);\n  voxel_grid.filter(*downsampled_cloud);\n\n \
+  \ // Convert back to ROS PointCloud2\n  obstacle_ros_pointcloud_ptr_ = std::make_shared<PointCloud2>();\n\
+  \  pcl::toROSMsg(*downsampled_cloud, *obstacle_ros_pointcloud_ptr_);\n  obstacle_ros_pointcloud_ptr_->header\
+  \ = input_msg->header;\n  obstacle_ros_pointcloud_ptr_->header.frame_id = \"base_link\"\
+  ;\n}"
+ground_truth.cpp: |-
+  void AEB::onPointCloud(const PointCloud2::ConstSharedPtr input_msg)
+  {
+    autoware::universe_utils::ScopedTimeTrack st(__func__, *time_keeper_);
+    PointCloud::Ptr pointcloud_ptr(new PointCloud);
+    pcl::fromROSMsg(*input_msg, *pointcloud_ptr);
+
+    if (input_msg->header.frame_id != "base_link") {
+      RCLCPP_ERROR_STREAM(
+        get_logger(),
+        "[AEB]: Input point cloud frame is not base_link and it is " << input_msg->header.frame_id);
+      // transform pointcloud
+      const auto logger = get_logger();
+      const auto transform_stamped =
+        utils::getTransform("base_link", input_msg->header.frame_id, tf_buffer_, logger);
+      if (!transform_stamped.has_value()) return;
+
+      // transform by using eigen matrix
+      PointCloud2 transformed_points{};
+      const Eigen::Matrix4f affine_matrix =
+        tf2::transformToEigen(transform_stamped.value().transform).matrix().cast<float>();
+      pcl_ros::transformPointCloud(affine_matrix, *input_msg, transformed_points);
+      pcl::fromROSMsg(transformed_points, *pointcloud_ptr);
+    }
+
+    // apply z-axis filter for removing False Positive points
+    PointCloud::Ptr height_filtered_pointcloud_ptr(new PointCloud);
+    pcl::PassThrough<pcl::PointXYZ> height_filter;
+    height_filter.setInputCloud(pointcloud_ptr);
+    height_filter.setFilterFieldName("z");
+    height_filter.setFilterLimits(
+      detection_range_min_height_,
+      vehicle_info_.vehicle_height_m + detection_range_max_height_margin_);
+    height_filter.filter(*height_filtered_pointcloud_ptr);
+
+    pcl::VoxelGrid<pcl::PointXYZ> filter;
+    PointCloud::Ptr no_height_filtered_pointcloud_ptr(new PointCloud);
+    filter.setInputCloud(height_filtered_pointcloud_ptr);
+    filter.setLeafSize(voxel_grid_x_, voxel_grid_y_, voxel_grid_z_);
+    filter.filter(*no_height_filtered_pointcloud_ptr);
+
+    obstacle_ros_pointcloud_ptr_ = std::make_shared<PointCloud2>();
+
+    pcl::toROSMsg(*no_height_filtered_pointcloud_ptr, *obstacle_ros_pointcloud_ptr_);
+    obstacle_ros_pointcloud_ptr_->header = input_msg->header;
+  }
+architecture-codes:
+  - ROS Message Issue - Message Operation Issue
+  - ROS Logger Issue - ROS Logger Missing Issue
+
+functionality-codes:
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Condition Issue - Conditional Check Missing Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+
+root-cause-codes:
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Framework Integration Issue - Lack of ROS development best practices
+  - Solving Robotic Tasks Issue - Inadequate Understanding of System Requirements
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

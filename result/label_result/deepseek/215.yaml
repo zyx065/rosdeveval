@@ -1,0 +1,88 @@
+compilation.log: |
+  Starting >>> nav2_waypoint_follower
+  --- stderr: nav2_waypoint_follower
+  /root/repos/nav_ws/src/nav2_waypoint_follower/plugins/photo_at_waypoint.cpp: In member function ‘virtual bool nav2_waypoint_follower::PhotoAtWaypoint::processAtWaypoint(const PoseStamped&, const int&)’:
+  /root/repos/nav_ws/src/nav2_waypoint_follower/plugins/photo_at_waypoint.cpp:102:43: error: unused parameter ‘curr_pose’ [-Werror=unused-parameter]
+    102 |   const geometry_msgs::msg::PoseStamped & curr_pose, const int & curr_waypoint_index)
+        |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/photo_at_waypoint.dir/build.make:76: CMakeFiles/photo_at_waypoint.dir/plugins/photo_at_waypoint.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:260: CMakeFiles/photo_at_waypoint.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_waypoint_follower [8.78s, exited with code 2]
+
+  Summary: 0 packages finished [9.10s]
+    1 package failed: nav2_waypoint_follower
+    1 package had stderr output: nav2_waypoint_follower
+generate_code.cpp: "bool PhotoAtWaypoint::processAtWaypoint(\n  const geometry_msgs::msg::PoseStamped\
+  \ & curr_pose, const int & curr_waypoint_index)\n{\n    if (!is_enabled_) {\n  \
+  \      RCLCPP_WARN(logger_, \"PhotoAtWaypoint plugin is disabled\");\n        return\
+  \ false;\n    }\n\n    // Lock access to current frame\n    std::lock_guard<std::mutex>\
+  \ lock(global_mutex_);\n\n    if (!curr_frame_msg_) {\n        RCLCPP_ERROR(logger_,\
+  \ \"No frame available to capture\");\n        return false;\n    }\n\n    try {\n\
+  \        // Convert ROS image message to OpenCV format\n        cv::Mat frame;\n\
+  \        deepCopyMsg2Mat(curr_frame_msg_, frame);\n\n        if (frame.empty())\
+  \ {\n            RCLCPP_ERROR(logger_, \"Received empty frame\");\n            return\
+  \ false;\n        }\n\n        // Create filename with waypoint index and timestamp\n\
+  \        auto now = std::chrono::system_clock::now();\n        auto now_c = std::chrono::system_clock::to_time_t(now);\n\
+  \        std::stringstream filename;\n        filename << \"waypoint_\" << curr_waypoint_index\
+  \ << \"_\" \n                << std::put_time(std::localtime(&now_c), \"%Y%m%d_%H%M%S\"\
+  )\n                << \".\" << image_format_;\n\n        // Create full save path\n\
+  \        auto save_path = save_dir_ / filename.str();\n\n        // Save the image\n\
+  \        if (!cv::imwrite(save_path.string(), frame)) {\n            RCLCPP_ERROR(logger_,\
+  \ \"Failed to save image to: %s\", save_path.string().c_str());\n            return\
+  \ false;\n        }\n\n        RCLCPP_INFO(logger_, \"Successfully saved photo to:\
+  \ %s\", save_path.string().c_str());\n        return true;\n\n    } catch (const\
+  \ std::exception & e) {\n        RCLCPP_ERROR(logger_, \"Exception while processing\
+  \ photo: %s\", e.what());\n        return false;\n    }\n}"
+ground_truth.cpp: |-
+  bool PhotoAtWaypoint::processAtWaypoint(
+    const geometry_msgs::msg::PoseStamped & curr_pose, const int & curr_waypoint_index)
+  {
+    if (!is_enabled_) {
+      RCLCPP_WARN(
+        logger_,
+        "Photo at waypoint plugin is disabled. Not performing anything"
+      );
+      return true;
+    }
+    try {
+      // construct the full path to image filename
+      std::filesystem::path file_name = std::to_string(
+        curr_waypoint_index) + "_" +
+        std::to_string(curr_pose.header.stamp.sec) + "." + image_format_;
+      std::filesystem::path full_path_image_path = save_dir_ / file_name;
+
+      // save the taken photo at this waypoint to given directory
+      std::lock_guard<std::mutex> guard(global_mutex_);
+      cv::Mat curr_frame_mat;
+      deepCopyMsg2Mat(curr_frame_msg_, curr_frame_mat);
+      cv::imwrite(full_path_image_path.c_str(), curr_frame_mat);
+      RCLCPP_INFO(
+        logger_,
+        "Photo has been taken sucessfully at waypoint %i", curr_waypoint_index);
+    } catch (const std::exception & e) {
+      RCLCPP_ERROR(
+        logger_,
+        "Couldn't take photo at waypoint %i! Caught exception: %s \n"
+        "Make sure that the image topic named: %s is valid and active!",
+        curr_waypoint_index,
+        e.what(), image_topic_.c_str());
+      return false;
+    }
+    return true;
+  }
+architecture-codes:
+  - Topic/Service Issue - Callback Function Binding Issue
+  - ROS Message Issue - Improper Message Type Usage Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing One Step Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+  - Constant Value Issue
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Framework Integration Issue - Lack of ROS development best practices

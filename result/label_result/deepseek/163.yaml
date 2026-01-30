@@ -1,0 +1,103 @@
+compilation.log: |
+  Starting >>> nav2_costmap_2d
+  --- stderr: nav2_costmap_2d
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp: In member function ‘void nav2_costmap_2d::KeepoutFilter::filterInfoCallback(nav2_msgs::msg::CostmapFilterInfo_<std::allocator<void> >::SharedPtr)’:
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:83:24: error: ‘using element_type = struct nav2_msgs::msg::CostmapFilterInfo_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::CostmapFilterInfo_<std::allocator<void> >’} has no member named ‘global_frame’
+     83 |   global_frame_ = msg->global_frame;
+        |                        ^~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:89:21: error: ‘class nav2_costmap_2d::KeepoutFilter’ has no member named ‘create_subscription’
+     89 |   mask_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
+        |                     ^~~~~~~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:89:69: error: expected primary-expression before ‘>’ token
+     89 |   mask_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
+        |                                                                     ^
+  /root/repos/nav_ws/src/nav2_costmap_2d/plugins/costmap_filters/keepout_filter.cpp:90:5: error: left operand of comma operator has no effect [-Werror=unused-value]
+     90 |     mask_frame_,
+        |     ^~~~~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/filters.dir/build.make:76: CMakeFiles/filters.dir/plugins/costmap_filters/keepout_filter.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:321: CMakeFiles/filters.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_costmap_2d [4.34s, exited with code 2]
+
+  Summary: 0 packages finished [4.66s]
+    1 package failed: nav2_costmap_2d
+    1 package had stderr output: nav2_costmap_2d
+generate_code.cpp: |-
+  void KeepoutFilter::filterInfoCallback(
+    const nav2_msgs::msg::CostmapFilterInfo::SharedPtr msg)
+  {
+    // Store the global frame for the costmap
+    global_frame_ = msg->global_frame;
+
+    // Store the mask frame from the message
+    mask_frame_ = msg->filter_mask_topic;
+
+    // Create subscription to the mask topic
+    mask_sub_ = this->create_subscription<nav_msgs::msg::OccupancyGrid>(
+      mask_frame_,
+      rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
+      std::bind(&KeepoutFilter::maskCallback, this, std::placeholders::_1));
+
+    // Initialize the mask costmap
+    mask_costmap_ = std::make_unique<Costmap2D>();
+  }
+ground_truth.cpp: |-
+  void KeepoutFilter::filterInfoCallback(
+    const nav2_msgs::msg::CostmapFilterInfo::SharedPtr msg)
+  {
+    std::lock_guard<CostmapFilter::mutex_t> guard(*getMutex());
+
+    rclcpp_lifecycle::LifecycleNode::SharedPtr node = node_.lock();
+    if (!node) {
+      throw std::runtime_error{"Failed to lock node"};
+    }
+
+    if (!mask_sub_) {
+      RCLCPP_INFO(
+        logger_,
+        "KeepoutFilter: Received filter info from %s topic.", filter_info_topic_.c_str());
+    } else {
+      RCLCPP_WARN(
+        logger_,
+        "KeepoutFilter: New costmap filter info arrived from %s topic. Updating old filter info.",
+        filter_info_topic_.c_str());
+      // Resetting previous subscriber each time when new costmap filter information arrives
+      mask_sub_.reset();
+    }
+
+    // Checking that base and multiplier are set to their default values
+    if (msg->base != BASE_DEFAULT || msg->multiplier != MULTIPLIER_DEFAULT) {
+      RCLCPP_ERROR(
+        logger_,
+        "KeepoutFilter: For proper use of keepout filter base and multiplier"
+        " in CostmapFilterInfo message should be set to their default values (%f and %f)",
+        BASE_DEFAULT, MULTIPLIER_DEFAULT);
+    }
+
+    mask_topic_ = msg->filter_mask_topic;
+
+    // Setting new filter mask subscriber
+    RCLCPP_INFO(
+      logger_,
+      "KeepoutFilter: Subscribing to \"%s\" topic for filter mask...",
+      mask_topic_.c_str());
+    mask_sub_ = node->create_subscription<nav_msgs::msg::OccupancyGrid>(
+      mask_topic_, rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
+      std::bind(&KeepoutFilter::maskCallback, this, std::placeholders::_1));
+  }
+architecture-codes:
+  - Topic/Service Issue - Topic/Service Use Error Issue 
+  - Topic/Service Issue - Incomplete Topic/Service Initialization Issue 
+  - ROS Message Issue - Incorrect Message Member Access Issue 
+  - ROS Logger Issue - ROS Logger Missing Issue 
+functionality-codes:
+  - Condition Issue - Conditional Check Missing Issue 
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue 
+  - Incomplete Code Issue - Missing Multiple Steps Issue 
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Framework Integration Issue - Lack of ROS development best practices 
+  - Framework Integration Issue - Insufficient understanding of ROS Integration 

@@ -1,0 +1,116 @@
+compilation.log: |
+  Starting >>> autoware_velocity_smoother
+  --- stderr: autoware_velocity_smoother
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp: In member function ‘void autoware::velocity_smoother::VelocitySmootherNode::publishClosestState(const TrajectoryPoints&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1023:29: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘acceleration’; did you mean ‘acceleration_mps2’?
+   1023 |       jerk = (closest_point.acceleration - prev_acc_) / dt;
+        |                             ^~~~~~~~~~~~
+        |                             acceleration_mps2
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1028:3: error: ‘autoware_auto_planning_msgs’ has not been declared
+   1028 |   autoware_auto_planning_msgs::msg::VelocityDebugStamped debug_msg;
+        |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1029:3: error: ‘debug_msg’ was not declared in this scope
+   1029 |   debug_msg.stamp = now();
+        |   ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1031:42: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘acceleration’; did you mean ‘acceleration_mps2’?
+   1031 |   debug_msg.acceleration = closest_point.acceleration;
+        |                                          ^~~~~~~~~~~~
+        |                                          acceleration_mps2
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1034:3: error: ‘debug_publisher_’ was not declared in this scope
+   1034 |   debug_publisher_->publish(debug_msg);
+        |   ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1037:29: error: ‘const struct autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> >’ has no member named ‘acceleration’; did you mean ‘acceleration_mps2’?
+   1037 |   prev_acc_ = closest_point.acceleration;
+        |                             ^~~~~~~~~~~~
+        |                             acceleration_mps2
+  gmake[2]: *** [CMakeFiles/autoware_velocity_smoother_node.dir/build.make:76: CMakeFiles/autoware_velocity_smoother_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:208: CMakeFiles/autoware_velocity_smoother_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_velocity_smoother [10.9s, exited with code 2]
+
+  Summary: 0 packages finished [12.2s]
+    1 package failed: autoware_velocity_smoother
+    1 package had stderr output: autoware_velocity_smoother
+generate_code.cpp: |-
+  void VelocitySmootherNode::publishClosestState(const TrajectoryPoints & trajectory)
+  {
+    // Get the closest trajectory point to ego vehicle
+    const auto closest_point = calcProjectedTrajectoryPointFromEgo(trajectory);
+
+    // Calculate jerk if we have previous data
+    double jerk = 0.0;
+    if (prev_time_ != nullptr) {
+      const double dt = (now() - *prev_time_).seconds();
+      if (dt > 0.0) {
+        jerk = (closest_point.acceleration - prev_acc_) / dt;
+      }
+    }
+
+    // Create and publish debug message
+    autoware_auto_planning_msgs::msg::VelocityDebugStamped debug_msg;
+    debug_msg.stamp = now();
+    debug_msg.velocity = closest_point.longitudinal_velocity_mps;
+    debug_msg.acceleration = closest_point.acceleration;
+    debug_msg.jerk = jerk;
+
+    debug_publisher_->publish(debug_msg);
+
+    // Update previous data for next calculation
+    prev_acc_ = closest_point.acceleration;
+    prev_time_ = std::make_shared<rclcpp::Time>(now());
+  }
+ground_truth.cpp: |-
+  void VelocitySmootherNode::publishClosestState(const TrajectoryPoints & trajectory)
+  {
+    const auto closest_point = calcProjectedTrajectoryPointFromEgo(trajectory);
+
+    auto publishFloat = [=](const double data, const auto pub) {
+      Float32Stamped msg{};
+      msg.stamp = this->now();
+      msg.data = data;
+      pub->publish(msg);
+      return;
+    };
+
+    const double curr_vel{closest_point.longitudinal_velocity_mps};
+    const double curr_acc{closest_point.acceleration_mps2};
+    if (!prev_time_) {
+      prev_time_ = std::make_shared<rclcpp::Time>(this->now());
+      prev_acc_ = curr_acc;
+      return;
+    }
+
+    // Calculate jerk
+    rclcpp::Time curr_time{this->now()};
+    double dt = (curr_time - *prev_time_).seconds();
+    double curr_jerk = (curr_acc - prev_acc_) / dt;
+
+    // Publish data
+    publishFloat(curr_vel, debug_closest_velocity_);
+    publishFloat(curr_acc, debug_closest_acc_);
+    publishFloat(curr_jerk, debug_closest_jerk_);
+
+    // Update
+    prev_acc_ = curr_acc;
+    *prev_time_ = curr_time;
+  }
+architecture-codes:
+
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Message Issue - Improper Message Type Usage Issue
+  - Topic/Service Issue - Topic/Service Not Used Issue
+  - Topic/Service Issue - Incomplete Topic/Service Initialization Issue
+
+functionality-codes:
+
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+
+root-cause-codes:
+
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Framework Integration Issue - Lack of ROS development best practices
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

@@ -1,0 +1,69 @@
+compilation.log: |
+  Starting >>> nav2_waypoint_follower
+  Finished <<< nav2_waypoint_follower [0.38s]
+
+  Summary: 1 package finished [0.69s]
+generate_code.cpp: |-
+  rcl_interfaces::msg::SetParametersResult
+  WaypointFollower::dynamicParametersCallback(std::vector<rclcpp::Parameter> parameters)
+  {
+      rcl_interfaces::msg::SetParametersResult result;
+      result.successful = true;
+
+      for (const auto& param : parameters) {
+          if (param.get_name() == "loop_rate") {
+              if (param.get_type() == rclcpp::ParameterType::PARAMETER_INTEGER) {
+                  loop_rate_ = param.as_int();
+              } else {
+                  result.successful = false;
+                  result.reason = "loop_rate must be an integer";
+              }
+          } else if (param.get_name() == "stop_on_failure") {
+              if (param.get_type() == rclcpp::ParameterType::PARAMETER_BOOL) {
+                  stop_on_failure_ = param.as_bool();
+              } else {
+                  result.successful = false;
+                  result.reason = "stop_on_failure must be a boolean";
+              }
+          } else {
+              result.successful = false;
+              result.reason = "Unknown parameter: " + param.get_name();
+          }
+      }
+
+      return result;
+  }
+ground_truth.cpp: |-
+  rcl_interfaces::msg::SetParametersResult
+  WaypointFollower::dynamicParametersCallback(std::vector<rclcpp::Parameter> parameters)
+  {
+    // No locking required as action server is running on same single threaded executor
+    rcl_interfaces::msg::SetParametersResult result;
+
+    for (auto parameter : parameters) {
+      const auto & type = parameter.get_type();
+      const auto & name = parameter.get_name();
+
+      if (type == ParameterType::PARAMETER_INTEGER) {
+        if (name == "loop_rate") {
+          loop_rate_ = parameter.as_int();
+        }
+      } else if (type == ParameterType::PARAMETER_BOOL) {
+        if (name == "stop_on_failure") {
+          stop_on_failure_ = parameter.as_bool();
+        }
+      }
+    }
+
+    result.successful = true;
+    return result;
+  }
+architecture-codes:
+  - ROS Parameter Issue - Insufficient Parameter Design Issue
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of System Requirements
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Framework Integration Issue - Insufficient understanding of ROS Integration

@@ -1,0 +1,288 @@
+compilation.log: |
+  Starting >>> nav2_controller
+  --- stderr: nav2_controller
+  /root/repos/nav_ws/src/nav2_controller/src/controller_server.cpp: In member function ‘virtual nav2_util::CallbackReturn nav2_controller::ControllerServer::on_configure(const rclcpp_lifecycle::State&)’:
+  /root/repos/nav_ws/src/nav2_controller/src/controller_server.cpp:85:29: error: no matching function for call to ‘nav2_costmap_2d::Costmap2DROS::on_configure()’
+     85 |   costmap_ros_->on_configure();
+        |   ~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+  In file included from /root/repos/nav_ws/install/nav2_core/include/nav2_core/controller.hpp:42,
+                   from /root/repos/nav_ws/src/nav2_controller/include/nav2_controller/controller_server.hpp:25,
+                   from /root/repos/nav_ws/src/nav2_controller/src/controller_server.cpp:28:
+  /root/repos/nav_ws/install/nav2_costmap_2d/include/nav2_costmap_2d/nav2_costmap_2d/costmap_2d_ros.hpp:108:29: note: candidate: ‘virtual nav2_util::CallbackReturn nav2_costmap_2d::Costmap2DROS::on_configure(const rclcpp_lifecycle::State&)’
+    108 |   nav2_util::CallbackReturn on_configure(const rclcpp_lifecycle::State & state) override;
+        |                             ^~~~~~~~~~~~
+  /root/repos/nav_ws/install/nav2_costmap_2d/include/nav2_costmap_2d/nav2_costmap_2d/costmap_2d_ros.hpp:108:29: note:   candidate expects 1 argument, 0 provided
+  /root/repos/nav_ws/src/nav2_controller/src/controller_server.cpp:125:28: error: no matching function for call to ‘nav2_core::Controller::configure(std::shared_ptr<nav2_util::LifecycleNode>&, __gnu_cxx::__alloc_traits<std::allocator<std::__cxx11::basic_string<char> >, std::__cxx11::basic_string<char> >::value_type&, std::shared_ptr<nav2_costmap_2d::Costmap2DROS>&)’
+    125 |       controller->configure(node, controller_ids_[i], costmap_ros_);
+        |       ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_controller/include/nav2_controller/controller_server.hpp:25,
+                   from /root/repos/nav_ws/src/nav2_controller/src/controller_server.cpp:28:
+  /root/repos/nav_ws/install/nav2_core/include/nav2_core/controller.hpp:75:16: note: candidate: ‘virtual void nav2_core::Controller::configure(const WeakPtr&, std::string, std::shared_ptr<tf2_ros::Buffer>, std::shared_ptr<nav2_costmap_2d::Costmap2DROS>)’
+     75 |   virtual void configure(
+        |                ^~~~~~~~~
+  /root/repos/nav_ws/install/nav2_core/include/nav2_core/controller.hpp:75:16: note:   candidate expects 4 arguments, 3 provided
+  gmake[2]: *** [CMakeFiles/controller_server_core.dir/build.make:76: CMakeFiles/controller_server_core.dir/src/controller_server.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:230: CMakeFiles/controller_server_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_controller [7.09s, exited with code 2]
+
+  Summary: 0 packages finished [7.39s]
+    1 package failed: nav2_controller
+    1 package had stderr output: nav2_controller
+generate_code.cpp: |-
+  nav2_util::CallbackReturn
+  ControllerServer::on_configure(const rclcpp_lifecycle::State & /*state*/)
+  {
+    auto node = shared_from_this();
+
+    // Initialize costmap
+    costmap_ros_ = std::make_shared<nav2_costmap_2d::Costmap2DROS>("controller_costmap");
+    costmap_ros_->on_configure();
+    costmap_thread_ = std::make_unique<nav2_util::NodeThread>(costmap_ros_);
+
+    // Get parameters
+    get_parameter("controller_frequency", controller_frequency_);
+    get_parameter("min_x_velocity_threshold", min_x_velocity_threshold_);
+    get_parameter("min_y_velocity_threshold", min_y_velocity_threshold_);
+    get_parameter("min_theta_velocity_threshold", min_theta_velocity_threshold_);
+    get_parameter("failure_tolerance", failure_tolerance_);
+    get_parameter("publish_zero_velocity", publish_zero_velocity_);
+
+    // Setup dynamic parameters handler
+    dyn_params_handler_ = add_on_set_parameters_callback(
+      std::bind(&ControllerServer::dynamicParametersCallback, this, std::placeholders::_1));
+
+    // Setup publishers and subscribers
+    vel_publisher_ = create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 1);
+    odom_sub_ = std::make_unique<nav_2d_utils::OdomSubscriber>(node);
+    speed_limit_sub_ = create_subscription<nav2_msgs::msg::SpeedLimit>(
+      "speed_limit", rclcpp::SystemDefaultsQoS(),
+      std::bind(&ControllerServer::speedLimitCallback, this, std::placeholders::_1));
+
+    // Load controller plugins
+    get_parameter("controller_plugins", controller_ids_);
+    get_parameter("controller_types", controller_types_);
+    if (controller_ids_.size() != controller_types_.size()) {
+      RCLCPP_FATAL(
+        get_logger(),
+        "Size of controller_ids (%zu) and controller_types (%zu) are not equal",
+        controller_ids_.size(), controller_types_.size());
+      return nav2_util::CallbackReturn::FAILURE;
+    }
+
+    for (size_t i = 0; i != controller_ids_.size(); i++) {
+      try {
+        nav2_core::Controller::Ptr controller =
+          lp_loader_.createUniqueInstance(controller_types_[i]);
+        RCLCPP_INFO(
+          get_logger(), "Created controller plugin %s of type %s",
+          controller_ids_[i].c_str(), controller_types_[i].c_str());
+        controller->configure(node, controller_ids_[i], costmap_ros_);
+        controllers_.insert({controller_ids_[i], controller});
+      } catch (const std::exception & ex) {
+        RCLCPP_FATAL(
+          get_logger(), "Failed to create controller %s of type %s: %s",
+          controller_ids_[i].c_str(), controller_types_[i].c_str(), ex.what());
+        return nav2_util::CallbackReturn::FAILURE;
+      }
+    }
+
+    // Load goal checker plugins
+    get_parameter("goal_checker_plugins", goal_checker_ids_);
+    get_parameter("goal_checker_types", goal_checker_types_);
+    if (goal_checker_ids_.size() != goal_checker_types_.size()) {
+      RCLCPP_FATAL(
+        get_logger(),
+        "Size of goal_checker_ids (%zu) and goal_checker_types (%zu) are not equal",
+        goal_checker_ids_.size(), goal_checker_types_.size());
+      return nav2_util::CallbackReturn::FAILURE;
+    }
+
+    for (size_t i = 0; i != goal_checker_ids_.size(); i++) {
+      try {
+        nav2_core::GoalChecker::Ptr goal_checker =
+          goal_checker_loader_.createUniqueInstance(goal_checker_types_[i]);
+        RCLCPP_INFO(
+          get_logger(), "Created goal checker plugin %s of type %s",
+          goal_checker_ids_[i].c_str(), goal_checker_types_[i].c_str());
+        goal_checker->initialize(node, goal_checker_ids_[i], costmap_ros_);
+        goal_checkers_.insert({goal_checker_ids_[i], goal_checker});
+      } catch (const std::exception & ex) {
+        RCLCPP_FATAL(
+          get_logger(), "Failed to create goal checker %s of type %s: %s",
+          goal_checker_ids_[i].c_str(), goal_checker_types_[i].c_str(), ex.what());
+        return nav2_util::CallbackReturn::FAILURE;
+      }
+    }
+
+    // Load progress checker plugin
+    get_parameter("progress_checker_plugin", progress_checker_id_);
+    get_parameter("progress_checker_type", progress_checker_type_);
+    try {
+      progress_checker_ = progress_checker_loader_.createUniqueInstance(progress_checker_type_);
+      RCLCPP_INFO(
+        get_logger(), "Created progress checker plugin %s of type %s",
+        progress_checker_id_.c_str(), progress_checker_type_.c_str());
+      progress_checker_->initialize(node, progress_checker_id_);
+    } catch (const std::exception & ex) {
+      RCLCPP_FATAL(
+        get_logger(), "Failed to create progress checker %s of type %s: %s",
+        progress_checker_id_.c_str(), progress_checker_type_.c_str(), ex.what());
+      return nav2_util::CallbackReturn::FAILURE;
+    }
+
+    return nav2_util::CallbackReturn::SUCCESS;
+  }
+ground_truth.cpp: |-
+  nav2_util::CallbackReturn
+  ControllerServer::on_configure(const rclcpp_lifecycle::State & /*state*/)
+  {
+    auto node = shared_from_this();
+
+    RCLCPP_INFO(get_logger(), "Configuring controller interface");
+
+    get_parameter("progress_checker_plugin", progress_checker_id_);
+    if (progress_checker_id_ == default_progress_checker_id_) {
+      nav2_util::declare_parameter_if_not_declared(
+        node, default_progress_checker_id_ + ".plugin",
+        rclcpp::ParameterValue(default_progress_checker_type_));
+    }
+
+    RCLCPP_INFO(get_logger(), "getting goal checker plugins..");
+    get_parameter("goal_checker_plugins", goal_checker_ids_);
+    if (goal_checker_ids_ == default_goal_checker_ids_) {
+      for (size_t i = 0; i < default_goal_checker_ids_.size(); ++i) {
+        nav2_util::declare_parameter_if_not_declared(
+          node, default_goal_checker_ids_[i] + ".plugin",
+          rclcpp::ParameterValue(default_goal_checker_types_[i]));
+      }
+    }
+
+    get_parameter("controller_plugins", controller_ids_);
+    if (controller_ids_ == default_ids_) {
+      for (size_t i = 0; i < default_ids_.size(); ++i) {
+        nav2_util::declare_parameter_if_not_declared(
+          node, default_ids_[i] + ".plugin",
+          rclcpp::ParameterValue(default_types_[i]));
+      }
+    }
+
+    controller_types_.resize(controller_ids_.size());
+    goal_checker_types_.resize(goal_checker_ids_.size());
+
+    get_parameter("controller_frequency", controller_frequency_);
+    get_parameter("min_x_velocity_threshold", min_x_velocity_threshold_);
+    get_parameter("min_y_velocity_threshold", min_y_velocity_threshold_);
+    get_parameter("min_theta_velocity_threshold", min_theta_velocity_threshold_);
+    RCLCPP_INFO(get_logger(), "Controller frequency set to %.4fHz", controller_frequency_);
+
+    std::string speed_limit_topic;
+    get_parameter("speed_limit_topic", speed_limit_topic);
+    get_parameter("failure_tolerance", failure_tolerance_);
+    get_parameter("publish_zero_velocity", publish_zero_velocity_);
+
+    costmap_ros_->configure();
+    // Launch a thread to run the costmap node
+    costmap_thread_ = std::make_unique<nav2_util::NodeThread>(costmap_ros_);
+
+    try {
+      progress_checker_type_ = nav2_util::get_plugin_type_param(node, progress_checker_id_);
+      progress_checker_ = progress_checker_loader_.createUniqueInstance(progress_checker_type_);
+      RCLCPP_INFO(
+        get_logger(), "Created progress_checker : %s of type %s",
+        progress_checker_id_.c_str(), progress_checker_type_.c_str());
+      progress_checker_->initialize(node, progress_checker_id_);
+    } catch (const pluginlib::PluginlibException & ex) {
+      RCLCPP_FATAL(
+        get_logger(),
+        "Failed to create progress_checker. Exception: %s", ex.what());
+      return nav2_util::CallbackReturn::FAILURE;
+    }
+
+    for (size_t i = 0; i != goal_checker_ids_.size(); i++) {
+      try {
+        goal_checker_types_[i] = nav2_util::get_plugin_type_param(node, goal_checker_ids_[i]);
+        nav2_core::GoalChecker::Ptr goal_checker =
+          goal_checker_loader_.createUniqueInstance(goal_checker_types_[i]);
+        RCLCPP_INFO(
+          get_logger(), "Created goal checker : %s of type %s",
+          goal_checker_ids_[i].c_str(), goal_checker_types_[i].c_str());
+        goal_checker->initialize(node, goal_checker_ids_[i], costmap_ros_);
+        goal_checkers_.insert({goal_checker_ids_[i], goal_checker});
+      } catch (const pluginlib::PluginlibException & ex) {
+        RCLCPP_FATAL(
+          get_logger(),
+          "Failed to create goal checker. Exception: %s", ex.what());
+        return nav2_util::CallbackReturn::FAILURE;
+      }
+    }
+
+    for (size_t i = 0; i != goal_checker_ids_.size(); i++) {
+      goal_checker_ids_concat_ += goal_checker_ids_[i] + std::string(" ");
+    }
+
+    RCLCPP_INFO(
+      get_logger(),
+      "Controller Server has %s goal checkers available.", goal_checker_ids_concat_.c_str());
+
+    for (size_t i = 0; i != controller_ids_.size(); i++) {
+      try {
+        controller_types_[i] = nav2_util::get_plugin_type_param(node, controller_ids_[i]);
+        nav2_core::Controller::Ptr controller =
+          lp_loader_.createUniqueInstance(controller_types_[i]);
+        RCLCPP_INFO(
+          get_logger(), "Created controller : %s of type %s",
+          controller_ids_[i].c_str(), controller_types_[i].c_str());
+        controller->configure(
+          node, controller_ids_[i],
+          costmap_ros_->getTfBuffer(), costmap_ros_);
+        controllers_.insert({controller_ids_[i], controller});
+      } catch (const pluginlib::PluginlibException & ex) {
+        RCLCPP_FATAL(
+          get_logger(),
+          "Failed to create controller. Exception: %s", ex.what());
+        return nav2_util::CallbackReturn::FAILURE;
+      }
+    }
+
+    for (size_t i = 0; i != controller_ids_.size(); i++) {
+      controller_ids_concat_ += controller_ids_[i] + std::string(" ");
+    }
+
+    RCLCPP_INFO(
+      get_logger(),
+      "Controller Server has %s controllers available.", controller_ids_concat_.c_str());
+
+    odom_sub_ = std::make_unique<nav_2d_utils::OdomSubscriber>(node);
+    vel_publisher_ = create_publisher<geometry_msgs::msg::Twist>("cmd_vel", 1);
+
+    // Create the action server that we implement with our followPath method
+    action_server_ = std::make_unique<ActionServer>(
+      shared_from_this(),
+      "follow_path",
+      std::bind(&ControllerServer::computeControl, this),
+      nullptr,
+      std::chrono::milliseconds(500),
+      true);
+
+    // Set subscribtion to the speed limiting topic
+    speed_limit_sub_ = create_subscription<nav2_msgs::msg::SpeedLimit>(
+      speed_limit_topic, rclcpp::QoS(10),
+      std::bind(&ControllerServer::speedLimitCallback, this, std::placeholders::_1));
+
+    return nav2_util::CallbackReturn::SUCCESS;
+  }
+architecture-codes:
+  - Topic/Service Issue - Topic/Service Name Mismatch Issue 
+  - Topic/Service Issue - QoS Policy Incompatibility Issue 
+  - ROS Parameter Issue - Use Non-existent Parameter Issue 
+  - ROS Parameter Issue - Insufficient Parameter Design Issue 
+  - ROS Logger Issue - ROS Logger Missing Issue 
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue 
+  - Condition Issue - Condition Check Logic Misapplication Issue
+root-cause-codes:
+  - Framework Integration Issue - Insufficient understanding of ROS Integration 
+  - Framework Integration Issue - Lack of ROS development best practices 
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase  

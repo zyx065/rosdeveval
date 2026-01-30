@@ -1,0 +1,162 @@
+compilation.log: |
+  Starting >>> autoware_autonomous_emergency_braking
+  --- stderr: autoware_autonomous_emergency_braking
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp: In constructor ‘autoware::motion::control::autonomous_emergency_braking::AEB::AEB(const rclcpp::NodeOptions&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:199:46: error: ‘updateDiagnostics’ is not a member of ‘autoware::motion::control::autonomous_emergency_braking::AEB’
+    199 |   updater_.add("aeb_diagnostic", this, &AEB::updateDiagnostics);
+        |                                              ^~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_autonomous_emergency_braking/src/node.cpp:206:67: error: ‘onParam’ is not a member of ‘autoware::motion::control::autonomous_emergency_braking::AEB’
+    206 |   set_param_res_ = add_on_set_parameters_callback(std::bind(&AEB::onParam, this, std::placeholders::_1));
+        |                                                                   ^~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_autonomous_emergency_braking_node.dir/build.make:76: CMakeFiles/autoware_autonomous_emergency_braking_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:187: CMakeFiles/autoware_autonomous_emergency_braking_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_autonomous_emergency_braking [18.9s, exited with code 2]
+
+  Summary: 0 packages finished [20.4s]
+    1 package failed: autoware_autonomous_emergency_braking
+    1 package had stderr output: autoware_autonomous_emergency_braking
+generate_code.cpp: "AEB::AEB(const rclcpp::NodeOptions & node_options)\n: Node(\"\
+  AEB\", node_options),\n  vehicle_info_(autoware::vehicle_info_utils::VehicleInfoUtils(*this).getVehicleInfo()),\n\
+  \  collision_data_keeper_(this->get_clock())\n{\n  // Parameters initialization\n\
+  \  publish_debug_pointcloud_ = declare_parameter<bool>(\"publish_debug_pointcloud\"\
+  , false);\n  publish_debug_markers_ = declare_parameter<bool>(\"publish_debug_markers\"\
+  , false);\n  use_predicted_trajectory_ = declare_parameter<bool>(\"use_predicted_trajectory\"\
+  , true);\n  use_imu_path_ = declare_parameter<bool>(\"use_imu_path\", false);\n\
+  \  limit_imu_path_lat_dev_ = declare_parameter<bool>(\"limit_imu_path_lat_dev\"\
+  , true);\n  limit_imu_path_length_ = declare_parameter<bool>(\"limit_imu_path_length\"\
+  , true);\n  use_pointcloud_data_ = declare_parameter<bool>(\"use_pointcloud_data\"\
+  , true);\n  use_predicted_object_data_ = declare_parameter<bool>(\"use_predicted_object_data\"\
+  , true);\n  use_object_velocity_calculation_ = declare_parameter<bool>(\"use_object_velocity_calculation\"\
+  , false);\n  check_autoware_state_ = declare_parameter<bool>(\"check_autoware_state\"\
+  , true);\n  \n  imu_path_lat_dev_threshold_ = declare_parameter<double>(\"imu_path_lat_dev_threshold\"\
+  , 1.0);\n  path_footprint_extra_margin_ = declare_parameter<double>(\"path_footprint_extra_margin\"\
+  , 0.5);\n  speed_calculation_expansion_margin_ = declare_parameter<double>(\"speed_calculation_expansion_margin\"\
+  , 0.5);\n  detection_range_min_height_ = declare_parameter<double>(\"detection_range_min_height\"\
+  , -1.5);\n  detection_range_max_height_margin_ = declare_parameter<double>(\"detection_range_max_height_margin\"\
+  , 0.5);\n  voxel_grid_x_ = declare_parameter<double>(\"voxel_grid_x\", 0.2);\n \
+  \ voxel_grid_y_ = declare_parameter<double>(\"voxel_grid_y\", 0.2);\n  voxel_grid_z_\
+  \ = declare_parameter<double>(\"voxel_grid_z\", 0.2);\n  min_generated_imu_path_length_\
+  \ = declare_parameter<double>(\"min_generated_imu_path_length\", 5.0);\n  max_generated_imu_path_length_\
+  \ = declare_parameter<double>(\"max_generated_imu_path_length\", 30.0);\n  expand_width_\
+  \ = declare_parameter<double>(\"expand_width\", 1.0);\n  longitudinal_offset_margin_\
+  \ = declare_parameter<double>(\"longitudinal_offset_margin\", 2.0);\n  t_response_\
+  \ = declare_parameter<double>(\"t_response\", 1.5);\n  a_ego_min_ = declare_parameter<double>(\"\
+  a_ego_min\", 3.0);\n  a_obj_min_ = declare_parameter<double>(\"a_obj_min\", 3.0);\n\
+  \  cluster_tolerance_ = declare_parameter<double>(\"cluster_tolerance\", 0.5);\n\
+  \  cluster_minimum_height_ = declare_parameter<double>(\"cluster_minimum_height\"\
+  , 0.1);\n  \n  minimum_cluster_size_ = declare_parameter<int>(\"minimum_cluster_size\"\
+  , 3);\n  maximum_cluster_size_ = declare_parameter<int>(\"maximum_cluster_size\"\
+  , 30);\n  \n  imu_prediction_time_horizon_ = declare_parameter<double>(\"imu_prediction_time_horizon\"\
+  , 5.0);\n  imu_prediction_time_interval_ = declare_parameter<double>(\"imu_prediction_time_interval\"\
+  , 0.1);\n  mpc_prediction_time_horizon_ = declare_parameter<double>(\"mpc_prediction_time_horizon\"\
+  , 5.0);\n  mpc_prediction_time_interval_ = declare_parameter<double>(\"mpc_prediction_time_interval\"\
+  , 0.1);\n\n  // Publishers initialization\n  pub_obstacle_pointcloud_ = create_publisher<sensor_msgs::msg::PointCloud2>(\"\
+  ~/output/obstacle_pointcloud\", 1);\n  debug_marker_publisher_ = create_publisher<MarkerArray>(\"\
+  ~/debug/markers\", 1);\n  virtual_wall_publisher_ = create_publisher<MarkerArray>(\"\
+  ~/output/virtual_wall\", 1);\n  debug_rss_distance_publisher_ = create_publisher<tier4_debug_msgs::msg::Float32Stamped>(\"\
+  ~/debug/rss_distance\", 1);\n  metrics_pub_ = create_publisher<MetricArray>(\"~/output/metrics\"\
+  , 1);\n  debug_processing_time_detail_pub_ = create_publisher<autoware::universe_utils::ProcessingTimeDetail>(\"\
+  ~/debug/processing_time_detail\", 1);\n\n  // Diagnostics setup\n  updater_.setHardwareID(\"\
+  aeb\");\n  updater_.add(\"aeb_diagnostic\", this, &AEB::updateDiagnostics);\n\n\
+  \  // Timer setup\n  const auto period_ns = rclcpp::Rate(10.0).period();\n  timer_\
+  \ = rclcpp::create_timer(this, get_clock(), period_ns, std::bind(&AEB::onTimer,\
+  \ this));\n\n  // Parameter callback\n  set_param_res_ = add_on_set_parameters_callback(std::bind(&AEB::onParam,\
+  \ this, std::placeholders::_1));\n\n  // Time keeper initialization\n  time_keeper_\
+  \ = std::make_shared<autoware::universe_utils::TimeKeeper>();\n}"
+ground_truth.cpp: |-
+  AEB::AEB(const rclcpp::NodeOptions & node_options)
+  : Node("AEB", node_options),
+    vehicle_info_(autoware::vehicle_info_utils::VehicleInfoUtils(*this).getVehicleInfo()),
+    collision_data_keeper_(this->get_clock())
+  {
+    // Publisher
+    {
+      pub_obstacle_pointcloud_ =
+        this->create_publisher<sensor_msgs::msg::PointCloud2>("~/debug/obstacle_pointcloud", 1);
+      debug_marker_publisher_ = this->create_publisher<MarkerArray>("~/debug/markers", 1);
+      virtual_wall_publisher_ = this->create_publisher<MarkerArray>("~/virtual_wall", 1);
+      debug_rss_distance_publisher_ =
+        this->create_publisher<tier4_debug_msgs::msg::Float32Stamped>("~/debug/rss_distance", 1);
+      metrics_pub_ = this->create_publisher<MetricArray>("~/metrics", 1);
+    }
+    // Diagnostics
+    {
+      updater_.setHardwareID("autonomous_emergency_braking");
+      updater_.add("aeb_emergency_stop", this, &AEB::onCheckCollision);
+    }
+    // parameter
+    publish_debug_pointcloud_ = declare_parameter<bool>("publish_debug_pointcloud");
+    publish_debug_markers_ = declare_parameter<bool>("publish_debug_markers");
+    use_predicted_trajectory_ = declare_parameter<bool>("use_predicted_trajectory");
+    use_imu_path_ = declare_parameter<bool>("use_imu_path");
+    limit_imu_path_lat_dev_ = declare_parameter<bool>("limit_imu_path_lat_dev");
+    limit_imu_path_length_ = declare_parameter<bool>("limit_imu_path_length");
+    use_pointcloud_data_ = declare_parameter<bool>("use_pointcloud_data");
+    use_predicted_object_data_ = declare_parameter<bool>("use_predicted_object_data");
+    use_object_velocity_calculation_ = declare_parameter<bool>("use_object_velocity_calculation");
+    check_autoware_state_ = declare_parameter<bool>("check_autoware_state");
+    path_footprint_extra_margin_ = declare_parameter<double>("path_footprint_extra_margin");
+    imu_path_lat_dev_threshold_ = declare_parameter<double>("imu_path_lat_dev_threshold");
+    speed_calculation_expansion_margin_ =
+      declare_parameter<double>("speed_calculation_expansion_margin");
+    detection_range_min_height_ = declare_parameter<double>("detection_range_min_height");
+    detection_range_max_height_margin_ =
+      declare_parameter<double>("detection_range_max_height_margin");
+    voxel_grid_x_ = declare_parameter<double>("voxel_grid_x");
+    voxel_grid_y_ = declare_parameter<double>("voxel_grid_y");
+    voxel_grid_z_ = declare_parameter<double>("voxel_grid_z");
+    min_generated_imu_path_length_ = declare_parameter<double>("min_generated_imu_path_length");
+    max_generated_imu_path_length_ = declare_parameter<double>("max_generated_imu_path_length");
+    expand_width_ = declare_parameter<double>("expand_width");
+    longitudinal_offset_margin_ = declare_parameter<double>("longitudinal_offset_margin");
+    t_response_ = declare_parameter<double>("t_response");
+    a_ego_min_ = declare_parameter<double>("a_ego_min");
+    a_obj_min_ = declare_parameter<double>("a_obj_min");
+
+    cluster_tolerance_ = declare_parameter<double>("cluster_tolerance");
+    cluster_minimum_height_ = declare_parameter<double>("cluster_minimum_height");
+    minimum_cluster_size_ = declare_parameter<int>("minimum_cluster_size");
+    maximum_cluster_size_ = declare_parameter<int>("maximum_cluster_size");
+
+    imu_prediction_time_horizon_ = declare_parameter<double>("imu_prediction_time_horizon");
+    imu_prediction_time_interval_ = declare_parameter<double>("imu_prediction_time_interval");
+    mpc_prediction_time_horizon_ = declare_parameter<double>("mpc_prediction_time_horizon");
+    mpc_prediction_time_interval_ = declare_parameter<double>("mpc_prediction_time_interval");
+
+    {  // Object history data keeper setup
+      const auto previous_obstacle_keep_time =
+        declare_parameter<double>("previous_obstacle_keep_time");
+      const auto collision_keeping_sec = declare_parameter<double>("collision_keeping_sec");
+      collision_data_keeper_.setTimeout(collision_keeping_sec, previous_obstacle_keep_time);
+    }
+
+    // Parameter Callback
+    set_param_res_ =
+      add_on_set_parameters_callback(std::bind(&AEB::onParameter, this, std::placeholders::_1));
+
+    // start time
+    const double aeb_hz = declare_parameter<double>("aeb_hz");
+    const auto period_ns = rclcpp::Rate(aeb_hz).period();
+    timer_ = rclcpp::create_timer(this, this->get_clock(), period_ns, std::bind(&AEB::onTimer, this));
+
+    debug_processing_time_detail_pub_ =
+      create_publisher<autoware::universe_utils::ProcessingTimeDetail>(
+        "~/debug/processing_time_detail_ms", 1);
+    time_keeper_ =
+      std::make_shared<autoware::universe_utils::TimeKeeper>(debug_processing_time_detail_pub_);
+  }
+architecture-codes:
+  - Topic/Service Issue - Topic/Service Name Mismatch Issue 
+  - ROS Diagnostic Issue - ROS Diagnostic API Misuse Issue
+  - ROS Parameter Issue - Insufficient Parameter Design Issue 
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue 
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of System Requirements
+  - Framework Integration Issue - Insufficient understanding of ROS Integration 
+  - Framework Integration Issue - Lack of ROS development best practices 
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase  

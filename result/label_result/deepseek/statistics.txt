@@ -1,0 +1,41 @@
+=== Analysis Results ===
+Total yaml files found: 240
+Successfully processed: 240
+
+--- Architecture Codes Statistics ---
+Total unique codes: 21
+  ROS Message Issue - Incorrect Message Member Access Issue: 64
+  ROS Parameter Issue - Use Non-existent Parameter Issue: 50
+  ROS Logger Issue - ROS Logger Missing Issue: 44
+  ROS Parameter Issue - Insufficient Parameter Design Issue: 42
+  Topic/Service Issue - Topic/Service Name Mismatch Issue: 36
+  ROS Message Issue - Message Operation Issue: 32
+  ROS Message Issue - Improper Message Type Usage Issue: 28
+  ROS Message Issue - Message Initialization Issue: 26
+  Topic/Service Issue - QoS Policy Incompatibility Issue: 20
+  ROS Timer Issue - Clock Source Usage Issue: 19
+  Topic/Service Issue - Topic/Service Use Error Issue: 18
+  Topic/Service Issue - Callback Function Binding Issue: 16
+  ROS Diagnostic Issue - Incomplete Diagnostic Lifecycle Implementation Issue: 14
+  ROS Timer Issue - Clock Source Instantiation and Synchronization Issue: 13
+  Topic/Service Issue - Incomplete Topic/Service Initialization Issue: 12
+  ROS Diagnostic Issue - ROS Diagnostic API Misuse Issue: 10
+  ROS Logger Issue - Log Level and Frequency Issue: 9
+  ROS Parameter Issue - Naming Convention Violations Issue: 8
+  Topic/Service Issue - Topic/Service Not Used Issue: 5
+  ROS Parameter Issue - Missing Dynamic Configuration Issue: 5
+  ROS Parameter Issue - Parameter Type and Unit Mismatch Issue: 2
+
+--- Functionality Codes Statistics ---
+Total unique codes: 11
+  Incomplete Code Issue - Missing Multiple Steps Issue: 155
+  Condition Issue - Condition Check Logic Misapplication Issue: 106
+  Domain Library Issue - Domain Specific Library Utilization Error: 69
+  Condition Issue - Conditional Check Missing Issue: 67
+  Operation/Calculation Issue - Algorithmic State and Initialization Issue: 53
+  Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue: 47
+  Incomplete Code Issue - Missing One Step Issue: 45
+  Domain Library Issue - Lack of Domain Library Utilization Issue: 43
+  Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue: 29
+  Constant Value Issue: 24
+  Operation/Calculation Issue - Violation of Physical & Kinematic Constraints Issue: 11

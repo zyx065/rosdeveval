@@ -1,0 +1,66 @@
+compilation.log: |
+  Starting >>> autoware_autonomous_emergency_braking
+  [Processing: autoware_autonomous_emergency_braking]
+  [Processing: autoware_autonomous_emergency_braking]
+  Finished <<< autoware_autonomous_emergency_braking [1min 20s]
+
+  Summary: 1 package finished [1min 21s]
+generate_code.cpp: "bool AEB::hasCollision(const double current_v, const ObjectData\
+  \ & closest_object)\n{\n  // Calculate required stopping distance (RSS)\n  const\
+  \ double reaction_time = 1.0; // typical reaction time in seconds\n  const double\
+  \ max_deceleration = 5.0; // typical maximum deceleration in m/s²\n  \n  // RSS\
+  \ formula: d = v*t + v²/(2*a)\n  const double rss_distance = current_v * reaction_time\
+  \ + \n                             (current_v * current_v) / (2 * max_deceleration);\n\
+  \  \n  // Publish RSS distance for debugging\n  tier4_debug_msgs::msg::Float32Stamped\
+  \ rss_msg;\n  rss_msg.stamp = this->now();\n  rss_msg.data = static_cast<float>(rss_distance);\n\
+  \  debug_rss_distance_publisher_->publish(rss_msg);\n  \n  // Store collision data\
+  \ for future reference\n  collision_data_keeper_.setCollisionData(closest_object);\n\
+  \  \n  // Check if object is within RSS distance and is a target\n  return closest_object.is_target\
+  \ && \n         closest_object.distance_to_object <= rss_distance;\n}"
+ground_truth.cpp: |-
+  bool AEB::hasCollision(const double current_v, const ObjectData & closest_object)
+  {
+    autoware::universe_utils::ScopedTimeTrack st(__func__, *time_keeper_);
+    const double rss_dist = std::invoke([&]() {
+      const double & obj_v = closest_object.velocity;
+      const double & t = t_response_;
+      const double pre_braking_covered_distance = std::abs(current_v) * t;
+      const double braking_distance = (current_v * current_v) / (2 * std::fabs(a_ego_min_));
+      const double ego_stopping_distance = pre_braking_covered_distance + braking_distance;
+      const double obj_braking_distance = (obj_v > 0.0)
+                                            ? -(obj_v * obj_v) / (2 * std::fabs(a_obj_min_))
+                                            : (obj_v * obj_v) / (2 * std::fabs(a_obj_min_));
+      return ego_stopping_distance + obj_braking_distance + longitudinal_offset_margin_;
+    });
+
+    tier4_debug_msgs::msg::Float32Stamped rss_distance_msg;
+    rss_distance_msg.stamp = get_clock()->now();
+    rss_distance_msg.data = rss_dist;
+    debug_rss_distance_publisher_->publish(rss_distance_msg);
+
+    if (closest_object.distance_to_object > rss_dist) return false;
+
+    // collision happens
+    ObjectData collision_data = closest_object;
+    collision_data.rss = rss_dist;
+    collision_data_keeper_.setCollisionData(collision_data);
+    return true;
+  }
+architecture-codes:
+  - ROS Parameter Issue - Use Non-existent Parameter Issue
+  - ROS Parameter Issue - Insufficient Parameter Design Issue
+  - ROS Logger Issue - ROS Logger Missing Issue
+  - ROS Message Issue - Message Initialization Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Operation/Calculation Issue - Violation of Physical & Kinematic Constraints Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Constant Value Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Solving Robotic Tasks Issue - Inadequate Understanding of System Requirements
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Framework Integration Issue - Lack of ROS development best practices
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

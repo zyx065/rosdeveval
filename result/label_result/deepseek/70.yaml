@@ -1,0 +1,42 @@
+compilation.log: |
+  Starting >>> autoware_ekf_localizer
+  Finished <<< autoware_ekf_localizer [21.0s]
+
+  Summary: 1 package finished [22.3s]
+generate_code.cpp: "diagnostic_msgs::msg::DiagnosticStatus check_process_activated(const\
+  \ bool is_activated)\n{\n    diagnostic_msgs::msg::DiagnosticStatus status;\n  \
+  \  \n    if (is_activated) {\n        status.level = diagnostic_msgs::msg::DiagnosticStatus::OK;\n\
+  \        status.message = \"Process is activated\";\n    } else {\n        status.level\
+  \ = diagnostic_msgs::msg::DiagnosticStatus::WARN;\n        status.message = \"Process\
+  \ is not activated\";\n    }\n    \n    return status;\n}"
+ground_truth.cpp: |-
+  diagnostic_msgs::msg::DiagnosticStatus check_process_activated(const bool is_activated)
+  {
+    diagnostic_msgs::msg::DiagnosticStatus stat;
+
+    diagnostic_msgs::msg::KeyValue key_value;
+    key_value.key = "is_activated";
+    key_value.value = is_activated ? "True" : "False";
+    stat.values.push_back(key_value);
+
+    stat.level = diagnostic_msgs::msg::DiagnosticStatus::OK;
+    stat.message = "OK";
+    if (!is_activated) {
+      stat.level = diagnostic_msgs::msg::DiagnosticStatus::WARN;
+      stat.message = "[WARN]process is not activated";
+    }
+
+    return stat;
+  }
+architecture-codes:
+  - ROS Diagnostic Issue - Incomplete Diagnostic Lifecycle Implementation Issue
+  - ROS Diagnostic Issue - ROS Diagnostic API Misuse Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Domain Library Issue - Domain Specific Library Utilization Error
+
+root-cause-codes:
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Framework Integration Issue - Lack of ROS development best practices
+  - Solving Robotic Tasks Issue - Inadequate Understanding of System Requirements

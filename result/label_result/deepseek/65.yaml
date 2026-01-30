@@ -1,0 +1,52 @@
+compilation.log: |
+  Starting >>> autoware_velocity_smoother
+  --- stderr: autoware_velocity_smoother
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp: In member function ‘void autoware::velocity_smoother::VelocitySmootherNode::publishStopWatchTime()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1125:31: error: ‘Float64Stamped’ is not a member of ‘std_msgs::msg’
+   1125 |     auto msg = std_msgs::msg::Float64Stamped();
+        |                               ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1125:31: note: suggested alternatives:
+  In file included from /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/float64_stamped.hpp:7,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/include/autoware/velocity_smoother/node.hpp:44,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:15:
+  /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/detail/float64_stamped__struct.hpp:139:7: note:   ‘autoware_internal_debug_msgs::msg::Float64Stamped’
+    139 | using Float64Stamped =
+        |       ^~~~~~~~~~~~~~
+  /workspace/repos/autoware/install/autoware_internal_debug_msgs/include/autoware_internal_debug_msgs/autoware_internal_debug_msgs/msg/detail/float64_stamped__struct.hpp:139:7: note:   ‘autoware_internal_debug_msgs::msg::Float64Stamped’
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_velocity_smoother/src/node.cpp:1131:16: error: ‘stopwatch_’ was not declared in this scope; did you mean ‘stop_watch_’?
+   1131 |     msg.data = stopwatch_.toc();
+        |                ^~~~~~~~~~
+        |                stop_watch_
+  gmake[2]: *** [CMakeFiles/autoware_velocity_smoother_node.dir/build.make:76: CMakeFiles/autoware_velocity_smoother_node.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:208: CMakeFiles/autoware_velocity_smoother_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_velocity_smoother [11.0s, exited with code 2]
+
+  Summary: 0 packages finished [12.3s]
+    1 package failed: autoware_velocity_smoother
+    1 package had stderr output: autoware_velocity_smoother
+generate_code.cpp: "void VelocitySmootherNode::publishStopWatchTime()\n{\n    // Create\
+  \ a Float64Stamped message\n    auto msg = std_msgs::msg::Float64Stamped();\n  \
+  \  \n    // Set the timestamp to current time\n    msg.header.stamp = this->now();\n\
+  \    \n    // Set the elapsed time from stopwatch\n    msg.data = stopwatch_.toc();\n\
+  \    \n    // Publish the message\n    debug_calculation_time_->publish(msg);\n}"
+ground_truth.cpp: |-
+  void VelocitySmootherNode::publishStopWatchTime()
+  {
+    Float64Stamped calculation_time_data{};
+    calculation_time_data.stamp = this->now();
+    calculation_time_data.data = stop_watch_.toc();
+    debug_calculation_time_->publish(calculation_time_data);
+  }
+architecture-codes:
+  - ROS Message Issue - Improper Message Type Usage Issue
+  - ROS Message Issue - Incorrect Message Member Access Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

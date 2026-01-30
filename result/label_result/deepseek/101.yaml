@@ -1,0 +1,45 @@
+compilation.log: |
+  Starting >>> autoware_external_cmd_converter
+  [Processing: autoware_external_cmd_converter]
+  Finished <<< autoware_external_cmd_converter [30.4s]
+
+  Summary: 1 package finished [31.6s]
+generate_code.cpp: "bool ExternalCmdConverterNode::check_emergency_stop_topic_timeout()\n\
+  {\n  // If we're waiting for the first topic, don't consider it a timeout\n  if\
+  \ (wait_for_first_topic_) {\n    return true;\n  }\n\n  // If we're not in external\
+  \ command mode, timeout check is not needed\n  if (!current_gate_mode_ || current_gate_mode_->data\
+  \ != GateMode::EXTERNAL) {\n    return true;\n  }\n\n  // If we haven't received\
+  \ any heartbeat yet, it's a timeout\n  if (!latest_emergency_stop_heartbeat_received_time_)\
+  \ {\n    return false;\n  }\n\n  // Check if the time since last heartbeat exceeds\
+  \ the timeout threshold\n  const auto now = this->now();\n  const auto time_since_last_heartbeat\
+  \ =\n    now - *latest_emergency_stop_heartbeat_received_time_;\n  \n  return time_since_last_heartbeat.seconds()\
+  \ <= emergency_stop_timeout_;\n}"
+ground_truth.cpp: |
+  bool ExternalCmdConverterNode::check_emergency_stop_topic_timeout()
+  {
+    if (!current_gate_mode_) {
+      return true;
+    }
+
+    if (current_gate_mode_->data == tier4_control_msgs::msg::GateMode::AUTO) {
+      latest_emergency_stop_heartbeat_received_time_ = nullptr;
+    }
+
+    if (!latest_emergency_stop_heartbeat_received_time_) {
+      return wait_for_first_topic_;
+    }
+
+    const auto duration = (this->now() - *latest_emergency_stop_heartbeat_received_time_);
+    return duration.seconds() <= emergency_stop_timeout_;
+  }
+architecture-codes:
+  - ROS Timer Issue - Clock Source Usage Issue
+
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Lack of ROS development best practices
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

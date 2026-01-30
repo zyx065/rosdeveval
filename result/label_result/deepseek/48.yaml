@@ -1,0 +1,69 @@
+compilation.log: |
+  Starting >>> autoware_obstacle_stop_planner
+  [Processing: autoware_obstacle_stop_planner]
+  Finished <<< autoware_obstacle_stop_planner [39.6s]
+
+  Summary: 1 package finished [41.1s]
+generate_code.cpp: |-
+  void ObstacleStopPlannerNode::onPointCloud(const PointCloud2::ConstSharedPtr input_msg)
+  {
+    // Lock mutex to ensure thread safety
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    // Check if point cloud is valid
+    if (input_msg->data.empty()) {
+      RCLCPP_WARN(get_logger(), "Received empty point cloud");
+      return;
+    }
+
+    // Process point cloud data (filtering, obstacle detection, etc.)
+    // Here we just copy the input to output for demonstration
+    // In real implementation, you would add your obstacle detection logic
+    obstacle_ros_pointcloud_ptr_ = std::make_shared<PointCloud2>(*input_msg);
+
+    // Publish the processed point cloud
+    if (pub_obstacle_pointcloud_ && obstacle_ros_pointcloud_ptr_) {
+      pub_obstacle_pointcloud_->publish(*obstacle_ros_pointcloud_ptr_);
+    }
+  }
+ground_truth.cpp: |-
+  void ObstacleStopPlannerNode::onPointCloud(const PointCloud2::ConstSharedPtr input_msg)
+  {
+    // mutex for obstacle_ros_pointcloud_ptr_
+    // NOTE: *obstacle_ros_pointcloud_ptr_ is used
+    std::lock_guard<std::mutex> lock(mutex_);
+
+    obstacle_ros_pointcloud_ptr_ = std::make_shared<PointCloud2>();
+    pcl::VoxelGrid<pcl::PointXYZ> filter;
+    PointCloud::Ptr pointcloud_ptr(new PointCloud);
+    PointCloud::Ptr no_height_filtered_pointcloud_ptr(new PointCloud);
+
+    pcl::fromROSMsg(*input_msg, *pointcloud_ptr);
+    if (!node_param_.enable_z_axis_obstacle_filtering) {
+      filter.setInputCloud(pointcloud_ptr);
+      filter.setLeafSize(
+        node_param_.voxel_grid_x, node_param_.voxel_grid_y, node_param_.voxel_grid_z);
+      filter.filter(*no_height_filtered_pointcloud_ptr);
+      pcl::toROSMsg(*no_height_filtered_pointcloud_ptr, *obstacle_ros_pointcloud_ptr_);
+    } else {
+      pcl::toROSMsg(*pointcloud_ptr, *obstacle_ros_pointcloud_ptr_);
+    }
+
+    obstacle_ros_pointcloud_ptr_->header = input_msg->header;
+    pub_obstacle_pointcloud_->publish(*obstacle_ros_pointcloud_ptr_);
+  }
+architecture-codes:
+  - ROS Parameter Issue - Use Non-existent Parameter Issue
+  - ROS Parameter Issue - Insufficient Parameter Design Issue
+  - ROS Message Issue - Message Operation Issue
+
+functionality-codes:
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

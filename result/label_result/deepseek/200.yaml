@@ -1,0 +1,45 @@
+compilation.log: |
+  Starting >>> nav2_util
+  Finished <<< nav2_util [0.39s]
+
+  Summary: 1 package finished [0.65s]
+generate_code.cpp: |-
+  bool getCurrentPose(
+    geometry_msgs::msg::PoseStamped & global_pose,
+    tf2_ros::Buffer & tf_buffer, const std::string global_frame,
+    const std::string robot_frame, const double transform_timeout,
+    const rclcpp::Time stamp)
+  {
+    geometry_msgs::msg::PoseStamped robot_pose;
+    robot_pose.header.frame_id = robot_frame;
+    robot_pose.header.stamp = stamp;
+
+    // Identity pose since we're getting the transform between frames
+    robot_pose.pose.orientation.w = 1.0;
+
+    return transformPoseInTargetFrame(
+      robot_pose, global_pose, tf_buffer, global_frame, transform_timeout);
+  }
+ground_truth.cpp: |-
+  bool getCurrentPose(
+    geometry_msgs::msg::PoseStamped & global_pose,
+    tf2_ros::Buffer & tf_buffer, const std::string global_frame,
+    const std::string robot_frame, const double transform_timeout,
+    const rclcpp::Time stamp)
+  {
+    tf2::toMsg(tf2::Transform::getIdentity(), global_pose.pose);
+    global_pose.header.frame_id = robot_frame;
+    global_pose.header.stamp = stamp;
+
+    return transformPoseInTargetFrame(
+      global_pose, global_pose, tf_buffer, global_frame, transform_timeout);
+  }
+architecture-codes:
+  - ROS Message Issue - Message Initialization Issue
+functionality-codes:
+  -  Domain Library Issue - Lack of Domain Library Utilization Issue
+  -  Incomplete Code Issue - Missing One Step Issue
+  -  Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+root-cause-codes:
+  -  Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge
+  -  Framework Integration Issue - Insufficient understanding of ROS Integration

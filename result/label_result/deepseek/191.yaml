@@ -1,0 +1,81 @@
+compilation.log: |
+  Starting >>> dwb_critics
+  --- stderr: dwb_critics
+  /root/repos/nav_ws/src/nav2_dwb_controller/dwb_critics/src/obstacle_footprint.cpp: In function ‘dwb_critics::Footprint dwb_critics::getOrientedFootprint(const Pose2D&, const Footprint&)’:
+  /root/repos/nav_ws/src/nav2_dwb_controller/dwb_critics/src/obstacle_footprint.cpp:63:33: error: no matching function for call to ‘std::vector<geometry_msgs::msg::Point_<std::allocator<void> > >::push_back(geometry_msgs::msg::Point32&)’
+     63 |     oriented_footprint.push_back(transformed_point);
+        |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/c++/11/vector:67,
+                   from /root/repos/nav_ws/src/nav2_dwb_controller/dwb_critics/include/dwb_critics/obstacle_footprint.hpp:38,
+                   from /root/repos/nav_ws/src/nav2_dwb_controller/dwb_critics/src/obstacle_footprint.cpp:35:
+  /usr/include/c++/11/bits/stl_vector.h:1187:7: note: candidate: ‘void std::vector<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = geometry_msgs::msg::Point_<std::allocator<void> >; _Alloc = std::allocator<geometry_msgs::msg::Point_<std::allocator<void> > >; std::vector<_Tp, _Alloc>::value_type = geometry_msgs::msg::Point_<std::allocator<void> >]’
+   1187 |       push_back(const value_type& __x)
+        |       ^~~~~~~~~
+  /usr/include/c++/11/bits/stl_vector.h:1187:35: note:   no known conversion for argument 1 from ‘geometry_msgs::msg::Point32’ {aka ‘geometry_msgs::msg::Point32_<std::allocator<void> >’} to ‘const value_type&’ {aka ‘const geometry_msgs::msg::Point_<std::allocator<void> >&’}
+   1187 |       push_back(const value_type& __x)
+        |                 ~~~~~~~~~~~~~~~~~~^~~
+  /usr/include/c++/11/bits/stl_vector.h:1203:7: note: candidate: ‘void std::vector<_Tp, _Alloc>::push_back(std::vector<_Tp, _Alloc>::value_type&&) [with _Tp = geometry_msgs::msg::Point_<std::allocator<void> >; _Alloc = std::allocator<geometry_msgs::msg::Point_<std::allocator<void> > >; std::vector<_Tp, _Alloc>::value_type = geometry_msgs::msg::Point_<std::allocator<void> >]’
+   1203 |       push_back(value_type&& __x)
+        |       ^~~~~~~~~
+  /usr/include/c++/11/bits/stl_vector.h:1203:30: note:   no known conversion for argument 1 from ‘geometry_msgs::msg::Point32’ {aka ‘geometry_msgs::msg::Point32_<std::allocator<void> >’} to ‘std::vector<geometry_msgs::msg::Point_<std::allocator<void> > >::value_type&&’ {aka ‘geometry_msgs::msg::Point_<std::allocator<void> >&&’}
+   1203 |       push_back(value_type&& __x)
+        |                 ~~~~~~~~~~~~~^~~
+  gmake[2]: *** [CMakeFiles/dwb_critics.dir/build.make:174: CMakeFiles/dwb_critics.dir/src/obstacle_footprint.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:180: CMakeFiles/dwb_critics.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< dwb_critics [4.29s, exited with code 2]
+
+  Summary: 0 packages finished [4.57s]
+    1 package failed: dwb_critics
+    1 package had stderr output: dwb_critics
+generate_code.cpp: |-
+  Footprint getOrientedFootprint(
+    const geometry_msgs::msg::Pose2D & pose,
+    const Footprint & footprint_spec)
+  {
+    Footprint oriented_footprint;
+    oriented_footprint.reserve(footprint_spec.size());
+
+    const double cos_th = std::cos(pose.theta);
+    const double sin_th = std::sin(pose.theta);
+
+    for (const auto& point : footprint_spec) {
+      geometry_msgs::msg::Point32 transformed_point;
+      // Apply rotation and translation
+      transformed_point.x = pose.x + (point.x * cos_th - point.y * sin_th);
+      transformed_point.y = pose.y + (point.x * sin_th + point.y * cos_th);
+      transformed_point.z = point.z;  // z remains unchanged in 2D transformation
+      oriented_footprint.push_back(transformed_point);
+    }
+
+    return oriented_footprint;
+  }
+ground_truth.cpp: |-
+  Footprint getOrientedFootprint(
+    const geometry_msgs::msg::Pose2D & pose,
+    const Footprint & footprint_spec)
+  {
+    std::vector<geometry_msgs::msg::Point> oriented_footprint;
+    oriented_footprint.resize(footprint_spec.size());
+    double cos_th = cos(pose.theta);
+    double sin_th = sin(pose.theta);
+    for (unsigned int i = 0; i < footprint_spec.size(); ++i) {
+      geometry_msgs::msg::Point & new_pt = oriented_footprint[i];
+      new_pt.x = pose.x + footprint_spec[i].x * cos_th - footprint_spec[i].y * sin_th;
+      new_pt.y = pose.y + footprint_spec[i].x * sin_th + footprint_spec[i].y * cos_th;
+    }
+    return oriented_footprint;
+  }
+architecture-codes:
+  - ROS Message Issue - Improper Message Type Usage Issue 
+  - ROS Message Issue - Message Initialization Issue 
+
+functionality-codes:
+  - Incomplete Code Issue - Missing One Step Issue
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+  - Condition Issue - Conditional Check Missing Issue
+root-cause-codes:
+  - Framework Integration Issue - Insufficient understanding of ROS Integration 
+  - Framework Integration Issue - Lack of ROS development best practices 
+  - Solving Robotic Tasks Issue - Inadequate Understanding of System Requirements 

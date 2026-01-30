@@ -1,0 +1,53 @@
+compilation.log: |
+  Starting >>> autoware_mission_planner_universe
+  [Processing: autoware_mission_planner_universe]
+  [Processing: autoware_mission_planner_universe]
+  [Processing: autoware_mission_planner_universe]
+  Finished <<< autoware_mission_planner_universe [1min 36s]
+
+  Summary: 1 package finished [1min 37s]
+generate_code.cpp: "bool is_in_parking_space(\n  const lanelet::ConstLineStrings3d\
+  \ & parking_spaces, const lanelet::ConstPoint3d & point)\n{\n  for (const auto&\
+  \ parking_space : parking_spaces) {\n    if (parking_space.size() < 3) {\n     \
+  \ continue;  // Not a valid polygon\n    }\n\n    // Extract polygon vertices\n\
+  \    std::vector<lanelet::BasicPoint2d> polygon;\n    for (const auto& p : parking_space)\
+  \ {\n      polygon.emplace_back(p.x(), p.y());\n    }\n\n    // Check point-in-polygon\
+  \ using ray casting algorithm\n    bool inside = false;\n    const lanelet::BasicPoint2d\
+  \ pt(point.x(), point.y());\n    for (size_t i = 0, j = polygon.size() - 1; i <\
+  \ polygon.size(); j = i++) {\n      if (((polygon[i].y() > pt.y()) != (polygon[j].y()\
+  \ > pt.y())) &&\n          (pt.x() < (polygon[j].x() - polygon[i].x()) * (pt.y()\
+  \ - polygon[i].y()) / \n                    (polygon[j].y() - polygon[i].y()) +\
+  \ polygon[i].x())) {\n        inside = !inside;\n      }\n    }\n\n    if (inside)\
+  \ {\n      return true;\n    }\n  }\n  return false;\n}"
+ground_truth.cpp: |-
+  bool is_in_parking_space(
+    const lanelet::ConstLineStrings3d & parking_spaces, const lanelet::ConstPoint3d & point)
+  {
+    for (const auto & parking_space : parking_spaces) {
+      lanelet::ConstPolygon3d parking_space_polygon;
+      if (!lanelet::utils::lineStringWithWidthToPolygon(parking_space, &parking_space_polygon)) {
+        continue;
+      }
+
+      const double distance = boost::geometry::distance(
+        lanelet::utils::to2D(parking_space_polygon).basicPolygon(),
+        lanelet::utils::to2D(point).basicPoint());
+      constexpr double th_distance = std::numeric_limits<double>::epsilon();
+      if (distance < th_distance) {
+        return true;
+      }
+    }
+    return false;
+  }
+architecture-codes: []
+
+functionality-codes:
+    - Domain Library Issue - Lack of Domain Library Utilization Issue
+    - Domain Library Issue - Domain Specific Library Utilization Error
+    - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+    - Condition Issue - Condition Check Logic Misapplication Issue
+
+root-cause-codes:
+    - Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge
+    - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+    - Framework Integration Issue - Lack of ROS development best practices

@@ -1,0 +1,89 @@
+compilation.log: |
+  Starting >>> nav2_rotation_shim_controller
+  --- stderr: nav2_rotation_shim_controller
+  /root/repos/nav_ws/src/nav2_rotation_shim_controller/src/nav2_rotation_shim_controller.cpp: In member function ‘geometry_msgs::msg::TwistStamped nav2_rotation_shim_controller::RotationShimController::computeRotateToHeadingCommand(const double&, const PoseStamped&, const Twist&)’:
+  /root/repos/nav_ws/src/nav2_rotation_shim_controller/src/nav2_rotation_shim_controller.cpp:295:37: error: unused parameter ‘velocity’ [-Werror=unused-parameter]
+    295 |   const geometry_msgs::msg::Twist & velocity)
+        |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/nav2_rotation_shim_controller.dir/build.make:76: CMakeFiles/nav2_rotation_shim_controller.dir/src/nav2_rotation_shim_controller.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:172: CMakeFiles/nav2_rotation_shim_controller.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_rotation_shim_controller [7.48s, exited with code 2]
+
+  Summary: 0 packages finished [7.78s]
+    1 package failed: nav2_rotation_shim_controller
+    1 package had stderr output: nav2_rotation_shim_controller
+generate_code.cpp: |-
+  geometry_msgs::msg::TwistStamped
+  RotationShimController::computeRotateToHeadingCommand(
+    const double & angular_distance_to_heading,
+    const geometry_msgs::msg::PoseStamped & pose,
+    const geometry_msgs::msg::Twist & velocity)
+  {
+    geometry_msgs::msg::TwistStamped cmd_vel;
+    cmd_vel.header.frame_id = pose.header.frame_id;
+    cmd_vel.header.stamp = clock_->now();
+
+    // Determine the direction of rotation (clockwise or counter-clockwise)
+    double direction = angular_distance_to_heading > 0.0 ? 1.0 : -1.0;
+    double angular_vel = direction * rotate_to_heading_angular_vel_;
+
+    // Apply acceleration limits if needed
+    if (last_angular_vel_ != std::numeric_limits<double>::max()) {
+      double max_delta_vel = max_angular_accel_ * control_duration_;
+      angular_vel = std::clamp(
+        angular_vel,
+        last_angular_vel_ - max_delta_vel,
+        last_angular_vel_ + max_delta_vel);
+    }
+
+    // Set the angular velocity command
+    cmd_vel.twist.angular.z = angular_vel;
+    last_angular_vel_ = angular_vel;
+
+    // Check if this command would cause a collision
+    isCollisionFree(cmd_vel, angular_distance_to_heading, pose);
+
+    return cmd_vel;
+  }
+ground_truth.cpp: |-
+  geometry_msgs::msg::TwistStamped
+  RotationShimController::computeRotateToHeadingCommand(
+    const double & angular_distance_to_heading,
+    const geometry_msgs::msg::PoseStamped & pose,
+    const geometry_msgs::msg::Twist & velocity)
+  {
+    auto current = closed_loop_ ? velocity.angular.z : last_angular_vel_;
+    if (current == std::numeric_limits<double>::max()) {
+      current = 0.0;
+    }
+
+    geometry_msgs::msg::TwistStamped cmd_vel;
+    cmd_vel.header = pose.header;
+    const double sign = angular_distance_to_heading > 0.0 ? 1.0 : -1.0;
+    const double angular_vel = sign * rotate_to_heading_angular_vel_;
+    const double & dt = control_duration_;
+    const double min_feasible_angular_speed = current - max_angular_accel_ * dt;
+    const double max_feasible_angular_speed = current + max_angular_accel_ * dt;
+    cmd_vel.twist.angular.z =
+      std::clamp(angular_vel, min_feasible_angular_speed, max_feasible_angular_speed);
+
+    isCollisionFree(cmd_vel, angular_distance_to_heading, pose);
+    return cmd_vel;
+  }
+architecture-codes:
+  - ROS Message Issue - Improper Message Type Usage Issue 
+  - ROS Timer Issue - Clock Source Usage Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue 
+  - Condition Issue - Condition Check Logic Misapplication Issue 
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic                          
+  - Framework Integration Issue - Insufficient understanding of ROS Integration 
+  - Framework Integration Issue - Lack of ROS development best practices 

@@ -1,0 +1,13 @@
+=== Analysis Results ===
+Total yaml files found: 240
+Successfully processed: 240
+
+--- Architecture Codes Statistics ---
+Total unique codes: 7
+  Framework Integration Issue - Insufficient understanding of ROS Integration: 172
+  Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic: 153
+  Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase : 144
+  Framework Integration Issue - Lack of ROS development best practices: 125
+  Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge: 78
+  Solving Robotic Tasks Issue - Inadequate Understanding of System Requirements: 63
+  Framework Integration Issue - Insufficient understanding of ROS Integration: 16

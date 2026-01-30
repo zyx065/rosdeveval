@@ -1,0 +1,76 @@
+compilation.log: |
+  Starting >>> autoware_scenario_selector
+  --- stderr: autoware_scenario_selector
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp: In member function ‘void autoware::scenario_selector::ScenarioSelectorNode::onTimer()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:399:3: error: ‘tier4_debug_msgs’ has not been declared
+    399 |   tier4_debug_msgs::msg::Float64Stamped processing_time_msg;
+        |   ^~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_scenario_selector/src/node.cpp:400:3: error: ‘processing_time_msg’ was not declared in this scope; did you mean ‘processing_time_ms’?
+    400 |   processing_time_msg.stamp = this->now();
+        |   ^~~~~~~~~~~~~~~~~~~
+        |   processing_time_ms
+  gmake[2]: *** [CMakeFiles/autoware_scenario_selector.dir/build.make:76: CMakeFiles/autoware_scenario_selector.dir/src/node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_scenario_selector.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_scenario_selector [14.8s, exited with code 2]
+
+  Summary: 0 packages finished [16.1s]
+    1 package failed: autoware_scenario_selector
+    1 package had stderr output: autoware_scenario_selector
+generate_code.cpp: "void ScenarioSelectorNode::onTimer()\n{\n  // Update internal\
+  \ data\n  updateData();\n\n  // Check if data is ready\n  if (!isDataReady()) {\n\
+  \    return;\n  }\n\n  // Start processing time measurement\n  const auto start_time\
+  \ = std::chrono::system_clock::now();\n\n  // Select scenario if none is active\n\
+  \  if (current_scenario_.empty()) {\n    current_scenario_ = selectScenarioByPosition();\n\
+  \  }\n\n  // Update current scenario state\n  updateCurrentScenario();\n\n  // Publish\
+  \ the current scenario\n  tier4_planning_msgs::msg::Scenario scenario_msg;\n  scenario_msg.current_scenario\
+  \ = current_scenario_;\n  pub_scenario_->publish(scenario_msg);\n\n  // Calculate\
+  \ and publish processing time\n  const auto end_time = std::chrono::system_clock::now();\n\
+  \  const double processing_time_ms = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time\
+  \ - start_time).count() * 1e-6;\n  \n  tier4_debug_msgs::msg::Float64Stamped processing_time_msg;\n\
+  \  processing_time_msg.stamp = this->now();\n  processing_time_msg.data = processing_time_ms;\n\
+  \  pub_processing_time_->publish(processing_time_msg);\n}"
+ground_truth.cpp: |-
+  void ScenarioSelectorNode::onTimer()
+  {
+    updateData();
+
+    if (!isDataReady()) {
+      return;
+    }
+
+    // Initialize Scenario
+    if (current_scenario_ == tier4_planning_msgs::msg::Scenario::EMPTY) {
+      current_scenario_ = selectScenarioByPosition();
+    }
+
+    updateCurrentScenario();
+    tier4_planning_msgs::msg::Scenario scenario;
+    scenario.current_scenario = current_scenario_;
+
+    if (current_scenario_ == tier4_planning_msgs::msg::Scenario::PARKING) {
+      scenario.activating_scenarios.push_back(current_scenario_);
+    }
+
+    pub_scenario_->publish(scenario);
+
+    // Publish ProcessingTime
+    autoware_internal_debug_msgs::msg::Float64Stamped processing_time_msg;
+    processing_time_msg.stamp = get_clock()->now();
+    processing_time_msg.data = stop_watch.toc();
+    pub_processing_time_->publish(processing_time_msg);
+  }
+architecture-codes:
+  - ROS Message Issue - Improper Message Type Usage Issue
+  - ROS Timer Issue - Clock Source Instantiation and Synchronization Issue
+
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Incomplete Code Issue - Missing One Step Issue
+
+root-cause-codes:
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic

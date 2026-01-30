@@ -1,0 +1,45 @@
+compilation.log: |
+  Starting >>> moveit_core
+  Finished <<< moveit_core [0.73s]
+
+  Summary: 1 package finished [1.17s]
+generate_code.cpp: |
+  double path_length(RobotTrajectory const& trajectory)
+  {
+      double length = 0.0;
+      std::size_t waypoint_count = trajectory.getWayPointCount();
+      
+      if (waypoint_count < 2)
+          return length;
+          
+      const moveit::core::RobotState* prev_waypoint = &trajectory.getWayPoint(0);
+      
+      for (std::size_t i = 1; i < waypoint_count; ++i)
+      {
+          const moveit::core::RobotState* current_waypoint = &trajectory.getWayPoint(i);
+          length += prev_waypoint->distance(*current_waypoint);
+          prev_waypoint = current_waypoint;
+      }
+      
+      return length;
+  }
+ground_truth.cpp: |-
+  double path_length(RobotTrajectory const& trajectory)
+  {
+    auto trajectory_length = 0.0;
+    for (std::size_t index = 1; index < trajectory.getWayPointCount(); ++index)
+    {
+      auto const& first = trajectory.getWayPoint(index - 1);
+      auto const& second = trajectory.getWayPoint(index);
+      trajectory_length += first.distance(second);
+    }
+    return trajectory_length;
+  }
+architecture-codes: []
+functionality-codes:
+    - Condition Issue - Condition Check Logic Misapplication Issue 
+    - Domain Library Issue - Domain Specific Library Utilization Error 
+
+root-cause-codes:
+    - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic 
+    - Framework Integration Issue - Lack of ROS development best practices 

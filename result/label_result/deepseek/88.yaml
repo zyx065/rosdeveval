@@ -1,0 +1,36 @@
+compilation.log: |
+  Starting >>> autoware_pose2twist
+  Finished <<< autoware_pose2twist [10.4s]
+
+  Summary: 1 package finished [11.8s]
+generate_code.cpp: "geometry_msgs::msg::Vector3 compute_relative_rotation_vector(\n\
+  \  const tf2::Quaternion & q1, const tf2::Quaternion & q2)\n{\n  // Compute the\
+  \ relative rotation quaternion (q2 * q1^-1)\n  tf2::Quaternion q_rel = q2 * q1.inverse();\n\
+  \  \n  // Normalize the quaternion to ensure valid rotation\n  q_rel.normalize();\n\
+  \  \n  // Convert to axis-angle representation\n  tf2::Vector3 axis = q_rel.getAxis();\n\
+  \  double angle = q_rel.getAngle();\n  \n  // Create the output vector (axis * angle)\n\
+  \  geometry_msgs::msg::Vector3 rotation_vector;\n  rotation_vector.x = axis.x()\
+  \ * angle;\n  rotation_vector.y = axis.y() * angle;\n  rotation_vector.z = axis.z()\
+  \ * angle;\n  \n  return rotation_vector;\n}"
+ground_truth.cpp: |-
+  geometry_msgs::msg::Vector3 compute_relative_rotation_vector(
+    const tf2::Quaternion & q1, const tf2::Quaternion & q2)
+  {
+    // If we define q2 as the rotation obtained by applying dq after applying q1,
+    // then q2 = q1 * dq .
+    // Therefore, dq = q1.inverse() * q2 .
+    const tf2::Quaternion diff_quaternion = q1.inverse() * q2;
+    const tf2::Vector3 axis = diff_quaternion.getAxis() * diff_quaternion.getAngle();
+    return geometry_msgs::msg::Vector3{}.set__x(axis.x()).set__y(axis.y()).set__z(axis.z());
+  }
+architecture-codes:
+  - ROS Message Issue - Message Initialization Issue
+
+functionality-codes:
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+  - Domain Library Issue - Domain Specific Library Utilization Error
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge

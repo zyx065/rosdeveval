@@ -1,0 +1,73 @@
+compilation.log: |
+  Starting >>> nav2_route
+  --- stderr: nav2_route
+  /root/repos/nav_ws/src/nav2_route/src/plugins/edge_cost_functions/dynamic_edges_scorer.cpp: In member function ‘void nav2_route::DynamicEdgesScorer::closedEdgesCb(std::shared_ptr<rmw_request_id_s>, std::shared_ptr<nav2_msgs::srv::DynamicEdges_Request_<std::allocator<void> > >, std::shared_ptr<nav2_msgs::srv::DynamicEdges_Response_<std::allocator<void> > >)’:
+  /root/repos/nav_ws/src/nav2_route/src/plugins/edge_cost_functions/dynamic_edges_scorer.cpp:49:39: error: ‘using element_type = struct nav2_msgs::srv::DynamicEdges_Request_<std::allocator<void> >’ {aka ‘struct nav2_msgs::srv::DynamicEdges_Request_<std::allocator<void> >’} has no member named ‘edges_to_close’
+     49 |   for (const auto& edge_id : request->edges_to_close) {
+        |                                       ^~~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/src/plugins/edge_cost_functions/dynamic_edges_scorer.cpp:55:39: error: ‘using element_type = struct nav2_msgs::srv::DynamicEdges_Request_<std::allocator<void> >’ {aka ‘struct nav2_msgs::srv::DynamicEdges_Request_<std::allocator<void> >’} has no member named ‘edges_to_open’
+     55 |   for (const auto& edge_id : request->edges_to_open) {
+        |                                       ^~~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/src/plugins/edge_cost_functions/dynamic_edges_scorer.cpp:61:39: error: ‘using element_type = struct nav2_msgs::srv::DynamicEdges_Request_<std::allocator<void> >’ {aka ‘struct nav2_msgs::srv::DynamicEdges_Request_<std::allocator<void> >’} has no member named ‘dynamic_penalties’
+     61 |   for (const auto& penalty : request->dynamic_penalties) {
+        |                                       ^~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/edge_scorers.dir/build.make:104: CMakeFiles/edge_scorers.dir/src/plugins/edge_cost_functions/dynamic_edges_scorer.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:266: CMakeFiles/edge_scorers.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_route [3.80s, exited with code 2]
+
+  Summary: 0 packages finished [4.11s]
+    1 package failed: nav2_route
+    1 package had stderr output: nav2_route
+generate_code.cpp: "void DynamicEdgesScorer::closedEdgesCb(\n  const std::shared_ptr<rmw_request_id_t>,\n\
+  \  const std::shared_ptr<nav2_msgs::srv::DynamicEdges::Request> request,\n  std::shared_ptr<nav2_msgs::srv::DynamicEdges::Response>\
+  \ response)\n{\n  // Process edges to close\n  for (const auto& edge_id : request->edges_to_close)\
+  \ {\n    closed_edges_.insert(edge_id);\n    RCLCPP_DEBUG(logger_, \"Closed edge\
+  \ %u\", edge_id);\n  }\n\n  // Process edges to open\n  for (const auto& edge_id\
+  \ : request->edges_to_open) {\n    closed_edges_.erase(edge_id);\n    RCLCPP_DEBUG(logger_,\
+  \ \"Opened edge %u\", edge_id);\n  }\n\n  // Process dynamic penalties\n  for (const\
+  \ auto& penalty : request->dynamic_penalties) {\n    if (penalty.penalty < 0) {\n\
+  \      dynamic_penalties_.erase(penalty.edge_id);\n      RCLCPP_DEBUG(logger_, \"\
+  Removed dynamic penalty for edge %u\", penalty.edge_id);\n    } else {\n      dynamic_penalties_[penalty.edge_id]\
+  \ = penalty.penalty;\n      RCLCPP_DEBUG(logger_, \"Set dynamic penalty for edge\
+  \ %u to %f\", \n        penalty.edge_id, penalty.penalty);\n    }\n  }\n\n  response->success\
+  \ = true;\n}"
+ground_truth.cpp: |-
+  void DynamicEdgesScorer::closedEdgesCb(
+    const std::shared_ptr<rmw_request_id_t>,
+    const std::shared_ptr<nav2_msgs::srv::DynamicEdges::Request> request,
+    std::shared_ptr<nav2_msgs::srv::DynamicEdges::Response> response)
+  {
+    RCLCPP_INFO(logger_, "Edge closure and cost adjustment in progress!");
+
+    // Add new closed edges
+    for (unsigned int edge : request->closed_edges) {
+      closed_edges_.insert(edge);
+    }
+
+    // Removed now opened edges, if stored
+    for (unsigned int edge : request->opened_edges) {
+      if (closed_edges_.find(edge) != closed_edges_.end()) {
+        closed_edges_.erase(edge);
+      }
+    }
+
+    // Add dynamic costs from application system for edges
+    for (auto & edge : request->adjust_edges) {
+      dynamic_penalties_[edge.edgeid] = edge.cost;
+    }
+
+    response->success = true;
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Message Issue - Message Operation Issue
+  - ROS Logger Issue - ROS Logger Missing Issue 
+functionality-codes:
+  - Condition Issue - Conditional Check Missing Issue
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of System Requirements
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

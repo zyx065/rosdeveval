@@ -1,0 +1,61 @@
+compilation.log: |
+  Starting >>> nav2_collision_monitor
+  Finished <<< nav2_collision_monitor [0.41s]
+
+  Summary: 1 package finished [0.72s]
+generate_code.cpp: |-
+  void Polygon::publish() const
+  {
+    if (!visualize_) {
+      return;
+    }
+
+    auto node = node_.lock();
+    if (!node) {
+      throw std::runtime_error("Failed to lock node for publishing");
+    }
+
+    if (!polygon_pub_->is_activated()) {
+      RCLCPP_WARN(logger_, "Trying to publish polygon when publisher is not activated");
+      return;
+    }
+
+    geometry_msgs::msg::PolygonStamped polygon_msg;
+    polygon_msg.header.frame_id = base_frame_id_;
+    polygon_msg.header.stamp = node->now();
+    polygon_msg.polygon = polygon_;
+
+    polygon_pub_->publish(polygon_msg);
+  }
+ground_truth.cpp: |-
+  void Polygon::publish() const
+  {
+    if (!visualize_) {
+      return;
+    }
+
+    auto node = node_.lock();
+    if (!node) {
+      throw std::runtime_error{"Failed to lock node"};
+    }
+
+    // Fill PolygonStamped struct
+    std::unique_ptr<geometry_msgs::msg::PolygonStamped> poly_s =
+      std::make_unique<geometry_msgs::msg::PolygonStamped>();
+    poly_s->header.stamp = node->now();
+    poly_s->header.frame_id = base_frame_id_;
+    poly_s->polygon = polygon_;
+
+    // Publish polygon
+    polygon_pub_->publish(std::move(poly_s));
+  }
+architecture-codes:
+  - ROS Message Issue - Message Operation Issue
+  - Topic/Service Issue - Topic/Service Use Error Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+
+root-cause-codes:
+  - Framework Integration Issue - Lack of ROS development best practices
+  - Framework Integration Issue - Insufficient understanding of ROS Integration

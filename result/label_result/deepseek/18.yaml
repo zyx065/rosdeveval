@@ -1,0 +1,62 @@
+compilation.log: |
+  Starting >>> autoware_planning_evaluator
+  --- stderr: autoware_planning_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/motion_evaluator_node.cpp: In member function ‘void planning_diagnostics::MotionEvaluatorNode::onOdom(nav_msgs::msg::Odometry_<std::allocator<void> >::SharedPtr)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/motion_evaluator_node.cpp:109:29: error: ‘using Trajectory = struct autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >’} has no member named ‘push_back’
+    109 |     accumulated_trajectory_.push_back(current_pose);
+        |                             ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/motion_evaluator_node.cpp:116:33: error: ‘using Trajectory = struct autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >’} has no member named ‘size’
+    116 |     if (accumulated_trajectory_.size() > max_trajectory_size) {
+        |                                 ^~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_planning_evaluator/src/motion_evaluator_node.cpp:117:33: error: ‘using Trajectory = struct autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >’ {aka ‘struct autoware_planning_msgs::msg::Trajectory_<std::allocator<void> >’} has no member named ‘pop_front’
+    117 |         accumulated_trajectory_.pop_front();
+        |                                 ^~~~~~~~~
+  gmake[2]: *** [CMakeFiles/planning_evaluator_node.dir/build.make:160: CMakeFiles/planning_evaluator_node.dir/src/motion_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:161: CMakeFiles/planning_evaluator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_planning_evaluator [5.64s, exited with code 2]
+
+  Summary: 0 packages finished [7.04s]
+    1 package failed: autoware_planning_evaluator
+    1 package had stderr output: autoware_planning_evaluator
+generate_code.cpp: "void MotionEvaluatorNode::onOdom(const nav_msgs::msg::Odometry::SharedPtr\
+  \ msg)\n{\n    // Get the current ego pose from the odometry message\n    geometry_msgs::msg::Pose\
+  \ current_pose = msg->pose.pose;\n    \n    // Add the current pose to the accumulated\
+  \ trajectory\n    accumulated_trajectory_.push_back(current_pose);\n    \n    //\
+  \ Store the corresponding timestamp\n    stamps_.push_back(msg->header.stamp);\n\
+  \    \n    // Optional: Limit the size of the trajectory to prevent excessive memory\
+  \ usage\n    const size_t max_trajectory_size = 1000; // Adjust as needed\n    if\
+  \ (accumulated_trajectory_.size() > max_trajectory_size) {\n        accumulated_trajectory_.pop_front();\n\
+  \        stamps_.pop_front();\n    }\n}"
+ground_truth.cpp: |
+  void MotionEvaluatorNode::onOdom(const nav_msgs::msg::Odometry::SharedPtr msg)
+  {
+    // TODO(Maxime CLEMENT): set some desired minimum time/distance between two points
+    TrajectoryPoint current_point;
+    current_point.pose = getCurrentEgoPose();
+    current_point.longitudinal_velocity_mps = msg->twist.twist.linear.x;
+    const rclcpp::Time now = this->get_clock()->now();
+    if (!accumulated_trajectory_.points.empty()) {
+      current_point.acceleration_mps2 =
+        (msg->twist.twist.linear.x -
+         accumulated_trajectory_.points.back().longitudinal_velocity_mps) /
+        (now - stamps_.back()).seconds();
+    }
+    accumulated_trajectory_.points.push_back(current_point);
+    stamps_.push_back(now);
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Message Issue - Message Initialization Issue
+  - ROS Timer Issue - Clock Source Instantiation and Synchronization Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Condition Issue - Conditional Check Missing Issue
+
+root-cause-codes:
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic

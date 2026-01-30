@@ -1,0 +1,60 @@
+compilation.log: |
+  Starting >>> autoware_scenario_simulator_v2_adapter
+  --- stderr: autoware_scenario_simulator_v2_adapter
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_scenario_simulator_v2_adapter/src/converter_node.cpp: In member function ‘void autoware::scenario_simulator_v2_adapter::MetricConverter::onMetrics(tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >::ConstSharedPtr, size_t, const string&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_scenario_simulator_v2_adapter/src/converter_node.cpp:68:43: error: ‘using element_type = const struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’ {aka ‘const struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’} has no member named ‘metrics’
+     68 |   for (const auto & metric : metrics_msg->metrics) {
+        |                                           ^~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_scenario_simulator_v2_adapter.dir/build.make:76: CMakeFiles/autoware_scenario_simulator_v2_adapter.dir/src/converter_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_scenario_simulator_v2_adapter.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_scenario_simulator_v2_adapter [3.95s, exited with code 2]
+
+  Summary: 0 packages finished [5.26s]
+    1 package failed: autoware_scenario_simulator_v2_adapter
+    1 package had stderr output: autoware_scenario_simulator_v2_adapter
+generate_code.cpp: |-
+  void MetricConverter::onMetrics(
+    const MetricArray::ConstSharedPtr metrics_msg, const size_t topic_idx,
+    const std::string & base_topic_name)
+  {
+    if (!metrics_msg) {
+      return;
+    }
+
+    const auto topic_name = removeInvalidTopicString(base_topic_name);
+    auto publisher = getPublisher(topic_name, topic_idx);
+
+    if (!publisher) {
+      return;
+    }
+
+    for (const auto & metric : metrics_msg->metrics) {
+      const auto user_defined_value = createUserDefinedValue(metric);
+      publisher->publish(user_defined_value);
+    }
+  }
+ground_truth.cpp: |-
+  void MetricConverter::onMetrics(
+    const MetricArray::ConstSharedPtr metrics_msg, const size_t topic_idx,
+    const std::string & base_topic_name)
+  {
+    for (const auto & metric : metrics_msg->metric_array) {
+      std::string metric_name = base_topic_name + (metric.name.empty() ? "" : "/" + metric.name);
+      const auto valid_topic_name = removeInvalidTopicString(metric_name);
+      getPublisher(valid_topic_name, topic_idx)->publish(createUserDefinedValue(metric));
+    }
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - Topic/Service Issue - Topic/Service Use Error Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

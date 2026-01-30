@@ -1,0 +1,163 @@
+compilation.log: |
+  Starting >>> autoware_raw_vehicle_cmd_converter
+  --- stderr: autoware_raw_vehicle_cmd_converter
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp: In member function ‘bool autoware::raw_vehicle_cmd_converter::BrakeMap::readBrakeMapFromCSV(const string&, bool)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:31:14: error: ‘Table’ is not a member of ‘autoware::raw_vehicle_cmd_converter::CSVLoader’
+     31 |   CSVLoader::Table table;
+        |              ^~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:32:27: error: ‘table’ was not declared in this scope; did you mean ‘Table’?
+     32 |   if (!csv_loader.readCSV(table)) {
+        |                           ^~~~~
+        |                           Table
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:33:5: error: ‘ROS_ERROR’ was not declared in this scope
+     33 |     ROS_ERROR("Failed to read CSV file: %s", csv_path.c_str());
+        |     ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:38:46: error: ‘table’ was not declared in this scope; did you mean ‘Table’?
+     38 |   if (validation && !CSVLoader::validateData(table, csv_path)) {
+        |                                              ^~~~~
+        |                                              Table
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:39:5: error: ‘ROS_ERROR’ was not declared in this scope
+     39 |     ROS_ERROR("Validation failed for CSV file: %s", csv_path.c_str());
+        |     ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:44:14: error: ‘Map’ is not a member of ‘autoware::raw_vehicle_cmd_converter::CSVLoader’
+     44 |   CSVLoader::Map map = CSVLoader::getMap(table);
+        |              ^~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:45:45: error: ‘map’ was not declared in this scope
+     45 |   if (validation && !CSVLoader::validateMap(map, true)) {
+        |                                             ^~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:45:45: note: suggested alternatives:
+  In file included from /usr/include/c++/11/map:61,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/bits/stl_map.h:100:11: note:   ‘std::map’
+    100 |     class map
+        |           ^~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/map:78:13: note:   ‘std::pmr::map’
+     78 |       using map
+        |             ^~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:46:5: error: ‘ROS_ERROR’ was not declared in this scope
+     46 |     ROS_ERROR("Map validation failed for CSV file: %s", csv_path.c_str());
+        |     ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:51:39: error: ‘table’ was not declared in this scope; did you mean ‘Table’?
+     51 |   vel_index_ = CSVLoader::getRowIndex(table);
+        |                                       ^~~~~
+        |                                       Table
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:52:3: error: ‘throttle_index_’ was not declared in this scope
+     52 |   throttle_index_ = CSVLoader::getColumnIndex(table);
+        |   ^~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:55:3: error: ‘accel_map_’ was not declared in this scope
+     55 |   accel_map_ = map;
+        |   ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:55:16: error: ‘map’ was not declared in this scope
+     55 |   accel_map_ = map;
+        |                ^~~
+  /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:55:16: note: suggested alternatives:
+  In file included from /usr/include/c++/11/map:61,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/bits/stl_map.h:100:11: note:   ‘std::map’
+    100 |     class map
+        |           ^~~
+  In file included from /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp:24,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:25,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp:21,
+                   from /opt/ros/humble/include/rclcpp/rclcpp/rclcpp.hpp:155,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/include/autoware_raw_vehicle_cmd_converter/brake_map.hpp:20,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/vehicle/autoware_raw_vehicle_cmd_converter/src/brake_map.cpp:15:
+  /usr/include/c++/11/map:78:13: note:   ‘std::pmr::map’
+     78 |       using map
+        |             ^~~
+  gmake[2]: *** [CMakeFiles/actuation_map_converter.dir/build.make:90: CMakeFiles/actuation_map_converter.dir/src/brake_map.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:163: CMakeFiles/actuation_map_converter.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_raw_vehicle_cmd_converter [2.59s, exited with code 2]
+
+  Summary: 0 packages finished [4.11s]
+    1 package failed: autoware_raw_vehicle_cmd_converter
+    1 package had stderr output: autoware_raw_vehicle_cmd_converter
+generate_code.cpp: |-
+  bool BrakeMap::readBrakeMapFromCSV(const std::string & csv_path, const bool validation)
+  {
+    // Initialize CSVLoader with the given path
+    CSVLoader csv_loader(csv_path);
+
+    // Read CSV data into a table
+    CSVLoader::Table table;
+    if (!csv_loader.readCSV(table)) {
+      ROS_ERROR("Failed to read CSV file: %s", csv_path.c_str());
+      return false;
+    }
+
+    // Perform validation if requested
+    if (validation && !CSVLoader::validateData(table, csv_path)) {
+      ROS_ERROR("Validation failed for CSV file: %s", csv_path.c_str());
+      return false;
+    }
+
+    // Extract map data from the table
+    CSVLoader::Map map = CSVLoader::getMap(table);
+    if (validation && !CSVLoader::validateMap(map, true)) {
+      ROS_ERROR("Map validation failed for CSV file: %s", csv_path.c_str());
+      return false;
+    }
+
+    // Extract row and column indices (velocity and throttle)
+    vel_index_ = CSVLoader::getRowIndex(table);
+    throttle_index_ = CSVLoader::getColumnIndex(table);
+
+    // Store the acceleration map
+    accel_map_ = map;
+
+    return true;
+  }
+ground_truth.cpp: |-
+  bool BrakeMap::readBrakeMapFromCSV(const std::string & csv_path, const bool validation)
+  {
+    CSVLoader csv(csv_path);
+    std::vector<std::vector<std::string>> table;
+
+    if (!csv.readCSV(table)) {
+      return false;
+    }
+
+    vehicle_name_ = table[0][0];
+    vel_index_ = CSVLoader::getColumnIndex(table);
+    brake_index_ = CSVLoader::getRowIndex(table);
+    brake_map_ = CSVLoader::getMap(table);
+    brake_index_rev_ = brake_index_;
+    if (validation && !CSVLoader::validateMap(brake_map_, false)) {
+      return false;
+    }
+    std::reverse(std::begin(brake_index_rev_), std::end(brake_index_rev_));
+
+    return true;
+  }
+architecture-codes:
+  - ROS Logger Issue - ROS Logger Missing Issue
+
+functionality-codes:
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Constant Value Issue
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

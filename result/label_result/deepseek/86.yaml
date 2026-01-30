@@ -1,0 +1,102 @@
+compilation.log: |
+  Starting >>> autoware_obstacle_collision_checker
+  --- stderr: autoware_obstacle_collision_checker
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp: In function ‘autoware::obstacle_collision_checker::Output autoware::obstacle_collision_checker::check_for_collisions(const autoware::obstacle_collision_checker::Input&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:87:59: error: ‘const struct autoware::obstacle_collision_checker::Input’ has no member named ‘trajectory’
+     87 |   output.resampled_trajectory = resample_trajectory(input.trajectory, input.interval);
+        |                                                           ^~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:87:77: error: ‘const struct autoware::obstacle_collision_checker::Input’ has no member named ‘interval’
+     87 |   output.resampled_trajectory = resample_trajectory(input.trajectory, input.interval);
+        |                                                                             ^~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:98:38: error: ‘const struct autoware::obstacle_collision_checker::Input’ has no member named ‘transform’
+     98 |     input.obstacle_pointcloud, input.transform);
+        |                                      ^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:100:64: error: ‘const struct autoware::obstacle_collision_checker::Input’ has no member named ‘radius’
+    100 |     transformed_pointcloud, output.resampled_trajectory, input.radius);
+        |                                                                ^~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp: At global scope:
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:67:8: error: ‘double {anonymous}::calc_braking_distance(double, double, double)’ defined but not used [-Werror=unused-function]
+     67 | double calc_braking_distance(
+        |        ^~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:49:32: error: ‘pcl::PointCloud<pcl::PointXYZ> {anonymous}::filter_point_cloud_by_trajectory(const pcl::PointCloud<pcl::PointXYZ>&, const Trajectory&, double)’ defined but not used [-Werror=unused-function]
+     49 | pcl::PointCloud<pcl::PointXYZ> filter_point_cloud_by_trajectory(
+        |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/control/autoware_obstacle_collision_checker/src/obstacle_collision_checker.cpp:34:32: error: ‘pcl::PointCloud<pcl::PointXYZ> {anonymous}::get_transformed_point_cloud(const PointCloud2&, const Transform&)’ defined but not used [-Werror=unused-function]
+     34 | pcl::PointCloud<pcl::PointXYZ> get_transformed_point_cloud(
+        |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+  cc1plus: all warnings being treated as errors
+  gmake[2]: *** [CMakeFiles/obstacle_collision_checker.dir/build.make:90: CMakeFiles/obstacle_collision_checker.dir/src/obstacle_collision_checker.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/obstacle_collision_checker.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_obstacle_collision_checker [8.58s, exited with code 2]
+
+  Summary: 0 packages finished [9.92s]
+    1 package failed: autoware_obstacle_collision_checker
+    1 package had stderr output: autoware_obstacle_collision_checker
+generate_code.cpp: "Output check_for_collisions(const Input & input)\n{\n  Output\
+  \ output;\n  \n  // Start processing time measurement\n  const auto start_time =\
+  \ std::chrono::system_clock::now();\n\n  // Resample trajectory\n  output.resampled_trajectory\
+  \ = resample_trajectory(input.trajectory, input.interval);\n  \n  // Create vehicle\
+  \ footprints along the trajectory\n  output.vehicle_footprints = create_vehicle_footprints(\n\
+  \    output.resampled_trajectory, input.param, input.vehicle_info);\n  \n  // Create\
+  \ vehicle passing areas from footprints\n  output.vehicle_passing_areas = create_vehicle_passing_areas(output.vehicle_footprints);\n\
+  \  \n  // Transform and filter point cloud to trajectory vicinity\n  const auto\
+  \ transformed_pointcloud = get_transformed_point_cloud(\n    input.obstacle_pointcloud,\
+  \ input.transform);\n  const auto filtered_pointcloud = filter_point_cloud_by_trajectory(\n\
+  \    transformed_pointcloud, output.resampled_trajectory, input.radius);\n  \n \
+  \ // Check for collisions\n  output.will_collide = will_collide(filtered_pointcloud,\
+  \ output.vehicle_footprints);\n  \n  // Calculate processing time\n  const auto\
+  \ end_time = std::chrono::system_clock::now();\n  const auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_time\
+  \ - start_time);\n  output.processing_time_map[\"total\"] = elapsed_time.count();\n\
+  \  \n  return output;\n}"
+ground_truth.cpp: |-
+  Output check_for_collisions(const Input & input)
+  {
+    Output output;
+    autoware::universe_utils::StopWatch<std::chrono::milliseconds> stop_watch;
+
+    // resample trajectory by braking distance
+    constexpr double min_velocity = 0.01;
+    const auto & raw_abs_velocity = std::abs(input.current_twist->linear.x);
+    const auto abs_velocity = raw_abs_velocity < min_velocity ? 0.0 : raw_abs_velocity;
+    const auto braking_distance =
+      calc_braking_distance(abs_velocity, input.param.max_deceleration, input.param.delay_time);
+    output.resampled_trajectory = cut_trajectory(
+      resample_trajectory(*input.predicted_trajectory, input.param.resample_interval),
+      braking_distance);
+    output.processing_time_map["resampleTrajectory"] = stop_watch.toc(true);
+
+    // resample pointcloud
+    const auto obstacle_pointcloud =
+      get_transformed_point_cloud(*input.obstacle_pointcloud, input.obstacle_transform->transform);
+    const auto filtered_obstacle_pointcloud = filter_point_cloud_by_trajectory(
+      obstacle_pointcloud, output.resampled_trajectory, input.param.search_radius);
+
+    output.vehicle_footprints =
+      create_vehicle_footprints(output.resampled_trajectory, input.param, input.vehicle_info);
+    output.processing_time_map["createVehicleFootprints"] = stop_watch.toc(true);
+
+    output.vehicle_passing_areas = create_vehicle_passing_areas(output.vehicle_footprints);
+    output.processing_time_map["createVehiclePassingAreas"] = stop_watch.toc(true);
+
+    output.will_collide = will_collide(filtered_obstacle_pointcloud, output.vehicle_passing_areas);
+    output.processing_time_map["willCollide"] = stop_watch.toc(true);
+
+    return output;
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Parameter Issue - Use Non-existent Parameter Issue
+  - ROS Diagnostic Issue - Incomplete Diagnostic Lifecycle Implementation Issue
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Condition Issue - Conditional Check Missing Issue
+  - Operation/Calculation Issue - Violation of Physical & Kinematic Constraints Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Framework Integration Issue - Lack of ROS development best practices
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

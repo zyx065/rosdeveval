@@ -1,0 +1,98 @@
+compilation.log: |
+  Starting >>> autoware_costmap_generator
+  --- stderr: autoware_costmap_generator
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp: In static member function ‘static void autoware::costmap_generator::CostmapGenerator::loadParkingAreasFromLaneletMap(lanelet::LaneletMapPtr, std::vector<geometry_msgs::msg::Polygon_<std::allocator<void> > >&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:216:66: error: no matching function for call to ‘lanelet::PrimitiveLayer<lanelet::Polygon3d>::findUsages(const char [8])’
+    216 |   const auto parking_areas = lanelet_map->polygonLayer.findUsages(lanelet::AttributeValueString::Parking);
+        |                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/install/autoware_lanelet2_extension/include/autoware_lanelet2_extension/utility/query.hpp:32,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:50:
+  /opt/ros/humble/include/lanelet2_core/LaneletMap.h:102:32: note: candidate: ‘std::vector<typename lanelet::traits::PrimitiveTraits<T>::ConstType> lanelet::PrimitiveLayer<T>::findUsages(lanelet::traits::ConstPrimitiveType<typename lanelet::traits::Owned<PrimitiveT>::Type>&) const [with T = lanelet::Polygon3d; typename lanelet::traits::PrimitiveTraits<T>::ConstType = lanelet::ConstPolygon3d; lanelet::traits::ConstPrimitiveType<typename lanelet::traits::Owned<PrimitiveT>::Type> = lanelet::ConstPoint3d; typename lanelet::traits::Owned<PrimitiveT>::Type = lanelet::Point3d]’
+    102 |   std::vector<ConstPrimitiveT> findUsages(
+        |                                ^~~~~~~~~~
+  /opt/ros/humble/include/lanelet2_core/LaneletMap.h:103:69: note:   no known conversion for argument 1 from ‘const char [8]’ to ‘lanelet::traits::ConstPrimitiveType<lanelet::Point3d>&’ {aka ‘const lanelet::ConstPoint3d&’}
+    103 |       const traits::ConstPrimitiveType<traits::OwnedT<PrimitiveT>>& primitive) const;
+        |       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+  /opt/ros/humble/include/lanelet2_core/LaneletMap.h:110:27: note: candidate: ‘std::vector<BufferT> lanelet::PrimitiveLayer<T>::findUsages(lanelet::traits::ConstPrimitiveType<typename lanelet::traits::Owned<PrimitiveT>::Type>&) [with T = lanelet::Polygon3d; lanelet::traits::ConstPrimitiveType<typename lanelet::traits::Owned<PrimitiveT>::Type> = lanelet::ConstPoint3d; typename lanelet::traits::Owned<PrimitiveT>::Type = lanelet::Point3d]’
+    110 |   std::vector<PrimitiveT> findUsages(const traits::ConstPrimitiveType<traits::OwnedT<PrimitiveT>>& primitive);
+        |                           ^~~~~~~~~~
+  /opt/ros/humble/include/lanelet2_core/LaneletMap.h:110:100: note:   no known conversion for argument 1 from ‘const char [8]’ to ‘lanelet::traits::ConstPrimitiveType<lanelet::Point3d>&’ {aka ‘const lanelet::ConstPoint3d&’}
+    110 |   std::vector<PrimitiveT> findUsages(const traits::ConstPrimitiveType<traits::OwnedT<PrimitiveT>>& primitive);
+        |                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:235:99: error: ‘ParkingSpace’ is not a member of ‘lanelet::AttributeValueString’
+    235 |   const auto parking_spaces = lanelet_map->polygonLayer.findUsages(lanelet::AttributeValueString::ParkingSpace);
+        |                                                                                                   ^~~~~~~~~~~~
+  In file included from /workspace/repos/autoware/build/autoware_costmap_generator/costmap_generator_node_parameters/include/costmap_generator_node_parameters.hpp:23,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/include/autoware/costmap_generator/costmap_generator.hpp:50,
+                   from /workspace/repos/autoware/src/universe/autoware.universe/planning/autoware_costmap_generator/src/costmap_generator.cpp:45:
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp: In function ‘void __static_initialization_and_destruction_0(int, int)’:
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp:51:13: warning: ‘parameter_traits::OK’ is deprecated: When returning tl::expected<void, std::string> default construct for OK with `{}`. [-Wdeprecated-declarations]
+     51 | auto static OK
+        |             ^~
+  /opt/ros/humble/include/parameter_traits/parameter_traits/parameter_traits.hpp:51:13: note: declared here
+  gmake[2]: *** [CMakeFiles/costmap_generator_node.dir/build.make:76: CMakeFiles/costmap_generator_node.dir/src/costmap_generator.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:218: CMakeFiles/costmap_generator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_costmap_generator [29.6s, exited with code 2]
+
+  Summary: 0 packages finished [31.2s]
+    1 package failed: autoware_costmap_generator
+    1 package had stderr output: autoware_costmap_generator
+generate_code.cpp: "void CostmapGenerator::loadParkingAreasFromLaneletMap(\n  const\
+  \ lanelet::LaneletMapPtr lanelet_map,\n  std::vector<geometry_msgs::msg::Polygon>\
+  \ & area_polygons)\n{\n  // Get all parking areas from the lanelet map\n  const\
+  \ auto parking_areas = lanelet_map->polygonLayer.findUsages(lanelet::AttributeValueString::Parking);\n\
+  \n  for (const auto & area : parking_areas) {\n    geometry_msgs::msg::Polygon polygon;\n\
+  \    \n    // Convert each point in the parking area to a polygon point\n    for\
+  \ (const auto & point : area) {\n      geometry_msgs::msg::Point32 polygon_point;\n\
+  \      polygon_point.x = static_cast<float>(point.x());\n      polygon_point.y =\
+  \ static_cast<float>(point.y());\n      polygon_point.z = static_cast<float>(point.z());\n\
+  \      polygon.points.push_back(polygon_point);\n    }\n    \n    // Add the polygon\
+  \ to the output vector\n    area_polygons.push_back(polygon);\n  }\n\n  // Also\
+  \ check for parking spaces (which might be separate in some maps)\n  const auto\
+  \ parking_spaces = lanelet_map->polygonLayer.findUsages(lanelet::AttributeValueString::ParkingSpace);\n\
+  \  \n  for (const auto & space : parking_spaces) {\n    geometry_msgs::msg::Polygon\
+  \ polygon;\n    \n    for (const auto & point : space) {\n      geometry_msgs::msg::Point32\
+  \ polygon_point;\n      polygon_point.x = static_cast<float>(point.x());\n     \
+  \ polygon_point.y = static_cast<float>(point.y());\n      polygon_point.z = static_cast<float>(point.z());\n\
+  \      polygon.points.push_back(polygon_point);\n    }\n    \n    area_polygons.push_back(polygon);\n\
+  \  }\n}"
+ground_truth.cpp: |-
+  void CostmapGenerator::loadParkingAreasFromLaneletMap(
+    const lanelet::LaneletMapPtr lanelet_map,
+    std::vector<geometry_msgs::msg::Polygon> & area_polygons)
+  {
+    // Parking lots
+    lanelet::ConstPolygons3d all_parking_lots = lanelet::utils::query::getAllParkingLots(lanelet_map);
+    for (const auto & ll_poly : all_parking_lots) {
+      geometry_msgs::msg::Polygon poly;
+      lanelet::utils::conversion::toGeomMsgPoly(ll_poly, &poly);
+      area_polygons.push_back(poly);
+    }
+
+    // Parking spaces
+    lanelet::ConstLineStrings3d all_parking_spaces =
+      lanelet::utils::query::getAllParkingSpaces(lanelet_map);
+    for (const auto & parking_space : all_parking_spaces) {
+      lanelet::ConstPolygon3d ll_poly;
+      lanelet::utils::lineStringWithWidthToPolygon(parking_space, &ll_poly);
+      geometry_msgs::msg::Polygon poly;
+      lanelet::utils::conversion::toGeomMsgPoly(ll_poly, &poly);
+      area_polygons.push_back(poly);
+    }
+  }
+architecture-codes:
+  - ROS Message Issue - Message Operation Issue
+  - ROS Message Issue - Improper Message Type Usage Issue
+
+functionality-codes:
+  - Domain Library Issue - Domain Specific Library Utilization Error
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Insufficient understanding of ROS Integration

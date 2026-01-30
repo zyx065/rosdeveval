@@ -1,0 +1,82 @@
+compilation.log: |
+  Starting >>> autoware_radar_crossing_objects_noise_filter
+  --- stderr: autoware_radar_crossing_objects_noise_filter
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp: In member function ‘bool autoware::radar_crossing_objects_noise_filter::RadarCrossingObjectsNoiseFilterNode::isNoise(const DetectedObject&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:129:23: error: ‘velocity_threshold_’ was not declared in this scope
+    129 |   if (velocity_norm < velocity_threshold_) {
+        |                       ^~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:134:89: error: ‘const _kinematics_type’ {aka ‘const struct autoware_perception_msgs::msg::DetectedObjectKinematics_<std::allocator<void> >’} has no member named ‘acceleration_with_covariance’; did you mean ‘set__twist_with_covariance’?
+    134 |   const double acceleration_norm = autoware::universe_utils::calcNorm(object.kinematics.acceleration_with_covariance.accel);
+        |                                                                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        |                                                                                         set__twist_with_covariance
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:135:27: error: ‘acceleration_threshold_’ was not declared in this scope
+    135 |   if (acceleration_norm > acceleration_threshold_) {
+        |                           ^~~~~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:140:35: error: ‘dimension_threshold_’ was not declared in this scope
+    140 |   if (object.shape.dimensions.x < dimension_threshold_ ||
+        |                                   ^~~~~~~~~~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/perception/autoware_radar_crossing_objects_noise_filter/src/radar_crossing_objects_noise_filter_node.cpp:152:30: error: ‘crossing_angle_threshold_’ was not declared in this scope
+    152 |   if (std::abs(angle_diff) > crossing_angle_threshold_) {
+        |                              ^~~~~~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_radar_crossing_objects_noise_filter_node_component.dir/build.make:76: CMakeFiles/autoware_radar_crossing_objects_noise_filter_node_component.dir/src/radar_crossing_objects_noise_filter_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/autoware_radar_crossing_objects_noise_filter_node_component.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_radar_crossing_objects_noise_filter [5.14s, exited with code 2]
+
+  Summary: 0 packages finished [6.52s]
+    1 package failed: autoware_radar_crossing_objects_noise_filter
+    1 package had stderr output: autoware_radar_crossing_objects_noise_filter
+generate_code.cpp: "bool RadarCrossingObjectsNoiseFilterNode::isNoise(const DetectedObject\
+  \ & object)\n{\n  // Check if velocity is too low (likely noise)\n  const double\
+  \ velocity_norm = autoware::universe_utils::calcNorm(object.kinematics.twist_with_covariance.twist.linear);\n\
+  \  if (velocity_norm < velocity_threshold_) {\n    return true;\n  }\n\n  // Check\
+  \ if acceleration is too high (likely noise)\n  const double acceleration_norm =\
+  \ autoware::universe_utils::calcNorm(object.kinematics.acceleration_with_covariance.accel);\n\
+  \  if (acceleration_norm > acceleration_threshold_) {\n    return true;\n  }\n\n\
+  \  // Check if object dimensions are too small (likely noise)\n  if (object.shape.dimensions.x\
+  \ < dimension_threshold_ || \n      object.shape.dimensions.y < dimension_threshold_)\
+  \ {\n    return true;\n  }\n\n  // Check if object is crossing (perpendicular to\
+  \ radar view)\n  const double yaw = std::atan2(\n    object.kinematics.twist_with_covariance.twist.linear.y,\n\
+  \    object.kinematics.twist_with_covariance.twist.linear.x);\n  const double angle_diff\
+  \ = autoware::universe_utils::normalizeRadian(\n    yaw - object.kinematics.pose_with_covariance.pose.orientation.z);\n\
+  \  \n  if (std::abs(angle_diff) > crossing_angle_threshold_) {\n    return true;\n\
+  \  }\n\n  // If none of the above conditions are met, it's not noise\n  return false;\n\
+  }"
+ground_truth.cpp: |-
+  bool RadarCrossingObjectsNoiseFilterNode::isNoise(const DetectedObject & object)
+  {
+    const double velocity = std::abs(
+      autoware::universe_utils::calcNorm(object.kinematics.twist_with_covariance.twist.linear));
+    const double object_angle = tf2::getYaw(object.kinematics.pose_with_covariance.pose.orientation);
+    const double object_position_angle = std::atan2(
+      object.kinematics.pose_with_covariance.pose.position.y,
+      object.kinematics.pose_with_covariance.pose.position.x);
+    const double crossing_yaw =
+      autoware::universe_utils::normalizeRadian(object_angle - object_position_angle);
+
+    if (
+      velocity > node_param_.velocity_threshold &&
+      abs(std::cos(crossing_yaw)) < abs(std::cos(node_param_.angle_threshold))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+architecture-codes:
+  - ROS Parameter Issue - Use Non-existent Parameter Issue
+  - ROS Parameter Issue - Insufficient Parameter Design Issue
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Message Issue - Improper Message Type Usage Issue
+
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge
+  - Framework Integration Issue - Lack of ROS development best practices

@@ -1,0 +1,95 @@
+compilation.log: |
+  Starting >>> nav_2d_utils
+  --- stderr: nav_2d_utils
+  /root/repos/nav_ws/src/nav2_dwb_controller/nav_2d_utils/src/path_ops.cpp: In function ‘nav_2d_msgs::msg::Path2D nav_2d_utils::adjustPlanResolution(const Path2D&, double)’:
+  /root/repos/nav_ws/src/nav2_dwb_controller/nav_2d_utils/src/path_ops.cpp:67:27: error: ‘Pose2D’ is not a member of ‘nav_2d_msgs::msg’; did you mean ‘geometry_msgs::msg::Pose2D’?
+     67 |         nav_2d_msgs::msg::Pose2D intermediate_pose;
+        |                           ^~~~~~
+  In file included from /root/repos/nav_ws/install/nav_2d_msgs/include/nav_2d_msgs/nav_2d_msgs/msg/detail/path2_d__struct.hpp:22,
+                   from /root/repos/nav_ws/install/nav_2d_msgs/include/nav_2d_msgs/nav_2d_msgs/msg/path2_d.hpp:7,
+                   from /root/repos/nav_ws/src/nav2_dwb_controller/nav_2d_utils/include/nav_2d_utils/path_ops.hpp:38,
+                   from /root/repos/nav_ws/src/nav2_dwb_controller/nav_2d_utils/src/path_ops.cpp:35:
+  /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/pose2_d__struct.hpp:150:7: note: ‘geometry_msgs::msg::Pose2D’ declared here
+    150 | using Pose2D =
+        |       ^~~~~~
+  /root/repos/nav_ws/src/nav2_dwb_controller/nav_2d_utils/src/path_ops.cpp:68:9: error: ‘intermediate_pose’ was not declared in this scope
+     68 |         intermediate_pose.x = last_pose.x + j * step_x;
+        |         ^~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/path_ops.dir/build.make:76: CMakeFiles/path_ops.dir/src/path_ops.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:206: CMakeFiles/path_ops.dir/all] Error 2
+  gmake[1]: *** Waiting for unfinished jobs....
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav_2d_utils [3.62s, exited with code 2]
+
+  Summary: 0 packages finished [3.88s]
+    1 package failed: nav_2d_utils
+    1 package had stderr output: nav_2d_utils
+generate_code.cpp: "nav_2d_msgs::msg::Path2D adjustPlanResolution(\n  const nav_2d_msgs::msg::Path2D\
+  \ & global_plan_in,\n  double resolution)\n{\n  nav_2d_msgs::msg::Path2D adjusted_plan;\n\
+  \  if (global_plan_in.poses.empty()) {\n    return adjusted_plan;\n  }\n\n  adjusted_plan.poses.push_back(global_plan_in.poses[0]);\n\
+  \  \n  for (size_t i = 1; i < global_plan_in.poses.size(); ++i) {\n    const auto&\
+  \ last_pose = adjusted_plan.poses.back();\n    const auto& current_pose = global_plan_in.poses[i];\n\
+  \    \n    double dx = current_pose.x - last_pose.x;\n    double dy = current_pose.y\
+  \ - last_pose.y;\n    double distance = std::hypot(dx, dy);\n    \n    if (distance\
+  \ > resolution) {\n      int steps = static_cast<int>(distance / resolution);\n\
+  \      double step_x = dx / steps;\n      double step_y = dy / steps;\n      \n\
+  \      for (int j = 1; j < steps; ++j) {\n        nav_2d_msgs::msg::Pose2D intermediate_pose;\n\
+  \        intermediate_pose.x = last_pose.x + j * step_x;\n        intermediate_pose.y\
+  \ = last_pose.y + j * step_y;\n        intermediate_pose.theta = last_pose.theta;\
+  \  // Maintain orientation\n        adjusted_plan.poses.push_back(intermediate_pose);\n\
+  \      }\n    }\n    \n    adjusted_plan.poses.push_back(current_pose);\n  }\n \
+  \ \n  return adjusted_plan;\n}"
+ground_truth.cpp: |-
+  nav_2d_msgs::msg::Path2D adjustPlanResolution(
+    const nav_2d_msgs::msg::Path2D & global_plan_in,
+    double resolution)
+  {
+    nav_2d_msgs::msg::Path2D global_plan_out;
+    if (global_plan_in.poses.size() == 0) {
+      return global_plan_out;
+    }
+
+    geometry_msgs::msg::Pose2D last = global_plan_in.poses[0];
+    global_plan_out.poses.push_back(last);
+
+    // we can take "holes" in the plan smaller than 2 grid cells (squared = 4)
+    double min_sq_resolution = resolution * resolution * 4.0;
+
+    for (unsigned int i = 1; i < global_plan_in.poses.size(); ++i) {
+      geometry_msgs::msg::Pose2D loop = global_plan_in.poses[i];
+      double sq_dist = (loop.x - last.x) * (loop.x - last.x) + (loop.y - last.y) * (loop.y - last.y);
+      if (sq_dist > min_sq_resolution) {
+        // add points in-between
+        double diff = sqrt(sq_dist) - sqrt(min_sq_resolution);
+        int steps = static_cast<int>(diff / resolution) - 1;
+        double steps_double = static_cast<double>(steps);
+
+        double delta_x = (loop.x - last.x) / steps_double;
+        double delta_y = (loop.y - last.y) / steps_double;
+        double delta_t = (loop.theta - last.theta) / steps_double;
+
+        for (int j = 1; j < steps; ++j) {
+          geometry_msgs::msg::Pose2D pose;
+          pose.x = last.x + j * delta_x;
+          pose.y = last.y + j * delta_y;
+          pose.theta = last.theta + j * delta_t;
+          global_plan_out.poses.push_back(pose);
+        }
+      }
+      global_plan_out.poses.push_back(global_plan_in.poses[i]);
+      last.x = loop.x;
+      last.y = loop.y;
+    }
+    return global_plan_out;
+  }
+architecture-codes:
+  - ROS Message Issue - Improper Message Type Usage Issue 
+functionality-codes:
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue 
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue 
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Insufficient understanding of ROS Integration 
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase  

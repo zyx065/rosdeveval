@@ -1,0 +1,115 @@
+compilation.log: |
+  Starting >>> nav2_costmap_2d
+  Finished <<< nav2_costmap_2d [0.76s]
+
+  Summary: 1 package finished [1.03s]
+generate_code.cpp: "std::vector<std::vector<float>> parseVVF(const std::string & input,\
+  \ std::string & error_return)\n{\n    std::vector<std::vector<float>> result;\n\
+  \    std::vector<float> current_vector;\n    std::string current_num;\n    bool\
+  \ in_vector = false;\n    bool in_number = false;\n    bool decimal_point = false;\n\
+  \    \n    for (size_t i = 0; i < input.size(); ++i) {\n        char c = input[i];\n\
+  \        \n        if (c == ' ') {\n            continue;\n        }\n        \n\
+  \        if (c == '[') {\n            if (in_vector) {\n                error_return\
+  \ = \"Nested vectors are not supported\";\n                return std::vector<std::vector<float>>();\n\
+  \            }\n            in_vector = true;\n            current_vector.clear();\n\
+  \        }\n        else if (c == ']') {\n            if (!in_vector) {\n      \
+  \          error_return = \"Unexpected closing bracket\";\n                return\
+  \ std::vector<std::vector<float>>();\n            }\n            \n            if\
+  \ (in_number) {\n                try {\n                    current_vector.push_back(std::stof(current_num));\n\
+  \                } catch (...) {\n                    error_return = \"Invalid number\
+  \ format: \" + current_num;\n                    return std::vector<std::vector<float>>();\n\
+  \                }\n                current_num.clear();\n                in_number\
+  \ = false;\n                decimal_point = false;\n            }\n            \n\
+  \            result.push_back(current_vector);\n            in_vector = false;\n\
+  \        }\n        else if (c == ',') {\n            if (!in_vector) {\n      \
+  \          error_return = \"Comma outside of vector\";\n                return std::vector<std::vector<float>>();\n\
+  \            }\n            \n            if (in_number) {\n                try\
+  \ {\n                    current_vector.push_back(std::stof(current_num));\n   \
+  \             } catch (...) {\n                    error_return = \"Invalid number\
+  \ format: \" + current_num;\n                    return std::vector<std::vector<float>>();\n\
+  \                }\n                current_num.clear();\n                in_number\
+  \ = false;\n                decimal_point = false;\n            }\n        }\n \
+  \       else if (c == '-' || c == '+' || isdigit(c)) {\n            if (!in_vector)\
+  \ {\n                error_return = \"Number outside of vector\";\n            \
+  \    return std::vector<std::vector<float>>();\n            }\n            current_num\
+  \ += c;\n            in_number = true;\n        }\n        else if (c == '.') {\n\
+  \            if (!in_vector || !in_number || decimal_point) {\n                error_return\
+  \ = \"Invalid decimal point\";\n                return std::vector<std::vector<float>>();\n\
+  \            }\n            current_num += c;\n            decimal_point = true;\n\
+  \        }\n        else {\n            error_return = \"Invalid character: \" +\
+  \ std::string(1, c);\n            return std::vector<std::vector<float>>();\n  \
+  \      }\n    }\n    \n    if (in_vector || in_number) {\n        error_return =\
+  \ \"Unexpected end of input\";\n        return std::vector<std::vector<float>>();\n\
+  \    }\n    \n    return result;\n}"
+ground_truth.cpp: |-
+  std::vector<std::vector<float>> parseVVF(const std::string & input, std::string & error_return)
+  {
+    std::vector<std::vector<float>> result;
+
+    std::stringstream input_ss(input);
+    int depth = 0;
+    std::vector<float> current_vector;
+    while (!!input_ss && !input_ss.eof()) {
+      switch (input_ss.peek()) {
+        case EOF:
+          break;
+        case '[':
+          depth++;
+          if (depth > 2) {
+            error_return = "Array depth greater than 2";
+            return result;
+          }
+          input_ss.get();
+          current_vector.clear();
+          break;
+        case ']':
+          depth--;
+          if (depth < 0) {
+            error_return = "More close ] than open [";
+            return result;
+          }
+          input_ss.get();
+          if (depth == 1) {
+            result.push_back(current_vector);
+          }
+          break;
+        case ',':
+        case ' ':
+        case '\t':
+          input_ss.get();
+          break;
+        default:  // All other characters should be part of the numbers.
+          if (depth != 2) {
+            std::stringstream err_ss;
+            err_ss << "Numbers at depth other than 2. Char was '" << char(input_ss.peek()) << "'.";
+            error_return = err_ss.str();
+            return result;
+          }
+          float value;
+          input_ss >> value;
+          if (!!input_ss) {
+            current_vector.push_back(value);
+          }
+          break;
+      }
+    }
+
+    if (depth != 0) {
+      error_return = "Unterminated vector string.";
+    } else {
+      error_return = "";
+    }
+
+    return result;
+  }
+architecture-codes: []
+
+functionality-codes:
+    - Domain Library Issue - Lack of Domain Library Utilization Issue
+    - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+    - Condition Issue - Condition Check Logic Misapplication Issue
+    - Incomplete Code Issue - Missing One Step Issue
+
+root-cause-codes:
+    - Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge
+    - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic

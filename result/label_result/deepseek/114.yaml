@@ -1,0 +1,64 @@
+compilation.log: |
+  Starting >>> autoware_motion_velocity_dynamic_obstacle_stop_module
+  --- stderr: autoware_motion_velocity_dynamic_obstacle_stop_module
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp: In function ‘bool autoware::motion_velocity_planner::dynamic_obstacle_stop::is_not_too_close(const PredictedObject&, const autoware::motion_velocity_planner::dynamic_obstacle_stop::EgoData&, const double&)’:
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:60:94: error: ‘const TrajectoryPoints’ {aka ‘const class std::vector<autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> > >’} has no member named ‘points’; did you mean ‘pointer’?
+     60 |   const auto closest_segment_idx = motion_utils::findNearestSegmentIndex(ego_data.trajectory.points, obj_pos);
+        |                                                                                              ^~~~~~
+        |                                                                                              pointer
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:64:25: error: ‘const TrajectoryPoints’ {aka ‘const class std::vector<autoware_planning_msgs::msg::TrajectoryPoint_<std::allocator<void> > >’} has no member named ‘points’; did you mean ‘pointer’?
+     64 |     ego_data.trajectory.points, ego_data.ego_pose_idx, closest_segment_idx);
+        |                         ^~~~~~
+        |                         pointer
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:64:42: error: ‘const struct autoware::motion_velocity_planner::dynamic_obstacle_stop::EgoData’ has no member named ‘ego_pose_idx’
+     64 |     ego_data.trajectory.points, ego_data.ego_pose_idx, closest_segment_idx);
+        |                                          ^~~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/planning/motion_velocity_planner/autoware_motion_velocity_dynamic_obstacle_stop_module/src/object_filtering.cpp:67:46: error: ‘const struct autoware::motion_velocity_planner::dynamic_obstacle_stop::EgoData’ has no member named ‘safety_distance’
+     67 |   const double distance_threshold = ego_data.safety_distance + ego_longitudinal_offset;
+        |                                              ^~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/autoware_motion_velocity_dynamic_obstacle_stop_module.dir/build.make:132: CMakeFiles/autoware_motion_velocity_dynamic_obstacle_stop_module.dir/src/object_filtering.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:157: CMakeFiles/autoware_motion_velocity_dynamic_obstacle_stop_module.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_motion_velocity_dynamic_obstacle_stop_module [10.1s, exited with code 2]
+
+  Summary: 0 packages finished [11.5s]
+    1 package failed: autoware_motion_velocity_dynamic_obstacle_stop_module
+    1 package had stderr output: autoware_motion_velocity_dynamic_obstacle_stop_module
+generate_code.cpp: "bool is_not_too_close(\n  const autoware_perception_msgs::msg::PredictedObject\
+  \ & object, const EgoData & ego_data,\n  const double & ego_longitudinal_offset)\n\
+  {\n  // Get the closest point on the ego trajectory to the object\n  const auto\
+  \ & obj_pos = object.kinematics.initial_pose_with_covariance.pose.position;\n  const\
+  \ auto closest_segment_idx = motion_utils::findNearestSegmentIndex(ego_data.trajectory.points,\
+  \ obj_pos);\n  \n  // Calculate the longitudinal distance from ego to object along\
+  \ the trajectory\n  const auto ego_traj_length = autoware::motion_utils::calcSignedArcLength(\n\
+  \    ego_data.trajectory.points, ego_data.ego_pose_idx, closest_segment_idx);\n\
+  \  \n  // The total distance threshold is the sum of the safety distance and the\
+  \ offset\n  const double distance_threshold = ego_data.safety_distance + ego_longitudinal_offset;\n\
+  \  \n  // Check if the object is beyond the safe distance\n  return (ego_traj_length\
+  \ > distance_threshold);\n}"
+ground_truth.cpp: |-
+  bool is_not_too_close(
+    const autoware_perception_msgs::msg::PredictedObject & object, const EgoData & ego_data,
+    const double & ego_longitudinal_offset)
+  {
+    const auto obj_arc_length = motion_utils::calcSignedArcLength(
+      ego_data.trajectory, ego_data.pose.position,
+      object.kinematics.initial_pose_with_covariance.pose.position);
+    return std::abs(obj_arc_length) > ego_data.longitudinal_offset_to_first_trajectory_idx +
+                                        ego_longitudinal_offset + object.shape.dimensions.x / 2.0;
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Parameter Issue - Use Non-existent Parameter Issue
+  - ROS Parameter Issue - Use Non-existent Parameter Issue
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

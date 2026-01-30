@@ -1,0 +1,129 @@
+compilation.log: |
+  Starting >>> autoware_control_evaluator
+  --- stderr: autoware_control_evaluator
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp: In member function ‘void control_diagnostics::ControlEvaluatorNode::onTimer()’:
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:334:22: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void> > >’ has no member named ‘isDataReady’
+    334 |   if (!odometry_sub_.isDataReady() || !accel_sub_.isDataReady() || !traj_sub_.isDataReady() ||
+        |                      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:334:51: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<geometry_msgs::msg::AccelWithCovarianceStamped_<std::allocator<void> > >’ has no member named ‘isDataReady’
+    334 |   if (!odometry_sub_.isDataReady() || !accel_sub_.isDataReady() || !traj_sub_.isDataReady() ||
+        |                                                   ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:334:79: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<autoware_planning_msgs::msg::Trajectory_<std::allocator<void> > >’ has no member named ‘isDataReady’
+    334 |   if (!odometry_sub_.isDataReady() || !accel_sub_.isDataReady() || !traj_sub_.isDataReady() ||
+        |                                                                               ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:335:22: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<autoware_vehicle_msgs::msg::SteeringReport_<std::allocator<void> > >’ has no member named ‘isDataReady’
+    335 |       !steering_sub_.isDataReady() || !behavior_path_subscriber_.isDataReady()) {
+        |                      ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:335:66: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<tier4_planning_msgs::msg::PathWithLaneId_<std::allocator<void> > >’ has no member named ‘isDataReady’
+    335 |       !steering_sub_.isDataReady() || !behavior_path_subscriber_.isDataReady()) {
+        |                                                                  ^~~~~~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:340:39: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<nav_msgs::msg::Odometry_<std::allocator<void> > >’ has no member named ‘getData’
+    340 |   const auto odometry = odometry_sub_.getData();
+        |                                       ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:341:40: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<geometry_msgs::msg::AccelWithCovarianceStamped_<std::allocator<void> > >’ has no member named ‘getData’
+    341 |   const auto acceleration = accel_sub_.getData();
+        |                                        ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:342:37: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<autoware_planning_msgs::msg::Trajectory_<std::allocator<void> > >’ has no member named ‘getData’
+    342 |   const auto trajectory = traj_sub_.getData();
+        |                                     ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:343:39: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<autoware_vehicle_msgs::msg::SteeringReport_<std::allocator<void> > >’ has no member named ‘getData’
+    343 |   const auto steering = steering_sub_.getData();
+        |                                       ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:344:56: error: ‘class autoware::universe_utils::InterProcessPollingSubscriber<tier4_planning_msgs::msg::PathWithLaneId_<std::allocator<void> > >’ has no member named ‘getData’
+    344 |   const auto behavior_path = behavior_path_subscriber_.getData();
+        |                                                        ^~~~~~~
+  /workspace/repos/autoware/src/universe/autoware.universe/evaluator/autoware_control_evaluator/src/control_evaluator_node.cpp:347:16: error: ‘using MetricArrayMsg = using MetricArray = struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’ {aka ‘struct tier4_metric_msgs::msg::MetricArray_<std::allocator<void> >’} has no member named ‘metrics’
+    347 |   metrics_msg_.metrics.clear();
+        |                ^~~~~~~
+  gmake[2]: *** [CMakeFiles/control_evaluator_node.dir/build.make:76: CMakeFiles/control_evaluator_node.dir/src/control_evaluator_node.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:159: CMakeFiles/control_evaluator_node.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< autoware_control_evaluator [21.2s, exited with code 2]
+
+  Summary: 0 packages finished [22.7s]
+    1 package failed: autoware_control_evaluator
+    1 package had stderr output: autoware_control_evaluator
+generate_code.cpp: "void ControlEvaluatorNode::onTimer()\n{\n  // Check if all required\
+  \ data is available\n  if (!odometry_sub_.isDataReady() || !accel_sub_.isDataReady()\
+  \ || !traj_sub_.isDataReady() || \n      !steering_sub_.isDataReady() || !behavior_path_subscriber_.isDataReady())\
+  \ {\n    return;\n  }\n\n  // Get current data\n  const auto odometry = odometry_sub_.getData();\n\
+  \  const auto acceleration = accel_sub_.getData();\n  const auto trajectory = traj_sub_.getData();\n\
+  \  const auto steering = steering_sub_.getData();\n  const auto behavior_path =\
+  \ behavior_path_subscriber_.getData();\n\n  // Clear previous metrics\n  metrics_msg_.metrics.clear();\n\
+  \n  // Add various metrics\n  AddLateralDeviationMetricMsg(trajectory, odometry.pose.pose.position);\n\
+  \  AddYawDeviationMetricMsg(trajectory, odometry.pose.pose);\n  AddGoalLongitudinalDeviationMetricMsg(odometry.pose.pose);\n\
+  \  AddGoalLateralDeviationMetricMsg(odometry.pose.pose);\n  AddGoalYawDeviationMetricMsg(odometry.pose.pose);\n\
+  \  AddBoundaryDistanceMetricMsg(behavior_path, odometry.pose.pose);\n  AddLaneletInfoMsg(odometry.pose.pose);\n\
+  \  AddKinematicStateMetricMsg(odometry, acceleration);\n  AddSteeringMetricMsg(steering);\n\
+  \n  // Publish metrics\n  metrics_msg_.stamp = this->now();\n  metrics_pub_->publish(metrics_msg_);\n\
+  \n  // Optional: Publish processing time if needed\n  if (processing_time_pub_)\
+  \ {\n    autoware_internal_debug_msgs::msg::Float64Stamped processing_time_msg;\n\
+  \    processing_time_msg.stamp = this->now();\n    // Calculate processing time\
+  \ here if needed\n    processing_time_pub_->publish(processing_time_msg);\n  }\n\
+  }"
+ground_truth.cpp: |-
+  void ControlEvaluatorNode::onTimer()
+  {
+    autoware::universe_utils::StopWatch<std::chrono::milliseconds> stop_watch;
+    const auto traj = traj_sub_.takeData();
+    const auto odom = odometry_sub_.takeData();
+    const auto acc = accel_sub_.takeData();
+    const auto behavior_path = behavior_path_subscriber_.takeData();
+    const auto steering_status = steering_sub_.takeData();
+
+    // calculate deviation metrics
+    if (odom && traj && !traj->points.empty()) {
+      const Pose ego_pose = odom->pose.pose;
+      AddLateralDeviationMetricMsg(*traj, ego_pose.position);
+      AddYawDeviationMetricMsg(*traj, ego_pose);
+    }
+
+    getRouteData();
+    if (odom && route_handler_.isHandlerReady()) {
+      const Pose ego_pose = odom->pose.pose;
+      AddLaneletInfoMsg(ego_pose);
+      AddGoalLongitudinalDeviationMetricMsg(ego_pose);
+      AddGoalLateralDeviationMetricMsg(ego_pose);
+      AddGoalYawDeviationMetricMsg(ego_pose);
+    }
+
+    if (odom && acc) {
+      AddKinematicStateMetricMsg(*odom, *acc);
+    }
+
+    if (odom && behavior_path) {
+      const Pose ego_pose = odom->pose.pose;
+      AddBoundaryDistanceMetricMsg(*behavior_path, ego_pose);
+    }
+
+    if (steering_status) {
+      AddSteeringMetricMsg(*steering_status);
+    }
+
+    // Publish metrics
+    metrics_msg_.stamp = now();
+    metrics_pub_->publish(metrics_msg_);
+    metrics_msg_ = MetricArrayMsg{};
+
+    // Publish processing time
+    autoware_internal_debug_msgs::msg::Float64Stamped processing_time_msg;
+    processing_time_msg.stamp = get_clock()->now();
+    processing_time_msg.data = stop_watch.toc();
+    processing_time_pub_->publish(processing_time_msg);
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue
+  - ROS Timer Issue - Clock Source Instantiation and Synchronization Issue
+
+functionality-codes:
+  - Condition Issue - Condition Check Logic Misapplication Issue
+  - Condition Issue - Conditional Check Missing Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+
+root-cause-codes:
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 
+  - Framework Integration Issue - Lack of ROS development best practices

@@ -1,0 +1,77 @@
+compilation.log: |
+  Starting >>> nav2_route
+  --- stderr: nav2_route
+  /root/repos/nav_ws/src/nav2_route/src/path_converter.cpp: In member function ‘void nav2_route::PathConverter::interpolateEdge(float, float, float, float, std::vector<geometry_msgs::msg::PoseStamped_<std::allocator<void> >, std::allocator<geometry_msgs::msg::PoseStamped_<std::allocator<void> > > >&)’:
+  /root/repos/nav_ws/src/nav2_route/src/path_converter.cpp:147:50: error: ‘interpolation_resolution_’ was not declared in this scope
+    147 |     int num_points = static_cast<int>(distance / interpolation_resolution_);
+        |                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/route_server_core.dir/build.make:160: CMakeFiles/route_server_core.dir/src/path_converter.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:214: CMakeFiles/route_server_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_route [3.06s, exited with code 2]
+
+  Summary: 0 packages finished [3.31s]
+    1 package failed: nav2_route
+    1 package had stderr output: nav2_route
+generate_code.cpp: "void PathConverter::interpolateEdge(\n  float x0, float y0, float\
+  \ x1, float y1,\n  std::vector<geometry_msgs::msg::PoseStamped> & poses)\n{\n  \
+  \  // Calculate the distance between points\n    float dx = x1 - x0;\n    float\
+  \ dy = y1 - y0;\n    float distance = sqrt(dx * dx + dy * dy);\n    \n    // Determine\
+  \ number of intermediate points based on distance\n    int num_points = static_cast<int>(distance\
+  \ / interpolation_resolution_);\n    if (num_points < 1) {\n        num_points =\
+  \ 1;\n    }\n    \n    // Calculate step sizes\n    float x_step = dx / num_points;\n\
+  \    float y_step = dy / num_points;\n    \n    // Create and add poses along the\
+  \ line\n    for (int i = 0; i <= num_points; ++i) {\n        geometry_msgs::msg::PoseStamped\
+  \ pose;\n        pose.header.frame_id = \"map\";  // Assuming map frame\n      \
+  \  pose.header.stamp = rclcpp::Clock().now();\n        \n        // Set position\n\
+  \        pose.pose.position.x = x0 + i * x_step;\n        pose.pose.position.y =\
+  \ y0 + i * y_step;\n        pose.pose.position.z = 0.0;  // Assuming 2D\n      \
+  \  \n        // Calculate orientation (facing along the path)\n        if (i < num_points)\
+  \ {\n            float yaw = atan2(y1 - pose.pose.position.y, x1 - pose.pose.position.x);\n\
+  \            pose.pose.orientation.z = sin(yaw / 2);\n            pose.pose.orientation.w\
+  \ = cos(yaw / 2);\n        } else {\n            // For last point, keep same orientation\
+  \ as previous point\n            if (!poses.empty()) {\n                pose.pose.orientation\
+  \ = poses.back().pose.orientation;\n            }\n        }\n        \n       \
+  \ poses.push_back(pose);\n    }\n}"
+ground_truth.cpp: |-
+  void PathConverter::interpolateEdge(
+    float x0, float y0, float x1, float y1,
+    std::vector<geometry_msgs::msg::PoseStamped> & poses)
+  {
+    // Find number of points to populate by given density
+    const float mag = hypotf(x1 - x0, y1 - y0);
+    const unsigned int num_pts = ceil(mag / density_);
+    const float iterpolated_dist = mag / num_pts;
+
+    // Find unit vector direction
+    float ux = (x1 - x0) / mag;
+    float uy = (y1 - y0) / mag;
+
+    // March along it until dist
+    float x = x0;
+    float y = y0;
+    poses.push_back(utils::toMsg(x, y));
+
+    unsigned int pt_ctr = 0;
+    while (pt_ctr < num_pts - 1) {
+      x += ux * iterpolated_dist;
+      y += uy * iterpolated_dist;
+      pt_ctr++;
+      poses.push_back(utils::toMsg(x, y));
+    }
+  }
+architecture-codes:
+  - ROS Parameter Issue - Use Non-existent Parameter Issue 
+  - ROS Message Issue - Improper Message Type Usage Issue 
+  - ROS Message Issue - Message Initialization Issue
+functionality-codes:
+  - Domain Library Issue - Lack of Domain Library Utilization Issue 
+  - Operation/Calculation Issue - Algorithmic State and Initialization Issue 
+  - Constant Value Issue 
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic 
+  - Framework Integration Issue - Insufficient understanding of ROS Integration 
+  - Framework Integration Issue - Lack of ROS development best practices
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase  

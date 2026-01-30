@@ -1,0 +1,76 @@
+compilation.log: |
+  Starting >>> nav2_costmap_2d
+  Finished <<< nav2_costmap_2d [0.45s]
+
+  Summary: 1 package finished [0.74s]
+generate_code.cpp: |-
+  void KeepoutFilter::maskCallback(
+    const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
+  {
+    // Update the mask frame from the incoming message
+    mask_frame_ = msg->header.frame_id;
+
+    // Create or update the mask costmap
+    if (!mask_costmap_) {
+      mask_costmap_ = std::make_unique<Costmap2D>(
+        msg->info.width,
+        msg->info.height,
+        msg->info.resolution,
+        msg->info.origin.position.x,
+        msg->info.origin.position.y);
+    } else {
+      mask_costmap_->resizeMap(
+        msg->info.width,
+        msg->info.height,
+        msg->info.resolution,
+        msg->info.origin.position.x,
+        msg->info.origin.position.y);
+    }
+
+    // Copy the occupancy data into the costmap
+    for (unsigned int i = 0; i < msg->info.width * msg->info.height; ++i) {
+      mask_costmap_->getCharMap()[i] = msg->data[i];
+    }
+  }
+ground_truth.cpp: |-
+  void KeepoutFilter::maskCallback(
+    const nav_msgs::msg::OccupancyGrid::SharedPtr msg)
+  {
+    std::lock_guard<CostmapFilter::mutex_t> guard(*getMutex());
+
+    rclcpp_lifecycle::LifecycleNode::SharedPtr node = node_.lock();
+    if (!node) {
+      throw std::runtime_error{"Failed to lock node"};
+    }
+
+    if (!mask_costmap_) {
+      RCLCPP_INFO(
+        logger_,
+        "KeepoutFilter: Received filter mask from %s topic.", mask_topic_.c_str());
+    } else {
+      RCLCPP_WARN(
+        logger_,
+        "KeepoutFilter: New filter mask arrived from %s topic. Updating old filter mask.",
+        mask_topic_.c_str());
+      mask_costmap_.reset();
+    }
+
+    // Making a new mask_costmap_
+    mask_costmap_ = std::make_unique<Costmap2D>(*msg);
+    mask_frame_ = msg->header.frame_id;
+  }
+architecture-codes:
+  - ROS Logger Issue - ROS Logger Missing Issue
+  - Topic/Service Issue - Callback Function Binding Issue
+  - ROS Message Issue - Message Initialization Issue 
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Incomplete Code Issue - Missing One Step Issue
+  - Condition Issue - Conditional Check Missing Issue
+
+root-cause-codes:
+  - Framework Integration Issue - Insufficient understanding of ROS Integration 
+  - Framework Integration Issue - Lack of ROS development best practices 
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase  
+  - Solving Robotic Tasks Issue - Inadequate Understanding of System Requirements

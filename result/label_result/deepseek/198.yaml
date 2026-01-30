@@ -1,0 +1,58 @@
+compilation.log: |
+  Starting >>> nav2_mppi_controller
+  Finished <<< nav2_mppi_controller [0.59s]
+
+  Summary: 1 package finished [0.83s]
+generate_code.cpp: |-
+  bool PathHandler::isWithinInversionTolerances(const geometry_msgs::msg::PoseStamped & robot_pose)
+  {
+      if (global_plan_up_to_inversion_.poses.empty()) {
+          RCLCPP_WARN(logger_, "Inversion path is empty");
+          return false;
+      }
+
+      const auto & last_inversion_pose = global_plan_up_to_inversion_.poses.back();
+
+      // Check position tolerance
+      double dx = robot_pose.pose.position.x - last_inversion_pose.pose.position.x;
+      double dy = robot_pose.pose.position.y - last_inversion_pose.pose.position.y;
+      double distance = std::hypot(dx, dy);
+
+      if (distance > inversion_xy_tolerance_) {
+          return false;
+      }
+
+      // Check orientation tolerance
+      double robot_yaw = tf2::getYaw(robot_pose.pose.orientation);
+      double inversion_yaw = tf2::getYaw(last_inversion_pose.pose.orientation);
+      double yaw_diff = std::abs(angles::shortest_angular_distance(robot_yaw, inversion_yaw));
+
+      if (yaw_diff > inversion_yaw_tolerance) {
+          return false;
+      }
+
+      return true;
+  }
+ground_truth.cpp: |-
+  bool PathHandler::isWithinInversionTolerances(const geometry_msgs::msg::PoseStamped & robot_pose)
+  {
+    // Keep full path if we are within tolerance of the inversion pose
+    const auto last_pose = global_plan_up_to_inversion_.poses.back();
+    float distance = hypotf(
+      robot_pose.pose.position.x - last_pose.pose.position.x,
+      robot_pose.pose.position.y - last_pose.pose.position.y);
+
+    float angle_distance = angles::shortest_angular_distance(
+      tf2::getYaw(robot_pose.pose.orientation),
+      tf2::getYaw(last_pose.pose.orientation));
+
+    return distance <= inversion_xy_tolerance_ && fabs(angle_distance) <= inversion_yaw_tolerance;
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue
+  - Condition Issue - Condition Check Logic Misapplication Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic

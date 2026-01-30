@@ -1,0 +1,67 @@
+compilation.log: |
+  Starting >>> autoware_geography_utils
+  Finished <<< autoware_geography_utils [3.94s]
+
+  Summary: 1 package finished [5.34s]
+generate_code.cpp: |-
+  double convert_height(
+    const double height, const double latitude, const double longitude,
+    const std::string & source_vertical_datum, const std::string & target_vertical_datum)
+  {
+    // Check if source and target datums are the same
+    if (source_vertical_datum == target_vertical_datum) {
+      return height;
+    }
+
+    // Check for supported datum conversions
+    bool is_ellipsoid_to_geoid = (source_vertical_datum == "WGS84" && target_vertical_datum == "EGM2008");
+    bool is_geoid_to_ellipsoid = (source_vertical_datum == "EGM2008" && target_vertical_datum == "WGS84");
+
+    if (!is_ellipsoid_to_geoid && !is_geoid_to_ellipsoid) {
+      throw std::invalid_argument("Unsupported vertical datum conversion");
+    }
+
+    // In a real implementation, you would use a geoid model here
+    // For this example, we'll use a simple approximation
+    // Note: This is a placeholder - actual implementation would use proper geoid model
+    double geoid_height = 30.0 * sin(latitude * M_PI / 180.0) * cos(longitude * M_PI / 180.0);
+
+    if (is_ellipsoid_to_geoid) {
+      return height - geoid_height;
+    } else { // is_geoid_to_ellipsoid
+      return height + geoid_height;
+    }
+  }
+ground_truth.cpp: |-
+  double convert_height(
+    const double height, const double latitude, const double longitude,
+    const std::string & source_vertical_datum, const std::string & target_vertical_datum)
+  {
+    if (source_vertical_datum == target_vertical_datum) {
+      return height;
+    }
+    static const std::map<std::pair<std::string, std::string>, HeightConversionFunction>
+      conversion_map{
+        {{"WGS84", "EGM2008"}, convert_wgs84_to_egm2008},
+        {{"EGM2008", "WGS84"}, convert_egm2008_to_wgs84},
+      };
+
+    const auto key = std::make_pair(source_vertical_datum, target_vertical_datum);
+    if (const auto it = conversion_map.find(key); it != conversion_map.end()) {
+      return it->second(height, latitude, longitude);
+    }
+
+    throw std::invalid_argument(
+      "Invalid conversion types: " + source_vertical_datum + " to " + target_vertical_datum);
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Domain Library Issue - Lack of Domain Library Utilization Issue
+  - Incomplete Code Issue - Missing Multiple Steps Issue
+  - Operation/Calculation Issue - Fundamental Mathematical and Geometric Issue
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding in Domain Knowledge
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase 

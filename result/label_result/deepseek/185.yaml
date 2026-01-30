@@ -1,0 +1,226 @@
+compilation.log: |
+  Starting >>> nav2_route
+  --- stderr: nav2_route
+  In file included from /root/repos/nav_ws/src/nav2_route/include/nav2_route/route_planner.hpp:28,
+                   from /root/repos/nav_ws/src/nav2_route/src/route_planner.cpp:22:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp: In function ‘nav2_msgs::msg::Route nav2_route::utils::toMsg(const nav2_route::Route&, const string&, const rclcpp::Time&)’:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:178:34: error: ‘const struct nav2_route::Route’ has no member named ‘poses’
+    178 |   for (const auto & pose : route.poses) {
+        |                                  ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:189:9: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘poses’
+    189 |     msg.poses.push_back(pose_msg);
+        |         ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:7: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:26: error: ‘const struct nav2_route::Route’ has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |                          ^~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_route/include/nav2_route/path_converter.hpp:28,
+                   from /root/repos/nav_ws/src/nav2_route/src/path_converter.cpp:22:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp: In function ‘nav2_msgs::msg::Route nav2_route::utils::toMsg(const nav2_route::Route&, const string&, const rclcpp::Time&)’:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:178:34: error: ‘const struct nav2_route::Route’ has no member named ‘poses’
+    178 |   for (const auto & pose : route.poses) {
+        |                                  ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:189:9: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘poses’
+    189 |     msg.poses.push_back(pose_msg);
+        |         ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:7: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:26: error: ‘const struct nav2_route::Route’ has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |                          ^~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_route/include/nav2_route/plugins/route_operations/collision_monitor.hpp:25,
+                   from /root/repos/nav_ws/src/nav2_route/src/plugins/route_operations/collision_monitor.cpp:20:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp: In function ‘nav2_msgs::msg::Route nav2_route::utils::toMsg(const nav2_route::Route&, const string&, const rclcpp::Time&)’:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:178:34: error: ‘const struct nav2_route::Route’ has no member named ‘poses’
+    178 |   for (const auto & pose : route.poses) {
+        |                                  ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:189:9: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘poses’
+    189 |     msg.poses.push_back(pose_msg);
+        |         ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:7: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:26: error: ‘const struct nav2_route::Route’ has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |                          ^~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_route/include/nav2_route/node_spatial_tree.hpp:25,
+                   from /root/repos/nav_ws/src/nav2_route/src/node_spatial_tree.cpp:19:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp: In function ‘nav2_msgs::msg::Route nav2_route::utils::toMsg(const nav2_route::Route&, const string&, const rclcpp::Time&)’:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:178:34: error: ‘const struct nav2_route::Route’ has no member named ‘poses’
+    178 |   for (const auto & pose : route.poses) {
+        |                                  ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:189:9: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘poses’
+    189 |     msg.poses.push_back(pose_msg);
+        |         ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:7: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:26: error: ‘const struct nav2_route::Route’ has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |                          ^~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_route/include/nav2_route/goal_intent_extractor.hpp:31,
+                   from /root/repos/nav_ws/src/nav2_route/src/goal_intent_extractor.cpp:19:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp: In function ‘nav2_msgs::msg::Route nav2_route::utils::toMsg(const nav2_route::Route&, const string&, const rclcpp::Time&)’:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:178:34: error: ‘const struct nav2_route::Route’ has no member named ‘poses’
+    178 |   for (const auto & pose : route.poses) {
+        |                                  ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:189:9: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘poses’
+    189 |     msg.poses.push_back(pose_msg);
+        |         ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:7: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:26: error: ‘const struct nav2_route::Route’ has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |                          ^~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/route_server_core.dir/build.make:160: CMakeFiles/route_server_core.dir/src/path_converter.cpp.o] Error 1
+  gmake[2]: *** Waiting for unfinished jobs....
+  gmake[2]: *** [CMakeFiles/route_server_core.dir/build.make:146: CMakeFiles/route_server_core.dir/src/node_spatial_tree.cpp.o] Error 1
+  gmake[2]: *** [CMakeFiles/route_server_core.dir/build.make:202: CMakeFiles/route_server_core.dir/src/goal_intent_extractor.cpp.o] Error 1
+  gmake[2]: *** [CMakeFiles/route_operations.dir/build.make:118: CMakeFiles/route_operations.dir/src/plugins/route_operations/collision_monitor.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:292: CMakeFiles/route_operations.dir/all] Error 2
+  gmake[1]: *** Waiting for unfinished jobs....
+  In file included from /root/repos/nav_ws/src/nav2_route/include/nav2_route/route_server.hpp:40,
+                   from /root/repos/nav_ws/src/nav2_route/src/route_server.cpp:15:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp: In function ‘nav2_msgs::msg::Route nav2_route::utils::toMsg(const nav2_route::Route&, const string&, const rclcpp::Time&)’:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:178:34: error: ‘const struct nav2_route::Route’ has no member named ‘poses’
+    178 |   for (const auto & pose : route.poses) {
+        |                                  ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:189:9: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘poses’
+    189 |     msg.poses.push_back(pose_msg);
+        |         ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:7: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:26: error: ‘const struct nav2_route::Route’ has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |                          ^~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_route/src/operations_manager.cpp:20:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp: In function ‘nav2_msgs::msg::Route nav2_route::utils::toMsg(const nav2_route::Route&, const string&, const rclcpp::Time&)’:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:178:34: error: ‘const struct nav2_route::Route’ has no member named ‘poses’
+    178 |   for (const auto & pose : route.poses) {
+        |                                  ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:189:9: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘poses’
+    189 |     msg.poses.push_back(pose_msg);
+        |         ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:7: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:26: error: ‘const struct nav2_route::Route’ has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |                          ^~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_route/include/nav2_route/edge_scorer.hpp:28,
+                   from /root/repos/nav_ws/src/nav2_route/src/edge_scorer.cpp:20:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp: In function ‘nav2_msgs::msg::Route nav2_route::utils::toMsg(const nav2_route::Route&, const string&, const rclcpp::Time&)’:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:178:34: error: ‘const struct nav2_route::Route’ has no member named ‘poses’
+    178 |   for (const auto & pose : route.poses) {
+        |                                  ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:189:9: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘poses’
+    189 |     msg.poses.push_back(pose_msg);
+        |         ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:7: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:26: error: ‘const struct nav2_route::Route’ has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |                          ^~~~~~~~~~
+  In file included from /root/repos/nav_ws/src/nav2_route/include/nav2_route/operations_manager.hpp:26,
+                   from /root/repos/nav_ws/src/nav2_route/include/nav2_route/route_tracker.hpp:25,
+                   from /root/repos/nav_ws/src/nav2_route/src/route_tracker.cpp:15:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp: In function ‘nav2_msgs::msg::Route nav2_route::utils::toMsg(const nav2_route::Route&, const string&, const rclcpp::Time&)’:
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:178:34: error: ‘const struct nav2_route::Route’ has no member named ‘poses’
+    178 |   for (const auto & pose : route.poses) {
+        |                                  ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:189:9: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘poses’
+    189 |     msg.poses.push_back(pose_msg);
+        |         ^~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:7: error: ‘using Route = struct nav2_msgs::msg::Route_<std::allocator<void> >’ {aka ‘struct nav2_msgs::msg::Route_<std::allocator<void> >’} has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |       ^~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_route/include/nav2_route/utils.hpp:193:26: error: ‘const struct nav2_route::Route’ has no member named ‘properties’
+    193 |   msg.properties = route.properties;
+        |                          ^~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/route_server_core.dir/build.make:118: CMakeFiles/route_server_core.dir/src/edge_scorer.cpp.o] Error 1
+  gmake[2]: *** [CMakeFiles/route_server_core.dir/build.make:132: CMakeFiles/route_server_core.dir/src/operations_manager.cpp.o] Error 1
+  gmake[2]: *** [CMakeFiles/route_server_core.dir/build.make:104: CMakeFiles/route_server_core.dir/src/route_tracker.cpp.o] Error 1
+  gmake[2]: *** [CMakeFiles/route_server_core.dir/build.make:76: CMakeFiles/route_server_core.dir/src/route_server.cpp.o] Error 1
+  gmake[2]: *** [CMakeFiles/route_server_core.dir/build.make:90: CMakeFiles/route_server_core.dir/src/route_planner.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:214: CMakeFiles/route_server_core.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_route [4min 6s, exited with code 2]
+  [Processing: nav2_route]
+  [Processing: nav2_route]
+  [Processing: nav2_route]
+  [Processing: nav2_route]
+  [Processing: nav2_route]
+  [Processing: nav2_route]
+  [Processing: nav2_route]
+  [Processing: nav2_route]
+
+  Summary: 0 packages finished [4min 6s]
+    1 package failed: nav2_route
+    1 package had stderr output: nav2_route
+generate_code.cpp: "inline nav2_msgs::msg::Route toMsg(\n  const nav2_route::Route\
+  \ & route, const std::string & frame, const rclcpp::Time & now)\n{\n  nav2_msgs::msg::Route\
+  \ msg;\n  \n  // Set header information\n  msg.header.frame_id = frame;\n  msg.header.stamp\
+  \ = now;\n\n  // Convert route poses\n  for (const auto & pose : route.poses) {\n\
+  \    geometry_msgs::msg::PoseStamped pose_msg;\n    pose_msg.header.frame_id = frame;\n\
+  \    pose_msg.header.stamp = now;\n    pose_msg.pose.position.x = pose.position.x;\n\
+  \    pose_msg.pose.position.y = pose.position.y;\n    pose_msg.pose.position.z =\
+  \ pose.position.z;\n    pose_msg.pose.orientation.x = pose.orientation.x;\n    pose_msg.pose.orientation.y\
+  \ = pose.orientation.y;\n    pose_msg.pose.orientation.z = pose.orientation.z;\n\
+  \    pose_msg.pose.orientation.w = pose.orientation.w;\n    msg.poses.push_back(pose_msg);\n\
+  \  }\n\n  // Copy route properties if they exist\n  msg.properties = route.properties;\n\
+  \n  return msg;\n}"
+ground_truth.cpp: |-
+  inline nav2_msgs::msg::Route toMsg(
+    const nav2_route::Route & route, const std::string & frame, const rclcpp::Time & now)
+  {
+    nav2_msgs::msg::Route msg;
+    msg.header.frame_id = frame;
+    msg.header.stamp = now;
+    msg.route_cost = route.route_cost;
+
+    nav2_msgs::msg::RouteNode route_node;
+    nav2_msgs::msg::RouteEdge route_edge;
+    route_node.nodeid = route.start_node->nodeid;
+    route_node.position.x = route.start_node->coords.x;
+    route_node.position.y = route.start_node->coords.y;
+    msg.nodes.push_back(route_node);
+
+    // Provide the Node info and Edge IDs we're traversing through
+    for (unsigned int i = 0; i != route.edges.size(); i++) {
+      route_edge.edgeid = route.edges[i]->edgeid;
+      route_edge.start.x = route.edges[i]->start->coords.x;
+      route_edge.start.y = route.edges[i]->start->coords.y;
+      route_edge.end.x = route.edges[i]->end->coords.x;
+      route_edge.end.y = route.edges[i]->end->coords.y;
+      msg.edges.push_back(route_edge);
+
+      route_node.nodeid = route.edges[i]->end->nodeid;
+      route_node.position.x = route.edges[i]->end->coords.x;
+      route_node.position.y = route.edges[i]->end->coords.y;
+      msg.nodes.push_back(route_node);
+    }
+
+    return msg;
+  }
+architecture-codes:
+  - ROS Message Issue - Incorrect Message Member Access Issue 
+  - ROS Message Issue - Improper Message Type Usage Issue 
+  - ROS Message Issue - Message Initialization Issue 
+
+functionality-codes:
+  - Incomplete Code Issue - Missing Multiple Steps Issue 
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue 
+  - Domain Library Issue - Lack of Domain Library Utilization Issue 
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of System Requirements
+  - Framework Integration Issue - Insufficient understanding of ROS Integration 
+  - Framework Integration Issue - Lack of ROS development best practices
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase  

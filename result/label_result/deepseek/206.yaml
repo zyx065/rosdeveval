@@ -1,0 +1,76 @@
+compilation.log: |
+  Starting >>> nav2_smac_planner
+  --- stderr: nav2_smac_planner
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_lattice.cpp: In static member function ‘static float nav2_smac_planner::NodeLattice::getHeuristicCost(const Coordinates&, const Coordinates&, const nav2_costmap_2d::Costmap2D*)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_lattice.cpp:325:77: error: cannot convert ‘const nav2_costmap_2d::Costmap2D*’ to ‘const double&’
+    325 |   float obstacle_heuristic = getObstacleHeuristic(node_coords, goal_coords, costmap);
+        |                                                                             ^~~~~~~
+        |                                                                             |
+        |                                                                             const nav2_costmap_2d::Costmap2D*
+  In file included from /root/repos/nav_ws/src/nav2_smac_planner/src/node_lattice.cpp:30:
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/node_lattice.hpp:370:20: note:   initializing argument 3 of ‘static float nav2_smac_planner::NodeLattice::getObstacleHeuristic(const Coordinates&, const Coordinates&, const double&)’
+    370 |     const double & cost_penalty)
+        |     ~~~~~~~~~~~~~~~^~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_lattice.cpp: In static member function ‘static float nav2_smac_planner::NodeLattice::getHeuristicCost(const Coordinates&, const Coordinates&, const nav2_costmap_2d::Costmap2D*)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_lattice.cpp:325:77: error: cannot convert ‘const nav2_costmap_2d::Costmap2D*’ to ‘const double&’
+    325 |   float obstacle_heuristic = getObstacleHeuristic(node_coords, goal_coords, costmap);
+        |                                                                             ^~~~~~~
+        |                                                                             |
+        |                                                                             const nav2_costmap_2d::Costmap2D*
+  In file included from /root/repos/nav_ws/src/nav2_smac_planner/src/node_lattice.cpp:30:
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/node_lattice.hpp:370:20: note:   initializing argument 3 of ‘static float nav2_smac_planner::NodeLattice::getObstacleHeuristic(const Coordinates&, const Coordinates&, const double&)’
+    370 |     const double & cost_penalty)
+        |     ~~~~~~~~~~~~~~~^~~~~~~~~~~~
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_lattice.cpp: In static member function ‘static float nav2_smac_planner::NodeLattice::getHeuristicCost(const Coordinates&, const Coordinates&, const nav2_costmap_2d::Costmap2D*)’:
+  /root/repos/nav_ws/src/nav2_smac_planner/src/node_lattice.cpp:325:77: error: cannot convert ‘const nav2_costmap_2d::Costmap2D*’ to ‘const double&’
+    325 |   float obstacle_heuristic = getObstacleHeuristic(node_coords, goal_coords, costmap);
+        |                                                                             ^~~~~~~
+        |                                                                             |
+        |                                                                             const nav2_costmap_2d::Costmap2D*
+  In file included from /root/repos/nav_ws/src/nav2_smac_planner/src/node_lattice.cpp:30:
+  /root/repos/nav_ws/src/nav2_smac_planner/include/nav2_smac_planner/node_lattice.hpp:370:20: note:   initializing argument 3 of ‘static float nav2_smac_planner::NodeLattice::getObstacleHeuristic(const Coordinates&, const Coordinates&, const double&)’
+    370 |     const double & cost_penalty)
+        |     ~~~~~~~~~~~~~~~^~~~~~~~~~~~
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner_lattice.dir/build.make:160: CMakeFiles/nav2_smac_planner_lattice.dir/src/node_lattice.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:248: CMakeFiles/nav2_smac_planner_lattice.dir/all] Error 2
+  gmake[1]: *** Waiting for unfinished jobs....
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner.dir/build.make:160: CMakeFiles/nav2_smac_planner.dir/src/node_lattice.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:196: CMakeFiles/nav2_smac_planner.dir/all] Error 2
+  gmake[2]: *** [CMakeFiles/nav2_smac_planner_2d.dir/build.make:160: CMakeFiles/nav2_smac_planner_2d.dir/src/node_lattice.cpp.o] Error 1
+  gmake[1]: *** [CMakeFiles/Makefile2:222: CMakeFiles/nav2_smac_planner_2d.dir/all] Error 2
+  gmake: *** [Makefile:146: all] Error 2
+  ---
+  Failed   <<< nav2_smac_planner [6.15s, exited with code 2]
+
+  Summary: 0 packages finished [6.41s]
+    1 package failed: nav2_smac_planner
+    1 package had stderr output: nav2_smac_planner
+generate_code.cpp: "float NodeLattice::getHeuristicCost(\n  const Coordinates & node_coords,\n\
+  \  const Coordinates & goal_coords,\n  const nav2_costmap_2d::Costmap2D * costmap)\n\
+  {\n  // Calculate obstacle heuristic\n  float obstacle_heuristic = getObstacleHeuristic(node_coords,\
+  \ goal_coords, costmap);\n  \n  // Calculate distance heuristic using the obstacle\
+  \ heuristic\n  float distance_heuristic = getDistanceHeuristic(node_coords, goal_coords,\
+  \ obstacle_heuristic);\n  \n  // Return the maximum of the two heuristic costs\n\
+  \  return std::max(obstacle_heuristic, distance_heuristic);\n}"
+ground_truth.cpp: |-
+  float NodeLattice::getHeuristicCost(
+    const Coordinates & node_coords,
+    const Coordinates & goal_coords,
+    const nav2_costmap_2d::Costmap2D * costmap)
+  {
+    // get obstacle heuristic value
+    const float obstacle_heuristic = getObstacleHeuristic(
+      node_coords, goal_coords, motion_table.cost_penalty);
+    const float distance_heuristic =
+      getDistanceHeuristic(node_coords, goal_coords, obstacle_heuristic);
+    return std::max(obstacle_heuristic, distance_heuristic);
+  }
+architecture-codes: []
+
+functionality-codes:
+  - Operation/Calculation Issue - Data Structure Semantic Misinterpretation Issue 
+
+root-cause-codes:
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Task Logic 
+  - Framework Integration Issue - Insufficient understanding of ROS Integration
+  - Solving Robotic Tasks Issue - Inadequate Understanding of Existing Codebase  
