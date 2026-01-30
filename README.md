@@ -34,7 +34,7 @@ rosdeveval/                  # Benchmark dataset (240 YAML files)
 result/         # Experimental results
 ├── rq1_result/           # RQ1 result data
 │   └── result_backup.csv # Main results file
-└── rq2&3_result/           # RQ2 issues classification results and RQ3 root cause classification results
+└── label_result/           # RQ2 issues classification results and RQ3 root cause classification results
     ├── deepseek/         # DeepSeek error analysis
 ```
 
